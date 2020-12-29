@@ -16,9 +16,8 @@ $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once ($dirname."/library/init.inc.php");
 
+//注释
 $str = '社会主义制度';
-//echo money_format("$%i",$str);
-//die;
 //PHP判断全为中文的正则判断
 if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $str)){
 	print("该字符串全部是中文");

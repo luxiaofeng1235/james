@@ -217,3 +217,14 @@ echo '</pre>';
  * http返回是无状态的
  * http采用明文传输，而https一般是密文传输，采用ca证书进行验证，一般ca证书大部分都收费，很少有免费的
  * */
+
+#数组的合并用+进行操作会怎么样：
+$a112  =array('a'=>'apple','b'=>'banana');
+$b12  =array('a'=>'pear','b'=>'strawberry','c'=>'cherry');
+
+$c23 = $a112+$b12; //以出现的第一个键值为依据
+#结果返回pear、strawberry、cherry 不过应该是通过减值来处理的，因为第一个里面ab优先取第一个的，然后把C的value加上。
+echo '<pre>';
+var_dump($c23);
+echo '</pre>';
+exit;
