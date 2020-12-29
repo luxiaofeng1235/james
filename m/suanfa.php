@@ -38,3 +38,45 @@ function range_insert($id,$tbName){
 function getMaxVal($a , $b , $c){
     return $a>b ? ($a >$c ? $a : $b) :($b > $c ? $b : $c);
 }
+
+#累加的递归调用
+function getSumData(int $n =0){
+    if($n>1){
+        return $n+getSumData($n-1);
+    }else{
+        return 1;
+    }
+}
+
+#判断当前的是否为回文数
+function dataIsPeriod($x =0){
+    if(!$x)
+        return false;
+    $temp = 0;
+    $y = $x; //先赋值方便来比较
+    while($x!=0){
+        $temp+=$temp*10+$x/10;
+        $x =$x/10;
+    }
+    return intval($temp) == $y ? true : false;
+
+}
+
+#猴子问题
+function king($n , $m){
+    $monkey = range(1,$n);
+    $i = 0; //设置一个计数器
+    while (count($monkey)>1){
+        $i+=1;//进来一次累加一次
+        $head = array_shift($monkey); //每次都默认踢出去一个
+        if($i % $m !=0){
+            array_unshift($monkey,$head);
+        }
+    }
+    if(isset($monkey[0])){
+        return $monkey[0];
+    }else{
+        return false;
+        return false;
+    }
+}

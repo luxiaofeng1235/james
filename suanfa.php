@@ -28,6 +28,7 @@ echo '</pre>';
 exit;
 // 让我们打印 en_US locale 的国际化格式
 // $number = 1234.56;
+//setlocale(LC_MONETARY,'en_US');
 setlocale(LC_MONETARY,"en_US");
 echo money_format("The price is %i", $number);
 exit;
