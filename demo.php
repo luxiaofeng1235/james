@@ -11,6 +11,17 @@ function getRelativePath($a ,$b){
 	return $strPath;
 }
 
+
+$files = './lock.log';
+$fp =fopen($files, ' a+');
+if(flock($fp , LOCK_EX)){
+    fwrite($fp,'can it do this for avaage');
+    flock($fp,LOCK_UN);
+}else{
+    echo "no data this is for br";
+    return false;
+}
+
 //记住一点 静态成员属于类 普通成员属于对象
 // echo "\\"; //输出\
 $A ='hello12';
