@@ -1,19 +1,15 @@
 <?php
-// ///////////////////////////////////////////////////
-// Copyright(c) 2016,父母邦，帮父母
-// 日 期：2016年4月12日
-// 作　者：卢晓峰
-// E-mail :xiaofeng.lu@fumubang.com
-// 文件名 :function.php
-// 创建时间:下午7:12:00
-// 编 码：UTF-8
-// 摘 要:处理日常涉及的常用函数
-// ///////////////////////////////////////////////////
 
 function checkPhoneNumber(){
 	return 12;
 	//获取当前的进程号
 	posix_getpid();
+}
+
+if(!function_exists('posix_getpid')){
+    function posix_getpid(){
+        return getmypid();
+    }
 }
 
 ?>
