@@ -1,0 +1,2965 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"zs",
+				"zs1\tzs of function"
+			],
+			[
+				"us",
+				"uses"
+			],
+			[
+				"memb",
+				"member"
+			],
+			[
+				"coM",
+				"commentId"
+			],
+			[
+				"funt",
+				"function"
+			],
+			[
+				"secu",
+				"securityLogger"
+			],
+			[
+				"reco",
+				"record"
+			],
+			[
+				"logg",
+				"logger"
+			],
+			[
+				"db",
+				"db_slave"
+			],
+			[
+				"city",
+				"city_items"
+			],
+			[
+				"ti",
+				"trips"
+			],
+			[
+				"fmbary",
+				"fmbarray\tchange data field"
+			],
+			[
+				"fmbarr",
+				"fmbarray1\tchange data field"
+			],
+			[
+				"wh",
+				"where_data"
+			],
+			[
+				"new",
+				"new_data"
+			],
+			[
+				"whe",
+				"where"
+			],
+			[
+				"mysql",
+				"mysql_client"
+			],
+			[
+				"ran",
+				"range"
+			],
+			[
+				"pre",
+				"pre\tpre-data"
+			],
+			[
+				"preg_matc",
+				"preg_match_all"
+			],
+			[
+				"post",
+				"post_data"
+			],
+			[
+				"che",
+				"check_key"
+			],
+			[
+				"inpu",
+				"input_param"
+			],
+			[
+				"sort",
+				"sort_set"
+			],
+			[
+				"sor",
+				"sort_item"
+			],
+			[
+				"limit",
+				"limit_size"
+			],
+			[
+				"tal",
+				"tval"
+			],
+			[
+				"res",
+				"res_key"
+			],
+			[
+				"updaet",
+				"update_data"
+			],
+			[
+				"magic",
+				"get_magic_quotes_gpc"
+			],
+			[
+				"ex",
+				"ext"
+			],
+			[
+				"iner",
+				"inner_sql"
+			],
+			[
+				"insert",
+				"insert_key"
+			],
+			[
+				"inser",
+				"insert_key"
+			],
+			[
+				"tb",
+				"tbNum"
+			],
+			[
+				"parse",
+				"parse_url"
+			],
+			[
+				"left",
+				"left_array"
+			],
+			[
+				"htm",
+				"htmDoc"
+			],
+			[
+				"is_nu",
+				"is_numeric"
+			],
+			[
+				"sco",
+				"score_ret"
+			],
+			[
+				"e",
+				"escapeshellarg"
+			],
+			[
+				"ur",
+				"url"
+			],
+			[
+				"http",
+				"http_client"
+			],
+			[
+				"redi",
+				"redis"
+			],
+			[
+				"pager",
+				"pager_key"
+			],
+			[
+				"conte",
+				"contents"
+			],
+			[
+				"con",
+				"con_key"
+			],
+			[
+				"redis",
+				"redis_key"
+			],
+			[
+				"url",
+				"url_info"
+			],
+			[
+				"total",
+				"totalNum"
+			],
+			[
+				"htp",
+				"http_client"
+			],
+			[
+				"cit",
+				"city_name"
+			],
+			[
+				"key",
+				"keywords"
+			],
+			[
+				"lin",
+				"link_url"
+			],
+			[
+				"link",
+				"link_url"
+			],
+			[
+				"mat",
+				"matches"
+			],
+			[
+				"pin",
+				"pinyin"
+			],
+			[
+				"array_fil",
+				"array_filter"
+			],
+			[
+				"utf",
+				"UTF-8"
+			],
+			[
+				"str_reap",
+				"str_replace"
+			],
+			[
+				"upda",
+				"update_data"
+			],
+			[
+				"code",
+				"code_type"
+			],
+			[
+				"cod",
+				"code_type"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"str",
+				"street_list"
+			],
+			[
+				"street",
+				"street_data"
+			],
+			[
+				"no",
+				"now_time"
+			],
+			[
+				"STR",
+				"STREET_CODE"
+			],
+			[
+				"page",
+				"pagesize"
+			],
+			[
+				"ts",
+				"ts_count"
+			],
+			[
+				"area",
+				"area_list"
+			],
+			[
+				"are",
+				"area_import"
+			],
+			[
+				"provi",
+				"provinceid"
+			],
+			[
+				"pro",
+				"provSql"
+			],
+			[
+				"ci",
+				"city_list"
+			],
+			[
+				"files",
+				"fiels"
+			],
+			[
+				"fetch",
+				"fetch_list"
+			],
+			[
+				"dif",
+				"diff2"
+			],
+			[
+				"di",
+				"diff2"
+			],
+			[
+				"array_key",
+				"array_keys"
+			],
+			[
+				"ob_get",
+				"ob_get_contents"
+			],
+			[
+				"table",
+				"table_name"
+			],
+			[
+				"expl",
+				"explode"
+			],
+			[
+				"gethostby",
+				"gethostbyname"
+			],
+			[
+				"posi",
+				"posix_getgid"
+			],
+			[
+				"fil",
+				"fileName"
+			],
+			[
+				"t",
+				"temp"
+			],
+			[
+				"exp",
+				"explode"
+			],
+			[
+				"keys",
+				"keysvalue"
+			],
+			[
+				"number",
+				"number-2"
+			],
+			[
+				"file",
+				"files"
+			],
+			[
+				"flo",
+				"flock"
+			],
+			[
+				"pa",
+				"path"
+			],
+			[
+				"apply",
+				"apply_total"
+			],
+			[
+				"ro",
+				"row_array\tget_one-data"
+			],
+			[
+				"appli",
+				"apply_list"
+			],
+			[
+				"ticket",
+				"ticket_people_num"
+			],
+			[
+				"tomor",
+				"tomorrow_start_time"
+			],
+			[
+				"tomorr",
+				"tomorrow_end_time"
+			],
+			[
+				"ext",
+				"ext_info"
+			],
+			[
+				"cert",
+				"cert_info"
+			],
+			[
+				"share",
+				"share_2020"
+			],
+			[
+				"zhuanti",
+				"zhuanti_end_date"
+			],
+			[
+				"mai",
+				"margin-right\tproperty"
+			],
+			[
+				"phon",
+				"phone_num"
+			],
+			[
+				"check_i",
+				"check_img_code"
+			],
+			[
+				"pho",
+				"phonenum"
+			],
+			[
+				"echo",
+				"echo\techo"
+			],
+			[
+				"mari",
+				"margin-left\tproperty"
+			],
+			[
+				"mri",
+				"margin-top\tproperty"
+			],
+			[
+				"wid",
+				"width\tproperty"
+			],
+			[
+				"mair",
+				"margin-left\tproperty"
+			],
+			[
+				"rol_li",
+				"role_lib_auth"
+			],
+			[
+				"allo",
+				"allow_ips"
+			],
+			[
+				"redis_",
+				"redis_reg_key"
+			],
+			[
+				"show_",
+				"show_error"
+			],
+			[
+				"admi",
+				"admin_list"
+			],
+			[
+				"dayu",
+				"dayures"
+			],
+			[
+				"sms_tp",
+				"sms_tpl_info"
+			],
+			[
+				"admin",
+				"admin_model"
+			],
+			[
+				"chec",
+				"check_code"
+			],
+			[
+				"is",
+				"is_bind"
+			],
+			[
+				"dis",
+				"disabled"
+			],
+			[
+				"du",
+				"dump\tdump the code"
+			],
+			[
+				"red",
+				"redis_reg_key"
+			],
+			[
+				"sm",
+				"sms_info"
+			],
+			[
+				"au",
+				"aubb_sbc"
+			],
+			[
+				"wi",
+				"width\tproperty"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/zs1.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 203,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/zs-code.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 422,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/html-code.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 444,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/nocache.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 220,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/post.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 182,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/phpstudy_pro/WWW/blog/app/Http/Controllers/ItemController.php",
+			"settings":
+			{
+				"buffer_size": 2684,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/extends.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 289,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/header.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 217,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/img.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 210,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/cft-code.sublime-snippet",
+			"settings":
+			{
+				"buffer_size": 655,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/F/phpstudy_pro/WWW/blog/config/services.php",
+			"settings":
+			{
+				"buffer_size": 950,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/F/phpstudy_pro/WWW/blog/config/database.php",
+			"settings":
+			{
+				"buffer_size": 5113,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Install Package",
+				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/F/phpstudy_pro/WWW",
+		"/F/phpstudy_pro/WWW/blog",
+		"/F/phpstudy_pro/WWW/blog/config"
+	],
+	"file_history":
+	[
+		"/F/phpstudy_pro/WWW/blog/routes/web.php",
+		"/F/phpstudy_pro/Extensions/MySQL5.7.26/my.ini",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Controllers/TaskController.php",
+		"/F/phpstudy_pro/WWW/blog/config/database.php",
+		"/F/phpstudy_pro/WWW/blog/.env",
+		"/F/phpstudy_pro/WWW/blog/config/app.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/laravel/framework/src/Illuminate/Http/Request.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/symfony/console/Input/Input.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/symfony/var-dumper/Server/Connection.php",
+		"/F/phpstudy_pro/WWW/tp/vendor/topthink/framework/src/think/Response.php",
+		"/F/phpstudy_pro/WWW/blog/tests/CreatesApplication.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/laravel/framework/src/Illuminate/Contracts/Auth/SupportsBasicAuth.php",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Controllers/MemberController.php",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Controllers/UserController.php",
+		"/F/phpstudy_pro/WWW/blog/app/Providers/RouteServiceProvider.php",
+		"/F/phpstudy_pro/WWW/james/prov_exec/city_init.php",
+		"/F/phpstudy_pro/WWW/james/log/aa.php",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Controllers/MenuController.php",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Controllers/ShowProfile.php",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Kernel.php",
+		"/F/phpstudy_pro/WWW/blog/public/.htaccess",
+		"/F/phpstudy_pro/WWW/blog/vendor/symfony/http-foundation/Request.php",
+		"/F/phpstudy_pro/WWW/blog/resources/views/welcome.blade.php",
+		"/F/phpstudy_pro/WWW/blog/app/Http/Controllers/Controller.php",
+		"/F/phpstudy_pro/WWW/blog/app/Providers/AppServiceProvider.php",
+		"/F/phpstudy_pro/WWW/blog/public/index.php",
+		"/F/phpstudy_pro/WWW/blog/routes/api.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/laravel/framework/src/Illuminate/Cookie/CookieServiceProvider.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php",
+		"/C/Users/Administrator/Desktop/技术部/学习文档/laravel学习/特殊资料",
+		"/F/phpstudy_pro/WWW/james/library/mysql_class.php",
+		"/F/phpstudy_pro/WWW/blog/vendor/filp/whoops/src/Whoops/Resources/js/clipboard.min.js",
+		"/F/phpstudy_pro/Extensions/Nginx1.15.11/logs/www.james.com_acess.log",
+		"/F/phpstudy_pro/Extensions/Nginx1.15.11/logs/www.james.com_error.log",
+		"/F/phpstudy_pro/Extensions/Nginx1.15.11/logs/blog.cn_acess.log",
+		"/F/phpstudy_pro/Extensions/Nginx1.15.11/logs/blog.cn_error.log",
+		"/F/phpstudy_pro/Extensions/Nginx1.15.11/conf/vhosts/www.james.com_80.conf",
+		"/F/phpstudy_pro/Extensions/Nginx1.15.11/conf/vhosts/blog.cn_80.conf",
+		"/F/phpstudy_pro/WWW/blog/vendor/laravel/framework/src/Illuminate/Foundation/Auth/Access/AuthorizesRequests.php",
+		"/F/phpstudy_pro/WWW/blog/composer.json",
+		"/F/phpstudy_pro/WWW/tp/public/.htaccess",
+		"/F/phpstudy_pro/WWW/tp/public/router.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/FirePHPHandler.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/GroupHandler.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/SocketHandler.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/NullHandler.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/MongoDBHandler.php",
+		"/F/phpstudy_pro/WWW/james/index.php",
+		"/F/phpstudy_pro/WWW/james/composer.json",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php",
+		"/F/phpstudy_pro/WWW/james/vendor/monolog/monolog/src/Monolog/Logger.php",
+		"/F/phpstudy_pro/WWW/phpMyAdmin4.8.5/vendor/symfony/polyfill-php56/composer.json",
+		"/F/phpstudy_pro/WWW/james/vendor/autoload.php",
+		"/F/phpstudy_pro/WWW/james/vendor/composer/autoload_psr4.php",
+		"/F/phpstudy_pro/WWW/james/library/init.inc.php",
+		"/F/php项目/site_groups/trunk/Application/Common/Common/function.php",
+		"/F/phpstudy_pro/WWW/james/library/common.php",
+		"/F/php项目/produc_ncpc_com/includes/lib_code.php",
+		"/F/php项目/petshow.chinapet.com/PetShow/Common/image.php",
+		"/F/php项目/produc_ncpc_com/includes/lib_goods.php",
+		"/C/ProgramData/ComposerSetup/bin/composer.bat",
+		"/F/phpstudy_pro/Extensions/php/php7.3.4nts/composer.bat",
+		"/F/phpstudy_pro/Extensions/php/php7.3.4nts/composer.phar",
+		"/F/phpstudy_pro/Extensions/composer1.8.5/composer",
+		"/F/PHP环境__资料/php框架安装/laravel/laravel完整版20140508/laravel/bootstrap/start.php",
+		"/F/phpstudy_pro/WWW/james/library/Geohash.php",
+		"/F/phpstudy_pro/WWW/james/library/HttpClientRequest.php",
+		"/F/php项目/q_chinapet_com/goods.php",
+		"/F/php项目/q_chinapet_com/ajax_2.php",
+		"/F/phpstudy_pro/WWW/james/library/pinyin.func.php",
+		"/F/php项目/q_chinapet_com/include/global.cfg.php",
+		"/F/phpstudy_pro/WWW/james/library/global.cfg.php",
+		"/F/php项目/q_chinapet_com/include/mysql.cfg.php",
+		"/F/php项目/q_chinapet_com/commend.php",
+		"/F/php项目/q_chinapet_com/include/sphinxapi.class.php",
+		"/F/php项目/q_chinapet_com/coupon.php",
+		"/F/php项目/q_chinapet_com/include/model.cls.php",
+		"/F/work_project/fmb.admin/application/helpers/common_protec_helper.php",
+		"/F/work_project/fmb.admin/application/helpers/mystring_helper.php",
+		"/F/work_project/fmb.admin/application/models/mycps/mycps_product_model.php",
+		"/F/work_project/fmb.dianping/application/helpers/common_helper.php",
+		"/F/php项目/q_chinapet_com/360.php",
+		"/F/phpstudy_pro/WWW/james/library/curl_http.php",
+		"/F/phpstudy_pro/WWW/james/library/start_init.php",
+		"/F/php项目/shop110301/ICUIRPHP/ICUIRPHP.php",
+		"/F/php项目/shop110301/ICUIRPHP/class/Email.class.php",
+		"/F/php项目/lengyun/trunk/application/controllers/admin/main.php",
+		"/F/php项目/shop110301/ICUIRPHP/class/Action.class.php",
+		"/F/php项目/q_chinapet_com/include/init.inc.php",
+		"/F/php项目/q_chinapet_com/ajax.php",
+		"/F/work_project/fmb.admin/application/libraries/action_crawler/Uploader.class.php",
+		"/F/php项目/q_chinapet_com/include/pinyin.func.php",
+		"/F/phpstudy_pro/WWW/james/mfw/list.php",
+		"/F/phpstudy_pro/WWW/james/demo.php",
+		"/F/work_project/fmb.admin/application/controllers/statistic/settle.php",
+		"/F/php项目/union/1.0/cronjob2/cron/brand_sales_sum.php",
+		"/F/php项目/lcc/baiduMap.php",
+		"/F/php项目/SQ/zdf/controller/accountinsightsController.php",
+		"/F/php项目/拉手网/branches/Application/Lists/Controller/SpApiController.class.php",
+		"/F/php项目/union/1.0/protected/commands/aiBangSaleMailCommand.php",
+		"/F/work_project/fmb.admin/application/models/mycps/mycps_recharge_model.php",
+		"/F/phpstudy_pro/WWW/james/prov_exec/async_street.php",
+		"/F/work_project/fmb.dianping/application/controllers/mobile/myvisa.php",
+		"/F/php项目/union/1.0/protected/commands/Cps360SaleDataCommand.php",
+		"/F/php项目/union/1.0/protected/extensions/SaleCatCal.php",
+		"/F/php项目/非礼文档/city.sql",
+		"/F/php项目/20160405/ICUIRPHP/ckeditor/ckeditor.php",
+		"/F/work_project/fmb.dianping/application/libraries/DsnHotel.php",
+		"/F/work_project/fmb.dianping/application/third_party/vendor/qiniu/php-sdk/src/Qiniu/Storage/BucketManager.php",
+		"/F/work_project/fmb.dianping/application/libraries/Geohash.php",
+		"/F/work_project/fmb.dianping/application/controllers/api/v2_0/user.php",
+		"/F/work_project/fmb.dianping/application/models/user_model.php",
+		"/F/phpstudy_pro/WWW/james/xcheng/scene_list.php",
+		"/F/work_project/fmb.dianping/application/helpers/hanzi_pinyin_helper.php",
+		"/F/phpstudy_pro/WWW/james/function.php",
+		"/F/work_project/fmb.admin/application/controllers/mycps/mycps_product.php",
+		"/F/phpstudy_pro/WWW/james/xcheng/get_city_ids.php",
+		"/C/Users/Administrator/Documents/jishigou_common_distrinct.sql",
+		"/F/phpstudy_pro/WWW/phpMyAdmin4.8.5/libraries/classes/Utils/HttpRequest.php",
+		"/F/phpstudy_pro/WWW/james/async_street.php",
+		"/F/phpstudy_pro/WWW/james/city_init.php",
+		"/E/迅雷下载/2019省市区街道4级MySQL数据/bs_province.sql",
+		"/E/迅雷下载/2019省市区街道4级MySQL数据/bs_city.sql",
+		"/F/work_project/fmb.admin/application/controllers/longline/orders.php",
+		"/F/work_project/fmb.admin/application/controllers/coupon/coupon.php",
+		"/F/work_project/fmb.admin/application/models/coupon/user_coupon_model.php"
+	],
+	"find":
+	{
+		"height": 32.0
+	},
+	"find_in_files":
+	{
+		"height": 125.0,
+		"where_history":
+		[
+			"F:\\phpstudy_pro\\WWW\\blog",
+			"F:\\phpstudy_pro\\WWW\\blog\\app\\Providers",
+			"F:\\work_project\\fmb.dianping\\application\\core",
+			"F:\\work_project\\fmb.dianping\\application\\helpers",
+			"F:\\work_project\\fmb.admin\\application",
+			"F:\\work_project\\fmb.admin\\system",
+			"F:\\work_project\\fmb.admin\\application\\controllers",
+			"F:\\work_project\\fmb.admin\\application\\config",
+			"F:\\work_project\\fmb.admin\\application\\core",
+			"F:\\work_project\\fmb.admin\\application\\helpers",
+			"F:\\work_project\\fmb.admin",
+			"F:\\work_project\\fmb.admin\\application",
+			"F:\\work_project\\fmb.admin"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"strict",
+			"APP_KEY",
+			"key",
+			"env.example",
+			"DB_CONNECTION",
+			"APP_URL",
+			"APP_DEBUG",
+			"APP_KEY",
+			"DATABASE_URL",
+			"group",
+			"$request",
+			"input",
+			"UserController",
+			"namespace ",
+			"UserController",
+			"user",
+			"UserController",
+			"UserController ",
+			"user",
+			"menu",
+			"memberinfo",
+			"user",
+			"middlewarePriority",
+			"auth",
+			"register",
+			"mysql",
+			"environment",
+			"enable-php",
+			"remote_addr",
+			"aasheaa",
+			"get_goods_info",
+			"getCookie",
+			"global.cfg",
+			"array_column",
+			"\n\narray_column",
+			"Array_transdata",
+			"Pinyin",
+			"global",
+			"db",
+			"http_client",
+			"data_by_condition",
+			"numpage",
+			"lanzhou231",
+			"http_client",
+			"div class=\"goto-items\"",
+			"div class=",
+			"journals-panel-items",
+			"<div class=\"goto-items\" id=\"journals-panel-items\">",
+			"b_str_split",
+			"page_size",
+			"rdb",
+			"port",
+			"bind",
+			"array_multisort",
+			"ubuntu",
+			"isPalindrome"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/zs1.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 203,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										193,
+										200
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/zs-code.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 422,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								303,
+								40
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										309,
+										312
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/dot.png",
+										"region.yellowish brackethighlighter.default"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										30,
+										39
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/html-code.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 444,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										436,
+										443
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/nocache.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 220,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										212,
+										219
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/post.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 182,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										172,
+										179
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/F/phpstudy_pro/WWW/blog/app/Http/Controllers/ItemController.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2684,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1656.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/extends.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 289,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								139,
+								40
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										141,
+										144
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/dot.png",
+										"region.yellowish brackethighlighter.default"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										30,
+										39
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/header.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 217,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										209,
+										216
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/img.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 210,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										202,
+										209
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/F/sublimetext3/Sublime Text Build 3176 x64/Data/Packages/User/cft-code.sublime-snippet",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 655,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										330,
+										337
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/tag.png",
+										"region.orangish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1,
+										8
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/XML/XML.sublime-syntax",
+							"tab_size": 5,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/F/phpstudy_pro/WWW/blog/config/services.php",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 950,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/F/phpstudy_pro/WWW/blog/config/database.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5113,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2098,
+								2104
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										2104,
+										2105
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/single_quote.png",
+										"region.greenish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										2097,
+										2098
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content"
+							],
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1143.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 46.4
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SFTP":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 150.0
+	},
+	"pinned_build_system": "",
+	"project": "my_wordk.sublime-project",
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"databa",
+				"WWW\\blog\\config\\database.php"
+			],
+			[
+				"database",
+				"WWW\\blog\\config\\database.php"
+			],
+			[
+				"Illuminate\\Database\\Connectors\\Connector.php",
+				"WWW\\blog\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php"
+			],
+			[
+				"Connection.php",
+				"WWW\\blog\\vendor\\symfony\\var-dumper\\Server\\Connection.php"
+			],
+			[
+				".env",
+				"WWW\\blog\\.env"
+			],
+			[
+				"Input.php",
+				"WWW\\blog\\vendor\\symfony\\console\\Input\\Input.php"
+			],
+			[
+				"Support",
+				"WWW\\blog\\vendor\\laravel\\framework\\src\\Illuminate\\Contracts\\Auth\\SupportsBasicAuth.php"
+			],
+			[
+				"Providers\\RouteServiceProvider.php",
+				"WWW\\blog\\app\\Providers\\RouteServiceProvider.php"
+			],
+			[
+				"request",
+				"WWW\\blog\\vendor\\symfony\\http-foundation\\Request.php"
+			],
+			[
+				"MemberController",
+				"WWW\\blog\\app\\Http\\Controllers\\MemberController.php"
+			],
+			[
+				"likeserveri",
+				"WWW\\blog\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\CookieServiceProvider.php"
+			],
+			[
+				"mysql_class",
+				"WWW\\james\\library\\mysql_class.php"
+			],
+			[
+				"init.inc",
+				"WWW\\james\\library\\init.inc.php"
+			],
+			[
+				"mysql_clas",
+				"WWW\\james\\library\\mysql_class.php"
+			],
+			[
+				"library/init.inc.ph",
+				"WWW\\james\\library\\init.inc.php"
+			],
+			[
+				"mcps_product_",
+				"work_project\\fmb.admin\\application\\models\\mycps\\mycps_product_model.php"
+			],
+			[
+				"newupload.cls.php",
+				"work_project\\fmb.admin\\application\\libraries\\action_crawler\\Uploader.class.php"
+			],
+			[
+				"ibrary/init.inc.php",
+				"WWW\\james\\library\\init.inc.php"
+			],
+			[
+				"settle.php",
+				"work_project\\fmb.admin\\application\\controllers\\statistic\\settle.php"
+			],
+			[
+				"mycps_product_mo",
+				"work_project\\fmb.admin\\application\\models\\mycps\\mycps_product_model.php"
+			],
+			[
+				"mycps_rd",
+				"work_project\\fmb.admin\\application\\models\\mycps\\mycps_recharge_model.php"
+			],
+			[
+				"myvis",
+				"work_project\\fmb.dianping\\application\\controllers\\mobile\\myvisa.php"
+			],
+			[
+				"ContentManager",
+				"work_project\\fmb.dianping\\application\\third_party\\vendor\\qiniu\\php-sdk\\src\\Qiniu\\Storage\\BucketManager.php"
+			],
+			[
+				"user_mo",
+				"work_project\\fmb.dianping\\application\\models\\user_model.php"
+			],
+			[
+				"v2_0/user",
+				"work_project\\fmb.dianping\\application\\controllers\\api\\v2_0\\user.php"
+			],
+			[
+				"mycps_prod",
+				"work_project\\fmb.admin\\application\\controllers\\mycps\\mycps_product.php"
+			],
+			[
+				"curl",
+				"work_project\\fmb.admin\\application\\libraries\\Curl_http.php"
+			],
+			[
+				"http",
+				"WWW\\phpMyAdmin4.8.5\\libraries\\classes\\Utils\\HttpRequest.php"
+			],
+			[
+				"street",
+				"WWW\\james\\async_street.php"
+			],
+			[
+				"mycps_produ",
+				"work_project\\fmb.admin\\application\\controllers\\mycps\\mycps_product.php"
+			],
+			[
+				"coupon.php",
+				"work_project\\fmb.admin\\application\\controllers\\coupon\\coupon.php"
+			],
+			[
+				"orders.php",
+				"work_project\\fmb.admin\\application\\controllers\\longline\\orders.php"
+			],
+			[
+				"mysql_cla",
+				"WWW\\james\\library\\mysql_class.php"
+			],
+			[
+				"salex",
+				"work_project\\fmb.admin\\application\\models\\app\\kpi_sale_export_app.php"
+			],
+			[
+				"redis_cod",
+				"work_project\\fmb.dianping\\application\\libraries\\Redis_codes.php"
+			],
+			[
+				"redis_co",
+				"work_project\\fmb.dianping\\application\\libraries\\Redis_codes.php"
+			],
+			[
+				"process",
+				"work_project\\fmb.daemon\\process_daemon.php"
+			],
+			[
+				"cmdrun/log",
+				"work_project\\fmb.dianping\\application\\controllers\\cmdrun\\longline.php"
+			],
+			[
+				"longlin/long",
+				"work_project\\fmb.admin\\application\\controllers\\longline\\longline.php"
+			],
+			[
+				"aliyun",
+				"fmb.dianping\\application\\controllers\\cmdrun\\aliyun_video_callback.php"
+			],
+			[
+				"visit",
+				"fmb.dianping\\application\\controllers\\cmdrun\\anniversary_visit_log.php"
+			],
+			[
+				"log_hel",
+				"fmb.dianping\\application\\helpers\\log_helper.php"
+			],
+			[
+				"sale_ex",
+				"fmb.admin\\application\\models\\app\\sale_export_app.php"
+			],
+			[
+				"hd_cr",
+				"fmb.dianping\\application\\controllers\\mobile\\hd_credit.php"
+			],
+			[
+				"send",
+				"fmb.daemon\\Library\\Sendmail.php"
+			],
+			[
+				"order_count",
+				"fmb.admin\\application\\controllers\\tickets\\order_count.php"
+			],
+			[
+				"orders_mo",
+				"fmb.admin\\application\\models\\tickets\\orders_model.php"
+			],
+			[
+				"shopManage/getOrder",
+				"fmb.dianping\\application\\views\\shopManage\\getOrder.php"
+			],
+			[
+				"order_cert",
+				"fmb.dianping\\application\\models\\order_certinfo_model.php"
+			],
+			[
+				"shoplogin",
+				"fmb.dianping\\application\\controllers\\shoplogin.php"
+			],
+			[
+				"mobile/zhuanti/share/share_novembe",
+				"fmb.dianping\\application\\views\\mobile\\zhuanti\\share\\share_november.php"
+			],
+			[
+				"subject",
+				"fmb.dianping\\application\\controllers\\mobile\\subject.php"
+			],
+			[
+				"hd_my",
+				"fmb.dianping\\application\\controllers\\mobile\\hd_my.php"
+			],
+			[
+				"pass",
+				"fmb.passport\\application\\controllers\\passport.php"
+			],
+			[
+				"obile/zhuanti/share/new_share",
+				"fmb.dianping\\application\\views\\mobile\\zhuanti\\share\\new_share.php"
+			],
+			[
+				"mobile/subject",
+				"fmb.dianping\\application\\controllers\\mobile\\subject.php"
+			],
+			[
+				"/temp/jiyan/tn_code.min.js",
+				"fmb.dianping\\mobile_html\\temp\\jiyan\\tn_code.min.js"
+			],
+			[
+				"jiyan/style.css",
+				"fmb.dianping\\mobile_html\\temp\\jiyan\\style.css"
+			],
+			[
+				"mobile/test",
+				"fmb.dianping\\application\\controllers\\mobile\\test.php"
+			],
+			[
+				"test.php",
+				"fmb.dianping\\application\\controllers\\test.php"
+			],
+			[
+				"my_reg.js",
+				"fmb.dianping\\mobile_html\\temp\\js\\my_reg.js"
+			],
+			[
+				"fmb.dianping/signup",
+				"fmb.dianping\\application\\views\\mobile\\signup.php"
+			],
+			[
+				"my_reg",
+				"fmb.dianping\\mobile_html\\temp\\js\\my_reg.js"
+			],
+			[
+				"business.css",
+				"fmb.dianping\\mobile_html\\temp\\css\\business.css"
+			],
+			[
+				"my.reg",
+				"fmb.dianping\\mobile_html\\temp\\js\\my_reg.js"
+			],
+			[
+				"mobile/locate_pass",
+				"fmb.dianping\\application\\views\\mobile\\locate_pass.php"
+			],
+			[
+				"hd_login",
+				"fmb.dianping\\application\\views\\mobile\\hd_login.php"
+			],
+			[
+				"hd_log",
+				"fmb.dianping\\application\\controllers\\mobile\\hd_login.php"
+			],
+			[
+				"view/hd_log",
+				"fmb.dianping\\application\\views\\mobile\\hd_login.php"
+			],
+			[
+				"sms.p",
+				"fmb.dianping\\application\\libraries\\Sms.php"
+			],
+			[
+				"mobile/aja",
+				"fmb.dianping\\application\\controllers\\mobile\\ajax.php"
+			],
+			[
+				"sms.php",
+				"fmb.dianping\\application\\libraries\\Sms.php"
+			],
+			[
+				"dianping/api.php",
+				"fmb.dianping\\application\\controllers\\api.php"
+			],
+			[
+				"api/seccode",
+				"fmb.dianping\\application\\libraries\\Seccode.php"
+			],
+			[
+				"user_model.php",
+				"fmb.dianping\\application\\models\\user_model.php"
+			],
+			[
+				"user_model",
+				"fmb.dianping\\application\\models\\user_model.php"
+			],
+			[
+				"signup",
+				"fmb.passport\\application\\views\\signup.php"
+			],
+			[
+				"fmb.passport/user",
+				"fmb.passport\\application\\models\\user.php"
+			],
+			[
+				"fmb.passport/ajax",
+				"fmb.passport\\application\\controllers\\ajax.php"
+			],
+			[
+				"temp/js/my_reg.js",
+				"fmb.dianping\\mobile_html\\temp\\js\\my_reg.js"
+			],
+			[
+				"mobile/hd_login",
+				"fmb.dianping\\application\\views\\mobile\\hd_login.php"
+			],
+			[
+				"mobile/hd_lo",
+				"fmb.dianping\\application\\controllers\\mobile\\hd_login.php"
+			],
+			[
+				"fmb.passport/aja",
+				"fmb.passport\\application\\controllers\\ajax.php"
+			],
+			[
+				"ajax",
+				"fmb.admin\\application\\controllers\\ajax.php"
+			],
+			[
+				"login",
+				"fmb.admin\\application\\controllers\\login.php"
+			],
+			[
+				"shoplog",
+				"fmb.dianping\\application\\controllers\\shoplogin.php"
+			],
+			[
+				"hd_cred",
+				"fmb.dianping\\application\\controllers\\mobile\\hd_credit.php"
+			],
+			[
+				"admin_a",
+				"fmb.admin\\application\\models\\app\\admin_app.php"
+			],
+			[
+				"role_li",
+				"fmb.admin\\application\\models\\app\\role_lib.php"
+			],
+			[
+				"kpi_orer_",
+				"fmb.admin\\application\\controllers\\tickets\\kpi_order_count.php"
+			],
+			[
+				"kpi_sale",
+				"fmb.admin\\application\\models\\app\\kpi_sale_export_app.php"
+			],
+			[
+				"application/session",
+				"fmb.admin\\application\\libraries\\Session.php"
+			],
+			[
+				"session",
+				"fmb.admin\\application\\libraries\\Session.php"
+			],
+			[
+				"api.php",
+				"fmb.dianping\\application\\config\\api.php"
+			],
+			[
+				"mobile/admin/login",
+				"fmb.admin\\application\\views\\mobile\\admin\\login.php"
+			],
+			[
+				"admin_list",
+				"fmb.admin\\application\\controllers\\admin\\admin_list.php"
+			],
+			[
+				"admin_mo",
+				"fmb.admin\\application\\models\\admin_model.php"
+			],
+			[
+				"admin/login",
+				"fmb.admin\\application\\views\\admin\\login.php"
+			],
+			[
+				"admin_ap",
+				"fmb.admin\\application\\models\\app\\admin_app.php"
+			],
+			[
+				"admin_model",
+				"fmb.admin\\application\\models\\admin_model.php"
+			],
+			[
+				"area_model",
+				"fmb.admin\\application\\models\\area_model.php"
+			],
+			[
+				"admi_mo",
+				"fmb.admin\\application\\models\\admin_model.php"
+			],
+			[
+				"login.",
+				"fmb.admin\\application\\controllers\\login.php"
+			],
+			[
+				"login.php",
+				"fmb.passport\\application\\views\\login.php"
+			],
+			[
+				"own",
+				"fmb.dianping\\application\\views\\mobile\\zhuanti\\christmas_activity\\own_activity.php"
+			],
+			[
+				"redis_codes_sms",
+				"fmb.dianping\\application\\libraries\\Redis_codes_sms.php"
+			],
+			[
+				"Autoloader.php",
+				"fmb.admin\\application\\libraries\\aop\\AutoLoader.php"
+			],
+			[
+				"libraries/Alidayu/TopSdk.php",
+				"fmb.dianping\\application\\libraries\\Alidayu\\TopSdk.php"
+			],
+			[
+				"AliDayu",
+				"fmb.dianping\\application\\libraries\\AliDayu.php"
+			],
+			[
+				"admin_app",
+				"fmb.admin\\application\\models\\app\\admin_app.php"
+			],
+			[
+				"sms",
+				"fmb.dianping\\application\\libraries\\Sms.php"
+			],
+			[
+				"admin/sms",
+				"fmb.admin\\application\\views\\admin\\sms.php"
+			],
+			[
+				"admin/new_sms",
+				"fmb.admin\\application\\views\\admin\\new_sms.php"
+			],
+			[
+				"test/main",
+				"fmb.admin\\application\\controllers\\test\\main.php"
+			],
+			[
+				"main",
+				"fmb.admin\\application\\controllers\\main.php"
+			],
+			[
+				"own_",
+				"fmb.dianping\\application\\views\\mobile\\zhuanti\\christmas_activity\\own_activity.php"
+			],
+			[
+				"user_api_model",
+				"fmb.dianping\\application\\models\\user_api_model.php"
+			],
+			[
+				"bj_ac",
+				"fmb.dianping\\application\\controllers\\cmdrun\\bj_christmas.php"
+			],
+			[
+				"redis_codes",
+				"fmb.dianping\\application\\libraries\\Redis_codes.php"
+			],
+			[
+				"mobile/ajax",
+				"fmb.dianping\\application\\controllers\\mobile\\ajax.php"
+			],
+			[
+				"mobile/zhuanti/christmas_activity/own_activity.php",
+				"fmb.dianping\\application\\views\\mobile\\zhuanti\\christmas_activity\\own_activity.php"
+			],
+			[
+				"christma",
+				"fmb.dianping\\application\\controllers\\mobile\\christmas_activity.php"
+			],
+			[
+				"download/download_list",
+				"fmb.admin\\application\\views\\download\\download_list.php"
+			],
+			[
+				"download_cen",
+				"fmb.admin\\application\\controllers\\common\\download_center.php"
+			],
+			[
+				"tickets/sale_report",
+				"fmb.admin\\application\\views\\tickets\\sale_report.php"
+			],
+			[
+				"downloa_list",
+				"fmb.admin\\application\\views\\download\\download_list.php"
+			],
+			[
+				"returns.php",
+				"fmb.admin\\application\\controllers\\tickets\\returns.php"
+			],
+			[
+				"common_hel",
+				"fmb.dianping\\application\\helpers\\common_helper.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 592.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 376.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
