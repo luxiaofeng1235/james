@@ -4,7 +4,7 @@ set_time_limit(300);
 
 $dir = dirname(dirname(__FILE__));
 $dir= str_replace("\\",'/',$dir);
-require_once ($dir.'/library/init.inc.php');
+require_once ($dir.'/library/init.inc.php'); #加载函数变更操作
 #查询地址表的相关数据信息
 $post_url = 'https://www.mafengwo.cn/ajax/router.php';
 //获取相关的数据接口

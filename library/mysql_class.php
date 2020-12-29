@@ -13,7 +13,7 @@ class  Mysql_class{
 	public $db_slave='db_slave'; //从库
 	public $db_master='db_master'; //主库
 
-	
+	//连接mysql的列表
 	private function mysqlList()
 	{
 		$list=array();
@@ -24,6 +24,14 @@ class  Mysql_class{
 		return $list;
 	}
 
+	/**
+	* @note 返回mysql的句柄并进行连接PDO操作
+	*
+	* @param [str] $[$db_name] [<连接的句柄>]
+	* @author [xiaofeng] <[<luxiaofneg.200@163.com>]>
+	* @Date 2020-1221
+	* @return object|bool
+	*/
 	private function getMysqlInfo($db_name)
 	{
 		if($db_name)
