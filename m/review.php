@@ -184,6 +184,7 @@ define('GREETING' ,"my is second values");
 #输出是输出define定义的第一个的值，因为常量在存储过程中不会改变，这个需要注意
 echo 'GREETING\'s value: ' . GREETING;
 echo "<br/>";
+echo 333;
 
 #利用file函数来读取文件内容
 $dir = './word.txt';
