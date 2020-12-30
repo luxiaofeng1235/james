@@ -228,4 +228,20 @@ echo '<pre>';
 var_dump($c23);
 echo '</pre>';
 
-#处理不同的规则对于现在的需求变更优化
+#求一个字符串中的出现的某个字符的数量
+$text = 'gdfgfdgd59gmkblg';
+echo substr_count($text,'d');
+echo "<br/>";
+
+/** 普通局部变量 */
+function local() {
+    $loc = 0; //这样，如果直接不给初值0是错误的。 ,如果加上static就会保存上一次的值，自动保存 为1.2.3
+    ++$loc;
+    echo $loc . '<br>';
+}
+local(); //1
+local(); //1
+local(); //1
+
+echo "<hr/>";
+

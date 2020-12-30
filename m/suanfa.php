@@ -199,3 +199,8 @@ function insert_sort($arr=[])
 		}
 	}
 }
+
+#求三个值中的最大值计算
+function maxnum($a,$b,$c){
+    return $a > $b ? ($a >$c ? $a : $c) : ($b > $c ? $b : $c);
+}
