@@ -64,7 +64,6 @@ function getExt($url = ''){
 #冒泡排序
 function bubble_sort($arr=[]){
 	$count = count($arr);
-//	$temp = 0;
 	for ($i =0;$i<$count;$i++){
 		for ($j=0;$j<$count-$i;$j++){
 			if($arr[$j]>$arr[$j+1]){
