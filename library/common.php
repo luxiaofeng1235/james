@@ -316,5 +316,46 @@ function printlog($str='',$file_name='file_log')
     fclose($fp);
 }
 
+/**
+ * @note cookie储存函数
+ * @param $name str 存储名称
+ * @param $value str 存储的具体值
+ * @param $tiem int 设置对应的过期时间
+ * @author xiaofeng   2020-06-27
+ */
+function cookie($name,$value='',$time=0){
+    global $Global;
+    if($time==0) $time = -1000;
+    setcookie($name, $value, $Global['F_time']+$time, '/', '.'.$Global['F_host']);
+    //bug with localhost
+    if($Global['F_host'] == 'localhost')setcookie($name, $value, $Global['F_time']+$time);
+}
+/**
+ * @note 得到cookie值
+ * @param $name str cookie名称
+ * @author xiaofeng   2020-06-27
+ */
+function getCookie($name){
+    if(!empty($_COOKIE[$name])){
+        Return $_COOKIE[$name];
+    }else{
+        Return false;
+    }
+}
+
+/**
+ * @note 判断远程文件是否存在
+ * @param url_file str url对应的文件
+ * @author xiaofeng   2020-10-27
+ */
+function remote_file_exists($url_file){
+    $headers = get_headers($url_file);
+    if (!preg_match("/200/", $headers[0])){
+
+        return false;
+
+    }
+    return true;
+}
 
 ?>
