@@ -154,3 +154,17 @@ function wash_card($cards_num =54){
 	}
 	return $cards;
 }
+
+#回文数判断：判断回文数是正反念都是一个数
+//判断反转过来的字符串是否相等
+function isPalindrome($x){
+	if(!$x)
+		return false;
+	$temp = 0;
+	$y = $x; //先赋值进行最后的比较
+	while ($x!=0) {
+		$temp =$temp*10+$x/10;
+		$x = $x/10;
+	}
+	return intval($temp) == $x ? true: false;
+}
