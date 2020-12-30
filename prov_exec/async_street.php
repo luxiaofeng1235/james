@@ -10,7 +10,7 @@ $mysql_init = $mysql_obj; //主要便于赋值操作
 function import_sql($data,$table_name=''){
 	if(!$data || !$table_name)
 		return false;
-	$sql .="insert into ".$table_name." (`city_code`,`name`,`upid`,`ctime`) values ";
+	$sql="insert into ".$table_name." (`city_code`,`name`,`upid`,`ctime`) values ";
 	$val_save ='';
 	foreach($data as $key =>$val){
 		 $arr = array();
