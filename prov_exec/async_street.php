@@ -4,7 +4,7 @@ ini_set("limit_memory",'8000M');
 set_time_limit(600);
 $dirname = dirname(dirname(__FILE__)); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
-require_once ($dirname."/library/init.inc.php.php");
+require_once ($dirname."/library/init.inc.php");
 $mysql_init = $mysql_obj; //主要便于赋值操作
 //导入的sql
 function import_sql($data,$table_name=''){

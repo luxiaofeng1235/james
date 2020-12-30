@@ -39,7 +39,7 @@ require_once ROOT.'library/common.php'; #加载公用函数
 require_once ROOT.'library/curl_http.php';
 require_once ROOT.'library/global.cfg.php';
 require_once ROOT.'library/HttpClientRequest.php';
-require_once ROOT.'library/newupload.cls';#文件上传
+require_once ROOT.'library/newupload.cls.php';#文件上传
 // require_once ROOT.'include/pimage.cls.php';
 // include_once ROOT.'include/ec.func.php';
 @extract($_GET);
