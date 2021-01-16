@@ -29,7 +29,7 @@ class  Mysql_class{
 	*
 	* @param [str] $[$db_name] [<连接的句柄>]
 	* @author [xiaofeng] <[<luxiaofneg.200@163.com>]>
-	* @Date 2020-1221
+	* @Date 2020-12-21
 	* @return object|bool
 	*/
 	private function getMysqlInfo($db_name)
@@ -234,7 +234,7 @@ class  Mysql_class{
 	* @param [string] $[table_name] [<表名称>]
 	* @return 
 	*/
-	public  function add_data($data,$table_name=''){
+	public function add_data($data,$table_name=''){
 	    if(!$data || !$table_name){
 	        return false;
 	    }
