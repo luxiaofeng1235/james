@@ -40,7 +40,7 @@ class  Mysql_class{
 			if($info[$db_name])
 			{
 				try {
-					//根据PDO来进行连接
+					//根据PDO来进行连接，主要用于进行PDO连接
 				   	$db = @new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
 				   	//主要用来设置POD链接失败会抛出来一个异常
 				    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
