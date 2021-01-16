@@ -83,63 +83,6 @@ function getPageOrSize($page,$page_size){
     return array($page,$page_size);
 }
 
-/**:二维数组转换为一维
- * @param $data
- * @param $field_array
- */
-function Array_transfrom($data,$field_array=array()){
-    $rules=array('1'=>'trim','2'=>'intval','3'=>'doubleval',/*'4'=>'Y-m-d','5'=>'Y-m-d H:i:s'*/);
-
-    if(!is_array($data)||!is_array($field_array))return false;
-    $new=array();
-    if(count($field_array)){
-        foreach($data as $key=>$val){
-            foreach($field_array as$k=>$va){
-                if(isset($val[$k])){
-                    $new[$key][]=$rules[$va]($val[$k]);
-//                    $new[$key][$k]=$val[$k];
-                }
-            }
-        }
-    }else{
-        foreach($data as $key=>$val){
-            $new[]=array_values($val);
-        }
-    }
-
-    return $new;
-}
-
-
-/**:二维数组转换为一维
- * @param $data
- * @param $field_array
- */
-function Array_transfrom_new($data,$field_array=array(),$pipeline=null,$redis_key=null){
-    if(!is_array($data)||!is_array($field_array))return false;
-    $rules=array('1'=>'trim','2'=>'intval','3'=>'floatval',/*'5'=>'Y-m-d','6'=>'Y-m-d H:i:s'*/);
-    $new=array();
-    if(count($field_array)){
-        foreach($data as $key=>$val){
-            foreach($field_array as$k=>$va){
-                if(isset($val[$k])){
-                    $new[$key][]=$rules[$va]($val[$k]);
-//                    $new[$key][$k]=$val[$k];
-                }
-            }
-            if($pipeline!=null&&$redis_key!=null){
-                $pipeline->rpush($redis_key,json_encode($new[$key]));
-            }
-        }
-    }else{
-        foreach($data as $key=>$val){
-            $new[]=array_values($val);
-        }
-    }
-    if($pipeline!=null&&$redis_key!=null)return;
-    return $new;
-}
-
  /**
   * @note 对emoji做表情编码
   *
@@ -213,8 +156,8 @@ function userTextEncode($str=''){
 }
 
 
-    /* 截取合适长度的字符显示
-   */
+/* 截取合适长度的字符显示
+*/
 function cut_str($str, $length, $etc='...', $start = 0, $code='UTF-8'){
     $ret = '';
     $count = 0;
@@ -256,7 +199,13 @@ function cut_string($str='',$cut_len=0, $f = ' '){
     return $content;
 }
 
-//获取当前时间
+/**
+ * @note 获取当前时间
+ *
+ * @param $format datetime 当前日期
+ * @param $tiemset int 过期时间戳
+ * @return object
+ */
 function MyDate($format='Y-m-d H:i:s', $timest=0)
 {
     global $cfg_cli_time;
@@ -267,7 +216,13 @@ function MyDate($format='Y-m-d H:i:s', $timest=0)
     }
     return gmdate ($format, $timest+$addtime);
 }
-//过滤字符
+
+/**
+ * @note 过滤字符
+ *
+ * @param $str string 输入字符
+ * @return object
+ */
 function stripStr($str){
     if(is_string($str)){
         if(!get_magic_quotes_gpc()) $str=stripslashes($str);
@@ -284,7 +239,7 @@ function stripStr($str){
 * @note 转换数组按照key返回
 *
 * @param $trips object 转换的对象
-* @param [str] $[filed] [<字段>]
+* @param [str] $[field] [<字段>]
 * @return object
 */
 
@@ -337,9 +292,9 @@ function cookie($name,$value='',$time=0){
  */
 function getCookie($name){
     if(!empty($_COOKIE[$name])){
-        Return $_COOKIE[$name];
+        return  $_COOKIE[$name];
     }else{
-        Return false;
+        return false;
     }
 }
 

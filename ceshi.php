@@ -22,7 +22,7 @@ class sort{
 		$this->str = strtolower($str);
 	}
 	//切割字符串
-	public function explodes(){
+	public function explodes($str=''){}
 		if(!$str) return array();
 		$arr = explode(' ', $str);
 		return is_array($arr) ? $arr : array($this->str);

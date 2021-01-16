@@ -28,25 +28,25 @@ function sum($n){
 }
 
 #遍历本地文件夹
-function my_scandir($dir)
+function scanDir($dir)
 {
 	$files = array();
 	if($handle = opendir($dir))
 	{
-		while (($file = readdir($handle))!== false)
-		{
-			if($file != '..' && $file != '.')
-			{
-				if(is_dir($dir."/".$file))
-				{
-					$files[$file]=my_scandir($dir."/".$file);
-				}
-				else
-				{
-					$files[] = $file;
-				}
-			}
-		}
+        while (($file = readdir($handle))!== false)
+        {
+            if($file != '..' && $file != '.')
+            {
+                if(is_dir($dir."/".$file))
+                {
+                    $files[$file]=scanDir($dir."/".$file);
+                }
+                else
+                {
+                    $files[] = $file;
+                }
+            }
+        }
 		closedir($handle);
 		return $files;
 	}
@@ -119,6 +119,7 @@ function writeTask($files =''){
 	}
 	fclose($fp);
 }
+
 
 #无限分类实现
 function tree($arr,$pid=0,$level=0){
