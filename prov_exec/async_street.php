@@ -38,7 +38,16 @@ function import_sql($data,$table_name=''){
 	return $sql;
 }
 
-//检验是否已经导入了
+
+/**
+* @note 检验是否已经导入了
+*
+* @param [number] $[upid] [<上级联动ID>]
+* @param [str]  $[table_name] [<表名称>]
+* @author [xiaofeng] <[<luxiaofneg.200@163.com>]>
+* @Date 2020-1221
+* @return object|bool
+*/
 function get_street_code($upid ='',$table_name=''){
 	$upid = intval($upid);
 	$table_name = trim($table_name);
