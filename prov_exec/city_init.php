@@ -44,14 +44,6 @@ if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $str)){
 // }
 // $logger->warning('Fii');
 // $logger->error('error');
-
-
-
-//利用他来构建相关的日志
-#加载第三方类
-
- 
- 
 $country_info = COUNTRY_INFO();
 // echo '<pre>';
 // print_R($country_info);
@@ -80,6 +72,7 @@ $special_codes = [110000,120000,310000,500000];
 function import_sql($data,$table_name=''){
 	if(!$data || !$table_name)
 		return false;
+	$sql = '';
 	$sql .="insert into ".$table_name." (`city_code`,`name`,`upid`,`ctime`) values ";
 	$val_save ='';
 	foreach($data as $key =>$val){

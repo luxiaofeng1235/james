@@ -1,7 +1,19 @@
 <?php
 
+// ///////////////////////////////////////////////////
+// Copyright(c) 2016,父母邦，帮父母
+// 日 期：2021年03月11日
+// 作　者：卢晓峰
+// E-mail :luxiaofeng.200@163.com
+// 文件名 :list.php
+// 创建时间:下午7:12:00
+// 编 码：UTF-8
+// 摘 要:同步三级联动街道数据
+// ///////////////////////////////////////////////////
+
 ini_set("limit_memory",'8000M');
 set_time_limit(600);
+//获取当前的路径位置
 $dirname = dirname(dirname(__FILE__)); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
 require_once ($dirname."/library/init.inc.php");
