@@ -27,6 +27,7 @@ function sum($n){
 	}
 }
 
+
 #遍历本地文件夹
 function scanDir($dir)
 {

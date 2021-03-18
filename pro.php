@@ -40,7 +40,7 @@ unzip解压zip文件
 
 /^(http|ftps):\/\/(www)\.([^\/\/]+)\.(com|org|cn|edu)([\w\.\&、&\?=*])?/i
  */
-$url ='www.fumubang.com';
+$url ='www.fumubang.com';//当前的URL
 $data = gethostbyname($url);
 preg_match('/^[1-0,]+$/', $arr)
 echo '<pre>';
