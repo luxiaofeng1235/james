@@ -75,7 +75,7 @@ var_dump($result->sorts);
 echo '</pre>';
 exit;
 
-$str = '1234,6'
+$str = '1234,6';
 $arr=regGx::checkEmail($str);
 echo '<pre>';
 var_dump($arr);

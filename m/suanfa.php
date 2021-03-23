@@ -3,6 +3,7 @@
 function quickSort($arr=[]){
 	if(!$arr)
 		return false;
+	//把第一个值取出来和下面的来进行比较
 	$baseNum = isset($arr[0]) ? $arr[0] : 1;
 	$leftArray = $rightArray = [];
 	for ($i = 0;$i<count($arr);$i++){
@@ -40,9 +41,8 @@ function scanDir($dir)
             {
                 if(is_dir($dir."/".$file))
                 {
-                    $files[$file]=scanDir($dir."/".$file);
-                }
-                else
+                    $files[$file]=scanDir($dir."/".$file); //递归调用
+                }else
                 {
                     $files[] = $file;
                 }
@@ -79,7 +79,7 @@ function bubble_sort($arr=[]){
 }
 
 #猴子选大王问题
-function king($n ,$m){
+function king(int $n ,int $m){
     //主要处理对应的猴子问题，对修改的问题进行优化
 	$king = range(1,$n);
 	$i = 0;
@@ -101,9 +101,9 @@ function sortStrNew($str){
     return implode('',$result);
 }
 
-#计算菲波那切数列通过递归来实现
+#斐波那契数列递归
 function feibonaqie($num = 0){
-    return $num < 2: 1 : feibonaqie($num-1)+feibonaqie($num-2);
+    return $num < 2 ?  1 : feibonaqie($num-1)+feibonaqie($num-2);
 }
 
 #解决多线程文件的思路
@@ -161,7 +161,7 @@ function wash_card($cards_num =54){
 
 #回文数判断：判断回文数是正反念都是一个数
 //判断反转过来的字符串是否相等
-function is_Palindrome($x){
+function is_Palindrome($x = 0){
 	if(!$x)
 		return false;
 	$temp = 0;
@@ -205,6 +205,6 @@ function insert_sort($arr=[])
 }
 
 #求三个值中的最大值计算
-function maxnum($a,$b,$c){
-    return $a > $b ? ($a >$c ? $a : $c) : ($b > $c ? $b : $c);
+function getMaxNumber($x , $y , $z){
+    return $x > $y ?($x>$z ? $x : $z) : ($y>$z ?$y :$z);
 }

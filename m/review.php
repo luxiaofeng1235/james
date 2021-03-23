@@ -1,4 +1,5 @@
 <?php
+
 #获取主机的名称 或者通过ping trace命令来实现
 $url = 'www.fumubang.com';
 $arr = gethostbyname($url);
