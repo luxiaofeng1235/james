@@ -94,16 +94,16 @@ function king($n ,$m){
 }
 
 #输入字符进行排序
-function sortStr($str){
-	$ret = str_split($str);
-	$ret = array_flip(array_flip($ret));
-	sort($ret);
-	return implode('',$ret);
+function sortStrNew($str){
+    $ret= str_split($str);
+    $result = array_flip(array_flip($ret));
+    sort($result);
+    return implode('',$result);
 }
 
 #计算菲波那切数列通过递归来实现
-function diguiList($num){    //实际上是斐波那契数列
-	return $num<2?1:diguiList($num-1)+diguiList($num-2);
+function feibonaqie($num = 0){
+    return $num < 2: 1 : feibonaqie($num-1)+feibonaqie($num-2);
 }
 
 #解决多线程文件的思路

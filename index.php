@@ -9,14 +9,16 @@
 function addNameList($list=array()){
 	if(!is_array($list))
 		return false;
+	
 	if($list && isset($list[0])){
 		$diff_data=[];
+        $oderList = [];
 		foreach($list[0] as $v){
 			$diff_data = array_merge($v,$diff_data);
 		}
-		if(count($diff_data)>0){
+		if(count($diff_data)>0){//判断当前是否为空，否则不会执行
 			foreach($diff_data as $gk => $gv){
-				 if(is_array($v)){
+				 if(is_array($gv)){
 				 	 $oderList[]=$gv;
 				 }
 			}
@@ -59,31 +61,31 @@ function isPalindrome($x){
 	return intval($temp) == $x ? true: false;
 }
 
-//快速排序
-function quickSort($arr){
-	if(!$arr)
-		return false;
-	$basenum = $arr[0];
-	$count = count($arr);
-	$left_array = $right_array = array();
-	for ($i=0; $i <$count ; $i++) { 
-		if($basenum>$arr[$i]){
-			$left_array[] = $arr[$i];
-		}else{
-			$right_array[] = $arr[$i];
-		}
-	}
-	$right_array = quickSort($right_array);
-	$left_array = quickSort($left_array);
-	return array_merge($left_array,array($basenum),$right_array);
+//快速排序法
+function quickSort($data=[]){
+    if(!$data)
+        return false;
+    $baseNum = isset($data[0]) ?$data[0] : [];
+    $count = count($data);
+    $leftArr = $rightArr = [];
+    for ($i=0;$i<$count;$i++) {
+         if($baseNum>$data[$i]){
+             $leftArr[] = $data[$i];
+         }else{
+             $rightArr[]= $data[$i];
+         }
+    }
+    $leftArr = quickSort($leftArr);
+    $rightArr = quickSort($rightArr);
+    return array_merge($leftArr,array($baseNum),$rightArr);
 }
 
-//从一个扩展名中获取对应的后缀
-function getExt($url){
-	$result = parse_url($url);
-	$data = basename($result['path']);
-	$ret = explode('.', $data);
-	return $ret[count($ret)-1];
+//获取当前的url
+function getExt($url = ''){
+    $arr = parse_url($url);
+    $data = basename($arr);
+    $ext = explode('.' , $data);
+    return $ext[count($ext)-1];
 }
 
 //n为猴子 m是需要判断的那个数
