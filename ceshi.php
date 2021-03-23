@@ -22,11 +22,11 @@ class sort{
 		$this->str = strtolower($str);
 	}
 	//切割字符串
-	public function explodes($str=''){}
+	public function explodes($str=''){
 		if(!$str) return array();
 		$arr = explode(' ', $str);
 		return is_array($arr) ? $arr : array($this->str);
-	}]]
+	}
 	//缓存穿刺使用的策略是：设置对应每次过期的时间间隔错开，比如第一个设置10秒，第二个和第三个设置20和40秒等，上游服务端nginx采用限流来进行并发数的显示。
 
 	//如果不用cookiecunchu可以考虑用其他的方式 例如铜鼓ourl传递sid参数，或者利用文件韩村或者redis的策略来进行。

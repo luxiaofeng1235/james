@@ -56,6 +56,7 @@ function scanDir($dir)
 #取出来扩展名
 function getExt($url = ''){
 	if(!$url) return false;
+	//解析URL对相关的数据进行判断优化，切割数据字符串。
 	$arr = parse_url($url);
 	$list = basename($arr['path']);
 	$ext  = explode(',',$list);
@@ -79,6 +80,7 @@ function bubble_sort($arr=[]){
 
 #猴子选大王问题
 function king($n ,$m){
+    //主要处理对应的猴子问题，对修改的问题进行优化
 	$king = range(1,$n);
 	$i = 0;
 	while (count($king)>1){
@@ -159,7 +161,7 @@ function wash_card($cards_num =54){
 
 #回文数判断：判断回文数是正反念都是一个数
 //判断反转过来的字符串是否相等
-function isPalindrome($x){
+function is_Palindrome($x){
 	if(!$x)
 		return false;
 	$temp = 0;
