@@ -42,7 +42,7 @@ unzip解压zip文件
  */
 $url ='www.fumubang.com';//当前的URL
 $data = gethostbyname($url);
-preg_match('/^[1-0,]+$/', $arr)
+preg_match("/^[1-10,]+$/", $arr)
 echo '<pre>';
 print_R($data);
 echo '</pre>';
