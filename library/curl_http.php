@@ -21,7 +21,7 @@ Class curl_http{
         $ch = curl_init();
 
         //发送头部信息
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch,CURLOPT_URL,$url);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         //https 请求

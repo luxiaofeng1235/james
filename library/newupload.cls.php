@@ -122,7 +122,7 @@ class UploadFile{
 	function getext($filename){
 		if($filename == "") return;
 		$ext = explode(".", $filename);
-		
+
 		$new_ext = array_reverse($ext);
 		Return $new_ext[0];
 	}
