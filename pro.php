@@ -51,7 +51,7 @@ exit;
 print_r(gethostbyname($hostname));
 echo '<br>';
 exit;
-
++
 print_r(gethostbyaddr($addr));
 echo '<br>';
 

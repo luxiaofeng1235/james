@@ -25,7 +25,13 @@ function Array_transdata($array,$field){
             $trans_data[]=array_values($val);
         }
     }
-    return $trans_data;
+    $temp= [];
+    if (!empty($trans_data)){
+        $temp = $trans_data;
+        if (isset($trans_data))
+            unset($trans_data);
+    }
+    return $temp;
 }
 
 //分页封装
