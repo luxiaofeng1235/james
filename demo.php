@@ -76,7 +76,7 @@ while ($a<5){
         default:$a=$a+5;
     }
 }
-echo $a;
+echo $a; //输出应该是10
 
 //采用哈希用户用户来做存储 也可以用range来去范围的数据
 function get_hash_table($table,$uid){
@@ -90,9 +90,6 @@ function get_hash_table($table,$uid){
 	}
 	return $table.'_'.$hash;
 }
-
-
-
 
 //处理用户的数据信息切入
 

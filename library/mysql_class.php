@@ -39,6 +39,7 @@ class  Mysql_class{
 			$info=$this->mysqlList();
 			if($info[$db_name])
 			{
+			    //測試連接應用
 				try {
 					//根据PDO来进行连接，主要用于进行PDO连接
 				   	$db = @new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
@@ -53,7 +54,7 @@ class  Mysql_class{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取条记录，并返回数组
 	 * @param string $sql
@@ -74,7 +75,7 @@ class  Mysql_class{
 
 	/**
 	 * 根据条件进行查询
-	 * @param arr $where 
+	 * @param arr $where
 	 *        condition =>[] 查询的关联数组
 	 *        sort_set => [] 排序依据 取决于是否需要排序 输入类型：数组或者单个字符
 	 *        sort_range =>[] 排序的降序或者升序 desc:降序 asc:升序 输入类型：数组或者单个字符

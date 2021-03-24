@@ -107,22 +107,20 @@ function feibonaqie($num = 0){
 }
 
 #解决多线程文件的思路
-function writeTask($files =''){
-	if(!$files)
-		return false;
-	#多线程文件
-	$fp = fopen($files,"w+");
-	if (flock($fp,LOCK_EX)) {
-		//获得写锁，写数据
-		fwrite($fp, "write something");
-		// 解除锁定
-		flock($fp, LOCK_UN);
-	} else {
-		echo "file is locking...";
-	}
-	fclose($fp);
+function wirteAsync($files =''){
+    if (!$files)
+        return null;
+    //先打开一个文件
+    $handle = fopen($files,'w+');
+    if(flock($handle,LOCK_EX)){
+        fwrite('this is a test something',$handle);
+        flock($handle,LOCK_UN);
+    }else{
+        echo "current files is writing..";
+    }
+    fclose($handle);
+    return true;
 }
-
 
 #无限分类实现
 function tree($arr,$pid=0,$level=0){

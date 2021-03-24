@@ -449,10 +449,6 @@ $str_find =preg_split("/\n/", $str);
 
 $list = $mysql_init->fetchAll($sql,$mysql_init->db_slave);
 if($list){
-	// echo '<pre>';
-	// print_R($list);
-	// echo '</pre>';
-	// exit;
 	foreach($list as $key =>$value){
 		if(!$value) continue;
 		$name = trim($value['name']);
