@@ -206,3 +206,18 @@ function insert_sort($arr=[])
 function getMaxNumber($x , $y , $z){
     return $x > $y ?($x>$z ? $x : $z) : ($y>$z ?$y :$z);
 }
+
+#兔子繁衍问题
+function tuziQues(int $month=0){
+    $one =1;
+    $two = 1;
+    if($month<2)
+        return 1;
+    for ($i=0;$i<$month;$i++) {
+        $sum = $one+$two;
+        $one = $two; ##把第一个的值赋值过来记性计算
+        $two = $sum;
+    }
+    echo "经过".$month."个月一共能繁殖".$sum."只兔子";
+    return $sum;
+}
