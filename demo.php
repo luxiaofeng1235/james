@@ -82,13 +82,14 @@ echo $a; //输出应该是10
 function get_hash_table($table,$uid){
 	if(!$uid)
 		return false;
-	$str = crc32($uid); //对数据进行转换32位
+	$str = crc32($uid); //对数据进行转换32位切换
 	if($str<0){//采用哈希的算法来记性
-		$hash = '0'.substr(abs($str), 0,1);
+		$hashstring = '0'.substr(abs($str), 0,1);
 	}else{
-		$hash = substr($str, 0,2);
+		$hashstring = substr($str, 0,2);
 	}
-	return $table.'_'.$hash;
+	//返回对应的顺序格式
+	return $table.'_'.$hashstring;
 }
 
 //处理用户的数据信息切入
