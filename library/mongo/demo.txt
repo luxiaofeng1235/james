@@ -1,0 +1,31 @@
+//引入mongo本地类
+$this->load->library('Mongo_new', '', 'mongo_data');
+ $hotel_info = $this->mongo_data->fetchRow($colName,
+           array(
+                array(
+                     'field' => 'HotelID',
+                     'where' => '=',
+                     'value' => $hotel_id,
+                 )
+             )
+        );
+
+
+ //更新：
+   //更新梳理
+      $result = $this->mongo_data->update($colName,$val,
+             array(
+           array(
+                  'field' => '_id',
+                 'where' => '=',
+                   'value' => $_id,
+               )
+          )
+     );
+
+//批量插入
+//$result  = $this->mongo_data->mupltiInsert($colName,$insert_data);
+
+//单个插入
+$item = array();
+$this->mongo_data->insert($colName,$item);
