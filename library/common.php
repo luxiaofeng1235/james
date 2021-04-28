@@ -342,7 +342,7 @@ function webRequest($url,$method,$params,$header = []){
                 }
 
                 echo $params;
-               
+
            
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($curl, CURLOPT_POSTFIELDS,$params);
@@ -378,15 +378,16 @@ function webRequest($url,$method,$params,$header = []){
         //获取sign参数获取签名验证
         ksort($param);
         reset($param);
+
+      
         if($param){
             $options = '';
             foreach($param as $key =>$item){
                 // if(!$item) continue; //异常判断
                 if(!is_array($item)){ //普通的数据格式
                     $options .= $key . '=' . $item .'&';
-                }else{//处理里面有多多维数组的的
-     
-                    $options .=$key . '=' . json_encode($item).'&';
+                }else{//处理里面有多多维数组的的 --主要银联那边不需要转码，原样返回
+                    $options .=$key . '=' . json_encode($item,JSON_UNESCAPED_UNICODE).'&';
                 }
             }
             $options = rtrim($options, '&');//存在转义字符，那么去掉转义
@@ -394,15 +395,16 @@ function webRequest($url,$method,$params,$header = []){
                 $options = stripslashes($options);
             }
            
-                 
             //#签名规则：用sha256进行上报加密
             //#算法：所有的字段处理排序后用&链接和md5通讯串链接后返回sign
             //采用sha256加密
 
             //$pattern = '/[^\x00-\x80]/'; 判断含有中文
             //
-            $options = str_replace('\u7535\u8d39', '电费', $options);
+             // $options = str_replace('\u6d4b\u8bd5', '测试', $options);
+            // $options = str_replace('\u7535\u8d39', '电费', $options);
             $str = $options.$mdkey;
+     
 
             echo "待验签:".$str;
             echo "<hr/>";
@@ -433,7 +435,7 @@ function webRequest($url,$method,$params,$header = []){
   //判断含有中文
   function checkChineseStr(){
         $pattern = '/[^\x00-\x80]/';
-        if(preg_match($pattern,$str)){
+        if(preg_match('/[^\x00-\x80]/',$str)){
            return 1;
         }else{
           return 2;

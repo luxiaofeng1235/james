@@ -20,7 +20,7 @@ $res=[
                 'body'=>'goods body',
                 'goodsCategory'=>'Auto',
                 'goodsId'=>'0001',
-                'goodsName'=>'电费',
+                'goodsName'=>'测试',
                 'price'=>'100',
                 'quantity'=>'1',
                 'subMerchantId'=>'988460101800202',
@@ -57,6 +57,7 @@ $postdata = Authorization($res, $mdkey);
 echo '<pre>';
 print_R($postdata);
 echo '</pre>';
+ 
  
 
 
