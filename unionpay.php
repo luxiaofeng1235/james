@@ -10,7 +10,7 @@ require_once ($dirname."/library/init.inc.php");
 $mdkey ='fcAmtnx7MwismjWNhNKdHC44mNXtnEQeJkRrhKJwyrW2ysRR';
 //报文推送时间
 $time = date('Y-m-d H:i:s');
-$merOrderId = '3194201708320210428490'; //处理生成的订单号
+$merOrderId = '3194201708320210428495'; //处理生成的订单号
 
 $res=[
 
