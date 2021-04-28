@@ -319,4 +319,124 @@ function remote_file_exists($url_file){
     return true;
 }
 
+function webRequest($url,$method,$params,$header = []){
+        //初始化CURL句柄
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if(!empty($header)){
+            curl_setopt ( $curl, CURLOPT_HTTPHEADER, $header );
+        }
+        //请求时间
+        $timeout = 30;
+        curl_setopt ($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
+        switch ($method){
+            case "GET" :
+                curl_setopt($curl, CURLOPT_HTTPGET, true);
+                break;
+            case "POST":
+                if(is_array($params)){
+                    $params = json_encode($params,320);
+                }
+
+                echo $params;
+               
+           
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($curl, CURLOPT_POSTFIELDS,$params);
+                break;
+        }
+        $data = curl_exec($curl);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);//关闭cURL会话
+
+        return $data;
+    }
+
+  /**
+  * @note sha256加密
+  *
+  * @param 
+  * @return 
+  */
+       
+  function encrypt_sha256($str = ''){
+        return hash("sha256", $str);
+  }
+
+   function Authorization($param = [],$mdkey =''){
+        if(!$param){
+            return false;
+        }
+        /*
+           首先将请求参数中的每一个一级字段按照0-9-A-Z-a-z的顺序排序（ASCII字典序），若遇到相同首字母，则看第二个字母，以此类推。注意：如goods、subOrders等嵌套结构字段，内部子字段无需排序。
+
+        排序后的参数以key=value形式使用“&”字符连接,并拼接上通讯密钥key值（注意：通讯密钥key直接拼接），即为待签名字符串。
+            * */
+        //获取sign参数获取签名验证
+        ksort($param);
+        reset($param);
+        if($param){
+            $options = '';
+            foreach($param as $key =>$item){
+                // if(!$item) continue; //异常判断
+                if(!is_array($item)){ //普通的数据格式
+                    $options .= $key . '=' . $item .'&';
+                }else{//处理里面有多多维数组的的
+     
+                    $options .=$key . '=' . json_encode($item).'&';
+                }
+            }
+            $options = rtrim($options, '&');//存在转义字符，那么去掉转义
+            if(get_magic_quotes_gpc()){
+                $options = stripslashes($options);
+            }
+           
+                 
+            //#签名规则：用sha256进行上报加密
+            //#算法：所有的字段处理排序后用&链接和md5通讯串链接后返回sign
+            //采用sha256加密
+
+            //$pattern = '/[^\x00-\x80]/'; 判断含有中文
+            //
+            $options = str_replace('\u7535\u8d39', '电费', $options);
+            $str = $options.$mdkey;
+
+            echo "待验签:".$str;
+            echo "<hr/>";
+            //生成了秘钥
+            $sign = encrypt_sha256($str);
+
+            echo "得到的sign:".$sign;
+            echo "<hr/>";
+            // echo $sign;
+            // exit;
+
+        
+            $param['sign'] = $sign;
+            echo '<pre>';
+            print_R($param);
+            echo '</pre>';
+
+             return $param;
+
+            if(!$sign)
+                return false;
+           
+            return $sign;
+        }
+        return [];
+    }
+
+  //判断含有中文
+  function checkChineseStr(){
+        $pattern = '/[^\x00-\x80]/';
+        if(preg_match($pattern,$str)){
+           return 1;
+        }else{
+          return 2;
+        }
+  }
 ?>

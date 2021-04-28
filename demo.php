@@ -1,5 +1,15 @@
 <?php
 
+$merOrderId = '31943333222';
+!empty($merOrderId) && $initials = substr($merOrderId, 0, 4);
+
+if($initials!='3194'){
+    echo "error";
+}else{
+    echo "ok";
+}
+die;
+
 //==只对值进行比较 ===值和类型都需要比较
 function getRelativePath($a ,$b){
 	$a1Array = explode('/', $a);
