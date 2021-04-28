@@ -404,8 +404,6 @@ function webRequest($url,$method,$params,$header = []){
                 $mdkey = $this->mdkey;
             }
             $str = $options.$mdkey;
-     
-
             // echo "待验签:".$str;
             // echo "<hr/>";
             //生成了秘钥
@@ -419,13 +417,7 @@ function webRequest($url,$method,$params,$header = []){
             // echo '<pre>';
             // print_R($param);
             // echo '</pre>';
-
              return $param;
-
-            if(!$sign)
-                return false;
-           
-            return $sign;
         }
         return [];
     }

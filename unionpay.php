@@ -24,7 +24,7 @@ $res=[
                 'price'=>'100',
                 'quantity'=>'1',
                 'subMerchantId'=>'988460101800202',
-                'subOrderAmount'=>'1',
+                'subOrderAmount'=>'4',
             ],
             [
                 'body'=>'goods body1',
@@ -34,7 +34,7 @@ $res=[
                 'price'=>'200',
                 'quantity'=>'2',
                 'subMerchantId'=>'988460101800201',
-                'subOrderAmount'=>'2',
+                'subOrderAmount'=>'3',
             ],
     ],
     'instMid'=>'APPDEFAULT',
