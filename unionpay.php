@@ -50,17 +50,15 @@ $res=[
     'totalAmount'=>'3',
 
 ];
-
+ 
+$postdata = Authorization($res, $mdkey);
  
 
-$postdata = Authorization($res, $mdkey);
+ 
 echo '<pre>';
 print_R($postdata);
 echo '</pre>';
-
  
-
-
 $url = 'https://qr-test2.chinaums.com/netpay-route-server/api/';
 //发送结果
 $initdata = webRequest($url,'POST',$postdata);

@@ -340,10 +340,7 @@ function webRequest($url,$method,$params,$header = []){
                 if(is_array($params)){
                     $params = json_encode($params,320);
                 }
-
-                echo $params;
-
-           
+                // echo $params;
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($curl, CURLOPT_POSTFIELDS,$params);
                 break;
@@ -406,21 +403,19 @@ function webRequest($url,$method,$params,$header = []){
             $str = $options.$mdkey;
      
 
-            echo "待验签:".$str;
-            echo "<hr/>";
+            // echo "待验签:".$str;
+            // echo "<hr/>";
             //生成了秘钥
             $sign = encrypt_sha256($str);
 
-            echo "得到的sign:".$sign;
-            echo "<hr/>";
+            // echo "得到的sign:".$sign;
+            // echo "<hr/>";
             // echo $sign;
             // exit;
-
-        
             $param['sign'] = $sign;
-            echo '<pre>';
-            print_R($param);
-            echo '</pre>';
+            // echo '<pre>';
+            // print_R($param);
+            // echo '</pre>';
 
              return $param;
 
