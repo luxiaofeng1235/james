@@ -17,9 +17,9 @@ $res=[
     'divisionFlag' =>'true',
     'goods'=>[
             [
-                'body'=>'goods body',
+                'body'=>'goods bod2y',
                 'goodsCategory'=>'Auto',
-                'goodsId'=>'0001',
+                'goodsId'=>'0002',
                 'goodsName'=>'测试',
                 'price'=>'100',
                 'quantity'=>'1',
@@ -27,9 +27,9 @@ $res=[
                 'subOrderAmount'=>'1',
             ],
             [
-                'body'=>'goods body',
+                'body'=>'goods body1',
                 'goodsCategory'=>'Auto',
-                'goodsId'=>'0002',
+                'goodsId'=>'0003',
                 'goodsName'=>'电费',
                 'price'=>'200',
                 'quantity'=>'2',
@@ -42,7 +42,7 @@ $res=[
     'mid'=>'898201612345678',
     'msgSrc'=>'WWW.TEST.COM',
     'msgType'=>'trade.precreate',
-    'orderDesc'=>'账单描述',
+    'orderDesc'=>'账单描述11',
     'platformAmount'=>'0',
     'requestTimestamp'=>date('Y-m-d H:i:s'),
     'signType'=>'SHA256',
@@ -57,7 +57,7 @@ $postdata = Authorization($res, $mdkey);
 echo '<pre>';
 print_R($postdata);
 echo '</pre>';
- 
+
  
 
 
