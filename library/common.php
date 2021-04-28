@@ -400,6 +400,9 @@ function webRequest($url,$method,$params,$header = []){
             //
              // $options = str_replace('\u6d4b\u8bd5', '测试', $options);
             // $options = str_replace('\u7535\u8d39', '电费', $options);
+            if(empty($mdkey)){ //做一个兼容
+                $mdkey = $this->mdkey;
+            }
             $str = $options.$mdkey;
      
 
