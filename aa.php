@@ -10,7 +10,7 @@ require_once ($dirname."/library/init.inc.php");
 
  
 $time = date('Y-m-d H:i:s');
-$merOrderId = '319420170832021042845'; //处理生成的订单号
+$merOrderId = '319420170832021042864'; //处理生成的订单号
 $str = 'divisionFlag=true&goods=[{"body":"goods body","goodsCategory":"Auto","goodsId":"0001","goodsName":"电费","price":100,"quantity":1,"subMerchantId":"988460101800202","subOrderAmount":1},{"body":"goods body","goodsCategory":"Auto","goodsId":"0002","goodsName":"电费","price":200,"quantity":2,"subMerchantId":"988460101800201","subOrderAmount":2}]&instMid=APPDEFAULT&merOrderId='.$merOrderId.'&mid=898201612345678&msgSrc=WWW.TEST.COM&msgType=trade.precreate&orderDesc=账单描述&platformAmount=0&requestTimestamp='.$time.'&signType=SHA256&tid=00000001&totalAmount=3fcAmtnx7MwismjWNhNKdHC44mNXtnEQeJkRrhKJwyrW2ysRR';
 
 echo "待验签参数：".$str;
@@ -18,30 +18,29 @@ echo "<hr/>";
 
 
         $res=[
-
-            'divisionFlag' =>true,
-            'goods'=>[
-                    [
-                        'body'=>'goods body',
-                        'goodsCategory'=>'Auto',
-                        'goodsId'=>'0001',
-                        'goodsName'=>'电费',
-                        'price'=>'100',
-                        'quantity'=>'1',
-                        'subMerchantId'=>'988460101800202',
-                        'subOrderAmount'=>'1',
-                    ],
-                    [
-                        'body'=>'goods body',
-                        'goodsCategory'=>'Auto',
-                        'goodsId'=>'0002',
-                        'goodsName'=>'电费',
-                        'price'=>'200',
-                        'quantity'=>'2',
-                        'subMerchantId'=>'988460101800234',
-                        'subOrderAmount'=>'2',
-                    ],
-            ],
+            // 'divisionFlag' =>true,
+            // 'goods'=>[
+            //         [
+            //             'body'=>'goods body',
+            //             'goodsCategory'=>'113,122',
+            //             'goodsId'=>'0001',
+            //             'goodsName'=>'电费1',
+            //             'price'=>'100',
+            //             'quantity'=>'1',
+            //             'subMerchantId'=>'988460101800202',
+            //             'subOrderAmount'=>'1',
+            //         ],
+            //         [
+            //             'body'=>'goods body',
+            //             'goodsCategory'=>'113,122',
+            //             'goodsId'=>'0002',
+            //             'goodsName'=>'电费2',
+            //             'price'=>'200',
+            //             'quantity'=>'2',
+            //             'subMerchantId'=>'988460101800234',
+            //             'subOrderAmount'=>'2',
+            //         ],
+            // ],
             'instMid'=>'APPDEFAULT',
             'merOrderId'=>'319420170832021042746',
             'mid'=>'898201612345678',
@@ -49,11 +48,11 @@ echo "<hr/>";
             'msgType'=>'trade.precreate',
             'signType'=>'SHA256',
             'orderDesc'=>'账单描述',
-            'platformAmount'=>'0',
+            // 'platformAmount'=>'0',
             'requestTimestamp'=>date('Y-m-d H:i:s'),
             'signType'=>'SHA256',
             'tid'   =>  '00000001',
-            'totalAmount'=>'3',
+            'totalAmount'=>'300',
 
         ];
 
