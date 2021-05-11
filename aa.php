@@ -1,5 +1,15 @@
 <?php
 
+// $tt = "test\r\n";
+// $tt.="1122222\r\n";
+// $tt.='33344';
+
+
+// $aa =file_put_contents('sites.txt', $tt,FILE_APPEND);
+// echo '<pre>';
+// var_dump($aa);
+// echo '</pre>';
+// exit;
 
  
 ini_set("limit_memory",'8000M');
@@ -9,26 +19,26 @@ $dirname = dirname(__FILE__); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
 require_once ($dirname."/library/init.inc.php");
 
+ 
 
+// $str ='151515|2
+// 140400001|10000000016327|0|100|测试收款人名称|测试行名称|123456789123|6236681300001758483|附言1
+// 140400002|10000000016327|0|100|测试收款人名称|测试行名称|123456789123|6236681300001758483|附言2';
+// echo '<pre>';
+// var_dump($str);
+// echo '</pre>';
+// echo "md5后的内容：";
+// echo "<br/>";
 
-$str ='151515|2
-140400001|10000000016327|0|100|测试收款人名称|测试行名称|123456789123|6236681300001758483|附言1
-140400002|10000000016327|0|100|测试收款人名称|测试行名称|123456789123|6236681300001758483|附言2';
-echo '<pre>';
-var_dump($str);
-echo '</pre>';
-echo "md5后的内容：";
-echo "<br/>";
+// $wai_str= md5($str);
+// echo $wai_str;
+// echo "<br/>";
+// $aaa =encrypt_sha256($wai_str);
 
-$wai_str= md5($str);
-echo $wai_str;
-echo "<br/>";
-$aaa =encrypt_sha256($wai_str);
-
-echo encrypt_sha256('b205dd291f1c7117a6f895a97bc8a943');
- echo "<hr/>";
-echo "md5变为sha256后：".$aaa;
-exit;
+// echo encrypt_sha256('b205dd291f1c7117a6f895a97bc8a943');
+// echo "<hr/>";
+// echo "md5变为sha256后：".$aaa;
+// exit;
 
 
  
