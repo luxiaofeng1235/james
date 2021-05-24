@@ -7,9 +7,14 @@ class Sftp {
     //sftp resource
     private $ressftp = NULL;
     // 初始化
-    public function __construct($config)
+    public function __construct()
     {
-        $this->config = $config;
+        $this->config =[
+        	'host'=> '140.206.74.65',
+        	'username'=> 'JXYJBY_fan',
+        	'port'=>'22',
+        	'password' =>'g^7zb5AL',
+        ];
         $this->connect();
     }
     public function connect()
@@ -45,11 +50,9 @@ class Sftp {
 
 //本地文件目录
 $localpath = "D:/ab.txt";		//本地文件路径
-$serverpath='/upload/test/'.date('Ymd');       //远程目录（需要上传到的目录）
-$config = array("host"=>"140.206.74.65","username"=>"JXYJBY_fan","port"=>"22","password"=>"g^7zb5AL");
-
-$sftp = new Sftp($config);
-$serveFile = $serverpath.'/ab.txt';
+$serverpath='/upload/'.date('Ymd');       //远程目录（需要上传到的目录）
+$sftp = new Sftp();
+$serveFile = $serverpath.'/e.txt';
 $res = $sftp->ssh2_dir_exits("$serverpath");
 //如果目录存在直接上传
 if($res){
@@ -58,6 +61,4 @@ if($res){
     $sftp->ssh2_sftp_mchkdir($serverpath);
     $sftp->upftp($localpath,$serveFile);
 }
-
-echo "ok";
 ?>

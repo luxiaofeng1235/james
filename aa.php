@@ -1,23 +1,97 @@
 <?php
 
+
+
 // $tt = "test\r\n";
 // $tt.="1122222\r\n";
 // $tt.='33344';
 
-
-// $aa =file_put_contents('sites.txt', $tt,FILE_APPEND);
+ // =file_put_contents('sites.txt', $tt,FILE_APPEND);
 // echo '<pre>';
 // var_dump($aa);
 // echo '</pre>';
 // exit;
 
- 
+
 ini_set("limit_memory",'8000M');
 set_time_limit(600);
 //获取当前的路径位置
 $dirname = dirname(__FILE__); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
-require_once ($dirname."/library/init.inc.php");
+require_once ($dirname."/library/ThreeDesUtil.php");
+      
+  $data = '{array_wakk:123}';//加密明文
+   $method = 'DES-ECB';//加密方法
+   $passwd = '12344321';//加密密钥
+   $options = 0;//数据格式选项（可选）
+   $iv = '';//加密初始化向量（可选）
+
+   $result = openssl_encrypt($data, $method, $passwd, $options);
+
+echo "加密后的数据为：".$result."<br />";
+$result = 'kQYOdswcm9I5elv2wdJucplqAgqDNqXg';
+var_dump(openssl_decrypt($result, $method, $passwd, 0));
+exit;
+
+// $iput='123456';
+// $key='123';
+// $data = openssl_encrypt($input,'des-ede3',$key,0);
+// $data= base64_decode($data);
+
+// $miwen =$data;
+
+// #解密
+// $decrypted = openssl_decrypt(base64_decode($miwen),'des-ede3',$key,OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
+// echo '<pre>';
+// var_dump($decrypted);
+// echo '</pre>';
+// exit;
+
+$key  = 'ABCEDFGHIJKLMNOPQ';
+$iv  = '0123456789';
+$des = new Encrypt($key, $iv);
+$str = "abcdefghijklmnopq";
+echo "source: {$str},len: ",strlen($str),"\r\n";
+$e_str = $des->encrypt3DES($str);
+echo "entrypt: ".$e_str, "\r\n";
+exit;
+$res = ThreeDesUtil::Encrypt();
+echo '<pre>';
+var_dump($res);
+echo '</pre>';
+exit;
+function getDatas($content = ''){
+      global $dirname;
+      require_once ($dirname."/library/phpanalysis/phpanalysis.class.php");
+      $pa=new PhpAnalysis();
+      $pa->SetSource($content);
+      $pa->resultType=2;
+      $pa->differMax=true;
+      $pa->StartAnalysis();
+      $arr=$pa->GetFinallyIndex();
+      $splitVal =  array_keys($arr);
+      if($splitVal[0]  && in_array($splitVal,['广州','东莞']) ) {
+            return $splitVal[0].$splitVal[1];
+      }if(strpos($splitVal[0], '银行')!=false){
+            return $splitVal[0];
+      }else if(isset($splitVal[1]) && $splitVal[1] =='银行'){
+            return $splitVal[0].$splitVal[1];
+      }else{
+            return $splitVal[0];
+      }
+}
+
+ 
+  $arr = getDatas('大连银行');
+
+//   //判断
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
+
+
+
 
  
 
