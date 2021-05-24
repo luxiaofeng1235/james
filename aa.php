@@ -13,25 +13,33 @@
 // exit;
 
 
+//https://blog.csdn.net/zhemejinnameyuanxc/article/details/83383434
 ini_set("limit_memory",'8000M');
 set_time_limit(600);
 //获取当前的路径位置
 $dirname = dirname(__FILE__); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
-require_once ($dirname."/library/ThreeDesUtil.php");
+// require_once ($dirname."/library/ThreeDesUtil.php");
       
-  $data = '{array_wakk:123}';//加密明文
-   $method = 'DES-ECB';//加密方法
-   $passwd = '12344321';//加密密钥
-   $options = 0;//数据格式选项（可选）
-   $iv = '';//加密初始化向量（可选）
+$data = '1234567887654321';//加密明文
+$method = 'aes-128-ecb';//加密方法 :对应JAVA的AES/ECB/PKCS5Padding算法
+$passwd = '12344321';//加密密钥
+$options = 0;//数据格式选项（可选）
+$iv = '';//加密初始化向量（可选）
 
-   $result = openssl_encrypt($data, $method, $passwd, $options);
+echo "原始串为data：".$data;
+echo "<hr/>";
 
-echo "加密后的数据为：".$result."<br />";
-$result = 'kQYOdswcm9I5elv2wdJucplqAgqDNqXg';
-var_dump(openssl_decrypt($result, $method, $passwd, 0));
-exit;
+$result = openssl_encrypt($data, $method, $passwd, OPENSSL_RAW_DATA);
+$code=base64_encode($result);
+echo "加密后的串为：".$code;
+echo "<br/>";
+
+$jiemi =openssl_decrypt($result, $method, $passwd,OPENSSL_RAW_DATA);
+echo "解密后为：".$jiemi;
+echo "<br/>";exit;
+
+//解密：
 
 // $iput='123456';
 // $key='123';
