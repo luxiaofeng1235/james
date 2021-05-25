@@ -45,8 +45,9 @@ $iv = '';//加密初始化向量（可选）
 $aa= AES::encrypt($data,$passwd);
 echo "data源数据：".$data;
 echo "<br/>";
-echo "加密后的数据".$aa;
-
+echo "通讯秘钥：".$passwd;
+echo "<br/>";
+echo "加密后的数据：".$aa;
 $arr= AES::decrypt($aa,$passwd);
 echo "<br/>";
 echo "通过加密后反解密的：".$arr;
