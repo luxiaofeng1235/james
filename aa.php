@@ -21,11 +21,40 @@ $dirname = dirname(__FILE__); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
 // require_once ($dirname."/library/ThreeDesUtil.php");
       
-$data = '1234567887654321';//加密明文
+class AES
+{
+   public static function encrypt($data, $key) {
+       $data =  openssl_encrypt($data, 'aes-128-ecb', base64_decode($key), OPENSSL_RAW_DATA);
+       return base64_encode($data);
+   }
+
+    public static function decrypt($data, $key) {
+        $encrypted = base64_decode($data);
+        return openssl_decrypt($encrypted, 'aes-128-ecb', base64_decode($key), OPENSSL_RAW_DATA);
+    }
+}
+
+
+
+$data = '1234567887654321-names';//加密明文
 $method = 'aes-128-ecb';//加密方法 :对应JAVA的AES/ECB/PKCS5Padding算法
 $passwd = '12344321';//加密密钥
 $options = 0;//数据格式选项（可选）
 $iv = '';//加密初始化向量（可选）
+
+$aa= AES::encrypt($data,$passwd);
+echo "data源数据：".$data;
+echo "<br/>";
+echo "加密后的数据".$aa;
+
+$arr= AES::decrypt($aa,$passwd);
+echo "<br/>";
+echo "通过加密后反解密的：".$arr;
+exit;
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
 
 echo "原始串为data：".$data;
 echo "<hr/>";
@@ -34,6 +63,7 @@ $result = openssl_encrypt($data, $method, $passwd, OPENSSL_RAW_DATA);
 $code=base64_encode($result);
 echo "加密后的串为：".$code;
 echo "<br/>";
+ 
 
 $jiemi =openssl_decrypt($result, $method, $passwd,OPENSSL_RAW_DATA);
 echo "解密后为：".$jiemi;
