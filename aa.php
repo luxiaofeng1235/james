@@ -29,16 +29,15 @@ class AES
    }
 
     public static function decrypt($data, $key) {
-        $encrypted = base64_decode($data);
-        return openssl_decrypt($encrypted, 'aes-128-ecb', base64_decode($key), OPENSSL_RAW_DATA);
+      $encrypted = base64_decode($data);
+      return openssl_decrypt($encrypted, 'aes-128-ecb', base64_decode($key), OPENSSL_RAW_DATA);
     }
 }
 
 
-
-$data = '1234567887654321-names';//加密明文
+$data = '123456';//加密明文
 $method = 'aes-128-ecb';//加密方法 :对应JAVA的AES/ECB/PKCS5Padding算法
-$passwd = '12344321';//加密密钥
+$passwd = 'udik876ehjde32dU61edsxsf';//加密密钥
 $options = 0;//数据格式选项（可选）
 $iv = '';//加密初始化向量（可选）
 
