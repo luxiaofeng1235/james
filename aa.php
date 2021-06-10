@@ -1,4 +1,6 @@
 <?php
+phpinfo();
+exit;
 /**
  * des-ecb加密
  * @param string  $data 要被加密的数据
@@ -7,6 +9,7 @@
 function des_ecb_encrypt($data, $key){
     return openssl_encrypt ($data, 'des-ecb', $key);
 }
+// 输出：string 'http://www.mytest.org/a/b/' (length=26)
 
 /*
 Array(

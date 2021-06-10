@@ -16,15 +16,56 @@ set_time_limit(500);
 
 $dirname =str_replace("\\",'/',dirname(__FILE__)).'/library/' ;
 define('APPPATH',$dirname);
-require_once(APPPATH . "/autoload.php");
-
+ 
+require_once(APPPATH."common.php");
+require_once(APPPATH . "autoload.php");
 // 引入鉴权类
 use Qiniu\Auth;
 use Qiniu\Http\Client;
 
+
+##测试数据
+$list = array(
+    'app_content' =>array(
+        'username' =>111,
+        'password'  => 3334
+    ),
+    'send_message' =>33222,
+    'status' =>array(
+        'plist'=>1,
+        'array'=>array(
+            'http',
+            'arr'
+        )
+    )
+);
+
+//解析数据格式
+$mobile_data = array2string($list);
+
+if($mobile_data){
+     //进行转换
+    $result = string2array(stripslashes($mobile_data));
+    $aids = is_array($result) && !empty($result) ? $result['status'] : array();
+    echo '<pre>';
+    print_R($aids);
+    echo '</pre>';
+ 
+}
 ##测试
- $img_data[] = array('data'=>array('uri'=>"https://www.baidu.com/img/bd_logo1.png"));
- $images_str = json_encode($img_data);
+$img_data[] = array(
+    'data'=>
+        array(
+            'uri'=>"http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg",
+        ),
+);
+/*
+ array(
+ https://www.baidu.com/img/bd_logo1.png
+            'uri'=>"http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg",
+        ),
+*/
+$images_str = json_encode($img_data);
 //返回七牛鉴黄结果
 $response = post_jh($img_data);
 echo '<pre>';
@@ -69,7 +110,6 @@ exit;
 
             if(is_array($field_list) && count($field_list)){
                 $image_question = array();
-                // print_r($field_list);
 
                 foreach ($field_list as $key=>$val){
                     if(in_array($val['result']['label'],array(0,1)) || (in_array($val['result']['label'],array(2)) && $val['result']['score'] < 0.8)){
