@@ -17,6 +17,15 @@ set_time_limit(600);
 $dirname = dirname(dirname(__FILE__)); //返回根目录
 $dirname = str_replace('\\', '/', $dirname);
 require_once ($dirname."/library/init.inc.php");
+
+$url = 'https://hpoc.newoffen.net/api.php/sendSms?mobile=18500187592';
+$res = $socket_client->run($url);
+echo '<pre>';
+var_dump($res);
+echo '</pre>';
+exit;
+//$socket_client
+
 $mysql_init = $mysql_obj; //主要便于赋值操作
 //导入的sql
 function import_sql($data,$table_name=''){
@@ -54,7 +63,7 @@ function get_street_code($upid ='',$table_name=''){
 	if(!$upid)
 		return false;
 	global $mysql_init;
-	$sql = "select count(1) as num from ".$table_name." where upid=".$upid;	 
+	$sql = "select count(1) as num from ".$table_name." where upid=".$upid;
 
 	$rows = $mysql_init->fetch($sql,$mysql_init->db_master); //查询主
 	return intval($rows['num']);
@@ -74,9 +83,9 @@ $pagesize = 5000;
 * @Date 2020-1221
 * @return string
 */
-function mb_str_split($str){  
-    return preg_split('/(?<!^)(?!$)/u', $str );  
-} 
+function mb_str_split($str){
+    return preg_split('/(?<!^)(?!$)/u', $str );
+}
 
 #处理的业务类型
 $oper = isset($_GET['oper'])  ? trim($_GET['oper']) : 1;
@@ -106,9 +115,9 @@ if($oper == 1){
 //关联查询
 // $sql = "select dg.`{$code_type}`,dg.`{$show_name}`,dg.LNG,dg.LAT,common.id,dg.`SORT`,dg.`GMT_MODIFIED`,common.`city_code` from jishigou_common_distrinct common left join ".$table_name." dg on dg.{$code_type}=common.city_code
 // 	where common.level = '{$level}' and dg.`{$code_type}` is not null and common.lng='' and dg.LNG!='' " ;
-// 	
+//
 $sql = "select * from jishigou_common_distrinct WHERE name!='市辖区' and  (LENGTH(pin_yin)=2 or LENGTH(pin_yin)=3) and name!='阿里地区' order by id asc";
-	     
+
 
 if($level ==4){
 	// $sql .=" limit ".($page-1)*$pagesize.','.$pagesize;
@@ -445,7 +454,7 @@ $str_find =preg_split("/\n/", $str);
 
 
 
-     
+
 
 $list = $mysql_init->fetchAll($sql,$mysql_init->db_slave);
 if($list){
@@ -460,7 +469,7 @@ if($list){
 		$name =str_replace('地区', '', $name);
 		$name =str_replace('区', '', $name);
 		$name =str_replace('特别行政', '', $name);
-		
+
 		// $name =str_replace('自治', '', $name);
 		//
 
@@ -479,13 +488,13 @@ if($list){
 		// if(end(mb_str_split($name)) =='镇'){
 
 		// 	$name =str_replace('镇', '', $name);
-	
+
 		// }
-		
 
 
 
-		
+
+
 
 		$pinyin =isset($str_find[$key]) ? ucfirst(trim($str_find[$key])): '';
 		// $pinyin = ucfirst(Pinyin('漷县' ,'UTF-8'));
@@ -495,11 +504,11 @@ if($list){
 
 
 
-		
+
 
 		// echo $name.'='.$pinyin;
 		// echo "<br/>";
-		 
+
 
 		$update_data = array(
 
@@ -514,21 +523,21 @@ if($list){
 			$sql .=" $k='$v',";
 		}
 
-		     
+
 		$sql =rtrim($sql,',');
 		$sql .=" where ".$update_where;
-		
+
 	// 	echo $sql;
 	// echo "<br/>";
-		     
-		     
+
+
 		$res = $mysql_init->query($sql,$mysql_init->db_master);
 		if($res){
 			echo "index:{$key} code : ".$value['city_code']." show_name : ".$value['name']." 更新成功"."<br />";
 		}else{
 			echo $value['city_code']."  error"."<br />";
 		}
-  
+
 	}
 }else{
 	echo "no data \r\n";

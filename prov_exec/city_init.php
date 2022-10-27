@@ -44,7 +44,7 @@ if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $str)){
 // }
 // $logger->warning('Fii');
 // $logger->error('error');
-$country_info = COUNTRY_INFO();
+// $country_info = COUNTRY_INFO();
 // echo '<pre>';
 // print_R($country_info);
 // echo '</pre>';

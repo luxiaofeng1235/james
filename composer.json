@@ -3,6 +3,8 @@
         "psr-4": {"Acme\\": "src/"}
     },
   "require": {
-  	"monolog/monolog": "1.2.*"
+  	"monolog/monolog": "1.2.*",
+		"topthink/think-view": "^1.0",
+		"elasticsearch/elasticsearch": "^7.11"
   }
 }

@@ -15,7 +15,7 @@ function getRelativePath($a ,$b){
 	$a1Array = explode('/', $a);
 	$bArray = explode('/', $b);
 	$strPath ='';
-	for ($i=0; $i <count($bArray)-2 ; $i++) { 
+	for ($i=0; $i <count($bArray)-2 ; $i++) {
 		$strPath.=$a1Array[$i] == $bArray[$i] ? '../' : $bArray[$i].'/';
 	}
 	return $strPath;
@@ -48,7 +48,7 @@ echo $$a;
 echo "<br/>";
 echo "<hr/>";
 
-$attr = array(1,2,3,4); 
+$attr = array(1,2,3,4);
 while(@list($key,$value) = each($attr))    {
 	echo $key."=>".$value."<br>";
 }
@@ -60,7 +60,7 @@ while(@list($key,$value) = each($attr))    {
 echo "<hr/>";
 $a= 'cc';
 $cc ='dd';
-echo $a=='cc' ? "{$$a}" : $a; 
+echo $a=='cc' ? "{$$a}" : $a;
 echo "<hr/>";
 
 $x= 15;
@@ -119,7 +119,7 @@ $table_name = range_insert(102368,'uc_members');
 echo '<pre>';
 print_R($table_name);
 echo '</pre>';
- 
+
 //或者我们用md5生成随机算法来计算
 $str= '1234561aa3';
 // $a =preg_split("/\r\n/", $str);
@@ -128,7 +128,7 @@ $str= '1234561aa3';
 // echo '</pre>';
 // exit;
 echo "<hr/>";
-echo get_hash_table('users_member','1'); 
+echo get_hash_table('users_member','1');
 
 echo "<hr/>";
 
@@ -137,29 +137,29 @@ if($a++){echo 1;}else{echo 0;}
 
 
 /**
-* @note 
+* @note
 *
 * @param $n array 初始值计算器
-* @return 
+* @return
 */
-     
- //logs_20201121 
+
+ //logs_20201121
  //logs_20201123
  //logs_202011
  //logs_2020
 function getDataResult($n,$i,$x){
 	// $n = $i =$x = 0; //重新赋值
 	$a =array();//设置最终的兔子数据
-	for ($i=0; $i <11 ; $i++) { 
+	for ($i=0; $i <11 ; $i++) {
 		//穷举搜索
 		$a[$i] = 1; //默认是有数据的
-		for ($i=0; $i <1000 ; $i++) { 
+		for ($i=0; $i <1000 ; $i++) {
 			$n+=$i+1;
 			$x= $n%10;
 			$a[$x] = 0 ;//表示未找到的d的位置置为0
 		}
 	}
-	for ($i=0; $i <10 ; $i++) { 
+	for ($i=0; $i <10 ; $i++) {
 		if($a[$i]){
 			echo "可能在第i个洞";
 		}
@@ -208,7 +208,7 @@ echo $uid%25;
  // curl_setopt($ch ,CURLOPT_BINARYTRANSFER,true);
  // curl_setopt($ch ,CURLOPT_CONNECTTIMEOUT,60);
  // curl_setopt($ch ,CURLOPT_FOLLOWLOCATION, true);
- // 
+ //
  function addRet(int $a,int $b):int{
  	return $b+$a;
  }
@@ -240,8 +240,8 @@ if($num2 && in_array($num2, $t)){
 	$diff2 = $list[$num2];
 }
 echo "<hr/>";
-for ($i=0; $i <count($diff1) ; $i++) { 
-	for ($j=0; $j <count($diff2) ; $j++) { 
+for ($i=0; $i <count($diff1) ; $i++) {
+	for ($j=0; $j <count($diff2) ; $j++) {
 		echo "组合方式：".$diff1[$i].$diff2[$j];
 		echo "<br/>";
 	}
@@ -263,7 +263,7 @@ list($x,$y) = (object) new ArrayObject([0,1]);
 echo '<pre>';
 var_dump($y);
 echo '</pre>';
-#*/10 2-20 * * * 
+#*/10 2-20 * * *
 #netstat -anpl|grep 'php-fpm'|wc -l #查服务器php-fpm进程数量
 $aaa  ='usernamearr';
 
@@ -279,8 +279,8 @@ fclose($handle);
 */
 
 //直角三角形
-for ($i=1; $i <=9 ; $i++) { 
-	for ($j=1; $j <=$i ; $j++) { 
+for ($i=1; $i <=9 ; $i++) {
+	for ($j=1; $j <=$i ; $j++) {
 		echo '*';
 	}
 	echo "<br />";
@@ -289,8 +289,8 @@ for ($i=1; $i <=9 ; $i++) {
 
 //杨辉三角形
 echo "<hr/>";
-for ($i=1; $i <=9 ; $i++) { 
-	for ($j=1; $j <=(2*$i)-1 ; $j++) { 
+for ($i=1; $i <=9 ; $i++) {
+	for ($j=1; $j <=(2*$i)-1 ; $j++) {
 		echo "&nbsp;&nbsp;".'*';
 	}
 	echo "<br />";
@@ -314,6 +314,6 @@ $b = $a + $b;
 }
 echo $b;
 // unserialize()
-// zend疫情 extendsion sapi  application 
-// 
+// zend疫情 extendsion sapi  application
+//
 ?>
