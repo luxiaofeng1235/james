@@ -11,19 +11,19 @@ $addr = '127.0.0.1';
 #gethostbyname根据url获取主机ip
 #R_SERVER['SERVER_ADDR'] 服务器的ipd
 #$_SERVER['REMOTE_ADDR'] 客户端的ip
-#$_SERVER['SCRIPT_FILENAME']获取执行的脚本文件路径 
+#$_SERVER['SCRIPT_FILENAME']获取执行的脚本文件路径
 #$_SERVER['query_string'] 取出来执行的参数
 #
 #、、Magic_quotes_gpc是在进行体积爱post或者get开启的情况下自动进行转义
 #
-#、、不适合简历索引的情况：查询比较复杂的表达式或者条件 
+#、、不适合简历索引的情况：查询比较复杂的表达式或者条件
 #一些数据类型不宜简历索引。比如text文本型
 echo '<pre>';
 print_R($_SERVER);
 echo '</pre>';
 exit;
 #获取主机的方法为：可以利用ping或者trace获取利用gethostbyname函数来获取。
-#程序中获取PHP的webroot目录 $_SERVER['DOCUMENT_ROOT'] 
+#程序中获取PHP的webroot目录 $_SERVER['DOCUMENT_ROOT']
 #
 #
 #通过session生成一个session_id在URL中带过来?sid=session_id对于国内的值，在第一次请求在cookie存储session_id.第二次从cookie中取出来他的值
@@ -51,7 +51,6 @@ exit;
 print_r(gethostbyname($hostname));
 echo '<br>';
 exit;
-+
 print_r(gethostbyaddr($addr));
 echo '<br>';
 
@@ -61,7 +60,7 @@ print_R($ret);
 echo '</pre>';
 exit;
 
-##crontab的格式：分 时 日 月 周 
+##crontab的格式：分 时 日 月 周
 #0,30 18-23 * * * 表示每天的18-23时的0至30分执行此脚本
 
 #45 10 1,10,22 * * 表示每个月的1 10 22号的十点45分来执行此脚本
@@ -80,7 +79,7 @@ crontab -r 删除当前的时程表
 
 /*
 常用操作端口号
- sphinx的端口号9312 redis 6479 http 80 mysql 3306 memcached11211 
+ sphinx的端口号9312 redis 6479 http 80 mysql 3306 memcached11211
 openid 获取appid+appscrent手动授权获取sccode.获取对应redirect_uri进行。
 scapi—_base 和scapi_userinfo basse是会获取少量的用户信息。而userinfo是需要用户去提示进行操作是否同意。，需要用户点确认进行授权，同意的话会调换到rediret_uri
 */
@@ -112,7 +111,7 @@ offset定位。
  */
 
 /*
-设计模式：单例模式 工厂模式 观察者模式 注册模式 
+设计模式：单例模式 工厂模式 观察者模式 注册模式
 
  */
 
@@ -127,7 +126,7 @@ mysql锁的类型：
 
 
 前端主要知识点：
-html5的用法 容器contains email check 
+html5的用法 容器contains email check
 ajax做异步通信用，发送http请求，
 
 $("#tstt").unbind('click').click('click',function(){
@@ -151,7 +150,7 @@ access-controller-allow-origin 设置http跨越规则处理
 */
 
 /*
-redis的事务用法 exec multi discard watch multi set namelu se exec 
+redis的事务用法 exec multi discard watch multi set namelu se exec
 */
 
 /*
@@ -171,7 +170,7 @@ DB::connection->enableQueryLog();
 /*
 删除重复的邮箱保留最小的那个
 delete from persion where id not in(
-	select id from 
+	select id from
 		(
 			select min(id) from persion Group by email
 		) t
@@ -202,9 +201,9 @@ docker ps -a \查看正常运行的容器的软件
 
 dociker stop 容器编号
 
-docker ps -a 
+docker ps -a
 
-docker run -it ubuntu /bin/bash 
+docker run -it ubuntu /bin/bash
 docker run -itd -name ubuntu /bin/bash
 
 docker restart 容器id 重启docker的容器

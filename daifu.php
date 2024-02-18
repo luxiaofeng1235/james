@@ -13,15 +13,19 @@
 
 //Java加签
 $url = 'https://uv.newoffen.com/sysback/EsSearchGoods/sign';
-$post_string = ['data'=>'2']; 
+$post_string = ['data'=>'2'];
 //加密后的：24b06a9b44fcbe377a0e987f6e1a9b9db5337c43b6ddee1a1e25d40986650d34
 $result = webRequest($url,'POST',$post_string);
+echo '<pre>';
+var_dump($result);
+echo '</pre>';
+exit;
 echo "java加签后的：".$result;
 echo "<br/>";
 
 
 
- 
+
 
 //JAVA解签
 $url='https://uv.newoffen.com/sysback/EsSearchGoods/verifySign';
@@ -40,10 +44,14 @@ if($res =='true'){
 echo "<hr/>";
 
 //Java加密
-$post_string =['data'=>json_encode(['luxiaofeng'=>'122'])];
+$post_string =[
+    'data'=>json_encode(
+        ['luxiaofeng'=>'122']
+    )];
 echo '<pre>';
 var_dump($post_string);
 echo '</pre>';
+die;
 
 $url='https://uv.newoffen.com/sysback/EsSearchGoods/encrypt';
 

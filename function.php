@@ -12,4 +12,11 @@ if(!function_exists('posix_getpid')){
     }
 }
 
+if(!function_exists('checkNumberItnum')){
+    function checkNumberItnum(){
+        posix_setgid();
+    }
+}
+
+
 ?>

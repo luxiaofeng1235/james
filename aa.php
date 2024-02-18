@@ -1,4 +1,50 @@
 <?php
+$array = array('1','1');
+foreach ($array as $k=>&$v){
+ $v = 2;
+}
+
+class A{
+    public function __construct(){
+		echo "Class A...<br/>";
+ 	}
+}
+class B extends A
+{
+    public function __construct(){
+        echo "Class B...<br/>";  }
+}
+new B();
+die;
+##s$sum = 0;
+$sum = 100 * (1+100) /2;
+echo '1-100的相加总和为：'.$sum;
+echo "<hr/>";
+echo 33;die;
+$params = json_decode( $str, true);
+echo '<pre>';
+print_R($params);
+echo '</pre>';
+exit;
+
+echo '<pre>';
+print_R($urlParam);
+echo '</pre>';
+exit;
+
+
+$order['order_pay_price'] =38;
+$order['boil_fee'] =0;
+$pay_price = bcadd($order['order_pay_price'] ,$order['boil_fee'],2);
+echo '<pre>';
+print_R($pay_price);
+echo '</pre>';
+exit;
+$res = '5a'+6;
+echo '<pre>';
+var_dump($res);
+echo '</pre>';
+exit;
 
 // $dd = numToWord(5);
 // echo '<pre>';
@@ -210,7 +256,7 @@ function erpGoodsData($goods_info= [] , $fun_type='goods'){
 		$erpGoods['minSaleNum'] = 10; //起批数量
 		$erpGoods['priceLimit'] = 1; //是否限价： 是否限价 1 不限制 2  限制
 		$erpGoods['priceType'] =  1;//价格类型：1云仓销售价格（商家不能改价）；2厂家供货价（商家自定义销售价
-		$erpGoods['referencePrice'] = 0; //市场参考价
+		$erpGoods['referencePrice'] = 0; //市场参考价+```
 		$erpGoods['retailPrice'] = 0;//建议零售价
 		$erpGoods['validityEndtime'] =time();//有效期结束日期
 		$erpGoods['validityStarttime'] = strtotime(date('Y-m-d H:i:s', strtotime("+2 year")));;//validityStarttime
