@@ -67,6 +67,15 @@ if($info){
 //</div>
 //';
 //
+        // $file_path =$dirname.'/log/112.txt';
+
+        // $str= '数据组装格式信息';
+
+        // $res= file_put_contents($file_path , $str);
+        // echo '<pre>';
+        // var_dump($res);
+        // echo '</pre>';
+        // exit;
         // $detail = $socket_handle->run($link_url,'GET');
         // echo '<pre>';
         // print_R($detail);
@@ -124,7 +133,7 @@ if($info){
     if(isset($matchesRes[0]) && !empty($matchesRes[0])){
         $pat = '/href=[\"|\'](.*?)[\"|\']/i';
         $newdata = preg_match_all("/<li.*?>.*?<\/li>/ism" , $matchesRes[0],$aaa);
-
+        //判断相关的流程部署
         if(!empty($aaa)){
             foreach($aaa[0] as $link_value){
                 preg_match($pat , $link_value ,$link_info);
