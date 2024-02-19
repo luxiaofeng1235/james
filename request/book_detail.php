@@ -21,6 +21,7 @@ if(!$art_id){
     exit();
 }
 $table_name ='ims_category';
+$table_novel_name ='ims_novel_info';
 $info = $mysql_obj->get_data_by_condition('id = \''.$art_id.'\'',$table_name);
 $url ='https://www.souduw.com/';
 if($info){
@@ -130,16 +131,15 @@ if($info){
 
     //执行插入操作
     $id = 5;
+    $store_id = $mysql_obj->add_data($store_data , $table_novel_name);
+    //关联插入的ID信息
     foreach($chapter_detal as &$v){
-        $v['store_id']  =   $id;
+        $v['store_id']  =   $store_id;
         $v['createtime'] = time();
     }
     $chapter_table_name= 'ims_chapter';
     $res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
-    echo '<pre>';
-    print_R($res);
-    echo '</pre>';
-    exit;
+    echo "基础信息和章节目录更新完成";
 }
 }else{
     echo "no data";
