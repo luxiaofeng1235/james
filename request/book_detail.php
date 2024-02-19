@@ -95,7 +95,7 @@ if($info){
             list($c_name,$date) =explode('：',$c_data[7]);
             $up_time =$date.' '.$c_data[8] ??'';
             $up_time = filterHtml($up_time);
-            $store_data['third_update_time'] = $up_time;
+            $store_data['third_update_time'] = strtotime($up_time);
         }
         print_R(preg_match('/target="_blank">.*/',$c_data[14],$t));
         //处理最后的章节
@@ -104,7 +104,7 @@ if($info){
         $html =str_replace('target="_blank">','',$nearyby_item);
         $html = str_replace('</a>','',$html);
         $html =str_replace('</em>','' ,$html);
-        $store_data['ims_novel_info'] = $html;
+        $store_data['nearby_chapter'] = $html;
     }
 
 
@@ -118,20 +118,29 @@ if($info){
         if(!empty($aaa)){
             foreach($aaa[0] as $link_value){
                 preg_match($pat , $link_value ,$link_info);
-                $chapter_detal[]=$link_info[1] ?? '';
+                $chapter_detal[]=[
+                    'link_url'  =>  $link_info[1] ?? '',
+                ];
             }
         }
-        echo '<pre>';
-        print_R($chapter_detal);
-        echo '</pre>';
-        exit;
-        // preg_match_all($pat , $matchesRes[0],$chapterData);//获取章节信息
-        echo '<pre>';
-        print_R($chapterData);
-        echo '</pre>';
-        exit;
     }
+    $store_data['cate_id'] = $art_id;
+    $store_data['createtime'] = time();
+
+
+    //执行插入操作
+    $id = 5;
+    foreach($chapter_detal as &$v){
+        $v['store_id']  =   $id;
+        $v['createtime'] = time();
     }
+    $chapter_table_name= 'ims_chapter';
+    $res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
+    echo '<pre>';
+    print_R($res);
+    echo '</pre>';
+    exit;
+}
 }else{
     echo "no data";
 }
