@@ -18,7 +18,7 @@ function Array_transdata($array,$field){
                 $trans_data[]=$innerData;
             }
         }else{
-            $trans_data[]=array();            
+            $trans_data[]=array();
         }
     }else{
         foreach($array as $key=>$val){
@@ -32,6 +32,10 @@ function Array_transdata($array,$field){
             unset($trans_data);
     }
     return $temp;
+}
+
+function is_cli(){
+    return preg_match("/cli/i", php_sapi_name()) ? true : false;
 }
 
 //分页封装
@@ -98,7 +102,7 @@ function getPageOrSize($page,$page_size){
 function userTextEncode($str=''){
     if(!is_string($str)) return $str;
     if(!$str || $str=='undefined') return '';
- 
+
     $text = json_encode($str); //暴露出unicode
     $text = preg_replace_callback("/(\\\u[2def][0-9a-f]{3})/i",function($str){
         return addslashes($str[0]);
@@ -109,10 +113,10 @@ function userTextEncode($str=''){
 /**
 * @note 过滤字符串
 *
-* @param $office str 
-* @return 
+* @param $office str
+* @return
 */
-         
+
  function filter_words($office=''){
     if(!$office) return '';
     $office = htmlspecialchars_decode($office); //转换一下格式反解出来
@@ -141,15 +145,15 @@ function userTextEncode($str=''){
 }
 
  /**
-* @note 过滤特殊字符 
+* @note 过滤特殊字符
 *
 * @param $str str 需要过滤的字符
 * @return array
 */
-     
+
  function filterHtml($str){
    if(!$str)return false;
-    
+
     $str = htmlspecialchars_decode($str);
 
     $html=str_replace("<br></p >","\\n",$str);
@@ -264,13 +268,13 @@ function double_array_exchange_by_field($trips,$field=''){
 
 /**
  * 打印文件日志  一天一个
- * @param 文件名-不带后缀 $file_name  
+ * @param 文件名-不带后缀 $file_name
  * @param str $str
  * @author wangyan   2013-06-27
  */
 function printlog($str='',$file_name='file_log')
 {
-    $fp = fopen("{$file_name}_".date('Ymd').".txt", 'a+');  
+    $fp = fopen("{$file_name}_".date('Ymd').".txt", 'a+');
     flock($fp, LOCK_EX) ;
     $sdfsd=fwrite($fp,strftime("%Y/%m/%d %H:%M:%S",time())."\t -- $str \t\n");
     flock($fp, LOCK_UN);
@@ -355,10 +359,10 @@ function webRequest($url,$method,$params,$header = []){
   /**
   * @note sha256加密
   *
-  * @param 
-  * @return 
+  * @param
+  * @return
   */
-       
+
   function encrypt_sha256($str = ''){
         return hash("sha256", $str);
   }
@@ -376,7 +380,7 @@ function webRequest($url,$method,$params,$header = []){
         ksort($param);
         reset($param);
 
-      
+
         if($param){
             $options = '';
             foreach($param as $key =>$item){
@@ -391,7 +395,7 @@ function webRequest($url,$method,$params,$header = []){
             if(get_magic_quotes_gpc()){
                 $options = stripslashes($options);
             }
-           
+
             //#签名规则：用sha256进行上报加密
             //#算法：所有的字段处理排序后用&链接和md5通讯串链接后返回sign
             //采用sha256加密

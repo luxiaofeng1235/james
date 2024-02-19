@@ -14,8 +14,11 @@ set_time_limit(300);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-
-$art_id  = isset($_REQUEST['art_id']) ? intval($_REQUEST['art_id']) : 0;
+if(is_cli()){
+    $art_id = $argv[1] ?? 0;
+}else{
+    $art_id  = isset($_REQUEST['art_id']) ? intval($_REQUEST['art_id']) : 0;
+}
 if(!$art_id){
     echo '请选择要抓取的内容id';
     exit();
@@ -23,7 +26,7 @@ if(!$art_id){
 $table_name ='ims_category';
 $table_novel_name ='ims_novel_info';
 $info = $mysql_obj->get_data_by_condition('id = \''.$art_id.'\'',$table_name);
-$url ='https://www.souduw.com/';
+$url ='https://www.souduw.com';
 if($info){
     //进行相关的匹配信息
     if(!empty($info[0]['article_url'])){
@@ -57,60 +60,64 @@ if($info){
 <li><a href="/ChongShengZhiQingYunZhiShang/1_1.html">第1章 大梦一场，我捏着满手王炸重生了</a></li>
 <li><a href="/ChongShengZhiQingYunZhiShang/2_1.html">第2章 我想要这个人</a></li>
 <li><a href="/ChongShengZhiQingYunZhiShang/3_1.html">第3章 这人胆子很大啊</a></li>
+<li><a href="/ChongShengZhiQingYunZhiShang/140_1.html">第140章 好久不见的曹总</a></li>
+<li><a href="/ChongShengZhiQingYunZhiShang/141_1.html">第141章 我错了，王警官</a></li>
 </ul>
 </div>
 ';
-
-        //$detail = webRequest($link_url , 'GET' , [],[]);
+        // $detail = webRequest($link_url , 'GET' , [],[]);
         preg_match("/<div class=\"jieshao\".*?>.*?<\/div>/ism",$detail,$matchesRes);
         preg_match('/<img.*?src="([^"]+)"/',$matchesRes[0],$m);
         $store_data['cover_logo'] = $url .$m[1]??'';
 
+        
+        preg_match('/novelid=([0-9]+)/',$detail,$lid); //匹配novelid方便进行存储
+    
+//        $store_data['novelid'] = isset($lid[1]) ? $lid[1] : null;
         //获取标题
         preg_match("#<h1>([^<]*)</h1>#",$detail,$title_data);
         $store_data['title'] = $title_data[1] ?? '';
-
         //获取连载和更新时间、作者、最后的一节的章节
         preg_match("/<div class=\"msg\".*?>.*?<\/div>/ism",$detail,$all_data);
         $pattern = '/[\s]+/';
         $c_data= preg_split($pattern, $all_data[0]);
+
         if(isset($c_data[5])){
             $author = filterHtml($c_data[5]);
             $author_info = explode('>',$author);
             $store_data['author'] = $author_info[1] ?? '';
         }
-    if($c_data){
-        $en_preg = "/[\x7f-\xff]+/";//匹配中文
-        if(isset($c_data[5])){
-            preg_match($en_preg,$c_data[5],$author_data);
-            $store_data['author'] = $author_data[0] ?? '';
-        }
+        if($c_data){
+            $en_preg = "/[\x7f-\xff]+/";//匹配中文
+            // if(isset($c_data[5])){
+            //     preg_match($en_preg,$c_data[5],$author_data);
+            //     $store_data['author'] = $author_data[0] ?? '';
+            // }
 
-        if(isset($c_data['6'])){
-            $a= explode('：',$c_data[6]);
-            preg_match($en_preg,$a[1],$status_data);
-            $store_data['status'] = $status_data[0] ??'';
-        }
-        //处理更新时间
-        if(isset($c_data[7])){
-            list($c_name,$date) =explode('：',$c_data[7]);
-            $up_time =$date.' '.$c_data[8] ??'';
-            $up_time = filterHtml($up_time);
-            $store_data['third_update_time'] = strtotime($up_time);
-        }
-        print_R(preg_match('/target="_blank">.*/',$c_data[14],$t));
-        //处理最后的章节
-        $aa = $c_data[15];
-        $nearyby_item = $t[0].' '.$aa;
-        $html =str_replace('target="_blank">','',$nearyby_item);
-        $html = str_replace('</a>','',$html);
-        $html =str_replace('</em>','' ,$html);
-        $store_data['nearby_chapter'] = $html;
+            if(isset($c_data['6'])){
+                $a= explode('：',$c_data[6]);
+                preg_match($en_preg,$a[1],$status_data);
+                $store_data['status'] = $status_data[0] ??'';
+            }
+            //处理更新时间
+            if(isset($c_data[7])){
+                list($c_name,$date) =explode('：',$c_data[7]);
+                $up_time =$date.' '.$c_data[8] ??'';
+                $up_time = filterHtml($up_time);
+                $store_data['third_update_time'] = strtotime($up_time);
+            }
+            print_R(preg_match('/target="_blank">.*/',$c_data[14],$t));
+            //处理最后的章节
+            $aa = $c_data[15];
+            $nearyby_item = $t[0].' '.$aa;
+            $html =str_replace('target="_blank">','',$nearyby_item);
+            $html = str_replace('</a>','',$html);
+            $html =str_replace('</em>','' ,$html);
+            $store_data['nearby_chapter'] = $html;
     }
 
-
     $chapter_detal  = [];
-    //匹配目录信息
+    //匹配章节目录信息
     preg_match("/<div class=\"mulu\".*?>.*?<\/div>/ism",$detail,$matchesRes);
     if(isset($matchesRes[0]) && !empty($matchesRes[0])){
         $pat = '/href=[\"|\'](.*?)[\"|\']/i';
@@ -127,7 +134,14 @@ if($info){
     }
     $store_data['cate_id'] = $art_id;
     $store_data['createtime'] = time();
-
+    echo '<pre>';
+    print_R($store_data);
+    echo '</pre>';
+    exit;
+    echo '<pre>';
+    print_R($chapter_detal);
+    echo '</pre>';
+    exit;
 
     //执行插入操作
     $id = 5;

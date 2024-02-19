@@ -1,4 +1,5 @@
 <?php
+echo 3;die;
 $dom = new DomDocument();
 echo '<pre>';
 print_R($dom);
