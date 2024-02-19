@@ -18,31 +18,6 @@ require_once($dirname.'/library/init.inc.php');
 
 $url = 'https://www.souduw.com/'; //需要爬取的url章节信息
 $data = webRequest($url ,'GET',[],[]);//获取当前的匹配的内容信息
-// $data ='<div class="lastupdate">
-//       <div style="float:left; display:block; width:630px;">
-// 　　　　　 <li>
-//             <span class="lx"><a href="/youxijingji.html" title="游戏竞技">游戏竞技</a></span>
-//             <span class="sm"><a href="/xiaoshuo/LianMeng_KaiJuSuoNa_SongZouLiaoZhouJieDaiMei.html" title="联盟：开局唢呐，送走了周姐呆妹">联盟：开局唢呐，送走了周姐呆妹</a></span>
-//             <span class="zj"><a href="/LianMeng_KaiJuSuoNa_SongZouLiaoZhouJieDaiMei/822_1.html" title="联盟：开局唢呐，送走了周姐呆妹 第785章 用峡谷先锋拖延北虎" target="_blank">第785章 用峡谷先锋拖延北虎</a></span>
-//             <span class="zz"><a href="/author/YouYingYeShen2.html" target="_blank" title="幽影夜神2">幽影夜神2</a></span>
-//             <span class="sj">02-19</span>
-//             </li>
-//             <li>
-//             <span class="lx"><a href="/dushishenghuo.html" title="都市生活">都市生活</a></span>
-//             <span class="sm"><a href="/xiaoshuo/LongYi_KaiJuCanZaoBeiPan_FanShouYingQuXiaoYiZi.html" title="龙医：开局惨遭背叛，反手迎娶小姨子">龙医：开局惨遭背叛，反手迎娶小姨子</a></span>
-//             <span class="zj"><a href="/LongYi_KaiJuCanZaoBeiPan_FanShouYingQuXiaoYiZi/275_1.html" title="龙医：开局惨遭背叛，反手迎娶小姨子 第二百七十五章 无名剑出！" target="_blank">第二百七十五章 无名剑出！</a></span>
-//             <span class="zz"><a href="/author/ZuiXingChen4.html" target="_blank" title="罪星辰">罪星辰</a></span>
-//             <span class="sj">02-19</span>
-//             </li>
-//             <li>
-// <span class="lx"><a href="/dushishenghuo.html" title="都市生活">都市生活</a></span>
-// <span class="sm"><a href="/xiaoshuo/ShangChengZhiXia.html" title="上城之下">上城之下</a></span>
-// <span class="zj"><a href="/ShangChengZhiXia/301_1.html" title="上城之下 第0301章 惊人发现" target="_blank">第0301章 惊人发现</a></span>
-// <span class="zz"><a href="/author/LiMa.html" target="_blank" title="李马">李马</a></span>
-// <span class="sj">02-19</span>
-// </li>
-// 　　　　</div>
-// </div>';
 if($data){
     $table_name= 'ims_category';//需要插入的表名称
     //<div class="lastupdate"> 最新更新
