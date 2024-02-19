@@ -31,6 +31,7 @@ if($info){
     //进行相关的匹配信息
     if(!empty($info[0]['article_url'])){
         $link_url = $url . $info[0]['article_url'];//需要抓取的网址
+
         // echo $link_url;die;
 //        $detail ='<div class="jieshao"><div class="lf">
 //<img src="/cover/4e/ed/02/4eed02ddc035b204cf347b0786114c43.jpg" alt="人在合欢宗，你让我守身如玉？" onerror="this.src=\'/cover/4e/ed/02/4eed02ddc035b204cf347b0786114c43.jpg\'">
@@ -69,7 +70,6 @@ if($info){
         preg_match("/<div class=\"jieshao\".*?>.*?<\/div>/ism",$detail,$matchesRes);
         preg_match('/<img.*?src="([^"]+)"/',$matchesRes[0],$m);
         $store_data['cover_logo'] = $url .$m[1]??'';
-
         
         preg_match('/novelid=([0-9]+)/',$detail,$lid); //匹配novelid方便进行存储
         $store_data['novelid'] = isset($lid[1]) ? $lid[1] : null;
