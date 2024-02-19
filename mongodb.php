@@ -113,7 +113,7 @@ try {
             'cate_id'   =>  '98758',
             'create_time'   =>  time(),
         ];
-        $colName =  'brand';//集合名称
+        $colName =  'brand';//集合名称1
         $bulk = new MongoDB\Driver\BulkWrite;
         $bulk->insert($data);
         // echo $this->dbname.'.'.$colName;die;
