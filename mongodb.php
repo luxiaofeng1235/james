@@ -1,6 +1,5 @@
 <?php
 $list =[1,2,3,4,5];
-
 array_push($list, 100);
 $c = $list;
 if(isset($c) || !empty($c)){
@@ -90,16 +89,44 @@ try {
         var_dump($result);
         echo '</pre>';
         exit;
-        // $sets = array('cate_id'   =>  '4567');
-        // echo '<pre>';
-        // print_R($sets);
-        // echo '</pre>';
-        // exit;
-        // $colName ='brand';
-        // echo '<pre>';
-        // print_R($colName);
-        // echo '</pre>';
-        // exit;
+    }else if($act == 'delete'){
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $query=['cate_id' =>   '4567'];
+        // $query = $this->parse_query($query);
+        // 自动处理 '_id' 字段
+        $query = _parseId($query);
+        $limit  = 1;
+        $bulk->delete($query, ['limit' => $limit]);
+        // echo $this->dbname.'.'.$colName;die;
+        $colName  = 'brand';
+        //
+        $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
+        $result = $mongodbClient->executeBulkWrite($config['dbname'].'.'.$colName, $bulk, $writeConcern);
+        echo '<pre>';
+        var_dump($result);
+        echo '</pre>';
+        exit;
+    }else if($act == 'insert'){
+        // array_map('est', $arraylist);
+        $data = [
+            'title'     =>  '将军令的传说',
+            'cate_id'   =>  '98758',
+            'create_time'   =>  time(),
+        ];
+        $colName =  'brand';//集合名称
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $bulk->insert($data);
+        // echo $this->dbname.'.'.$colName;die;
+        $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
+        $insertRes = $mongodbClient->executeBulkWrite($config['dbname'].'.'.$colName, $bulk,$writeConcern);
+        if(!$insertRes){
+            echo 'insert error'."<br />";
+            die;
+        }
+        echo '<pre>';
+        var_dump($insertRes);
+        echo '</pre>';
+        exit;
     }
 
 
