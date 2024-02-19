@@ -84,15 +84,17 @@ if($data){
                             ];
                         }
                     }
-                    if(count($items)>0){
+                    if(!empty($items)){
                         $result = $mysql_obj->add_data($items ,$table_name);
                         if(!$result){
                             echo "complate error";
                         }
                         echo "同步分类完成";
+                    }else{
+                        echo "hava complate category data";
                     }
                 }else{
-                    echo "hava complte ";//已经同步
+                    echo "no data ";//已经同步
                 }
         }else{
             echo 'no category data !!!';
