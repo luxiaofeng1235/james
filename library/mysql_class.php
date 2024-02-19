@@ -2,14 +2,14 @@
 /*
  * 联盟数据库操类，
  * wangyan lixiaofeng 2013-11-28
- * 
+ *
  */
 
 //$obj=new Mysql_class();
 //$sdfsdfs=$obj->fetch("select * from union_user limit 10",$obj->union_slave);
 
 class  Mysql_class{
-	
+
 	public $db_slave='db_slave'; //从库
 	public $db_master='db_master'; //主库
 
@@ -18,9 +18,9 @@ class  Mysql_class{
 	{
 		$list=array();
 		//联盟主库master
-		$list['db_slave']=array('dsn'=>'mysql:host=localhost;port=3306;dbname=archive_product','user'=>'root','password'=>'root');
+		$list['db_slave']=array('dsn'=>'mysql:host=localhost;port=3306;dbname=book_center','user'=>'root','password'=>'root');
 		//联盟slave库
-		$list['db_master']=array('dsn'=>'mysql:host=localhost;port=3306;dbname=archive_product','user'=>'root','password'=>'root');
+		$list['db_master']=array('dsn'=>'mysql:host=localhost;port=3306;dbname=book_center','user'=>'root','password'=>'root');
 		return $list;
 	}
 
@@ -81,7 +81,7 @@ class  Mysql_class{
 	 *        sort_range =>[] 排序的降序或者升序 desc:降序 asc:升序 输入类型：数组或者单个字符
 	 *        group_by => '' 按照某个字段来进行排序
 	 *        limit => ''	查询限制个数，主要做分页会用到 可以是数组或者具体的字符 如 5 |[5,10]
-	 * @param string $filed 查询字段 
+	 * @param string $filed 查询字段
 	 * @param string $db_name 数据库连接句柄
 	 * @return object|unknow
 	 */
@@ -133,7 +133,7 @@ class  Mysql_class{
 			$sort_range = isset($where['sort_range']) ?$where['sort_range'] : ''; //排序方式
 			$group_by = isset($where['group_by']) ? trim($where['group_by']) : ''; //分组依据
 			$limit = isset($where['limit']) ? $where['limit'] :0;
-			
+
 			if($where_data){
 				foreach($where_data as $k=> $v){
 				if(!$v) continue;
@@ -161,7 +161,7 @@ class  Mysql_class{
 					if($sort_item){
 						$sort_item =rtrim($sort_item,',');
 						$sort_str = $sort_item;
-						if(isset($sort_item)) 
+						if(isset($sort_item))
 							unset($sort_item);
 					}
 				}else{
@@ -177,7 +177,7 @@ class  Mysql_class{
 			}
 		}
 		// return $sql;
-	
+
 	    //查询所有的数据进行解析
 	    $result = $this->fetchAll($sql,$db_name);
 	    if($result && is_array($result)){
@@ -192,7 +192,7 @@ class  Mysql_class{
 	    }
 	    return [];
 	}
-	
+
 	/**
 	 * 获取结果集，返回tables
 	 * @param string $sql
@@ -209,7 +209,7 @@ class  Mysql_class{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 执行一个sql,成功返回sql语句,失败返回空
 	 * @param string $sql
@@ -222,8 +222,8 @@ class  Mysql_class{
 		$date=$db_obj->query($sql);
 		if(isset($date) && !empty($date))
 		{
-			return $date; 
-			
+			return $date;
+
 		}
 		return false;
 	}
@@ -233,7 +233,7 @@ class  Mysql_class{
 	*
 	* @param [object] $[data] [<待添加的数据>]
 	* @param [string] $[table_name] [<表名称>]
-	* @return 
+	* @return
 	*/
 	public function add_data($data,$table_name=''){
 	    if(!$data || !$table_name){
@@ -241,14 +241,14 @@ class  Mysql_class{
 	    }
 	    $db_name = $this->db_master;
 	    $sql ="insert into `{$table_name}`";
-	
+
 	    if(!isset($data[0])){
-			$item[]=  $data;	    	
+			$item[]=  $data;
 	    }else{
 	    	$item = $data;
 	    }
 	    //取出来第一个的键值来处理
-	   
+
 	    $push_key  =isset($item[0]) ? implode(',', array_keys($item[0])) : '';
 	    // $order_sns=array_map('trim',explode("\n",$order_sns));
 	    $sql .=" (".$push_key.") values ";
@@ -269,7 +269,6 @@ class  Mysql_class{
 	        $inner_sql = rtrim($inner_sql,',');
 	        $sql .=$inner_sql;
 	    }
-	         
 	    if($sql){//开始添加数据
 	    	$db_obj = $this->getMysqlInfo($db_name);
 	    	$ret = $db_obj->query($sql);
@@ -282,7 +281,7 @@ class  Mysql_class{
 	    }else{
 	    	return false;
 	    }
-	    
+
 	}
 
 	/**
@@ -323,7 +322,7 @@ class  Mysql_class{
 	        unset($tval);
 	    if(!empty($update_data)){
 	        $sql .=$update_data;
-	    }    
+	    }
 	    $sql .= ' WHERE '.$where;
 	    if($limit && $limit_size){
 	        $sql .=" LIMIT ".$limit_size;
@@ -348,12 +347,12 @@ class  Mysql_class{
 	 * @param string $db_name
 	 * @return string or  false
 	 * @author [xiaofeng] <[<luxiaofeng.200@163.com>]>
-	 * 
+	 *
 	 */
 	public function delete($where='',$table_name=''){
 
 		$db_name =$this->db_master; //默认启用master来删除
-		
+
 		if(!$where)
 			return false;
 
@@ -367,7 +366,7 @@ class  Mysql_class{
 			return 0;
 		}
 	}
-	
+
 }
 
 function aasheaa($msg, $title = '')

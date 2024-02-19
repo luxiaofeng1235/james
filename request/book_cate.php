@@ -46,6 +46,7 @@ $data ='<div class="proxylistitem">
 　　　　</div>
 </div>';
 if($data){
+    $table_name= 'ims_category';//需要插入的表名称
     //<div class="lastupdate"> 最新更新
     preg_match("/<div class=\"proxylistitem\".*?>.*?<\/div>/ism",$data,$matchesRes);
     if(isset($matchesRes[0]) && !empty($matchesRes[0])){
@@ -67,18 +68,31 @@ if($data){
                 # $en_pa ='/[^\u4e00-\u9fa5]/';
                 if(is_array($content_info)){
                     $en_preg = "/[\x7f-\xff]+/";//匹配中文
+                    $now_time = time();
                     foreach($content_info as $response){
                         preg_match($pat, $response, $link_data);//获取当前的链接
                         preg_match($en_preg , $response,$title_data);//正则匹配汉字
-                        $items[] = [
-                            'link_url'  =>  $link_data[1] ?? '',
-                            'title'     =>  $title_data[0] ?? '',
-                        ];
+                        //匹配当前是否存在已存在的连接
+                        $where_data = "link_url = '".$link_data[1]."'";
+                        $info = $mysql_obj->get_data_by_condition($where_data,$table_name,'cate_name');
+                        //防止重复插入
+                        if(!$info){
+                             $items[] = [
+                                'cate_name'     =>  $title_data[0] ?? '',
+                                'link_url'  =>  $link_data[1] ?? '',
+                                'createtime'    => $now_time,
+                            ];
+                        }
                     }
-                    echo '<pre>';
-                    print_R($items);
-                    echo '</pre>';
-                    exit;
+                    if(count($items)>0){
+                        $result = $mysql_obj->add_data($items ,$table_name);
+                        if(!$result){
+                            echo "complate error";
+                        }
+                        echo "同步分类完成";
+                    }
+                }else{
+                    echo "hava complte ";//已经同步
                 }
         }else{
             echo 'no category data !!!';
