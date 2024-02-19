@@ -1,4 +1,9 @@
 <?php
+$dom = new DomDocument();
+echo '<pre>';
+print_R($dom);
+echo '</pre>';
+exit;
 echo 3;die;
 $array = array('1','1');
 foreach ($array as $k=>&$v){
