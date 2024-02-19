@@ -1,4 +1,5 @@
 <?php
+echo 3;die;
 $array = array('1','1');
 foreach ($array as $k=>&$v){
  $v = 2;
