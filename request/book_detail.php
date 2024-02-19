@@ -66,11 +66,17 @@ if($info){
 //</ul>
 //</div>
 //';
+//
+        // $detail = $socket_handle->run($link_url,'GET');
+        // echo '<pre>';
+        // print_R($detail);
+        // echo '</pre>';
+        // exit;
         $detail = webRequest($link_url , 'GET' , [],[]);
         preg_match("/<div class=\"jieshao\".*?>.*?<\/div>/ism",$detail,$matchesRes);
         preg_match('/<img.*?src="([^"]+)"/',$matchesRes[0],$m);
         $store_data['cover_logo'] = $url .$m[1]??'';
-        
+
         preg_match('/novelid=([0-9]+)/',$detail,$lid); //匹配novelid方便进行存储
         $store_data['novelid'] = isset($lid[1]) ? $lid[1] : null;
 
