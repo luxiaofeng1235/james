@@ -27,6 +27,7 @@ if($info){
     //进行相关的匹配信息
     if(!empty($info[0]['article_url'])){
         $link_url = $url . $info[0]['article_url'];//需要抓取的网址
+        // echo $link_url;die;
         $detail ='<div class="jieshao"><div class="lf">
 <img src="/cover/4e/ed/02/4eed02ddc035b204cf347b0786114c43.jpg" alt="人在合欢宗，你让我守身如玉？" onerror="this.src=\'/cover/4e/ed/02/4eed02ddc035b204cf347b0786114c43.jpg\'">
 </div>
@@ -61,30 +62,20 @@ if($info){
 
         //获取连载和更新时间、作者、最后的一节的章节
         preg_match("/<div class=\"msg\".*?>.*?<\/div>/ism",$detail,$all_data);
-    // $str = 'www<p>dreamdu</p>.com';
-    // echo '<pre>';
-    // var_dump(filterHtml($str));
-    // echo '</pre>';
-    // exit;
-
-        // echo '<pre>';
-        // print_R($all_data);
-        // echo '</pre>';
-        // exit;
-    // $subject = 'PHP中文网：http://www.php.cn/, baidu百度：http://www.baidu.com/';
-    $pattern = '/[\s]+/';
-
-    $c_data= preg_split($pattern, $all_data[0]);
-    if(isset($c_data[5])){
-        $store_data['author'] = filterHtml($c_data[11]);
-    }
-
+        $pattern = '/[\s]+/';
+        $c_data= preg_split($pattern, $all_data[0]);
+        if(isset($c_data[5])){
+            $author = filterHtml($c_data[5]);
+            $author_info = explode('>',$author);
+            $store_data['author'] = $author_info[1] ?? '';
+        }
     if($c_data){
         $en_preg = "/[\x7f-\xff]+/";//匹配中文
         if(isset($c_data[5])){
             preg_match($en_preg,$c_data[5],$author_data);
             $store_data['author'] = $author_data[0] ?? '';
         }
+
         if(isset($c_data['6'])){
             $a= explode('：',$c_data[6]);
             preg_match($en_preg,$a[1],$status_data);
@@ -97,15 +88,15 @@ if($info){
             $up_time = filterHtml($up_time);
             $store_data['third_update_time'] = $up_time;
         }
-
         print_R(preg_match('/target="_blank">.*/',$c_data[14],$t));
         //处理最后的章节
         $aa = $c_data[15];
-        echo '<pre>';
-        print_R($c_data);
-        echo '</pre>';
-        exit;
-        $store_data['nearby_chapter'] = $aa;
+        $nearyby_item = $t[0].' '.$aa;
+        $html =str_replace('target="_blank">','',$nearyby_item);
+        $html = str_replace('</a>','',$html);
+        $html =str_replace('</em>','' ,$html);
+        $store_data['ims_novel_info'] = $html;
+
         echo '<pre>';
         print_R($store_data);
         echo '</pre>';
