@@ -32,6 +32,8 @@ if($info){
 	if(!empty($info[0]['article_url'])){
 		$link_url = $url . $info[0]['article_url'];//需要抓取的网址
 
+
+
 		// echo $link_url;die;
 		//        $detail ='<div class="jieshao"><div class="lf">
 		//<img src="/cover/4e/ed/02/4eed02ddc035b204cf347b0786114c43.jpg" alt="人在合欢宗，你让我守身如玉？" onerror="this.src=\'/cover/4e/ed/02/4eed02ddc035b204cf347b0786114c43.jpg\'">
@@ -81,7 +83,10 @@ if($info){
 		// print_R($detail);
 		// echo '</pre>';
 		// exit;
-		$detail = webRequest($link_url , 'GET' , [],[]);
+		 $detail = webRequest($link_url , 'GET' , [],[]);
+		//$list = MultiHttp::curlGet(array($link_url));
+		// $detail  = $list[0] ?? [];
+
 		preg_match("/<div class=\"jieshao\".*?>.*?<\/div>/ism",$detail,$matchesRes);
 		preg_match('/<img.*?src="([^"]+)"/',$matchesRes[0],$m);
 		$store_data['cover_logo'] = $url .$m[1]??'';
