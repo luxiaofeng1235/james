@@ -145,6 +145,10 @@ if($info){
 		}
 		$store_data['cate_id'] = $art_id;
 		$store_data['createtime'] = time();
+		echo '<pre>';
+		print_R($store_data);
+		echo '</pre>';
+		exit;
 		//执行插入操作
 		$store_id = $mysql_obj->add_data($store_data , $table_novel_name);
 		if(!$store_id){
