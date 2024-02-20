@@ -1,24 +1,110 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '99a2481b42a5777fabbb7f75e459344c4f69e9a0',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
     ),
-    'reference' => NULL,
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '99a2481b42a5777fabbb7f75e459344c4f69e9a0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'elasticsearch/elasticsearch' => array(
+            'pretty_version' => 'v7.11.0',
+            'version' => '7.11.0.0',
+            'reference' => '277cd5e182827c59c23e146a836a30470c0f879d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../elasticsearch/elasticsearch',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'ezimuel/guzzlestreams' => array(
+            'pretty_version' => '3.0.1',
+            'version' => '3.0.1.0',
+            'reference' => 'abe3791d231167f14eb80d413420d1eab91163a8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ezimuel/guzzlestreams',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'ezimuel/ringphp' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'reference' => '92b8161404ab1ad84059ebed41d9f757e897ce74',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ezimuel/ringphp',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/ringphp' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '1.2.0',
+            ),
+        ),
+        'monolog/monolog' => array(
+            'pretty_version' => '1.2.1',
+            'version' => '1.2.1.0',
+            'reference' => 'd16496318c3e08e3bccfc3866e104e49cf25488a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../monolog/monolog',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/log' => array(
+            'pretty_version' => '1.1.4',
+            'version' => '1.1.4.0',
+            'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/log',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/simple-cache' => array(
+            'pretty_version' => '1.0.1',
+            'version' => '1.0.1.0',
+            'reference' => '408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/simple-cache',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'react/promise' => array(
+            'pretty_version' => 'v2.9.0',
+            'version' => '2.9.0.0',
+            'reference' => '234f8fd1023c9158e2314fa9d7d0e6a83db42910',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../react/promise',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'topthink/think-template' => array(
+            'pretty_version' => 'v2.0.8',
+            'version' => '2.0.8.0',
+            'reference' => 'abfc293f74f9ef5127b5c416310a01fe42e59368',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../topthink/think-template',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'topthink/think-view' => array(
+            'pretty_version' => 'v1.0.14',
+            'version' => '1.0.14.0',
+            'reference' => 'edce0ae2c9551ab65f9e94a222604b0dead3576d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../topthink/think-view',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
-  ),
 );
