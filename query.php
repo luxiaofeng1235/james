@@ -17,8 +17,20 @@ require_once './vendor/autoload.php';
 set_time_limit(500);
 ini_set('memory_limit','5000M');
 
+// $html = file_get_contents('http://www.baidu.com');
+// $doc = phpQuery::newDocumentHTML($html);
+// echo '<pre>';
+// print_R($doc);
+// echo '</pre>';
+// exit;
+
+
+
+
 $target_url = 'http://www.souduw.com';
-phpQuery::newDocumentFile($target_url);
+ phpQuery::newDocumentFile($target_url);
+
+
 $list = pq('div.fengtui')->find('dl');
 $i = 0;
 $data_img_list = array();
