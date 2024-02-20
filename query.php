@@ -24,10 +24,10 @@ $i = 0;
 $data_img_list = array();
 foreach ($list as $item) {
    $i ++;
-   $img = pq($item)->find('img')->attr('src');
-   $title = pq($item)->find('h3')->text();
-   $description = pq($item)->find('p')->text();
-   $href = pq($item)->find('span a')->attr('href');
+   $img = pq($item)->find('img')->attr('src');#小说的具体内容
+   $title = pq($item)->find('h3')->text();#小说的标题
+   $description = pq($item)->find('p')->text();#小说的描述
+   $href = pq($item)->find('span a')->attr('href');#获取小说的连接
    $author = pq($item)->find('span a')->text();//获取作者名称
    // $img_src_list[] = $img;
    $data_img_list[] =[
