@@ -20,7 +20,7 @@ if($_SERVER['SERVER_ADDR']=="127.0.0.1"){
 //error_reporting(E_ALL);
 error_reporting(E_ALL);   //屏蔽所有错误
 define('ROOT', str_replace("\\",'/',substr(dirname(__FILE__), 0, -7)));//ROOT => 根目录
- 
+
 define('IN', true);
 
 #$mtime = explode(' ', microtime());
@@ -40,6 +40,8 @@ require_once ROOT.'library/curl_http.php';
 require_once ROOT.'library/global.cfg.php';
 require_once ROOT.'library/HttpClientRequest.php';
 require_once ROOT.'library/newupload.cls.php';#文件上传
+require_once(ROOT.'library/Http.php'); //多线程请求curl支持post和get
+
 // require_once ROOT.'include/pimage.cls.php';
 // include_once ROOT.'include/ec.func.php';
 @extract($_GET);
