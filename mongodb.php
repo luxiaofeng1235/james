@@ -70,11 +70,10 @@ try {
 
     }else if($act == 'update'){
         $bulk = new MongoDB\Driver\BulkWrite;
-
-        $query = array('cate_id'   =>  '4567');
+        $query = array('cate_id'   =>  'M1256');
         // 自动处理 '_id' 字段
         $query =_parseId($query);
-        $newDoc = array('title' =>  '记忆的美好的123');
+        $newDoc = array('title' =>  '我是关羽的徒弟');
         $colName = 'brand';
 
         $bulk->update(
