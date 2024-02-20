@@ -119,11 +119,18 @@ if($info){
 			}
 			print_R(preg_match('/target="_blank">.*/',$c_data[14],$t));
 			//处理最后的章节
-			$aa = $c_data[15];
-			$nearyby_item = $t[0].' '.$aa;
-			$html =str_replace('target="_blank">','',$nearyby_item);
-			$html = str_replace('</a>','',$html);
-			$html =str_replace('</em>','' ,$html);
+			if(isset($c_data[15])){
+				$aa = $c_data[15];
+				$nearyby_item = $t[0].' '.$aa;
+				$html =str_replace('target="_blank">','',$nearyby_item);
+				$html = str_replace('</a>','',$html);
+				$html =str_replace('</em>','' ,$html);
+			}else{
+				//如果没有匹配到从12中去获取
+				$html = $c_data[12] ?? '';
+				$html = str_replace('"','',$html);
+			}
+
 			$store_data['nearby_chapter'] = $html;
 		}
 
@@ -145,10 +152,6 @@ if($info){
 		}
 		$store_data['cate_id'] = $art_id;
 		$store_data['createtime'] = time();
-		echo '<pre>';
-		print_R($store_data);
-		echo '</pre>';
-		exit;
 		//执行插入操作
 		$store_id = $mysql_obj->add_data($store_data , $table_novel_name);
 		if(!$store_id){
