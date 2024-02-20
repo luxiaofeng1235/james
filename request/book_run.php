@@ -16,12 +16,12 @@ $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
-$urls = ['http://www.baidu.com'];
-$result = MultiHttp::curlGet($urls);
-echo '<pre>';
-print_R($result);
-echo '</pre>';
-exit;
+// $urls = ['http://www.baidu.com'];
+// $result = MultiHttp::curlGet($urls);
+// echo '<pre>';
+// print_R($result);
+// echo '</pre>';
+// exit;
 if(is_cli()){
     $store_id = $argv[1] ?? 0;
 }else{
