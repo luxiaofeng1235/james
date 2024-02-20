@@ -19,11 +19,6 @@ require_once($dirname.'/library/init.inc.php');
 $file_path = ROOT . '/log/intro.html';
 
 
-// if (file_exists($file_path)) {
-//     $str = file_get_contents($file_path);//将整个文件内容读入到一个字符串中
-//     $str = str_replace("\r\n", "<br />", $str);
-// }
-
 // $urls = ['http://www.baidu.com'];
 // $result = MultiHttp::curlGet($urls);
 // echo '<pre>';
