@@ -1,4 +1,14 @@
 <?php
+// ///////////////////////////////////////////////////
+// Copyright(c) 2016,父母邦，帮父母
+// 日 期：2016年4月12日
+// 作　者：卢晓峰
+// E-mail :xiaofeng.lu@fumubang.com
+// 文件名 :.php
+// 创建时间:下午7:12:00
+// 编 码：UTF-8
+// 摘 要:利用phpquery进行数据采集
+// ///////////////////////////////////////////////////
 
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
@@ -17,14 +27,3 @@ foreach ($list as $item) {
    $img_src_list[] = $img;
 }
 var_dump($img_src_list);
-// phpQuery::newDocumentFile('http://news.sina.com.cn/china');
-// $aa= pq(".main-text li a")->text();
-// $dd = pq(".main-text li a")->attr('href');
-// echo '<pre>';
-// var_dump($dd);
-// echo '</pre>';
-// exit;
-// die;
-
-// $html = webRequest('https://www.souduw.com/api/novel/chapter/transcode.html?novelid=320105&chapterid=5&page=1','GET',[],[]);
-// $doc = phpQuery::newDocument($html,'utf-8'); //创建html对象
