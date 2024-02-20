@@ -12,7 +12,7 @@ class MultiHttp
 {
 
 
-   public static function rolling_curl($urls,$custom_options = null){//多个url访问
+   public static function curlGet($urls,$custom_options = null){//多个url访问
         if (sizeof($urls)==0) return;
         // make sure the rolling window isn't greater than the # of urls
         $rolling_window = 8;
