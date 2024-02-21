@@ -69,6 +69,24 @@ STR;
 // echo '</pre>';
 // exit;
 
+$rules = array(
+    'img'       =>array('.jieshao img','src'),
+    'author'    => array('.jieshao .rt em:eq(0) a','text'),
+    'title'     =>array('.jieshao .rt>h1','text'),
+    'status'    =>array('.jieshao .rt em:eq(1)','text'),
+    'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'),
+    'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
+    'intro' => array('.intro','html'),
+);
+$url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
+$info_data=QueryList::get($url)->rules($rules)->query()->getData();
+$info = $info_data->all();
+echo '<pre>';
+print_R($info);
+echo '</pre>';
+exit;
+
+
 
 $rules =array(
     'href'  =>  array('a','href'),
