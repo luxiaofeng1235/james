@@ -27,7 +27,11 @@ $sql = "select m.chapter_id,m.link_url,n.novelid from ".$table_novel_name.' as n
 $items = $mysql_obj->fetchAll($sql ,'db_slave');
 
 
+///获取拼装小说请求接口的url
 function getAPIUrl($novelid,$url){
+    if( !$novelid || !$url ){
+        return false;
+    }
     global $api_host,$link_url;
     $urls = explode('/' , $url);
     $store_name = $urls[1] ?? '';
@@ -61,6 +65,7 @@ if($items && is_array($items)){
     
     foreach ($items as $val){
         $url = getAPIUrl($val['novelid'],$val['link_url']);
+        if(!$url) continue;
         echo '<pre>';
         print_R($url);
         echo '</pre>';
