@@ -7,7 +7,15 @@ namespace Composer\Autoload;
 class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
 {
     public static $files = array (
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        'fe62ba7e10580d903cc46d808b5961a4' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/helpers.php',
+        'caf31cc6ec7cf2241cb6f12c226c3846' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/alias.php',
         '8592c7b0947d8a0965a9e8c3d16f9c24' => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/autoload.php',
     );
 
@@ -17,23 +25,58 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
             'think\\view\\driver\\' => 18,
             'think\\' => 6,
         ),
+        'T' => 
+        array (
+            'Tightenco\\Collect\\' => 18,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\VarDumper\\' => 28,
+        ),
         'R' => 
         array (
             'React\\Promise\\' => 14,
+        ),
+        'Q' => 
+        array (
+            'QL\\' => 3,
         ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
+            'Psr\\Cache\\' => 10,
+        ),
+        'L' => 
+        array (
+            'League\\MimeTypeDetection\\' => 25,
+            'League\\Flysystem\\' => 17,
+        ),
+        'J' => 
+        array (
+            'Jaeger\\' => 7,
         ),
         'G' => 
         array (
             'GuzzleHttp\\Stream\\' => 18,
             'GuzzleHttp\\Ring\\' => 16,
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
         ),
         'E' => 
         array (
             'Elasticsearch\\' => 14,
+        ),
+        'C' => 
+        array (
+            'Cache\\TagInterop\\' => 17,
+            'Cache\\Adapter\\Filesystem\\' => 25,
+            'Cache\\Adapter\\Common\\' => 21,
         ),
         'A' => 
         array (
@@ -50,9 +93,29 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/topthink/think-template/src',
         ),
+        'Tightenco\\Collect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tightenco/collect/src/Collect',
+        ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\VarDumper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/var-dumper',
+        ),
         'React\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
+        'QL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaeger/querylist/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -62,6 +125,31 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+        ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'League\\MimeTypeDetection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
+        ),
+        'League\\Flysystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem/src',
+        ),
+        'Jaeger\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaeger/g-http/src',
+        ),
         'GuzzleHttp\\Stream\\' => 
         array (
             0 => __DIR__ . '/..' . '/ezimuel/guzzlestreams/src',
@@ -70,9 +158,33 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/ezimuel/ringphp/src',
         ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
         'Elasticsearch\\' => 
         array (
             0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
+        ),
+        'Cache\\TagInterop\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cache/tag-interop',
+        ),
+        'Cache\\Adapter\\Filesystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cache/filesystem-adapter',
+        ),
+        'Cache\\Adapter\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cache/adapter-common',
         ),
         'Acme\\' => 
         array (
@@ -91,6 +203,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
     );
 
     public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Callback' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackBody' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackParam' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
@@ -101,6 +214,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'DOMDocumentWrapper' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/DOMDocumentWrapper.php',
         'DOMEvent' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/DOMEvent.php',
         'ICallbackNamed' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'phpQuery' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery.php',
         'phpQueryEvents' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/phpQueryEvents.php',
         'phpQueryObject' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/phpQueryObject.php',
