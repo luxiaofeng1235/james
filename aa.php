@@ -71,12 +71,11 @@ STR;
 
 
 $rules =array(
-
     'href'  =>  array('a','href'),
     'link_name' =>array('a','text'),
     'img'   =>array('a>img','src'),
     'intro' =>array('dd>p','text'),
-    'author'    =>array('dd span a','text'),
+    'author'    =>array('dd>span>a','text'),
 );
 
 $url ='https://www.souduw.com/';
