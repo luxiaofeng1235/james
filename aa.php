@@ -74,39 +74,46 @@ STR;
 //  var_dump($aa);
 //  echo '</pre>';
 //  exit;
-$rules = array(
-    'img'       =>array('.jieshao img','src'),
-    'author'    => array('.jieshao .rt em:eq(0) a','text'),
-    'title'     =>array('.jieshao .rt>h1','text'),
-    'status'    =>array('.jieshao .rt em:eq(1)','text'),
-    'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'),
-    'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
-    'intro' => array('.intro','html'),
-    'location'  =>  array('.place','text'),
-    'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
-    'novelid'   =>array('.info a:eq(2)','href'),//获取a连接里的值
-);
-$url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
-$info_data=QueryList::get($url)->rules($rules)->query()->getData();
-$info = $info_data->all();
-echo '<pre>';
-print_R($info);
-echo '</pre>';
-exit;
+// $rules = array(
+//     'cover_logo'       =>array('.jieshao img','src'),
+//     'author'    => array('.jieshao .rt em:eq(0) a','text'),
+//     'title'     =>array('.jieshao .rt>h1','text'),
+//     'status'    =>array('.jieshao .rt em:eq(1)','text'),
+//     'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'),
+//     'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
+//     'intro' => array('.intro','html'),
+//     'location'  =>  array('.place','text'),
+//     'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
+//     'novelid'   =>array('.info a:eq(2)','href'),//获取a连接里的值
+// );
+
+
+// $rules = array(
+//     'link'       =>array('.jieshao img','src'),
+// );
+// $url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
+// $info_data=QueryList::get($url)->rules($rules)->query()->getData();
+// $info = $info_data->all();
+// echo '<pre>';
+// print_R($info);
+// echo '</pre>';
+// exit;
 
 
 
 $rules =array(
     'href'  =>  array('a','href'),
     'link_name' =>array('a','text'),
-    'img'   =>array('a>img','src'),
-    'intro' =>array('dd>p','text'),
-    'author'    =>array('dd>span>a','text'),
+
 );
 
-$url ='https://www.souduw.com/';
-$range = '.fengtui dl';
+$url ='https://www.souduw.com/xiaoshuo/NBA_KaiJuXuanZeDaYaoDangDuiYou.html';
+$range = '.mulu li';
 $list=QueryList::get($url)->rules($rules)->range($range)->query()->getData();
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
 if($list){
     foreach($list->all() as $item){
         $auth_list[]  =  $item;

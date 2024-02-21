@@ -14,6 +14,8 @@ set_time_limit(300);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
+use QL\QueryList;##引入querylist的采集器
+
 if(is_cli()){
 	$art_id = $argv[1] ?? 0;
 }else{
@@ -31,95 +33,79 @@ if($info){
 	//进行相关的匹配信息
 	if(!empty($info[0]['article_url'])){
 		$link_url = $url . $info[0]['article_url'];//需要抓取的网址
-		$detail = webRequest($link_url , 'GET' , [],[]);
-		//$list = MultiHttp::curlGet(array($link_url));
-		// $detail  = $list[0] ?? [];
 
-		preg_match("/<div class=\"jieshao\".*?>.*?<\/div>/ism",$detail,$matchesRes);
-		preg_match('/<img.*?src="([^"]+)"/',$matchesRes[0],$m);
-		$store_data['cover_logo'] = $url .$m[1]??'';
+		//定义抓取规则
+		$rules = array(
+		    'cover_logo'       =>array('.jieshao img','src'),
+		    'author'    => array('.jieshao .rt em:eq(0) a','text'),
+		    'title'     =>array('.jieshao .rt>h1','text'),
+		    'status'    =>array('.jieshao .rt em:eq(1)','text'),
+		    'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'),
+		    'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
+		    'intro' => array('.intro','html'),
+		    'location'  =>  array('.place','text'),
+		    'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
+		    'novel_url'   =>array('.info a:eq(2)','href'),//获取a连接里的值
+		);
+		$info_data=QueryList::get($link_url)->rules($rules)->query()->getData();
+		$store_data = $info_data->all();
+		if(!empty($store_data)){
+			$store_data['status'] = str_replace('状态：','',$store_data['status']);
+			preg_match('/novelid=([0-9]+)/',$store_data['novel_url'],$novelid); //匹配novelid方便进行存储
+			$novelid && $store_data['novelid'] = $novelid[1] ?? 0;
+			if(!empty($store_data['link_url'])){
+				$link_data = explode('/' , $store_data['link_url']);//处理标签
+				if($link_data && isset($link_data[2])){
+					$store_data['english_name'] = str_replace('.html','',$link_data[2]);
+				}
+				//更新时间处理
+				$update_time  = str_replace('更新时间：','',$store_data['third_update_time']);
+				$update_time = strtotime($update_time);
+				$store_data['third_update_time'] = $update_time;
 
-		preg_match('/novelid=([0-9]+)/',$detail,$lid); //匹配novelid方便进行存储
-		$store_data['novelid'] = isset($lid[1]) ? $lid[1] : null;
+				$store_data['intro'] = htmlspecialchars($store_data['intro']);
+				unset($store_data['link_url']);//删除链接地址
+				unset($store_data['novel_url']);//删除无用数据
+				$store_data['cate_id'] = $info[0]['id'];
+				$store_data['createtime'] = time();
 
-		//获取标题
-		preg_match("#<h1>([^<]*)</h1>#",$detail,$title_data);
-		$store_data['title'] = $title_data[1] ?? '';
-		//获取连载和更新时间、作者、最后的一节的章节
-		preg_match("/<div class=\"msg\".*?>.*?<\/div>/ism",$detail,$all_data);
-		$pattern = '/[\s]+/';
-		$c_data= preg_split($pattern, $all_data[0]);
+				//执行插入操作
+				$where_data = "novelid = '".$store_data['novelid']."'";
 
-		if(isset($c_data[5])){
-			$author = filterHtml($c_data[5]);
-			$author_info = explode('>',$author);
-			$store_data['author'] = $author_info[1] ?? '';
-		}
-		if($c_data){
-			$en_preg = "/[\x7f-\xff]+/";//匹配中文
-			//匹配对应的状态信息
-			if(isset($c_data['6'])){
-				$a= explode('：',$c_data[6]);
-				preg_match($en_preg,$a[1],$status_data);
-				$store_data['status'] = $status_data[0] ??'';
-			}
-			//处理更新时间
-			if(isset($c_data[7])){
-				list($c_name,$date) =explode('：',$c_data[7]);
-				$up_time =$date.' '.$c_data[8] ??'';
-				$up_time = filterHtml($up_time);
-				$store_data['third_update_time'] = strtotime($up_time);
-			}
-			print_R(preg_match('/target="_blank">.*/',$c_data[14],$t));
-			//处理最后的章节
-			if(isset($c_data[15])){
-				$aa = $c_data[15];
-				$nearyby_item = $t[0].' '.$aa;
-				$html =str_replace('target="_blank">','',$nearyby_item);
-				$html = str_replace('</a>','',$html);
-				$html =str_replace('</em>','' ,$html);
-			}else{
-				//如果没有匹配到从12中去获取
-				$html = $c_data[12] ?? '';
-				$html = str_replace('"','',$html);
-			}
+				$check_data = $mysql_obj->get_data_by_condition($where_data,$table_novel_name,'store_id');
+				if(!empty($check_data)){
+					$store_id = intval($check_data[0]['store_id']);
+				}else{
+					$store_id = $mysql_obj->add_data($store_data , $table_novel_name);
+				}
+				if(!$store_id){
+					echo "add baseinfo error<br />";
+					exit();
+				}
 
-			$store_data['nearby_chapter'] = $html;
-		}
-
-		$chapter_detal  = [];
-		//匹配章节目录信息
-		preg_match("/<div class=\"mulu\".*?>.*?<\/div>/ism",$detail,$matchesRes);
-		if(isset($matchesRes[0]) && !empty($matchesRes[0])){
-			$pat = '/href=[\"|\'](.*?)[\"|\']/i';
-			$newdata = preg_match_all("/<li.*?>.*?<\/li>/ism" , $matchesRes[0],$aaa);
-			//判断相关的流程部署
-			if(!empty($aaa)){
-				foreach($aaa[0] as $link_value){
-					preg_match($pat , $link_value ,$link_info);
-					$chapter_detal[]=[
-						'link_url'  =>  $link_info[1] ?? '',
-					];
+				//定义章节的目录信息
+				$list_rule = array(
+				    'link_url'       =>array('a','href'),
+				  	'link_name'		=>array('a','text'),
+				);
+				$range = '.mulu li';
+				$rt = QueryList::get($link_url)->rules($list_rule)->range($range)->query()->getData();
+				if(!empty($rt->all())){
+					$chapter_detal = $rt->all();
+					foreach($chapter_detal  as &$value){
+						$value['store_id'] = $store_id;
+					}
+					$chapter_table_name= 'ims_chapter';
+					$res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
+					echo "基础信息和章节目录更新完成";
 				}
 			}
+		}else{
+			echo "未匹配相关数据\r\n";
 		}
-		$store_data['cate_id'] = $art_id;
-		$store_data['createtime'] = time();
-		//执行插入操作
-		$store_id = $mysql_obj->add_data($store_data , $table_novel_name);
-		if(!$store_id){
-			echo "add baseinfo error<br />";
-			exit();
-		}
-		//关联插入的ID信息
-		foreach($chapter_detal as &$v){
-			$v['store_id']  =   $store_id;
-			$v['createtime'] = time();
-		}
-		$chapter_table_name= 'ims_chapter';
-		$res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
-		echo "基础信息和章节目录更新完成";
 	}
+
+
 }else{
 	echo "no data";
 }
