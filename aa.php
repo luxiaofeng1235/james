@@ -6,59 +6,54 @@ use QL\QueryList;
 
 $html = <<<STR
 <div id="one">
-<div class="two">
-<img src="http://querylist.com/1.jpg" alt="这是图片"><img src="http://querylist.com/2.jpg" alt="这是图片2">
-</div>
-<span>其它的<b>一些</b>文本</span>
-<em>哈哈测试来了</em>
-</div>
-<div class="two">
-<img src="http://querylist.com/2.jpg" alt="这是图片"><img src="http://querylist.com/23.jpg" alt="这是图片2">
-</div>
-<span>其它的3<b>一些</b>文本1</span>
-<em>哈哈测试来了1</em>
+    <div class="two">
+    <img src="http://querylist.com/1.jpg" alt="这是图片"><img src="http://querylist.com/2.jpg" alt="这是图片2">
+    </div>
+    <span>其它的<b>一些</b>文本</span>
+    <em>哈哈测试来了</em>
 </div>
 STR;
 
-    // 请求地址
-    $url = 'https://proxy.ip3366.net/free/?action=china&page=1' ;
+    // // 请求地址
+    // $url = 'https://proxy.ip3366.net/free/?action=china&page=1' ;
 
-    // 定义采集规则
-    $rules = [
-        'ip' => ['td[data-title=IP]', 'text'],
-        'port' => ['td[data-title=PORT]', 'text'],
-        'type' => ['td[data-title=类型]', 'text'],
-        'location' => ['td[data-title=位置]', 'text'],
-        'speed' =>  ['td[data-title=响应速度]','text'],
-        //
-        'time'  =>  ['td[data-title=最后验证时间]','text'],
-    ];
-    // 循环的dom主体
-    $range = 'tbody tr';
-    $rt = QueryList::get($url)->rules($rules)->range($range)->query()->getData();
-    foreach($rt->all() as $val){
-        $info['ip'] = $val['ip'];
-        $info['port'] = $val['port'];
-        $info['type']   =   $val['type'];
-        $info['location']   =$val['location'];
-        $info['speed']  =   $val['speed'];
-        $info['time']   =   $val['time'];
-        $allProxy[] = $info;
-        // $allProxy[]['ip'] = $val['ip'];
-        // $allProxy[]['port'] = $val['port'];
-        // $allProxy[]['type'] = $val['type'];
-    }
-    echo '<pre>';
-    print_R($allProxy);
-    echo '</pre>';
-    exit;
+    // // 定义采集规则
+    // $rules = [
+    //     'ip' => ['td[data-title=IP]', 'text'],
+    //     'port' => ['td[data-title=PORT]', 'text'],
+    //     'type' => ['td[data-title=类型]', 'text'],
+    //     'location' => ['td[data-title=位置]', 'text'],
+    //     'speed' =>  ['td[data-title=响应速度]','text'],
+    //     //
+    //     'time'  =>  ['td[data-title=最后验证时间]','text'],
+    // ];
+    // // 循环的dom主体
+    // $range = 'tbody tr';
+    // $rt = QueryList::get($url)->rules($rules)->range($range)->query()->getData();
+    // foreach($rt->all() as $val){
+    //     $info['ip'] = $val['ip'];
+    //     $info['port'] = $val['port'];
+    //     $info['type']   =   $val['type'];
+    //     $info['location']   =$val['location'];
+    //     $info['speed']  =   $val['speed'];
+    //     $info['time']   =   $val['time'];
+    //     $allProxy[] = $info;
+    //     // $allProxy[]['ip'] = $val['ip'];
+    //     // $allProxy[]['port'] = $val['port'];
+    //     // $allProxy[]['type'] = $val['type'];
+    // }
+    // echo '<pre>';
+    // print_R($allProxy);
+    // echo '</pre>';
+    // exit;
 
 $rules = array(
     //采集id为one这个元素里面的纯文本内容
     'text' => array('#one','text'),//采集class为two下面的超链接的链接
     'link'=> array('.two>a','href'),//采集class为two下面的第二张图片的链接
     'img'=> array('.two>img:eq(1)','src'),//采集span标签中的HTML内容
-    'other' => array('span','html')
+    'other' => array('span','html'),
+    'tdk'   =>array('#one em','text'),
 
 );
 $data = QueryList::html($html)->rules($rules)->query()
