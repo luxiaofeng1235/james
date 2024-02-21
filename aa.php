@@ -7,7 +7,8 @@ use QL\QueryList;
 $html = <<<STR
 <div id="one">
     <div class="two">
-    <img src="http://querylist.com/1.jpg" alt="这是图片"><img src="http://querylist.com/2.jpg" alt="这是图片2">
+        <img src="http://querylist.com/1.jpg" alt="这是图片"><img src="http://querylist.com/2.jpg" alt="这是图片2">
+        <a href='http://www.baidu.com'>我是链接名称</a>
     </div>
     <span>其它的<b>一些</b>文本</span>
     <em>哈哈测试来了</em>
@@ -15,9 +16,9 @@ $html = <<<STR
 STR;
 
     // // 请求地址
-    // $url = 'https://proxy.ip3366.net/free/?action=china&page=1' ;
+    //  $url = 'https://proxy.ip3366.net/free/?action=china&page=1' ;
 
-    // // 定义采集规则
+    // // // 定义采集规则
     // $rules = [
     //     'ip' => ['td[data-title=IP]', 'text'],
     //     'port' => ['td[data-title=PORT]', 'text'],
@@ -27,9 +28,13 @@ STR;
     //     //
     //     'time'  =>  ['td[data-title=最后验证时间]','text'],
     // ];
-    // // 循环的dom主体
+    // // // 循环的dom主体
     // $range = 'tbody tr';
     // $rt = QueryList::get($url)->rules($rules)->range($range)->query()->getData();
+    // echo '<pre>';
+    // print_R($rt);
+    // echo '</pre>';
+    // exit;
     // foreach($rt->all() as $val){
     //     $info['ip'] = $val['ip'];
     //     $info['port'] = $val['port'];
@@ -47,25 +52,43 @@ STR;
     // echo '</pre>';
     // exit;
 
-$rules = array(
-    //采集id为one这个元素里面的纯文本内容
-    'text' => array('#one','text'),//采集class为two下面的超链接的链接
-    'link'=> array('.two>a','href'),//采集class为two下面的第二张图片的链接
-    'img'=> array('.two>img:eq(1)','src'),//采集span标签中的HTML内容
-    'other' => array('span','html'),
-    'tdk'   =>array('#one em','text'),
+// $rules = array(
 
+//     'text' => array('#one','text'),//采集class为two下面的超链接的链接
+//     'link'=> array('.two>a','href'),//采集class为two下面的下的文字
+//     'link_name' =>array('.two>a','text'),//采集class为two下面的连接地址里的文字
+//     'img'=> array('.two>img:eq(1)','src'),//采集two标签里的第二个图片的src的地址
+//     'other' => array('span','html'),//采集span标签里的html
+//     'tdk'   =>array('#one em','text'),//采集div的id为one的em下的内容
+// );
+// $data = QueryList::html($html)->rules($rules)->query()
+// ->getData();
+// $list = $data->all();
+// echo '<pre>';
+// print_R($data->all());
+// echo '</pre>';
+// exit;
+
+
+$rules =array(
+
+    'href'  =>  array('a','href'),
+    'link_name' =>array('a','text'),
+    'img'   =>array('a>img','src'),
+    'intro' =>array('dd>p','text'),
+    'author'    =>array('dd span a','text'),
 );
-$data = QueryList::html($html)->rules($rules)->query()
-->getData();
-$list = $data->all();
+
+$url ='https://www.souduw.com/';
+$range = '.fengtui dl';
+$list=QueryList::get($url)->rules($rules)->range($range)->query()->getData();
 echo '<pre>';
-print_R($data->all());
+print_R($list);
 echo '</pre>';
 exit;
 
 echo '<pre>';
-var_dump($html);
+var_dump($data);
 echo '</pre>';
 exit;
 
