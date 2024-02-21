@@ -36,14 +36,14 @@ if($info){
 
 		//定义抓取规则
 		$rules = array(
-		    'cover_logo'       =>array('.jieshao img','src'),
-		    'author'    => array('.jieshao .rt em:eq(0) a','text'),
-		    'title'     =>array('.jieshao .rt>h1','text'),
-		    'status'    =>array('.jieshao .rt em:eq(1)','text'),
-		    'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'),
-		    'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
-		    'intro' => array('.intro','html'),
-		    'location'  =>  array('.place','text'),
+		    'cover_logo'       =>array('.jieshao img','src'),//小说封面
+		    'author'    => array('.jieshao .rt em:eq(0) a','text'),//小说作者
+		    'title'     =>array('.jieshao .rt>h1','text'),//小说标题
+		    'status'    =>array('.jieshao .rt em:eq(1)','text'),//小说的状态
+		    'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'), //最近的更新时间
+		    'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'), //最近的文章
+		    'intro' => array('.intro','html'),//小说的简介
+		    'location'  =>  array('.place','text'),//小说的面包屑位置
 		    'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
 		    'novel_url'   =>array('.info a:eq(2)','href'),//获取a连接里的值
 		);
