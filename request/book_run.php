@@ -20,10 +20,10 @@ use QL\QueryList;##引入querylist的采集器
 
 $ql = QueryList::getInstance();
 //////////////////////取小说的htm
-$url = 'https://www.souduw.com/api/novel/chapter/transcode.html?novelid=153593&chapterid=40&page=1';
+$url = 'https://www.souduw.com/api/novel/chapter/transcode.html?novelid=153593&chapterid=116&page=1';
 $headers  = [
     'headers' => [
-        'Referer'             =>    'https://www.souduw.com/ZuiHaoZhuiXu-LongWangDian/40_1.html',
+        'Referer'             =>    'https://www.souduw.com/ZuiHaoZhuiXu-LongWangDian/116_1.html',
         'Cache-Control'       =>    'Cache-Control',
         'X-Requested-With'    =>    'XMLHttpRequest',
 
@@ -33,7 +33,8 @@ $response = $ql::post($url,[],$headers);
 $result  =$response->getHtml();
 $result = str_replace("}</p>",'}',$result);
 $info = str_replace(array("\r\n","\r","\n"),"",$result);
-$data = json_decode($info,true);
+// echo $info;die;
+$data = json_decode($info);
 echo '<pre>';
 print_R($data);
 echo '</pre>';
