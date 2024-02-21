@@ -40,7 +40,9 @@ require_once ROOT.'library/curl_http.php';
 require_once ROOT.'library/global.cfg.php';
 require_once ROOT.'library/HttpClientRequest.php';
 require_once ROOT.'library/newupload.cls.php';#文件上传
-require_once(ROOT.'library/Http.php'); //多线程请求curl支持post和get
+require_once ROOT.'library/Http.php'; //多线程请求curl支持post和get
+require_once ROOT.'vendor/autoload.php';//自动加载第三方类的初始文件
+
 
 // require_once ROOT.'include/pimage.cls.php';
 // include_once ROOT.'include/ec.func.php';

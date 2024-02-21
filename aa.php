@@ -1,5 +1,7 @@
 <?php
-require './vendor/autoload.php';
+$dirname = dirname(__FILE__);
+$dirname =str_replace("\\", "/", $dirname) ;
+require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
 $html = <<<STR
