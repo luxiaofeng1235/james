@@ -84,6 +84,7 @@ $rules = array(
     'intro' => array('.intro','html'),
     'location'  =>  array('.place','text'),
     'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
+    'novelid'   =>array('.info a:eq(2)','href'),//获取a连接里的值
 );
 $url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
 $info_data=QueryList::get($url)->rules($rules)->query()->getData();
