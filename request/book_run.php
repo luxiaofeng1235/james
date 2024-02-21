@@ -15,7 +15,11 @@ set_time_limit(300);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-
+$aa =Env::get('APICONFIG.API_HOST');
+echo '<pre>';
+var_dump($aa);
+echo '</pre>';
+exit;
 use QL\QueryList;##引入querylist的采集器
 
 $ql = QueryList::getInstance();
