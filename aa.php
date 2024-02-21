@@ -26,6 +26,10 @@ STR;
         'ip' => ['td[data-title=IP]', 'text'],
         'port' => ['td[data-title=PORT]', 'text'],
         'type' => ['td[data-title=类型]', 'text'],
+        'location' => ['td[data-title=位置]', 'text'],
+        'speed' =>  ['td[data-title=响应速度]','text'],
+        //
+        'time'  =>  ['td[data-title=最后验证时间]','text'],
     ];
     // 循环的dom主体
     $range = 'tbody tr';
@@ -34,6 +38,9 @@ STR;
         $info['ip'] = $val['ip'];
         $info['port'] = $val['port'];
         $info['type']   =   $val['type'];
+        $info['location']   =$val['location'];
+        $info['speed']  =   $val['speed'];
+        $info['time']   =   $val['time'];
         $allProxy[] = $info;
         // $allProxy[]['ip'] = $val['ip'];
         // $allProxy[]['port'] = $val['port'];
