@@ -28,7 +28,7 @@ ini_set('memory_limit','5000M');
 
 
 $target_url = 'http://www.souduw.com';
- phpQuery::newDocumentFile($target_url);
+phpQuery::newDocumentFile($target_url);
 
 
 $list = pq('div.fengtui')->find('dl');
