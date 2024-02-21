@@ -73,6 +73,10 @@ if($info){
 				$where_data = "novelid = '".$store_data['novelid']."'";
 
 				$check_data = $mysql_obj->get_data_by_condition($where_data,$table_novel_name,'store_id');
+				// echo '<pre>';
+				// print_R($store_data);
+				// echo '</pre>';
+				// exit;
 				if(!empty($check_data)){
 					$store_id = intval($check_data[0]['store_id']);
 				}else{
@@ -97,7 +101,7 @@ if($info){
 					}
 					$chapter_table_name= 'ims_chapter';
 					$res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
-					echo "基础信息和章节目录更新完成";
+					echo "当前小说：".$store_data['title']."|novelid=".$store_data['novelid']."  拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
 				}
 			}
 		}else{
