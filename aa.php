@@ -81,13 +81,14 @@ $rules =array(
 $url ='https://www.souduw.com/';
 $range = '.fengtui dl';
 $list=QueryList::get($url)->rules($rules)->range($range)->query()->getData();
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
+if($list){
+    foreach($list->all() as $item){
+        $auth_list[]  =  $item;
+    }
+}
 
 echo '<pre>';
-var_dump($data);
+var_dump($auth_list);
 echo '</pre>';
 exit;
 
