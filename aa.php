@@ -77,6 +77,7 @@ $rules = array(
     'third_update_time'    =>array('.jieshao .rt em:eq(2)','text'),
     'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
     'intro' => array('.intro','html'),
+    'location'  =>  array('.place','text'),
 );
 $url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
 $info_data=QueryList::get($url)->rules($rules)->query()->getData();
