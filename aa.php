@@ -2,7 +2,7 @@
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-use QL\QueryList;
+use QL\QueryList;##引入querylist的采集器
 
 $html = <<<STR
 <div id="one">
@@ -69,6 +69,11 @@ STR;
 // echo '</pre>';
 // exit;
 
+// $aa =Pinyin('zhongguo');
+// echo '<pre>';
+//  var_dump($aa);
+//  echo '</pre>';
+//  exit;
 $rules = array(
     'img'       =>array('.jieshao img','src'),
     'author'    => array('.jieshao .rt em:eq(0) a','text'),
@@ -78,6 +83,7 @@ $rules = array(
     'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
     'intro' => array('.intro','html'),
     'location'  =>  array('.place','text'),
+    'aa'    =>array('.place a:eq(2)','href'),
 );
 $url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
 $info_data=QueryList::get($url)->rules($rules)->query()->getData();
