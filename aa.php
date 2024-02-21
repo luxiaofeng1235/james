@@ -83,7 +83,7 @@ $rules = array(
     'nearby_chapter'    =>array('.jieshao .rt em:eq(3) a','text'),
     'intro' => array('.intro','html'),
     'location'  =>  array('.place','text'),
-    'aa'    =>array('.place a:eq(2)','href'),
+    'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
 );
 $url = 'https://www.souduw.com/xiaoshuo/ChuaiZaiLiHunHou_QianFuSanGuiJiuKouQiuHeHao.html';
 $info_data=QueryList::get($url)->rules($rules)->query()->getData();
