@@ -17,7 +17,7 @@ require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
 
 
-$url = 'https://www.souduw.com/'; //需要爬取的url章节信息
+$url = Env::get('APICONFIG.WEB_SOTRE_HOST'); //需要爬取的url章节信息
 $table_name= 'ims_category';//需要插入的表名称
 $data = webRequest($url ,'GET',[],[]);//获取当前的匹配的内容信息
 if($data){

@@ -28,7 +28,7 @@ if(!$art_id){
 $table_name ='ims_category';
 $table_novel_name ='ims_novel_info';
 $info = $mysql_obj->get_data_by_condition('id = \''.$art_id.'\'',$table_name);
-$url ='https://www.souduw.com';
+$url = Env::get('APICONFIG.WEB_SOTRE_HOST'); //获取配置的域名信息
 if($info){
 	//进行相关的匹配信息
 	if(!empty($info[0]['article_url'])){
@@ -73,10 +73,6 @@ if($info){
 				$where_data = "novelid = '".$store_data['novelid']."'";
 
 				$check_data = $mysql_obj->get_data_by_condition($where_data,$table_novel_name,'store_id');
-				// echo '<pre>';
-				// print_R($store_data);
-				// echo '</pre>';
-				// exit;
 				if(!empty($check_data)){
 					$store_id = intval($check_data[0]['store_id']);
 				}else{

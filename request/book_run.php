@@ -15,13 +15,11 @@ set_time_limit(300);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-$aa =Env::get('APICONFIG.API_HOST');
-echo '<pre>';
-var_dump($aa);
-echo '</pre>';
-exit;
+
 use QL\QueryList;##引入querylist的采集器
 
+$link_url =Env::get('APICONFIG.API_HOST');//域名地址
+$api_host = Env::get('APICONFIG.API_HOST'); //请求的接口域名
 $ql = QueryList::getInstance();
 //////////////////////取小说的htm
 $url = 'https://www.souduw.com/api/novel/chapter/transcode.html?novelid=327782&chapterid=19&page=1';
