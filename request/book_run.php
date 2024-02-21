@@ -16,7 +16,28 @@ $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
-$file_path = ROOT . '/log/intro.html';
+use QL\QueryList;##引入querylist的采集器
+
+$ql = QueryList::getInstance();
+//////////////////////取小说的htm
+$url = 'https://www.souduw.com/api/novel/chapter/transcode.html?novelid=153593&chapterid=40&page=1';
+$headers  = [
+    'headers' => [
+        'Referer'             =>    'https://www.souduw.com/ZuiHaoZhuiXu-LongWangDian/40_1.html',
+        'Cache-Control'       =>    'Cache-Control',
+        'X-Requested-With'    =>    'XMLHttpRequest',
+
+    ]
+];
+$response = $ql::post($url,[],$headers);
+$result  =$response->getHtml();
+$result = str_replace("}</p>",'}',$result);
+$info = str_replace(array("\r\n","\r","\n"),"",$result);
+$data = json_decode($info,true);
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+exit;
 
 
 // $urls = ['http://www.baidu.com'];

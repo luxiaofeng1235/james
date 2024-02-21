@@ -45,7 +45,7 @@ if($info){
 		    'intro' => array('.intro','html'),//小说的简介
 		    'location'  =>  array('.place','text'),//小说的面包屑位置
 		    'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
-		    'novel_url'   =>array('.info a:eq(2)','href'),//获取a连接里的值
+		    'novel_url'   =>array('.info a:eq(2)','href'),//获取小说的跳转地址
 		);
 		$info_data=QueryList::get($link_url)->rules($rules)->query()->getData();
 		$store_data = $info_data->all();
