@@ -20,7 +20,6 @@ $php_path = str_replace('\\','/',$php_path);
 $shell_cmd = $php_path . ' '.ROOT . '/request/aa.php';//需要执行的脚本的路径信息
 echo $shell_cmd."\n";
 
-
 // echo $shell_cmd;die;
 // $shell_cmd =  str_replace("\\",'/' , $shell_cmd);
 exec($shell_cmd , $output , $status);

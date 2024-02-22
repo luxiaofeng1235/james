@@ -22,6 +22,7 @@ error_reporting(E_ALL);   //屏蔽所有错误
 define('ROOT', str_replace("\\",'/',substr(dirname(__FILE__), 0, -7)));//ROOT => 根目录
 
 define('IN', true);
+define('DS', DIRECTORY_SEPARATOR);
 
 #$mtime = explode(' ', microtime());
 #$starttime = $mtime[1] + $mtime[0];

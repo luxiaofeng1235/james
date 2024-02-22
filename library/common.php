@@ -498,6 +498,29 @@ if (!function_exists('createFolders')) {
 }
 
 /**
+ * 获取小说的目录和文件信息
+ * @param $str 需要处理的路径
+ * @return mixed
+ */
+function getStoreFile($str){
+    if(!$str){
+        return false;
+    }
+    $data =explode('/', $str);
+    $filename = $data[1] ?? '';
+    if(strpos($filename,'_')){
+        $prepare_filder= explode('_',$filename);
+        $folder_name = $prepare_filder[1]??'';
+    }else{
+        $folder_name = $filename;
+    }
+    $save_file = $data[2]??'';//获取保存的名称
+    $save_file = str_replace('html','txt',$save_file); //用txt来进行存储保存
+    $return_str= ['folder'  =>  $folder_name , 'save_path'  =>  $save_file];
+    return $return_str;
+}
+
+/**
  * 读取指定文件
  * @param $string 需要处理的字符串或数组
  * @return mixed
