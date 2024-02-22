@@ -28,33 +28,36 @@ $php_path = str_replace('\\','/',$php_path);
 // print_R($output);
 // echo '</pre>';
 
-
-for ($i=0; $i <$pages ; $i++) {
-    $page = $i* $num;
-    // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
-    $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$limit;
-    $list = $mysql_obj->fetchAll($sql,'db_slave');
-    if(!empty($list)){
-        foreach($list as $key =>$val){
-            $cate_id = intval($val['cate_id']);
-            if ( !$cate_id ) continue;
-            //定义需要执行的语句
-            $shell_cmd = $php_path . ' '.ROOT . 'request/book_detail.php '.$cate_id;
-            echo $shell_cmd ."\r\n";
-            exec($shell_cmd , $output , $status);
-            echo '<pre>';
-            print_R($output);
-            echo '</pre>';
-        }
-        die;
+ $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$limit;
+$list = $mysql_obj->fetchAll($sql,'db_slave');
+if(!empty($list)){
+    foreach($list as $key =>$val){
+        $cate_id = intval($val['cate_id']);
+        if ( !$cate_id ) continue;
+        //定义需要执行的语句
+        $shell_cmd = $php_path . ' '.ROOT . 'request/book_detail.php '.$cate_id;
+        echo $shell_cmd ."\r\n";
+        exec($shell_cmd , $output , $status);
+        echo '<pre>';
+        print_R($output);
+        echo '</pre>';
     }
-    // echo $sql;exit;
-    // foreach($list as $key =>$value){
-    //     $cate_id = intval($value['cate_id']);
-    //     if(!$cate_id) continue;
-
-    // }
-    // sleep(1);
-    echo $sql."\r\n";
+    exit;
 }
+
+
+// for ($i=0; $i <$pages ; $i++) {
+//     $page = $i* $num;
+//     // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
+
+
+//     // echo $sql;exit;
+//     // foreach($list as $key =>$value){
+//     //     $cate_id = intval($value['cate_id']);
+//     //     if(!$cate_id) continue;
+
+//     // }
+//     // sleep(1);
+//     echo $sql."\r\n";
+// }
 ?>
