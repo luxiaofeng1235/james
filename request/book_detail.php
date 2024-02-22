@@ -31,12 +31,12 @@ $info = $mysql_obj->get_data_by_condition('id = \''.$art_id.'\'',$table_name);
 $url = Env::get('APICONFIG.WEB_SOTRE_HOST'); //获取配置的域名信息
 
 //删除旧数据，防止有新的进行抓取
-function delete_chapter_data($store_id,$table_name){
+function delete_chapter_data($store_id,$novelid,$table_name){
 	if(!$store_id){
 		return false;
 	}
 	global $mysql_obj;
-	$sql = "delete from ".$table_name." where store_id = ".$store_id;
+	$sql = "delete from ".$table_name." where novelid = ".$novelid;
 	$mysql_obj->query($sql,'db_master');
 }
 if($info){
@@ -96,7 +96,7 @@ if($info){
 				//每次更新之前先把旧数据删除
 				$chapter_table_name= 'ims_chapter';
 				//删除章节关联的数据信息
-				delete_chapter_data($store_id,$chapter_table_name);
+				delete_chapter_data($store_id,$store_data['novelid'],$chapter_table_name);
 
 				//定义章节的目录信息
 				$list_rule = array(
