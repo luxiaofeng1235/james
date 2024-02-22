@@ -484,6 +484,19 @@ function new_addslashes($string){
     return $string;
 }
 
+
+/**
+ * 创建指定目录
+ * @param $string 需要处理的字符串或数组
+ * @return mixed
+ */
+if (!function_exists('createFolders')) {
+    function createFolders($dir)
+    {
+        return is_dir($dir) or (createFolders(dirname($dir)) and mkdir($dir, 0777) and chmod($dir, 0777));
+    }
+}
+
 /**
  * 读取指定文件
  * @param $string 需要处理的字符串或数组
