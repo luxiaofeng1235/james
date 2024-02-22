@@ -47,7 +47,10 @@ if($info){
 		    'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
 		    'novel_url'   =>array('.info a:eq(2)','href'),//获取小说的跳转地址
 		);
-		$info_data=QueryList::get($link_url)->rules($rules)->query()->getData();
+		//爬取相关规则下的类
+		$info_data=QueryList::get($link_url)
+				->rules($rules)
+				->query()->getData();
 		$store_data = $info_data->all();
 		if(!empty($store_data)){
 			$store_data['status'] = str_replace('状态：','',$store_data['status']);

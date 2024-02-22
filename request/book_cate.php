@@ -27,7 +27,10 @@ if($data){
         'cate_link_url' =>   array('.lx a','href'), //分类链接地址
         'article_url'   =>array('.sm a','href') //文章链接地址
     );
-    $rt = QueryList::get($url)->rules($rules)->range($range)->query()->getData();
+    $rt = QueryList::get($url)
+        ->rules($rules)
+        ->range($range)
+        ->query()->getData();
     if($rt->all()){
         $data = $rt->all();
         foreach($data as  $key =>$val){
