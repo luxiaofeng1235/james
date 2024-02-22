@@ -27,6 +27,14 @@ class MultiHttp
             CURLOPT_TIMEOUT => 60,
             CURLOPT_HEADER  => 0,
             CURLOPT_ENCODING    =>  'gzip',
+
+            CURLOPT_PROXY       =>  '202.63.172.220',
+            CURLOPT_PROXYPORT   =>  '47394',
+            CURLOPT_PROXYUSERPWD    =>  '3e42fd4e:a8c776b5',
+            CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5,
+            CURLOPT_PROXYAUTH   =>   CURLAUTH_BASIC,
+
+            CURLOPT_HTTPPROXYTUNNEL => 0,
         );
 
         $std_options[CURLOPT_SSL_VERIFYPEER] = FALSE;
@@ -38,7 +46,9 @@ class MultiHttp
         // start the first batch批 of requests
         for ($i = 0; $i < $rolling_window; $i++) {
             $ch = curl_init();
+
             $options[CURLOPT_URL] = $urls[$i];
+
             $options[CURLOPT_REFERER] = $urls[$i];
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Linux; U; Android 4.4.1; zh-cn; R815T Build/JOP40D) AppleWebKit/533.1 (KHTML, like Gecko)Version/4.0 MQQBrowser/4.5 Mobile Safari/533.1');
              //设置头部
