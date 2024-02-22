@@ -15,33 +15,33 @@ if(!$countNum){
 
 $num =50;
 $pages = ceil($countNum /$num);
-$root_path = dirname(dirname(dirname(__DIR__))).'/Extensions/php/php7.2.9nts';
-// $shell_cmd = 'cd  '.$root_path.';  php.exe ../../../WWW/james/request/book_detail.php 1';
-// // echo $shell_cmd;die;
+$root_path = ROOT.'request/aa.php';
+$shell_cmd = 'php '.$root_path;
+echo $shell_cmd;
+// echo $shell_cmd;die;
 // $shell_cmd =  str_replace("\\",'/' , $shell_cmd);
-// exec($shell_cmd , $output , $status);
-// echo '<pre>';
-// print_R($output);
-// echo '</pre>';
-// exit;
-// die;
+exec($shell_cmd , $output , $status);
+echo '<pre>';
+print_R($output);
+echo '</pre>';
 
-for ($i=0; $i <$pages ; $i++) {
-    $page = $i* $num;
-    // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
-    $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit 2";
-    $list = $mysql_obj->fetchAll($sql,'db_slave');
-    echo '<pre>';
-    print_R($list);
-    echo '</pre>';
-    exit;
-    // echo $sql;exit;
-    // foreach($list as $key =>$value){
-    //     $cate_id = intval($value['cate_id']);
-    //     if(!$cate_id) continue;
 
-    // }
-    // sleep(1);
-    echo $sql."\r\n";
-}
+// for ($i=0; $i <$pages ; $i++) {
+//     $page = $i* $num;
+//     // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
+//     $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit 2";
+//     $list = $mysql_obj->fetchAll($sql,'db_slave');
+//     echo '<pre>';
+//     print_R($list);
+//     echo '</pre>';
+//     exit;
+//     // echo $sql;exit;
+//     // foreach($list as $key =>$value){
+//     //     $cate_id = intval($value['cate_id']);
+//     //     if(!$cate_id) continue;
+
+//     // }
+//     // sleep(1);
+//     echo $sql."\r\n";
+// }
 ?>
