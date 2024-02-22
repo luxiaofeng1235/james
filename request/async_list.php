@@ -31,7 +31,7 @@ $php_path = str_replace('\\','/',$php_path);
 for ($i=0; $i <$pages ; $i++) {
     $page = $i* $num;
     // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
-    $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit 2";
+    $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit 10";
     $list = $mysql_obj->fetchAll($sql,'db_slave');
     if(!empty($list)){
         foreach($list as $key =>$val){
