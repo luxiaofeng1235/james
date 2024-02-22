@@ -126,7 +126,7 @@ if($info){
 						$update_data['is_async'] = 1;
 						$mysql_obj->update_data($update_data,"id=".$art_id,$table_name);
 					}
-					echo "当前小说：".$store_data['title']."|novelid=".$store_data['novelid']." ---url：".$article_url."\t拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
+					echo "insert_id：".$store_id."\t当前小说：".$store_data['title']."|novelid=".$store_data['novelid']." ---url：".$article_url."\t拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
 				}
 			}
 		}else{

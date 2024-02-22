@@ -18,17 +18,8 @@ $limit = isset($argv[1]) ? intval($argv[1]) : 10;
 $pages = ceil($countNum /$num);
 $php_path = dirname(dirname(dirname(__DIR__))).'/Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径
 $php_path = str_replace('\\','/',$php_path);
-// $shell_cmd = $php_path . ' '.ROOT . '/request/aa.php';//需要执行的脚本的路径信息
-// echo $shell_cmd."\n";
 
-// echo $shell_cmd;die;
-// $shell_cmd =  str_replace("\\",'/' , $shell_cmd);
-// exec($shell_cmd , $output , $status);
-// echo '<pre>';
-// print_R($output);
-// echo '</pre>';
-
- $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$limit;
+ $sql ="select id as cate_id from ".$table_name." where ".$where_data." order by id asc limit ".$limit;
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 if(!empty($list)){
     foreach($list as $key =>$val){
@@ -42,7 +33,6 @@ if(!empty($list)){
         print_R($output);
         echo '</pre>';
     }
-    exit;
 }
 
 
