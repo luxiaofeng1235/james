@@ -785,6 +785,50 @@
                         "install-path": "../guzzlehttp/psr7"
                 },
                 {
+                        "name": "jaeger/curlmulti",
+                        "version": "1.0",
+                        "version_normalized": "1.0.0.0",
+                        "source": {
+                                "type": "git",
+                                "url": "https://github.com/jae-jae/CurlMulti.git",
+                                "reference": "059f13241e15ddfe6155c032ef765e58233a5aab"
+                        },
+                        "dist": {
+                                "type": "zip",
+                                "url": "https://api.github.com/repos/jae-jae/CurlMulti/zipball/059f13241e15ddfe6155c032ef765e58233a5aab",
+                                "reference": "059f13241e15ddfe6155c032ef765e58233a5aab",
+                                "shasum": ""
+                        },
+                        "require": {
+                                "ext-curl": "*",
+                                "php": ">=5.1.0"
+                        },
+                        "time": "2015-12-23T16:28:22+00:00",
+                        "type": "library",
+                        "installation-source": "dist",
+                        "autoload": {
+                                "psr-4": {
+                                        "QL\\Ext\\Lib\\": ""
+                                }
+                        },
+                        "notification-url": "https://packagist.org/downloads/",
+                        "license": [
+                                "Apache-2.0"
+                        ],
+                        "authors": [
+                                {
+                                        "name": "Ares",
+                                        "email": "admin@phpdr.net"
+                                }
+                        ],
+                        "description": "CurlMulti是PHP多线程类库,修改用于QueryList(http://querylist.cc ),CurlMulti项目地址:https://github.com/ares333/php-curlmulti",
+                        "support": {
+                                "issues": "https://github.com/jae-jae/CurlMulti/issues",
+                                "source": "https://github.com/jae-jae/CurlMulti/tree/master"
+                        },
+                        "install-path": "../jaeger/curlmulti"
+                },
+                {
                         "name": "jaeger/g-http",
                         "version": "V1.7.2",
                         "version_normalized": "1.7.2.0",

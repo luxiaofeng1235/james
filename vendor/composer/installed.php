@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3a8db34b3ecfd98cf3fedb010cac1be064330658',
+        'reference' => '278b109f530ddff73b1071a16219778c6115f43c',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3a8db34b3ecfd98cf3fedb010cac1be064330658',
+            'reference' => '278b109f530ddff73b1071a16219778c6115f43c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -114,6 +114,15 @@
             'replaced' => array(
                 0 => '1.2.0',
             ),
+        ),
+        'jaeger/curlmulti' => array(
+            'pretty_version' => '1.0',
+            'version' => '1.0.0.0',
+            'reference' => '059f13241e15ddfe6155c032ef765e58233a5aab',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../jaeger/curlmulti',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'jaeger/g-http' => array(
             'pretty_version' => 'V1.7.2',
