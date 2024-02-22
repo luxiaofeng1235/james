@@ -80,7 +80,6 @@ if($info){
 				unset($store_data['novel_url']);//删除无用数据
 				$store_data['cate_id'] = $info[0]['id'];
 				$store_data['createtime'] = time();
-
 				//执行插入操作
 				$where_data = "novelid = '".$store_data['novelid']."'";
 				$check_data = $mysql_obj->get_data_by_condition($where_data,$table_novel_name,'store_id');
@@ -116,6 +115,11 @@ if($info){
 						$value['store_id'] = $store_id;
 					}
 					$res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
+					//同步小说分类表的状态
+					if($info[0]['is_async'] !=1){
+						$update_data['is_async'] = 1;
+						$mysql_obj->update_data($update_data,"id=".$art_id,$table_name);
+					}
 					echo "当前小说：".$store_data['title']."|novelid=".$store_data['novelid']."  拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
 				}
 			}
