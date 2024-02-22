@@ -16,8 +16,10 @@ if(!$countNum){
 $num =50;
 $pages = ceil($countNum /$num);
 $root_path = ROOT.'request/aa.php';
-$shell_cmd = 'php '.$root_path;
-echo $shell_cmd;
+$shell_cmd = 'php '.ROOT.'/request/aa.php';//需要执行的脚本
+echo $shell_cmd."\n";
+// die;
+
 // echo $shell_cmd;die;
 // $shell_cmd =  str_replace("\\",'/' , $shell_cmd);
 exec($shell_cmd , $output , $status);
