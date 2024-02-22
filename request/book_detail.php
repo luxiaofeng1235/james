@@ -44,7 +44,7 @@ if($info){
 	if(!empty($info[0]['article_url'])){
 		$article_url = trim($info[0]['article_url']);//小说地址
 		if($info[0]['is_async'] == 1){
-			echo $info[0]['article_url']." ---url：".$article_url."---当前数据已同步，请勿重复同步\r\n";
+			echo "url：---".$article_url."---当前数据已同步，请勿重复同步\r\n";
 			exit();
 		}
 		$link_url = $url . $info[0]['article_url'];//需要抓取的网址
