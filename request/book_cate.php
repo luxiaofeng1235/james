@@ -18,7 +18,7 @@ use QL\QueryList;##引入querylist的采集器
 
 
 $url = Env::get('APICONFIG.WEB_SOTRE_HOST'); //需要爬取的url章节信息
-$table_name= 'ims_category';//需要插入的表名称
+$table_name= Env::get('APICONFIG.TABLE_CATE');//需要插入的表名称
 $data = webRequest($url ,'GET',[],[]);//获取当前的匹配的内容信息
 if($data){
     $range = '.lastupdate li';
@@ -42,7 +42,6 @@ if($data){
             if($info){
                 unset($data[$key]);
             }
-
         }
         $cate_data = array_merge(array(),$data);
         $result = $mysql_obj->add_data($cate_data ,$table_name);

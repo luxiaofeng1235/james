@@ -25,8 +25,8 @@ if(!$art_id){
 	echo '请选择要抓取的内容id';
 	exit();
 }
-$table_name ='ims_category';
-$table_novel_name ='ims_novel_info';
+$table_name =Env::get('APICONFIG.TABLE_CATE'); //分类表
+$table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
 $info = $mysql_obj->get_data_by_condition('id = \''.$art_id.'\'',$table_name);
 $url = Env::get('APICONFIG.WEB_SOTRE_HOST'); //获取配置的域名信息
 
@@ -100,7 +100,7 @@ if($info){
 				}
 
 				//每次更新之前先把旧数据删除
-				$chapter_table_name= 'ims_chapter';
+				$chapter_table_name= Env::get('APICONFIG.TABLE_CHAPTER');
 				//删除章节关联的数据信息
 				delete_chapter_data($store_id,$store_data['novelid'],$chapter_table_name);
 
