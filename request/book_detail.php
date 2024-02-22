@@ -42,6 +42,10 @@ function delete_chapter_data($store_id,$novelid,$table_name){
 if($info){
 	//进行相关的匹配信息
 	if(!empty($info[0]['article_url'])){
+		if($info[0]['is_async'] == 1){
+			echo $info[0]['article_url']." ---当前数据已同步，请勿重复同步\r\n";
+			exit();
+		}
 		$link_url = $url . $info[0]['article_url'];//需要抓取的网址
 		//定义抓取规则
 		$rules = array(
