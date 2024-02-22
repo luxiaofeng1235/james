@@ -29,11 +29,20 @@ $table_name ='ims_category';
 $table_novel_name ='ims_novel_info';
 $info = $mysql_obj->get_data_by_condition('id = \''.$art_id.'\'',$table_name);
 $url = Env::get('APICONFIG.WEB_SOTRE_HOST'); //获取配置的域名信息
+
+//删除旧数据，防止有新的进行抓取
+function delete_chapter_data($store_id,$table_name){
+	if(!$store_id){
+		return false;
+	}
+	global $mysql_obj;
+	$sql = "delete from ".$table_name." where store_id = ".$store_id;
+	$mysql_obj->query($sql,'db_master');
+}
 if($info){
 	//进行相关的匹配信息
 	if(!empty($info[0]['article_url'])){
 		$link_url = $url . $info[0]['article_url'];//需要抓取的网址
-
 		//定义抓取规则
 		$rules = array(
 		    'cover_logo'       =>array('.jieshao img','src'),//小说封面
@@ -74,7 +83,6 @@ if($info){
 
 				//执行插入操作
 				$where_data = "novelid = '".$store_data['novelid']."'";
-
 				$check_data = $mysql_obj->get_data_by_condition($where_data,$table_novel_name,'store_id');
 				if(!empty($check_data)){
 					$store_id = intval($check_data[0]['store_id']);
@@ -86,19 +94,27 @@ if($info){
 					exit();
 				}
 
+				//每次更新之前先把旧数据删除
+				$chapter_table_name= 'ims_chapter';
+				//删除章节关联的数据信息
+				delete_chapter_data($store_id,$chapter_table_name);
+
 				//定义章节的目录信息
 				$list_rule = array(
 				    'link_url'       =>array('a','href'),
 				  	'link_name'		=>array('a','text'),
 				);
 				$range = '.mulu li';
-				$rt = QueryList::get($link_url)->rules($list_rule)->range($range)->query()->getData();
+				$rt = QueryList::get($link_url)
+						->rules($list_rule)
+						->range($range)
+						->query()->getData();
 				if(!empty($rt->all())){
 					$chapter_detal = $rt->all();
 					foreach($chapter_detal  as &$value){
+						$value['novelid'] = $store_data['novelid'];
 						$value['store_id'] = $store_id;
 					}
-					$chapter_table_name= 'ims_chapter';
 					$res = $mysql_obj->add_data($chapter_detal , $chapter_table_name);
 					echo "当前小说：".$store_data['title']."|novelid=".$store_data['novelid']."  拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
 				}
