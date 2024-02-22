@@ -39,7 +39,10 @@ for ($i=0; $i <$pages ; $i++) {
             if ( !$cate_id ) continue;
             //定义需要执行的语句
             $shell_cmd = $php_path . ' '.ROOT . 'request/book_detail.php '.$cate_id;
-            echo $shell_cmd . "\r\n";
+            exec($shell_cmd , $output , $status);
+            echo '<pre>';
+            print_R($output);
+            echo '</pre>';
         }
         die;
     }
