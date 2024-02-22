@@ -12,11 +12,11 @@ $proxy = '202.63.172.220';
 $proxyauth = '3e42fd4e:a8c776b5';
 
 
-$list=MultiHttp::curlGet(['https://www.baode.cc/ob/18767/6992970.html','https://www.baode.cc/ob/18767/6998393.html','https://www.baode.cc/ob/101785/19252540.html','https://www.baode.cc/ob/101785/19253327.html','https://www.baode.cc/ob/101785/19321012.html','https://www.baode.cc/ob/101768/19252546.html','https://www.baode.cc/ob/101768/19252545.html'],[]);
+$list=MultiHttp::curlGet(['https://www.baode.cc/ob/18767/6992970.html','https://www.baode.cc/ob/18767/6998393.html','https://www.baode.cc/ob/101785/19252540.html','https://www.baode.cc/ob/101785/19253327.html','https://www.baode.cc/ob/101785/19321012.html','https://www.baode.cc/ob/101768/19252546.html','https://www.baode.cc/ob/101768/19252545.html','https://www.baode.cc/ob/101768/19252546.html','https://www.baode.cc/ob/101768/19252550.html','https://www.baode.cc/ob/101768/19252553.html','https://www.baode.cc/ob/101768/19253327.html','<a href="https://www.baode.cc/ob/101768/19279974.html','https://www.baode.cc/ob/101768/19293205.html','https://www.baode.cc/ob/101768/19321012.html','https://www.baode.cc/ob/101768/19345822.html','https://www.baode.cc/ob/101768/19400348.html','https://www.baode.cc/ob/101768/19428010.html','https://www.baode.cc/ob/101768/19435965.html','https://www.baode.cc/ob/101768/19474937.html','https://www.baode.cc/ob/101768/19475380.html','https://www.baode.cc/ob/101768/19485825.html','https://www.baode.cc/ob/101768/19485825.html'],[]);
 
 $rules = array(
     'text' => array('.bookname h1','text'),//采集class为two下面的超链接的链接
-    'content'   =>array('#content','html'),
+    // 'content'   =>array('#content','html'),
 );
 $newdata=[];
 foreach($list as $key =>$html){
