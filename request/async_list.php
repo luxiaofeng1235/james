@@ -17,33 +17,39 @@ $num =50;
 $pages = ceil($countNum /$num);
 $php_path = dirname(dirname(dirname(__DIR__))).'/Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径
 $php_path = str_replace('\\','/',$php_path);
-$shell_cmd = $php_path . ' '.ROOT . '/request/aa.php';//需要执行的脚本的路径信息
-echo $shell_cmd."\n";
+// $shell_cmd = $php_path . ' '.ROOT . '/request/aa.php';//需要执行的脚本的路径信息
+// echo $shell_cmd."\n";
 
 // echo $shell_cmd;die;
 // $shell_cmd =  str_replace("\\",'/' , $shell_cmd);
-exec($shell_cmd , $output , $status);
-echo '<pre>';
-print_R($output);
-echo '</pre>';
+// exec($shell_cmd , $output , $status);
+// echo '<pre>';
+// print_R($output);
+// echo '</pre>';
 
 
-// for ($i=0; $i <$pages ; $i++) {
-//     $page = $i* $num;
-//     // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
-//     $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit 2";
-//     $list = $mysql_obj->fetchAll($sql,'db_slave');
-//     echo '<pre>';
-//     print_R($list);
-//     echo '</pre>';
-//     exit;
-//     // echo $sql;exit;
-//     // foreach($list as $key =>$value){
-//     //     $cate_id = intval($value['cate_id']);
-//     //     if(!$cate_id) continue;
+for ($i=0; $i <$pages ; $i++) {
+    $page = $i* $num;
+    // $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit ".$page .",".$num;
+    $sql ="select id as cate_id from ".$table_name." where ".$where_data." limit 2";
+    $list = $mysql_obj->fetchAll($sql,'db_slave');
+    if(!empty($list)){
+        foreach($list as $key =>$val){
+            $cate_id = intval($val['cate_id']);
+            if ( !$cate_id ) continue;
+            //定义需要执行的语句
+            $shell_cmd = $php_path . ' '.ROOT . 'request/book_detail.php '.$cate_id;
+            echo $shell_cmd . "\r\n";
+        }
+        die;
+    }
+    // echo $sql;exit;
+    // foreach($list as $key =>$value){
+    //     $cate_id = intval($value['cate_id']);
+    //     if(!$cate_id) continue;
 
-//     // }
-//     // sleep(1);
-//     echo $sql."\r\n";
-// }
+    // }
+    // sleep(1);
+    echo $sql."\r\n";
+}
 ?>

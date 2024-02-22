@@ -42,8 +42,9 @@ function delete_chapter_data($store_id,$novelid,$table_name){
 if($info){
 	//进行相关的匹配信息
 	if(!empty($info[0]['article_url'])){
+		$article_url = trim($info[0]['article_url']);//小说地址
 		if($info[0]['is_async'] == 1){
-			echo $info[0]['article_url']." ---当前数据已同步，请勿重复同步\r\n";
+			echo $info[0]['article_url']." ---url：".$article_url."---当前数据已同步，请勿重复同步\r\n";
 			exit();
 		}
 		$link_url = $url . $info[0]['article_url'];//需要抓取的网址
@@ -64,6 +65,7 @@ if($info){
 		$info_data=QueryList::get($link_url)
 				->rules($rules)
 				->query()->getData();
+
 		$store_data = $info_data->all();
 		if(!empty($store_data)){
 			$store_data['status'] = str_replace('状态：','',$store_data['status']);
@@ -124,7 +126,7 @@ if($info){
 						$update_data['is_async'] = 1;
 						$mysql_obj->update_data($update_data,"id=".$art_id,$table_name);
 					}
-					echo "当前小说：".$store_data['title']."|novelid=".$store_data['novelid']."  拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
+					echo "当前小说：".$store_data['title']."|novelid=".$store_data['novelid']." ---url：".$article_url."\t拉取成功，共更新章节目录：".count($chapter_detal)."个\r\n";
 				}
 			}
 		}else{
