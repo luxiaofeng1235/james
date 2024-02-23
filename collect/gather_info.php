@@ -17,6 +17,16 @@ if(!$store_id){
 $table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
 $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //获取配置的域名信息
+//删除旧数据，防止有新的进行抓取
+function delete_chapter_data($store_id,$story_id,$table_name){
+    if(!$store_id){
+        return false;
+    }
+    global $mysql_obj;
+    $sql = "delete from ".$table_name." where story_id = '".$story_id."'";
+    $mysql_obj->query($sql,'db_master');
+}
+
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
@@ -40,10 +50,6 @@ if($info){
     $info_data=QueryList::get($story_link)
             ->rules($rules)
             ->query()->getData();
-    echo '<pre>';
-    print_R($info_data);
-    echo '</pre>';
-    exit;
     $store_data = $info_data->all();
     if(!empty($store_data)){
 
@@ -64,11 +70,37 @@ if($info){
         $store_data['updatetime'] = time();
         //执行更新操作
         $where_data = "story_id = '".$story_id."'";
+
+
+        //定义章节的目录信息
+        $list_rule = array(
+            'link_name'     =>array('a','text'),
+            'link_url'       =>array('a','href'),
+        );
+        $range = '#list dd';
+        $rt = QueryList::get($story_link)
+                ->rules($list_rule)
+                ->range($range)
+                ->query()->getData();
+        $item_list = [];
+        if(!empty($rt->all())){
+            $chapter_detal = $rt->all();
+            foreach($chapter_detal as $val){
+                $val['store_id'] = $info[0]['store_id']; //关联主表info里的store_id
+                $val['story_id'] = $story_id;//小说的id
+                $items[$val['link_url']] = $val;
+            }
+            //取出来章节
+            $item_list = array_values($items);
+        }
+
+        $update_id = $info[0]['store_id'];
+        //删除章节关联的数据信息
+        $chapter_table_name= Env::get('APICONFIG.TABLE_CHAPTER');
+        //处理相关的信息
+        delete_chapter_data($update_id,$story_id,$chapter_table_name);
         $update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
-        echo '<pre>';
-        print_R($update_ret);
-        echo '</pre>';
-        exit;
+        echo "insert_id：".$update_id."\t当前小说：".$store_data['title']."|novelid=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
     }
 }else{
     echo "no data";
