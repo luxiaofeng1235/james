@@ -28,9 +28,9 @@ class MultiHttp
             CURLOPT_HEADER  => 0,
             CURLOPT_ENCODING    =>  'gzip',
 
-            CURLOPT_PROXY       =>  '202.63.172.220',
-            CURLOPT_PROXYPORT   =>  '47394',
-            CURLOPT_PROXYUSERPWD    =>  '3e42fd4e:a8c776b5',
+            CURLOPT_PROXY       =>  Env::get('PROXY.URL_HOST'),
+            CURLOPT_PROXYPORT   =>  Env::get('PROXY.PORT'),
+            CURLOPT_PROXYUSERPWD    =>  Env::get('PROXY.PROXY_AUTH'),
             CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5,
             CURLOPT_PROXYAUTH   =>   CURLAUTH_BASIC,
 
