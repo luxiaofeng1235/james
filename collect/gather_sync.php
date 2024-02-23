@@ -23,10 +23,10 @@ $php_path = str_replace('\\','/',$php_path);
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 if(!empty($list)){
     foreach($list as $key =>$val){
-        $cate_id = intval($val['cate_id']);
-        if ( !$cate_id ) continue;
+        $store_id = intval($val['store_id']);
+        if ( !$store_id ) continue;
         //定义需要执行的语句
-        $shell_cmd = $php_path . ' '.ROOT . 'request/book_detail.php '.$cate_id;
+        $shell_cmd = $php_path . ' '.ROOT . 'collect/gather_info.php '.$store_id;
         echo $shell_cmd ."\r\n";
         exec($shell_cmd , $output , $status);
         echo '<pre>';
