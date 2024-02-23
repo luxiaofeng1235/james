@@ -24,11 +24,15 @@ $ql = QueryList::getInstance();
 $table_chapter_name = Env::get('APICONFIG.TABLE_CHAPTER');//章节表
 $is_async = 0;
 $where_data = 'is_async ='.$is_async;
-$sql = "select chapter_id,link_url,story_id from ".$table_chapter_name . "  where  ".$where_data."  limit 1";
+$sql = "select chapter_id,link_url,story_id,link_name from ".$table_chapter_name . "  where  ".$where_data."  limit 1";
 $items = $mysql_obj->fetchAll($sql ,'db_slave');
 
 if($items && is_array($items)){
     $ql = QueryList::getInstance();
+//    echo '<pre>';
+//    print_R($items);
+//    echo '</pre>';
+//    exit;
     foreach($items as $key =>$value){
         $story_id = trim($value['story_id']);
         $c_url = trim($value['link_url']);
@@ -39,23 +43,25 @@ if($items && is_array($items)){
 
         $folder_data = getStoreFile($c_url);//获取处理的小说内容
         $download_path = ROOT . 'log' . DS . 'paoshu8' .DS . $folder_data['folder'];//下载路径
-        echo "chapter_id=".$value['chapter_id']."\story_id=".$story_id."\t" ."url:". $c_url . "\tfolder：".$folder_data['folder']."\r\n";
+
         if(!is_dir($download_path)){
             createFolders($download_path);
         }
         $save_path = $folder_data['save_path'];
         $filename = $download_path . DS . $save_path;
+
+        echo "chapter_id=".$value['chapter_id']."\story_id=".$story_id."\t" ."url:". $c_url . "\tfolder：".$folder_data['folder']."\t当前章节：".$value['link_name']."\t目录结构：".$filename."\r\n";
+
         //获取小说里的内容信息
         $content = getApiContent($link_url);
         $update_data = ['is_async'=>1];
-        $where_data = "story_id = '".$story_id."'";
+        $where_data = "chapter_id = '".$value['chapter_id']."' limit 1";
 //        echo $filename;die;
         $mysql_obj->update_data($update_data,$where_data,$table_chapter_name);
 //        if(!empty($content)){
 //            file_put_contents($filename, "\r\n".$content);
 //        }
         file_put_contents($filename, "\r\n".$content);
-        echo 1;die;
     }
     echo "over\r\n";
 }else{
