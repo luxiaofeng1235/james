@@ -35,10 +35,10 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 
 $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
-echo '<pre>';
-var_dump($curl_scraped_page);
-echo '</pre>';
-exit;
+// echo '<pre>';
+// var_dump($httpcode);
+// echo '</pre>';
+// exit;
 
 if(curl_exec($ch) === false)
 {

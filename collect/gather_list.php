@@ -48,35 +48,35 @@ if(!empty($storeData)){
             foreach($itemList->all() as $k =>$v){
                 $info['cate_name'] = $cate_name;
                 $info = array_merge($info,$v);
-                $return[] = $info;
+                $nover_list[] = $info;
             }
         }
     }
     $now_time = time();
-    if(count($return)>0){
+    if(count($nover_list)>0){
         //处理需要入库的主要信息
-        foreach($return as $gkey =>$gval){
+        foreach($nover_list as $gkey =>$gval){
             $link_url = str_replace('http:/','',$gval['story_link']);
             $article_url = Env::get('APICONFIG.PAOSHU_HOST') . '/'.$link_url;
             $novelid_str = str_replace('/','',$link_url);
-            $return[$gkey]['story_link'] = $article_url;
-            $return[$gkey]['story_id'] = $novelid_str;
-            $return[$gkey]['createtime'] = $now_time;
-            $return[$gkey]['source'] = Env::get('APICONFIG.PAOSHU_STR');//标记
+            $nover_list[$gkey]['story_link'] = $article_url;
+            $nover_list[$gkey]['story_id'] = $novelid_str;
+            $nover_list[$gkey]['createtime'] = $now_time;
+            $nover_list[$gkey]['source'] = Env::get('APICONFIG.PAOSHU_STR');//标记
             $where_data = "story_id = '".$novelid_str."'";
             //查是否存在当前小说信息
             $info = $mysql_obj->get_data_by_condition($where_data,$novel_table_name,'store_id');
             if(!empty($info)){
-                unset($return[$gkey]);
+                unset($nover_list[$gkey]);
             }
         }
     }
-    $return = array_merge(array(),$return);
+    $nover_list = array_merge(array(),$nover_list);
     // $test_data = array_slice($return , 0 ,1);
-    $result = $mysql_obj->add_data($return ,$novel_table_name);
+    $result = $mysql_obj->add_data($nover_list ,$novel_table_name);
     if(!$result){
         echo "complate error";
     }
-    echo "最新文章同步完成=======共同步".count($return)."篇小说";
+    echo "最新文章同步完成=======共同步".count($nover_list)."篇小说";
 }
 ?>
