@@ -27,6 +27,22 @@ function delete_chapter_data($store_id,$story_id,$table_name){
     $mysql_obj->query($sql,'db_master');
 }
 
+//清洗掉不需要的字段
+function cleanData($items = [],$filter_key=[]){
+    if(!$items ||!$filter_key) return false;
+    $list = [];
+    foreach($items as $key => $val){
+        foreach($val as $k =>&$v){
+            //如果在过滤的字段里，直接切除
+            if(in_array($k , $filter_key)){
+                unset($val[$k]);
+            }
+        }
+        $list[$key] = $val;
+    }
+    return $items;
+}
+
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
@@ -82,23 +98,37 @@ if($info){
                 ->rules($list_rule)
                 ->range($range)
                 ->query()->getData();
-        $item_list = [];
+        $item_list = $chapter_ids = $items= [];
         if(!empty($rt->all())){
+            $now_time = time();
             $chapter_detal = $rt->all();
             foreach($chapter_detal as $val){
+                $link_url = trim($val['link_url']);
+                $chapter_ret= explode('/',$link_url);
+                $chapter_str=str_replace('.html','',$chapter_ret[2]);
+                $chapter_id = (int) $chapter_str;
+                $val['chapter_id'] = $chapter_id;//章节id
                 $val['store_id'] = $info[0]['store_id']; //关联主表info里的store_id
                 $val['story_id'] = $story_id;//小说的id
+                $val['createtime'] = time();
                 $items[$val['link_url']] = $val;
+                $chapter_ids[$val['chapter_id']] = 1;
             }
+            $sort_ids= array_keys($chapter_ids);
             //取出来章节
             $item_list = array_values($items);
         }
+        array_multisort($sort_ids , SORT_ASC , $item_list);
+
+        //清晰不需要的数据信息
+        $item_list = cleanData($item_list,['chapter_id']);
 
         $update_id = $info[0]['store_id'];
         //删除章节关联的数据信息
         $chapter_table_name= Env::get('APICONFIG.TABLE_CHAPTER');
         //处理相关的信息
         delete_chapter_data($update_id,$story_id,$chapter_table_name);
+        // echo 11;die;
         $update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
         $res = $mysql_obj->add_data($item_list , $chapter_table_name);
         if($res){
