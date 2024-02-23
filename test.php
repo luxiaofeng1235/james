@@ -8,57 +8,45 @@ use QL\QueryList;##引入querylist的采集器
 
 $url = 'https://www.baidu.com';
 
-$proxy = '202.63.172.220';
-$proxyauth = '3e42fd4e:a8c776b5';
+$proxy = Env::get('PROXY.URL_HOST');
+$proxyauth = Env::get('PROXY.PROXY_AUTH');
+$port =Env::get('PROXY.PORT');
 
-//     $url = 'https://www.baode.cc/ob/101768/' ;
-//         // 定义采集规则
-//     $rules = [
-//         'capacity' => ['a', 'text'],
-//         'link_url'  =>['a','href'],
-//     ];
-//     $range = '#list dd';
-//     $list = QueryList::get($url)->rules($rules)->range($range)->query()->getData();
-//     echo '<pre>';
-//     print_R($list);
-//     echo '</pre>';
-//     exit;
-
-
-// $list=MultiHttp::curlGet(['https://www.baode.cc/ob/18767/6992970.html','https://www.baode.cc/ob/18767/6998393.html','https://www.baode.cc/ob/101785/19252540.html','https://www.baode.cc/ob/101785/19253327.html','https://www.baode.cc/ob/101785/19321012.html','https://www.baode.cc/ob/101768/19252546.html','https://www.baode.cc/ob/101768/19252545.html','https://www.baode.cc/ob/101768/19252546.html','https://www.baode.cc/ob/101768/19252550.html','https://www.baode.cc/ob/101768/19252553.html','https://www.baode.cc/ob/101768/19253327.html','<a href="https://www.baode.cc/ob/101768/19279974.html','https://www.baode.cc/ob/101768/19293205.html','https://www.baode.cc/ob/101768/19321012.html','https://www.baode.cc/ob/101768/19345822.html','https://www.baode.cc/ob/101768/19400348.html','https://www.baode.cc/ob/101768/19428010.html','https://www.baode.cc/ob/101768/19435965.html','https://www.baode.cc/ob/101768/19474937.html','https://www.baode.cc/ob/101768/19475380.html','https://www.baode.cc/ob/101768/19485825.html','https://www.baode.cc/ob/101768/19485825.html '],[]);
-
-// $rules = array(
-//     'text' => array('.bookname h1','text'),//采集class为two下面的超链接的链接
-//     // 'content'   =>array('#content','html'),
-// );
-// $newdata=[];
-// foreach($list as $key =>$html){
-//     $data = QueryList::html($html)->rules($rules)->query()
-//         ->getData();
-//     $list = $data->all();
-//     $newdata[] =$list;
-// }
-// echo '<pre>';
-// print_R($newdata);
-// echo '</pre>';
-// exit;
-
+//https://202.63.172.110:11890:1eb2ab2f:fb1abba5
+//1eb2ab2f:fb1abba5
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_PROXY, $proxy);
+curl_setopt($ch, CURLOPT_PROXYPORT, $port);
 curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
-curl_setopt($ch, CURLOPT_PROXYPORT, '47394');
+curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 0);
 curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_HEADER, 1);
 
 $curl_scraped_page = curl_exec($ch);
+$httpcode = curl_getinfo($ch);
 echo '<pre>';
 var_dump($curl_scraped_page);
 echo '</pre>';
 exit;
-$httpcode = curl_getinfo($ch);
+
+if(curl_exec($ch) === false)
+{
+    echo 'Curl error: ' . curl_error($ch);
+}
+else
+{
+    echo '操作完成没有任何错误';
+}
+die;
+echo '<pre>';
+var_dump($curl_scraped_page);
+echo '</pre>';
+exit;
+;
 echo '<pre>';
 print_R($curl_scraped_page);
 echo '</pre>';
