@@ -12,7 +12,7 @@ class MultiHttp
 {
 
 
-   public static function curlGet($urls,$custom_options = null){//多个url访问
+   public static function curlGet($urls,$custom_options = null,$is_proxy =false){//多个url访问
         if (sizeof($urls)==0) return;
         // make sure the rolling window isn't greater than the # of urls
         $rolling_window = 8;
@@ -28,15 +28,22 @@ class MultiHttp
             CURLOPT_HEADER  => 0,
             CURLOPT_ENCODING    =>  'gzip',
 
-            CURLOPT_PROXY       =>  Env::get('PROXY.URL_HOST'),
-            CURLOPT_PROXYPORT   =>  Env::get('PROXY.PORT'),
-            CURLOPT_PROXYUSERPWD    =>  Env::get('PROXY.PROXY_AUTH'),
-            CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5,
-            CURLOPT_PROXYAUTH   =>   CURLAUTH_BASIC,
+            // CURLOPT_PROXY       =>  Env::get('PROXY.URL_HOST'),
+            // CURLOPT_PROXYPORT   =>  Env::get('PROXY.PORT'),
+            // CURLOPT_PROXYUSERPWD    =>  Env::get('PROXY.PROXY_AUTH'),
+            // CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5,
+            // CURLOPT_PROXYAUTH   =>   CURLAUTH_BASIC,
 
             CURLOPT_HTTPPROXYTUNNEL => 0,
         );
-
+        if($is_proxy){
+            //是否开启代理
+            $std_options[CURLOPT_PROXY] = Env::get('PROXY.URL_HOST');
+            $std_options[CURLOPT_PROXYPORT] = Env::get('PROXY.PORT');
+            $std_options[CURLOPT_PROXYUSERPWD] = Env::get('PROXY.PROXY_AUTH');
+            $std_options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
+            $std_options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
+        }
         $std_options[CURLOPT_SSL_VERIFYPEER] = FALSE;
         $std_options[CURLOPT_SSL_VERIFYHOST] = FALSE;
         $std_options[CURLOPT_HTTPHEADER] =array(

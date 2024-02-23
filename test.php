@@ -15,11 +15,11 @@ $port =Env::get('PROXY.PORT');
 //https://202.63.172.110:11890:1eb2ab2f:fb1abba5
 //1eb2ab2f:fb1abba5
 
-$res = MultiHttp::curlGet(['http://www.paoshu8.info/92_92763/']);
-echo '<pre>';
-print_R($res);
-echo '</pre>';
-exit;
+// $res = MultiHttp::curlGet(['http://www.paoshu8.info/92_92763/'],null,true);
+// echo '<pre>';
+// print_R($res);
+// echo '</pre>';
+// exit;
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
