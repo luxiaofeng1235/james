@@ -4,6 +4,13 @@ $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
 
+$str= "‘叮'的响起一声";
+$a = addslashes($str);
+echo '<pre>';
+var_dump($a);
+echo '</pre>';
+exit;
+
 $html = <<<STR
 <div id="one">
     <div class="two">

@@ -8,9 +8,10 @@ use QL\QueryList;##引入querylist的采集器
 
 $url = 'http://www.paoshu8.info/92_92763/';
 
-$proxy = Env::get('PROXY.URL_HOST');
-$proxyauth = Env::get('PROXY.PROXY_AUTH');
-$port =Env::get('PROXY.PORT');
+//as.hostmjj.net:10119:account1-zone-zone2-region-CN:123456
+$proxy = 'as.hostmjj.net';
+$proxyauth = 'account1-zone-zone2-region-CN:123456';
+$port ='10119';
 
 //https://202.63.172.110:11890:1eb2ab2f:fb1abba5
 //1eb2ab2f:fb1abba5
@@ -35,10 +36,14 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 
 $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
-// echo '<pre>';
-// var_dump($httpcode);
-// echo '</pre>';
-// exit;
+echo '<pre>';
+var_dump($curl_scraped_page);
+echo '</pre>';
+exit;
+echo '<pre>';
+var_dump($httpcode);
+echo '</pre>';
+exit;
 
 if(curl_exec($ch) === false)
 {

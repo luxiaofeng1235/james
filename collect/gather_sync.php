@@ -13,7 +13,7 @@ $end = isset($argv[3]) ? intval($argv[3]) : 0;//控制语句的控制条件
 $exec_start_time = microtime(true); //执行开始时间
 $table_novel_name ='ims_novel_info';
 $where_data =  "is_async =0 and  source='".Env::get('APICONFIG.PAOSHU_STR')."'";
-$where_data .=" and store_id>".$start." and store_id<".$end; ##先限制这个条件吧
+// $where_data .=" and store_id>".$start." and store_id<".$end; ##先限制这个条件吧
 $sql = "select count(store_id) as ts_count from $table_novel_name where ".$where_data; //取出来所有的数据集合
 $ts_count = $mysql_obj->fetch($sql ,'db_slave');
 $countNum = $ts_count['ts_count'] ?? 0;
@@ -35,7 +35,6 @@ echo "total-num：".$countNum."\r\n";
 echo "当前列表：共需要执行".$pages."页，每页".$limit."条数据的小说明细去拉取章节\r\n";
 for ($i=0; $i < $pages; $i++) {
      $sql ="select store_id from ".$table_novel_name." where ".$where_data." order by store_id asc limit ".($i*$limit).','.$limit;
-    echo $sql."\r\n";
     echo "currenet_page：".($i+1)."\r\n";
     $list = $mysql_obj->fetchAll($sql,'db_slave');
     // echo '<pre>';

@@ -323,7 +323,7 @@ function remote_file_exists($url_file){
     return true;
 }
 
-function webRequest($url,$method,$params,$header = []){
+function webRequest($url,$method,$params=[],$header = []){
         //初始化CURL句柄
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
