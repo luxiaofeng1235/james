@@ -6,6 +6,7 @@ $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 $table_novel_name ='ims_novel_info';
 $where_data =  "1 and is_async =0 and  source='".Env::get('APICONFIG.PAOSHU_STR')."'";
+$where_data .=" and store_id<500"; ##先限制这个条件吧
 $sql = "select count(store_id) as ts_count from $table_novel_name where ".$where_data; //取出来所有的数据集合
 $ts_count = $mysql_obj->fetch($sql ,'db_slave');
 $countNum = $ts_count['ts_count'] ?? 0;
@@ -22,7 +23,6 @@ $php_path = str_replace('\\','/',$php_path);
  $sql ="select store_id from ".$table_novel_name." where ".$where_data." order by store_id asc limit ".$limit;
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 if(!empty($list)){
-    echo '<pre>';
     foreach($list as $key =>$val){
         $store_id = intval($val['store_id']);
         if ( !$store_id ) continue;
