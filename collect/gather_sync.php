@@ -22,6 +22,7 @@ $php_path = str_replace('\\','/',$php_path);
  $sql ="select store_id from ".$table_novel_name." where ".$where_data." order by store_id asc limit ".$limit;
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 if(!empty($list)){
+    echo '<pre>';
     foreach($list as $key =>$val){
         $store_id = intval($val['store_id']);
         if ( !$store_id ) continue;

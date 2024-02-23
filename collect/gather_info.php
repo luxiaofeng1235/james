@@ -32,15 +32,16 @@ function cleanData($items = [],$filter_key=[]){
     if(!$items ||!$filter_key) return false;
     $list = [];
     foreach($items as $key => $val){
+        $info = [];
         foreach($val as $k =>&$v){
             //如果在过滤的字段里，直接切除
-            if(in_array($k , $filter_key)){
-                unset($val[$k]);
+            if(!in_array($k , $filter_key)){
+                $info[$k] = $v;
             }
         }
-        $list[$key] = $val;
+        $list[$key] = $info;
     }
-    return $items;
+    return $list;
 }
 
 if($info){
@@ -128,7 +129,6 @@ if($info){
         $chapter_table_name= Env::get('APICONFIG.TABLE_CHAPTER');
         //处理相关的信息
         delete_chapter_data($update_id,$story_id,$chapter_table_name);
-        // echo 11;die;
         $update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
         $res = $mysql_obj->add_data($item_list , $chapter_table_name);
         if($res){
