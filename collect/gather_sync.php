@@ -1,5 +1,5 @@
 <?
-ini_set("memory_limit", "5000M");
+ini_set("memory_limit", "8000M");
 set_time_limit(0);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
