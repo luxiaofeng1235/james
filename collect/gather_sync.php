@@ -55,6 +55,8 @@ for ($i=0; $i < $pages; $i++) {
         echo '<pre>';
         print_R($output);
         echo '</pre>';
+    }else {
+        echo "page:".($i+1)."no data current\r\n";
     }
 }
 $exec_end_time =microtime(true); //执行结束时间

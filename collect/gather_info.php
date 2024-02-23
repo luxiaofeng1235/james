@@ -85,6 +85,7 @@ if($info){
         $author_data = explode('：',$store_data['author']);
         $store_data['author']  = $author_data[1] ?? '';
         $store_data['updatetime'] = time();
+        $store_data['intro'] = addslashes($store_data['intro']);//转义 特殊字符
         //执行更新操作
         $where_data = "story_id = '".$story_id."'";
 
