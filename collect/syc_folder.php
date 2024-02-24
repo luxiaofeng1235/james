@@ -4,7 +4,13 @@ ini_set("memory_limit", "5000M");
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-$sql = "select story_id from ims_novel_info limit 200";
+
+$limit = isset($argv[1]) ? intval($argv[1]) : 0;
+
+$sql = "select story_id,story_link from ims_novel_info ";
+if($limit>0){
+    $sql .=" limit ".$limit;
+}
 $list =$mysql_obj->fetchAll($sql , 'db_slave');
 $save_file = 'json.txt';//需要存储的txt文件信息
 foreach($list as $key=>$val){
@@ -19,7 +25,7 @@ foreach($list as $key=>$val){
         //获取关联的章节信息列表
         $json_content = getItemData($chapter_list);
         $save_json_file = $download_path . DS . $save_file;
-        echo $save_json_file;
+        echo "url:".$val['story_link']."====success：".$save_json_file;
         echo "\n";
         //写入对应的目录中区
         file_put_contents($save_json_file, $json_content);
