@@ -1,5 +1,7 @@
 <?
 
+require_once(ROOT.'library/redis_codes.php');
+
 /**
  * curl请求类多线程，支持get和post请求
  *
@@ -10,6 +12,7 @@
  */
 class MultiHttp
 {
+
 
 
    public static function curlGet($urls,$custom_options = null,$is_proxy =false){//多个url访问
@@ -37,10 +40,15 @@ class MultiHttp
             CURLOPT_HTTPPROXYTUNNEL => 0,
         );
         if($is_proxy){
+            //获取代理的配置方式
+            $proxy_data = getProxyInfo();
+            // $proxy = $proxy_data['ip'];
+            // $port = $proxy_data['port'];
+            // $proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
             //是否开启代理
-            $std_options[CURLOPT_PROXY] = Env::get('PROXY.URL_HOST');
-            $std_options[CURLOPT_PROXYPORT] = Env::get('PROXY.PORT');
-            $std_options[CURLOPT_PROXYUSERPWD] = Env::get('PROXY.PROXY_AUTH');
+            $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
+            $std_options[CURLOPT_PROXYPORT] = $proxy_data['port'];
+            $std_options[CURLOPT_PROXYUSERPWD] = $proxy_data['username'].':'.$proxy_data['password'];
             $std_options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
             $std_options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
         }

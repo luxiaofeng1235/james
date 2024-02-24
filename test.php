@@ -27,6 +27,12 @@ $proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
 // echo '</pre>';
 // exit;
 
+$res = MultiHttp::curlGet(['http://www.baidu.com'],[],true);
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_PROXY, $proxy);
@@ -41,10 +47,6 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 
 $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
-echo '<pre>';
-var_dump($curl_scraped_page);
-echo '</pre>';
-exit;
 echo '<pre>';
 var_dump($httpcode);
 echo '</pre>';

@@ -1,5 +1,6 @@
 <?php
 use QL\QueryList;
+require_once(ROOT.'library/redis_codes.php');
 //数组转换，主要导需要用
 function Array_transdata($array,$field){
     $trans_data =array();
@@ -504,7 +505,8 @@ if (!function_exists('createFolders')) {
  * @param $str 需要处理的路径
  * @return mixed
  */
-function getProxyInfo($redis_data){
+function getProxyInfo(){
+    $redis_data = new redis_codes();
     $proxy_cache_key = 'proxy_config:'.date('Ymd_H');
     //取代理的配置信息
     $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
