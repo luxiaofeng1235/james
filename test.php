@@ -13,21 +13,21 @@ use QL\QueryList;##引入querylist的采集器
 
 
 //获取代理的配置信息
-$proxy_data = getProxyInfo($redis_data);
-$url = 'http://www.baidu.com/';
-$proxy = $proxy_data['ip'];
-$port = $proxy_data['port'];
-$proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
-//https://202.63.172.110:11890:1eb2ab2f:fb1abba5
-//1eb2ab2f:fb1abba5
+// $proxy_data = getProxyInfo($redis_data);
+// $url = 'http://www.paoshu8.info/185_185961/';
+// $proxy = $proxy_data['ip'];
+// $port = $proxy_data['port'];
+// $proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
+// //https://202.63.172.110:11890:1eb2ab2f:fb1abba5
+// //1eb2ab2f:fb1abba5
 
-// $res = MultiHttp::curlGet(['http://www.paoshu8.info/92_92763/'],null,true);
-// echo '<pre>';
-// print_R($res);
-// echo '</pre>';
-// exit;
+// // $res = MultiHttp::curlGet(['http://www.paoshu8.info/92_92763/'],null,true);
+// // echo '<pre>';
+// // print_R($res);
+// // echo '</pre>';
+// // exit;
 
-$res = MultiHttp::curlGet(['http://www.paoshu8.info/0_859/653516.html','http://www.paoshu8.info/0_859/653518.html'],[],true);
+$res = MultiHttp::curlGet(['http://www.paoshu8.info/185_185961/'],[],true);
 echo '<pre>';
 print_R($res);
 echo '</pre>';
