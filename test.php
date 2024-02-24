@@ -27,7 +27,7 @@ $proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
 // echo '</pre>';
 // exit;
 
-$res = MultiHttp::curlGet(['http://www.baidu.com'],[],true);
+$res = MultiHttp::curlGet(['http://www.paoshu8.info/0_859/653516.html','http://www.paoshu8.info/0_859/653518.html'],[],true);
 echo '<pre>';
 print_R($res);
 echo '</pre>';
