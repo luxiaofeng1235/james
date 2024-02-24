@@ -12,26 +12,9 @@ use QL\QueryList;##引入querylist的采集器
 
 
 
-$proxy_cache_key = 'testarrrr';
-
-
-
-//取代理的配置信息
-$api_proxy_data = $redis_data->get_redis($proxy_cache_key);
- if(!$api_proxy_data){
-        $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN';
-        $item = webRequest($url,'GET');
-        $tscode  = json_decode($item,true);
-        $proxy_data = $tscode['data']['list'][0] ?? [];
-        $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),200);
-
- }else{
-    $proxy_data = json_decode($api_proxy_data,true);
- }
-
-
+//获取代理的配置信息
+$proxy_data = getProxyInfo($redis_data);
 $url = 'http://www.baidu.com/';
-
 $proxy = $proxy_data['ip'];
 $port = $proxy_data['port'];
 $proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
@@ -59,7 +42,7 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
 echo '<pre>';
-var_dump($httpcode);
+var_dump($curl_scraped_page);
 echo '</pre>';
 exit;
 echo '<pre>';

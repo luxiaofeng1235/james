@@ -498,6 +498,29 @@ if (!function_exists('createFolders')) {
     }
 }
 
+
+/**
+ * 获取代理的配置
+ * @param $str 需要处理的路径
+ * @return mixed
+ */
+function getProxyInfo($redis_data){
+    $proxy_cache_key = 'proxy_config:'.date('Ymd_H');
+    //取代理的配置信息
+    $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
+     if(!$api_proxy_data){
+            $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN';
+            $item = webRequest($url,'GET');
+            $tscode  = json_decode($item,true);
+            $proxy_data = $tscode['data']['list'][0] ?? [];
+            $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),200);
+
+     }else{
+        $proxy_data = json_decode($api_proxy_data,true);
+     }
+     return $proxy_data;
+}
+
 /**
  * 获取小说的目录和文件信息
  * @param $str 需要处理的路径
