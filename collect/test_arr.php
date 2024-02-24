@@ -7,7 +7,7 @@ require_once($dirname.'/library/init.inc.php');
 
 
 
-$sql ="select chapter_id,link_url from ims_chapter where novelid =0 limit 600000";
+$sql ="select chapter_id,link_url from ims_chapter where novelid =0 limit 60000";
 $list = $mysql_obj->fetchAll($sql,'db_master');
 foreach($list as $key =>$val){
    $urls = explode('/',$val['link_url']);

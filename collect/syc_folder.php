@@ -11,12 +11,12 @@ $sql = "select story_id,story_link from ims_novel_info ";
 if($limit>0){
     $sql .=" limit ".$limit;
 }
+
 $list =$mysql_obj->fetchAll($sql , 'db_slave');
-$save_file = 'json.txt';//需要存储的txt文件信息
 foreach($list as $key=>$val){
     $sql ="select CONCAT('".Env::get('APICONFIG.PAOSHU_HOST')."',link_url)  as link_url,link_name,story_id  from ims_chapter where story_id ='".$val['story_id']."'";
     $chapter_list = $mysql_obj->fetchAll($sql,'db_slave');
-    $download_path = ROOT . 'log' . DS . 'paoshu8' .DS . 'chapter'.DS.$val['story_id'];
+    $download_path = ROOT . 'log' . DS . 'paoshu8' .DS . 'chapter';
     //创建目录信息
     if(!is_dir($download_path)){
         createFolders($download_path);
@@ -24,11 +24,13 @@ foreach($list as $key=>$val){
     if($chapter_list){
         //获取关联的章节信息列表
         $json_content = getItemData($chapter_list);
-        $save_json_file = $download_path . DS . $save_file;
+        $save_json_file = $download_path . DS . $val['story_id'] .'.json';
         echo "url:".$val['story_link']."====success：".$save_json_file;
-        echo "\n";
+        echo "\r\n";
         //写入对应的目录中区
         file_put_contents($save_json_file, $json_content);
+    }else{
+        echo 11;die;
     }
 }
 echo "over\r\n";
@@ -39,13 +41,30 @@ function getItemData($item){
         return [];
     }
     $list =[];
+    /*
+"id": 1,
+    "sort": 1,
+    "chapter_link": "https://www.biquge34.net/article/14453/6400281.html",
+    "chapter_name": "第一章 倒斗天师",
+    "vip": 0,
+    "cion": 0,
+    "is_first": 0,
+    "is_last": 0,
+    "text_num": 2000,
+    "addtime": 1704911323
+ */
     foreach($item as $key =>$val){
         $list[] = [
-            'story_id'    =>$val['story_id'],
-            'id'    =>$key+1,
-            'url'   =>$val['link_url'],//连接地址
-            'adddate'   =>time(),//添加时间
-            'link_name' =>$val['link_name'],//连接地址
+            'id'    =>$val['story_id'],//小说ID
+            'sort'    =>$key+1,//默认排序
+            'chapter_link'   =>$val['link_url'],//连接地址
+            'chapter_name' =>$val['link_name'],//连接地址
+            'vip'   =>  0,//是否为VIP
+            'cion'  =>  0,//是有有图标
+            'is_first'  =>  0,//附加字段
+            'is_last'   => 0,//附加字段
+            'text_num'  => 2000,//默认先给2000
+            'addtime'   =>time(),//添加时间
         ];
     }
     $json_string= json_encode($list,JSON_UNESCAPED_UNICODE);
