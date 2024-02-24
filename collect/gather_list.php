@@ -16,6 +16,8 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
 
+
+$limit = isset($argv[1]) ? intval($argv[1]) : 0;
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //需要抓取的小说的url
 // 定义采集规则
 $rules = [
@@ -52,6 +54,10 @@ if(!empty($storeData)){
             }
         }
     }
+    //控制数据的写入步长
+    if( $limit > 0){
+        $nover_list = array_slice($nover_list, 0 , $limit);
+    }
     $now_time = time();
     if(count($nover_list)>0){
         //处理需要入库的主要信息
@@ -71,11 +77,13 @@ if(!empty($storeData)){
             }
         }
     }
-    $nover_list = array_merge(array(),$nover_list);
-    // $test_data = array_slice($return , 0 ,1);
-    $result = $mysql_obj->add_data($nover_list ,$novel_table_name);
-    if(!$result){
-        echo "complate error";
+    if(!empty($nover_list)){
+         $nover_list = array_merge(array(),$nover_list);
+        // $test_data = array_slice($return , 0 ,1);
+        $result = $mysql_obj->add_data($nover_list ,$novel_table_name);
+        if(!$result){
+            echo "complate error";
+        }
     }
     echo "最新文章同步完成=======共同步".count($nover_list)."篇小说";
 }
