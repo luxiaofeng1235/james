@@ -5,14 +5,24 @@ require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
 
 
+$url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN';
+$item = webRequest($url,'GET');
+$tscode  = json_decode($item,true);
+$config = $tscode['data']['list'][0] ?? null;
 
-$url = 'http://www.paoshu8.info/92_92763/';
+
+
+$url = 'http://www.baidu.com/';
 
 //as.hostmjj.net:10119:account1-zone-zone2-region-CN:123456
-$proxy = 'as.hostmjj.net';
-$proxyauth = 'account1-zone-zone2-region-CN:123456';
-$port ='10119';
+// $proxy = 'as.hostmjj.net';
+// $proxyauth = 'account1-zone-zone2-region-CN:123456';
+// $port ='10119';
 
+
+$proxy = $config['ip'];
+$port = $config['port'];
+$proxyauth = $config['username'].':'.$config['password'];
 //https://202.63.172.110:11890:1eb2ab2f:fb1abba5
 //1eb2ab2f:fb1abba5
 
@@ -37,7 +47,7 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
 echo '<pre>';
-var_dump($curl_scraped_page);
+var_dump($httpcode);
 echo '</pre>';
 exit;
 echo '<pre>';
