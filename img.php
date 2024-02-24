@@ -1,5 +1,5 @@
 <?php
-
+//1
 //定义输出为图像类型
 header("content-type:image/gif");
 //新建图象

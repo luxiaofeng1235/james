@@ -1,9 +1,19 @@
 <?
 
 require_once(__DIR__.'/library/init.inc.php');
-
+require_once ROOT.'library/ftp.php';
 use QL\QueryList;##引入querylist的采集器
 
+$ftp = new FtpService();
+// $path = 'F:\phpstudy_pro\WWW\james\log\paoshu8\859\653516.txt';
+$path = iconv('UTF-8','GB2312',$_SERVER['DOCUMENT_ROOT'].'/log/paoshu8/test.txt');
+
+ $result = $ftp->read('/chapter');   //上传操作
+ echo '<pre>';
+ var_dump($result);
+ echo '</pre>';
+ exit;
+ // $result = $ftp->upload($path,'/chapter/luxiaofeng.txt');   //上传操作
 
 // $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN';
 // $item = webRequest($url,'GET');

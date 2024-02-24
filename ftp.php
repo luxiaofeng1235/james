@@ -1,4 +1,5 @@
 <?php
+//1111
 class Sftp {
     // 初始配置为NULL
     private $config = NULL;
