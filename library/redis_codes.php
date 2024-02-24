@@ -121,25 +121,13 @@ class redis_codes {
         return $result;
     }
 
-    public function set_redis($key ,$data , $timeout){
+    public function set_redis($key ,$data , $timeout=0){
         $result = $this->redis->set($key , $data);
+        $aa =$this->redis->get($key);
         if($timeout>0){
-            $result = $this->redis->set($key , $time_out);
+            $result = $this->redis->expire($key , $timeout);
         }
         return $result;
-    }
-    /**
-     *设置key和过期时间，单位秒
-     * @param type $key
-     * @param type $data
-     * @param type $time_out
-     * @return type
-     */
-    public function set_redis($key,$data,$time_out) {
-        $result = $this->redis->set($key,$data);
-        if ($time_out > 0) $this->redis->expire($key, $time_out);
-            return $result;
-
     }
 
     public function incr_redis($key){
@@ -150,13 +138,6 @@ class redis_codes {
         return $this->redis->decr($key);
     }
 
-    /**
-     * 把$key的值增加1
-     * @param unknown_type $key
-     */
-    public function incr_redis($key){
-    	return $this->redis->incr($key);
-    }
 
     /**
      * 把$key的值减去1
