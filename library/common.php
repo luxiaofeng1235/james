@@ -1,4 +1,5 @@
 <?php
+use QL\QueryList;
 //数组转换，主要导需要用
 function Array_transdata($array,$field){
     $trans_data =array();
@@ -502,7 +503,7 @@ if (!function_exists('createFolders')) {
  * @param $str 需要处理的路径
  * @return mixed
  */
-function getStoreFile($str){
+function getStoreFile($str,$link_name=''){
     if(!$str){
         return false;
     }
@@ -514,8 +515,13 @@ function getStoreFile($str){
     }else{
         $folder_name = $filename;
     }
-    $save_file = $data[2]??'';//获取保存的名称
-    $save_file = str_replace('html','txt',$save_file); //用txt来进行存储保存
+    if($link_name){
+        $save_file = $link_name . '.txt';
+    }else{
+        $save_file = $data[2]??'';//获取保存的名称
+        $save_file = str_replace('html','txt',$save_file); //用txt来进行存储保存
+    }
+
     $return_str= ['folder'  =>  $folder_name , 'save_path'  =>  $save_file];
     return $return_str;
 }
@@ -537,5 +543,63 @@ function readFileData($file_path){
         return $str;
     }
 }
+
+
+/*
+ * @param $str 根据CURL获取内容信息
+ * @param $data array 需要处理的
+ * @return mixed
+ */
+function getContenetNew($data){
+    foreach($data as $key =>$val){
+        $item[$val['link_url']] = $val;
+        $urls[$val['link_url']]= Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
+        $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
+    }
+    $rules = [
+        'content'    =>['#content','html'],
+        'meta_data'       =>['meta[name=mobile-agent]','content'],
+        'href'      =>['.con_top a:eq(2)','href'],
+    ];
+    $s= [];
+    $list = MultiHttp::curlGet($t_url,null,false);
+    foreach($list as $key =>$val){
+
+        $data = QueryList::html($val)->rules($rules)->query()->getData();
+        $html = $data->all();
+        $store_content = $html['content'] ?? '';
+        $meta_data = $html['meta_data']??'';
+        $href = $html['href'];
+        $html_path = getHtmlUrl($meta_data,$href);
+        if($store_content){
+            $store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
+            //替换文本中的P标签
+            $store_content = str_replace("<p>",'',$store_content);
+            $store_content = str_replace("</p>","\n\n",$store_content);
+        }
+        $store_c[$html_path] = $store_content;
+    }
+    foreach($item as $k =>$v){
+        $item[$k]['content'] = $store_c[$k] ?? '';
+    }
+    $arr_list= array_values($item);
+    return $arr_list;
+}
+
+/*
+ * @param $str 需要处理的路径
+ * @param $href 路径
+ * @param $meta meta标记信息
+ * @return mixed
+ */
+function getHtmlUrl($meta,$href){
+    $meta_data = $meta;
+    $real_path = explode('/',$meta_data);
+    $str = $real_path[3] ?? '';
+    $c_data = explode('-',$str);
+    $link = $href .$c_data[2].'.html';
+    return  $link;
+}
+
 
 ?>

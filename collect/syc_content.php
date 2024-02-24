@@ -9,12 +9,12 @@
 // 编 码：UTF-8
 // 摘 要:同步小说内容
 // ///////////////////////////////////////////////////
-
 ini_set("memory_limit", "5000M");
-set_time_limit(300);
+// set_time_limit(0);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
+// ini_set('max_execution_time ','0');//永远不过期
 
 use QL\QueryList;##引入querylist的采集器
 
@@ -24,43 +24,47 @@ $ql = QueryList::getInstance();
 $table_chapter_name = Env::get('APICONFIG.TABLE_CHAPTER');//章节表
 $is_async = 0;
 $where_data = 'is_async ='.$is_async;
-$sql = "select chapter_id,link_url,story_id,link_name from ".$table_chapter_name . "  where  ".$where_data."  limit 1";
-$items = $mysql_obj->fetchAll($sql ,'db_slave');
+$str  =[
+    '0_859',
+];
+$ids =[];
+foreach($str as $key =>$val){
+    $ids[] = "'".$val."'";
+}
 
+
+$where_data .=" and story_id in (".join(',' , $ids).")";
+$sql = "select chapter_id,link_url,story_id,link_name from ".$table_chapter_name . "  where  ".$where_data." limit 2";
+// echo $sql;die;
+$items = $mysql_obj->fetchAll($sql ,'db_slave');
 if($items && is_array($items)){
     $ql = QueryList::getInstance();
-//    echo '<pre>';
-//    print_R($items);
-//    echo '</pre>';
-//    exit;
-    foreach($items as $key =>$value){
+    foreach($items as $key =>$val){
+        $data[$val['link_url']] = $val;
+    }
+    //处理并发获取到的数据信息
+    $handle_data= getContenetNew($data);
+
+    foreach($handle_data as $key =>$value){
         $story_id = trim($value['story_id']);
         $c_url = trim($value['link_url']);
         if(!$story_id || !$c_url) continue;
         //获取需要抓取小说内容的配置信息
-
         $link_url = Env::get('APICONFIG.PAOSHU_HOST'). $value['link_url'];
-
-        $folder_data = getStoreFile($c_url);//获取处理的小说内容
+        $folder_data = getStoreFile($c_url,$value['link_name']);//获取处理的小说内容
         $download_path = ROOT . 'log' . DS . 'paoshu8' .DS . $folder_data['folder'];//下载路径
-
         if(!is_dir($download_path)){
             createFolders($download_path);
         }
         $save_path = $folder_data['save_path'];
         $filename = $download_path . DS . $save_path;
-
         echo "chapter_id=".$value['chapter_id']."\story_id=".$story_id."\t" ."url:". $c_url . "\tfolder：".$folder_data['folder']."\t当前章节：".$value['link_name']."\t目录结构：".$filename."\r\n";
 
         //获取小说里的内容信息
-        $content = getApiContent($link_url);
+        $content = $value['content'] ?? '';
         $update_data = ['is_async'=>1];
         $where_data = "chapter_id = '".$value['chapter_id']."' limit 1";
-//        echo $filename;die;
         $mysql_obj->update_data($update_data,$where_data,$table_chapter_name);
-//        if(!empty($content)){
-//            file_put_contents($filename, "\r\n".$content);
-//        }
         file_put_contents($filename, "\r\n".$content);
     }
     echo "over\r\n";
