@@ -21,10 +21,12 @@ use QL\QueryList;##引入querylist的采集器
 
 $sql = "select * from ims_chapter limit 1";
 $rs = $mysql_obj->fetchAll($sql,'db_slave');
-
 $redis_data->set_redis('data','1222');
 
-
+echo '<pre>';
+print_R($redis_data->get_redis('data'));
+echo '</pre>';
+exit;
 $str= "‘叮'的响起一声";
 $a = addslashes($str);
 echo '<pre>';
