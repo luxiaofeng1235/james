@@ -18,9 +18,9 @@ class  Mysql_class{
 	{
 		$list=array();
 		//联盟主库master
-		$list['db_slave']=array('dsn'=>'mysql:host=localhost;port=3306;dbname=book_center','user'=>'root','password'=>'root');
+		$list['db_slave']=array('dsn'=>'mysql:host=127.0.0.1;port=3306;dbname=book_center','user'=>'root','password'=>'pq71qgpf1fJzXxlf');
 		//联盟slave库
-		$list['db_master']=array('dsn'=>'mysql:host=localhost;port=3306;dbname=book_center','user'=>'root','password'=>'root');
+		$list['db_master']=array('dsn'=>'mysql:host=127.0.0.1;port=3306;dbname=book_center','user'=>'root','password'=>'pq71qgpf1fJzXxlf');
 		return $list;
 	}
 
@@ -42,7 +42,7 @@ class  Mysql_class{
 			    //測試連接應用
 				try {
 					//根据PDO来进行连接，主要用于进行PDO连接
-				   	$db = @new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
+					$db = new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
 				   	//主要用来设置POD链接失败会抛出来一个异常
 				    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				    $db->query("set names utf8");

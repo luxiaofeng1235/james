@@ -13,12 +13,12 @@ class redis_codes {
     {
         $host   = 'localhost'; //主机IP
         $port   = '6379'; //端口号
-        $pass   = ''; //密码设置
+        $pass   = '123456'; //密码设置
         $this->redis = new Redis();//实例化redis
         $this->redis->connect($host, $port);
         if(!empty($pass)){
             $this->redis->auth($pass);
-        }
+	}
         $this->redis->select(10);
     }
 
