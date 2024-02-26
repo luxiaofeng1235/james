@@ -11,14 +11,14 @@ class redis_codes {
 
     function __construct()
     {
-        $host   = 'localhost'; //主机IP
-        $port   = '6379'; //端口号
-        $pass   = '123456'; //密码设置
+        $host   = Env::get('REDIS.HOST_NAME'); //主机IP
+        $port   =  Env::get('REDIS.PORT'); ; //端口号
+        $pass   =  Env::get('REDIS.PASSWORD');  //密码设置
         $this->redis = new Redis();//实例化redis
         $this->redis->connect($host, $port);
         if(!empty($pass)){
             $this->redis->auth($pass);
-	}
+        }
         $this->redis->select(10);
     }
 

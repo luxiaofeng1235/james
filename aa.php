@@ -1,8 +1,29 @@
 <?php
+// $host = "127.0.0.1";
+// $username  = "root";
+// $passwd = "root";
+// $dbname = "book_center";
+// $conn= mysqli_connect($host,$username,$passwd,$dbname);
+// mysqli_set_charset($conn,'utf8');
+// if (!$conn) {
+//         die("连接失败: " . mysqli_connect_error());
+// }
+// echo "连接成功！";
+// mysqli_close($conn); //关闭连接Vkkkk
+// die;
+
+// die;
+
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
+
+$sql = "select * from ims_chapter limit 1";
+$rs = $mysql_obj->fetchAll($sql,'db_slave');
+
+$redis_data->set_redis('data','1222');
+
 
 $str= "‘叮'的响起一声";
 $a = addslashes($str);

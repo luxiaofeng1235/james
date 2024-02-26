@@ -17,10 +17,18 @@ class  Mysql_class{
 	private function mysqlList()
 	{
 		$list=array();
+		//从Env的环境变量中加载配置文件方便管理
+		$config = [
+            'host'  =>Env::get('DATABASE.HOST_NAME'),//数据库的主机地址
+            'username'  =>Env::get('DATABASE.USERNAME'), //数据库的用户
+            'password'  =>Env::get('DATABASE.PASSWORD'),//数据库的密码
+            'db_name'   =>Env::get('DATABASE.DBNAME'),//数据库名称
+            'port'  =>  Env::get('DATABASE.PORT')//数据库的端口
+        ];
 		//联盟主库master
-		$list['db_slave']=array('dsn'=>'mysql:host=127.0.0.1;port=3306;dbname=book_center','user'=>'root','password'=>'pq71qgpf1fJzXxlf');
+		$list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
 		//联盟slave库
-		$list['db_master']=array('dsn'=>'mysql:host=127.0.0.1;port=3306;dbname=book_center','user'=>'root','password'=>'pq71qgpf1fJzXxlf');
+		$list['db_master']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
 		return $list;
 	}
 
