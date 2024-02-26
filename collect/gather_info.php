@@ -58,7 +58,9 @@ if($info){
         'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
         'third_update_time'    =>array('#info p:eq(2)','text'), //最近的更新时间
         'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
-        'intro' => array('#intro','text'),//小说的简介
+        // 'intro' => array('#intro','text'),//小说的简介
+        'intro' =>array('meta[property=og:description]','content'),
+        'tag'   => array('meta[property=og:novel:category]','content'),
         'location'  =>  array('.con_top','text'),//小说的面包屑位置
         // 'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
         // 'novel_url'   =>array('.info a:eq(2)','href'),//获取小说的跳转地址
@@ -89,7 +91,6 @@ if($info){
         //执行更新操作
         $where_data = "story_id = '".$story_id."'";
 
-
         //定义章节的目录信息
         $list_rule = array(
             'link_name'     =>array('a','text'),
@@ -113,6 +114,7 @@ if($info){
                 $val['store_id'] = $info[0]['store_id']; //关联主表info里的store_id
                 $val['story_id'] = $story_id;//小说的id
                 $val['createtime'] = time();
+                $val['novelid'] = $chapter_id;
                 $items[$val['link_url']] = $val;
                 $chapter_ids[$val['chapter_id']] = 1;
             }
