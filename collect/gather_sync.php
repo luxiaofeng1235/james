@@ -5,7 +5,7 @@ $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
-$limit = isset($argv[1]) ? intval($argv[1]) : 10;
+$limit = isset($argv[1]) ? intval($argv[1]) : 50;
 $start = isset($argv[2]) ? intval($argv[2]) : 0;//控制脚本的起止位置
 $end = isset($argv[3]) ? intval($argv[3]) : 0;//控制语句的控制条件
 
@@ -22,24 +22,21 @@ if(!$countNum){
 }
 
 // $num =50;
-
 $pages = ceil($countNum /$limit);
 $php_path = dirname(dirname(dirname(__DIR__))).'/Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径
 $php_path = str_replace('\\','/',$php_path);
 
-if(!$start && !$end){
-    echo "请输入起止位置";
-    die;
-}
+// if(!$start && !$end){
+//     echo "请输入起止位置";
+//     die;
+// }
 echo "total-num：".$countNum."\r\n";
 echo "当前列表：共需要执行".$pages."页，每页".$limit."条数据的小说明细去拉取章节\r\n";
+
 for ($i=0; $i < $pages; $i++) {
      $sql ="select store_id from ".$table_novel_name." where ".$where_data." order by store_id asc limit ".($i*$limit).','.$limit;
     echo "currenet_page：".($i+1)."\r\n";
     $list = $mysql_obj->fetchAll($sql,'db_slave');
-    // echo '<pre>';
-    // print_R($list);
-    // echo '</pre>';
     // echo "ts_count:".count($list)."\r\n";
     if(!empty($list)){
         foreach($list as $key =>$val){
