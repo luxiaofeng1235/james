@@ -7,7 +7,7 @@ use QL\QueryList;##引入querylist的采集器
 $sql ="SELECT count(story_id) as num,story_id from ims_chapter
 GROUP BY story_id
 HAVING num>8000";
-
+phpinfo();die;
 
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 $dd =array_column($list, 'story_id');
