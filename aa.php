@@ -3,7 +3,7 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
-
+// $aa= filter_words("112<br/>2qqq");
 $sql ="SELECT count(story_id) as num,story_id from ims_chapter
 GROUP BY story_id
 HAVING num>8000";
