@@ -590,10 +590,6 @@ function getContenetNew($data){
         $urls[$val['link_url']]= Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
         $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
     }
-    // echo '<pre>';
-    // print_R($item);
-    // echo '</pre>';
-    // exit;
     $rules = [
         'content'    =>['#content','html'],
         'meta_data'       =>['meta[name=mobile-agent]','content'],
