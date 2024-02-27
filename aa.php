@@ -1,23 +1,77 @@
 <?php
-// $host = "127.0.0.1";
-// $username  = "root";
-// $passwd = "root";
-// $dbname = "book_center";
-// $conn= mysqli_connect($host,$username,$passwd,$dbname);
-// mysqli_set_charset($conn,'utf8');
-// if (!$conn) {
-//         die("连接失败: " . mysqli_connect_error());
-// }
-// echo "连接成功！";
-// mysqli_close($conn); //关闭连接Vkkkk
-// die;
-
-// die;
-
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
+
+$sql ="SELECT count(story_id) as num,story_id from ims_chapter
+GROUP BY story_id
+HAVING num>8000";
+
+
+$list = $mysql_obj->fetchAll($sql,'db_slave');
+$dd =array_column($list, 'story_id');
+// echo '<pre>';
+// print_R($dd);
+// echo '</pre>';
+// exit;
+
+//143_143425 - 168_168191
+// echo '<pre>';
+// print_R($dd);
+// echo '</pre>';
+// exit;
+/*
+0-200
+200 200
+400 200
+600 200
+800 200
+1000 200
+1200 200
+1400 200
+1600 200
+1800 200
+2000 200
+ */
+//168_168212 - 180_180578
+// echo '<pre>';
+// print_R($dd);
+// echo '</pre>';
+// exit;
+$start = 0;
+$size = 200; //定义直接为200进行跑吧，100太慢了要开很多窗口
+//第一次数据 0,100
+//
+//0-200 已执行
+//200 -200 //已执行
+//400 -200
+//600 -200
+$t = array_slice($dd,$start,$size);
+$str= '';
+foreach($t as $key =>$val){
+    $str .="'".$val."',";
+}
+$str= rtrim($str,',');
+echo '<pre>';
+print_R($str);
+echo '</pre>';
+exit;
+
+
+
+$client = new GuzzleHttp\Client();
+$res = $client->request('GET', 'http://www.paoshu8.info/185_185961/', [
+    'headers' => [
+        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
+        'Accept-Encoding' => 'gzip, deflate, br',
+    ]
+]);
+$html = (string)$res->getBody();
+echo '<pre>';
+print_R($html);
+echo '</pre>';
+exit;
 
 $sql = "select * from ims_chapter limit 1";
 $rs = $mysql_obj->fetchAll($sql,'db_slave');
