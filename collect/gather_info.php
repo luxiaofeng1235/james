@@ -90,7 +90,6 @@ if($info){
         $store_data['intro'] = addslashes($store_data['intro']);//转义 特殊字符
         //执行更新操作
         $where_data = "story_id = '".$story_id."'";
-
         //定义章节的目录信息
         $list_rule = array(
             'link_name'     =>array('a','text'),
@@ -135,9 +134,9 @@ if($info){
         $update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
         $res = $mysql_obj->add_data($item_list , $chapter_table_name);
         if($res){
-            //更新小说表的is_async为1，表示已经更新过了不需要重复更新
+             //更新小说表的is_async为1，表示已经更新过了不需要重复更新
             $update_data['is_async'] = 1;
-            $a= $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
+            $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
         }
         echo "insert_id：".$update_id."\t当前小说：".$store_data['title']."|novelid=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
     }
