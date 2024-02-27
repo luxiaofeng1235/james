@@ -3,6 +3,38 @@
 require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
 
+$str = "第四百二十六章 我们能赢2_2.txt";
+$newStr = preg_replace('# #', '', $str);
+
+
+$a= file_put_contents('./'.$newStr,'11112');
+echo '<pre>';
+var_dump($a);
+echo '</pre>';
+exit;
+$a='第四百二十六章 我们能赢（2/2）.txt';
+$aa = trim($a);
+echo '<pre>';
+var_dump($aa);
+echo '</pre>';
+exit;
+$url = 'http://www.paoshu8.info/files/article/image/195/195081/195081s.jpg';
+$savePath = './image.jpeg'; // 保存路径及文件名
+
+// 获取远程图片内容并写入本地文件
+if (($content = file_get_contents($url)) !== false) {
+    if (file_put_contents($savePath, $content) !== false) {
+        echo "成功保存图片！";
+    } else {
+        echo "无法保存图片到指定位置。";
+    }
+} else {
+    echo "无法从指定URL获取图片内容。";
+}
+die;
+
+
+
 
 //获取代理的配置信息
 $proxy_data = getProxyInfo($redis_data);
