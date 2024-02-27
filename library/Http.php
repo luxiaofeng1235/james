@@ -30,27 +30,19 @@ class MultiHttp
             CURLOPT_TIMEOUT => 60,
             CURLOPT_HEADER  => 0,
             CURLOPT_ENCODING    =>  'gzip',
-
-            // CURLOPT_PROXY       =>  Env::get('PROXY.URL_HOST'),
-            // CURLOPT_PROXYPORT   =>  Env::get('PROXY.PORT'),
-            // CURLOPT_PROXYUSERPWD    =>  Env::get('PROXY.PROXY_AUTH'),
-            // CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5,
-            // CURLOPT_PROXYAUTH   =>   CURLAUTH_BASIC,
-
             CURLOPT_HTTPPROXYTUNNEL => 0,
         );
         if($is_proxy){
             //获取代理的配置方式
             $proxy_data = getProxyInfo();
-            // $proxy = $proxy_data['ip'];
-            // $port = $proxy_data['port'];
-            // $proxyauth = $proxy_data['username'].':'.$proxy_data['password'];
-            //是否开启代理
-            $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
-            $std_options[CURLOPT_PROXYPORT] = $proxy_data['port'];
-            $std_options[CURLOPT_PROXYUSERPWD] = $proxy_data['username'].':'.$proxy_data['password'];
-            $std_options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
-            $std_options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
+            if($proxy_data){
+                //是否开启代理
+                $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
+                $std_options[CURLOPT_PROXYPORT] = $proxy_data['port'];
+                $std_options[CURLOPT_PROXYUSERPWD] = $proxy_data['username'].':'.$proxy_data['password'];
+                $std_options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
+                $std_options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
+            }
         }
         $std_options[CURLOPT_SSL_VERIFYPEER] = FALSE;
         $std_options[CURLOPT_SSL_VERIFYHOST] = FALSE;

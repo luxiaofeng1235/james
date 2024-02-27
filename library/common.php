@@ -511,6 +511,7 @@ function getProxyInfo(){
     //取代理的配置信息
     $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
      if(!$api_proxy_data){
+            //请求代理的接口请求信息
             $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN';
             $item = webRequest($url,'GET');
             $tscode  = json_decode($item,true);
