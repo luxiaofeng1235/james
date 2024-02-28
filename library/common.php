@@ -580,14 +580,14 @@ function getContenetNew($data){
     foreach($data as $key =>$val){
         $item[$val['link_url']] = $val;
         $link_name = $val['link_name'];
-        $name =str_replace('****','  ',$link_name);
-        $name =str_replace('*','',$name);
-        $name =str_replace('**','',$name);
-        $name =str_replace('***','',$name);
-        $name =str_replace('****','',$name);
-        $name =str_replace('?','',$name);
-        $name =str_replace("\t",'',$name);
-        $item[$val['link_url']]['link_name'] = $name;
+        // $name =str_replace('****','  ',$link_name);
+        // $name =str_replace('*','',$name);
+        // $name =str_replace('**','',$name);
+        // $name =str_replace('***','',$name);
+        // $name =str_replace('****','',$name);
+        // $name =str_replace('?','',$name);
+        // $name =str_replace("\t",'',$name);
+        $item[$val['link_url']]['link_name'] = $link_name;
         $urls[$val['link_url']]= Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
         $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
     }
