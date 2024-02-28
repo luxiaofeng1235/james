@@ -13,8 +13,7 @@ require_once(dirname(__DIR__).'/library/init.inc.php');
 ///从本地取出来数据
 $table_pro_name = 'mc_book';
 $table_local_name ='ims_novel_info';
-$local_list = $mysql_obj->fetchAll('select *,replace(cate_name,\'大全列表\',\'\') as cate_new_name from '.$table_local_name.' limit 5','db_slave');
-
+$local_list = $mysql_obj->fetchAll('select *,replace(cate_name,\'大全列表\',\'\') as cate_new_name from '.$table_local_name.' limit 10','db_slave');
 $dict_exchange = [
     'title'     =>  'book_name',//小说书名
     'cover_logo'       =>  'pic',//小说封面
@@ -55,7 +54,7 @@ if($local_list){
                 $upddateData= ['pro_book_id' =>$pro_id];
                 $res = $mysql_obj->update_data($upddateData,$where_data ,$table_local_name);
             }
-            echo "index——".$i."\tpro_id：".$pro_id."\ttitle：".$gval['book_name']."\turl：".$gval['source_url']."\r\n";
+            echo "index——".$i."\tstory_id".$story_id."\tpro_id：".$pro_id."\ttitle：".$gval['book_name']."\turl：".$gval['source_url']."\r\n";
         }
         echo "over\r\n";
     }
