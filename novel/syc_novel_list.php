@@ -35,10 +35,6 @@ if($local_list){
     $book_handle = [];
     if(!empty($data)){
         $i = 0;
-        echo '<pre>';
-        print_R($data);
-        echo '</pre>';
-        exit;
         foreach($data as &$gval){
             $i++;
             $book_handle = checkBookHandle($gval['book_name']);
@@ -53,7 +49,7 @@ if($local_list){
                 $add_push_data = getKeyClean($gval);
                 $pro_id = $mysql_obj_pro->add_data($add_push_data,$table_pro_name);
             }
-            echo "index——".$i."\ttitle：".$gval['title']."\turl：".$gval['source_url']."\r\n";
+            echo "index——".$i."\tpro_id：".$pro_id."\ttitle：".$gval['book_name']."\turl：".$gval['source_url']."\r\n";
         }
         echo "over\r\n";
     }
@@ -113,6 +109,7 @@ function exchange_book_handle($data){
     $info['desc'] = preg_replace("/\r\n/", '', $info['desc']);
     $info['serialize'] = $serialize;
     $info['story_id'] = $story_id;
+    $info['chapter_title'] = $info['last_chapter_title'];//冗余下最新章节
     $info['addtime'] = (int) $info['addtime'];
     return $info;
 }
