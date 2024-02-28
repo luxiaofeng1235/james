@@ -45,6 +45,7 @@ require_once ROOT.'library/Http.php'; //多线程请求curl支持post和get
 require_once ROOT.'vendor/autoload.php';//自动加载第三方类的初始文件
 require_once ROOT.'library/Env.php'; //环境变量
 require_once ROOT.'library/redis_codes.php';
+require_once ROOT.'library/mysql_class_pro.php';//线上操作库信息
 
 
 // require_once ROOT.'include/pimage.cls.php';
@@ -58,7 +59,8 @@ require_once ROOT.'library/redis_codes.php';
 // $qplus = new QPlusOpen($Global['qplus']['app_id'],$Global['qplus']['app_secret']);
 
 //$mysql_obj = new Mysql_class();
-$mysql_obj =new Mysql_class();
+$mysql_obj =new Mysql_class(); //本地测试库
+$mysql_obj_pro = new Mysql_class_pro(); //线上操作库
 $http_client= new curl_http();
 $redis_data = new redis_codes();
 
