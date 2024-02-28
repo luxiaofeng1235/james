@@ -38,9 +38,10 @@ if($local_list){
         foreach($data as &$gval){
             $i++;
             $book_handle = checkBookHandle($gval['book_name']);
+            $story_id = $gval['story_id'];
             if(!empty($book_handle) && is_array($book_handle)){
                  $pro_id = $book_handle['id'];
-                 $where_data="story_id ='".$gval['story_id']."' limit 1";
+                 $where_data="story_id ='".$story_id."' limit 1";
                  $upddateData= ['pro_book_id' =>$pro_id];
                  $res = $mysql_obj->update_data($upddateData,$where_data ,$table_local_name);
             }else{
@@ -48,6 +49,11 @@ if($local_list){
                 unset($gval['story_id']);
                 $add_push_data = getKeyClean($gval);
                 $pro_id = $mysql_obj_pro->add_data($add_push_data,$table_pro_name);
+
+                ////更新当前表的id
+                $where_data="story_id ='".$story_id."' limit 1";
+                $upddateData= ['pro_book_id' =>$pro_id];
+                $res = $mysql_obj->update_data($upddateData,$where_data ,$table_local_name);
             }
             echo "index——".$i."\tpro_id：".$pro_id."\ttitle：".$gval['book_name']."\turl：".$gval['source_url']."\r\n";
         }
