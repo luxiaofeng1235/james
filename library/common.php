@@ -580,7 +580,7 @@ function getContenetNew($data){
     foreach($data as $key =>$val){
         $item[$val['link_url']] = $val;
         $link_name = $val['link_name'];
-        // $name =str_replace('****','  ',$link_name);
+        $name =str_replace('****','  ',$link_name);
         $name =str_replace('*','',$name);
         $name =str_replace('**','',$name);
         $name =str_replace('***','',$name);
