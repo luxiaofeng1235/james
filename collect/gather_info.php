@@ -105,6 +105,7 @@ if($info){
         if(!empty($rt->all())){
             $now_time = time();
             $chapter_detal = $rt->all();
+            //处理过滤章节名称里的特殊字符---按照名称进行存储，部分章节可能重名
             $chapter_detal = removeData($chapter_detal);
             foreach($chapter_detal as $val){
                 $link_url = trim($val['link_url']);

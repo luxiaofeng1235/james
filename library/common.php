@@ -706,7 +706,7 @@ function replaceCnWords($str){
     $newStr =SBC_DBC($str,1);
     $newStr = preg_replace('/\*/','',$newStr);
     // $newStr =preg_replace('/\s*/i','',$newStr);
-    $newStr = preg_replace('/（/', '',$newStr);
+    $newStr =  preg_replace('/（/', '',$newStr);
     $newStr =  preg_replace('/）/', '',$newStr);
     $newStr =  preg_replace('/:/', '',$newStr);
     $newStr =  preg_replace('/：/', '',$newStr);
