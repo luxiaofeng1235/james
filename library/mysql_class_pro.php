@@ -249,7 +249,6 @@ class  Mysql_class_pro{
 	    }
 	    $db_name = $this->db_master;
 	    $sql ="insert into `{$table_name}`";
-
 	    if(!isset($data[0])){
 			$item[]=  $data;
 	    }else{
