@@ -100,10 +100,12 @@ if($info){
                 ->rules($list_rule)
                 ->range($range)
                 ->query()->getData();
+
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt->all())){
             $now_time = time();
             $chapter_detal = $rt->all();
+            $chapter_detal = removeData($chapter_detal);
             foreach($chapter_detal as $val){
                 $link_url = trim($val['link_url']);
                 $chapter_ret= explode('/',$link_url);
@@ -142,5 +144,22 @@ if($info){
     }
 }else{
     echo "no data";
+}
+
+//处理抓取中不需要的数据信息
+function removeData($data){
+    if(!$data) return false;
+    foreach($data as $key=>$val){
+        $link_name = replaceCnWords($val['link_name']);
+        if(!empty($link_name)){
+            $t[$link_name] = [
+                'link_name' =>$link_name,
+                'link_url'  =>$val['link_url']
+            ];
+        }
+    }
+    $t= array_values($t);
+    return $t;
+
 }
 ?>

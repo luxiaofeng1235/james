@@ -1,13 +1,42 @@
 <?php
+echo md5('第2章:校花');
+die;
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
+$list = $mysql_obj_pro->fetchAll("select * from mc_book limit 5",'db_slave');
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
 use QL\QueryList;##引入querylist的采集器
 // $aa= filter_words("112<br/>2qqq");
+$meta_data ='format=html5; url=http://m.paoshu8.info/wapbook-92763-178209219/';
+$real_path = explode('/',$meta_data);
+$href = '/92_92763/';
+$str = $real_path[3] ?? '';
+$c_data = explode('-',$str);
+$link = $href. $c_data[2].'.html';
+echo '<pre>';
+print_R(Env::get('DATABASE_PRO.PORT'));
+echo '</pre>';
+exit;
+
+$base_dir = 'E:\\chapter'.DS;
+$old_dir = './test_dd';
+$new_dir = $base_dir . 'test_arr';
+
+$shell_cmd = 'mv '.$old_dir.' '.$new_dir;
+// echo $shell_cmd;die;
+exec($shell_cmd,$output,$status);
+echo '<pre>';
+print_R($output);
+echo '</pre>';
+exit;
+
 $sql ="SELECT count(story_id) as num,story_id from ims_chapter
 GROUP BY story_id
-HAVING num>8000";
-echo $sql;die;
+HAVING num>1000 and num<8000";
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 $dd =array_column($list, 'story_id');
 // echo '<pre>';
