@@ -1,4 +1,5 @@
 <?
+//同步每本小说的章节到数据库中
 ini_set("memory_limit", "8000M");
 set_time_limit(0);
 $dirname = dirname(dirname(__FILE__));
