@@ -1,9 +1,32 @@
 <?php
-echo md5('第2章:校花');
-die;
+
+
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
+
+
+$title = '12|**""\'<>（）[]22（2
+123）55:  55';
+$t = replaceCnWords($title);
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+
+// $str= md5($t);
+// $t_str='9ae92084ba83fa851755a482b579af6d';
+// if($t_str == $str){
+//     echo 1;die;
+// }
+echo '<pre>';
+print_R($str);
+echo '</pre>';
+exit;
+
+echo md5('第2章:校花');
+die;
+
 $list = $mysql_obj_pro->fetchAll("select * from mc_book limit 5",'db_slave');
 echo '<pre>';
 print_R($list);

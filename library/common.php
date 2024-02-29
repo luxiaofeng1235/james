@@ -580,13 +580,6 @@ function getContenetNew($data){
     foreach($data as $key =>$val){
         $item[$val['link_url']] = $val;
         $link_name = $val['link_name'];
-        // $name =str_replace('****','  ',$link_name);
-        // $name =str_replace('*','',$name);
-        // $name =str_replace('**','',$name);
-        // $name =str_replace('***','',$name);
-        // $name =str_replace('****','',$name);
-        // $name =str_replace('?','',$name);
-        // $name =str_replace("\t",'',$name);
         $item[$val['link_url']]['link_name'] = $link_name;
         $urls[$val['link_url']]= Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
         $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
@@ -596,7 +589,7 @@ function getContenetNew($data){
         'meta_data'       =>['meta[name=mobile-agent]','content'],
         'href'      =>['.con_top a:eq(2)','href'],
     ];
-    $s= [];
+    //开启多线程请求
     $list = MultiHttp::curlGet($t_url,null,false);
     foreach($list as $key =>$val){
 
@@ -694,7 +687,7 @@ function SBC_DBC($str,$args2=1) {
 }
 
 /**
-* @note 替换中文字符
+* @note 替换中文字符|||清洗不必要的特殊字符
 *
 * @param $str 需要处理的字符
 * @return  string
@@ -703,9 +696,7 @@ function SBC_DBC($str,$args2=1) {
 function replaceCnWords($str){
     if(!$str)
         return false;
-    $newStr =SBC_DBC($str,1);
-    $newStr = preg_replace('/\*/','',$newStr);
-    // $newStr =preg_replace('/\s*/i','',$newStr);
+    $newStr = preg_replace('/\*/','',$str);
     $newStr =  preg_replace('/（/', '',$newStr);
     $newStr =  preg_replace('/）/', '',$newStr);
     $newStr =  preg_replace('/:/', '',$newStr);
@@ -714,7 +705,10 @@ function replaceCnWords($str){
     $newStr =  preg_replace('/</', '',$newStr);
     $newStr =  preg_replace('/？/', '',$newStr);
     $newStr =  preg_replace('/"/', '',$newStr);
+    $newStr =  preg_replace('/\'/', '',$newStr);
     $newStr =  preg_replace('/\|/', '',$newStr);
+    $newStr =  preg_replace('/\r\n/','',$newStr);
+    $newStr =SBC_DBC($newStr,1);
     return $newStr;
 }
 
