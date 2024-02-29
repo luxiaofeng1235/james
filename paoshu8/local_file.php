@@ -23,7 +23,7 @@ if(!empty($id)){
     $ss = join(',',$run_ids);
    $where ="story_id in (".$ss.")";
 }else{
-        $where = "story_id in ('174_174667')";
+        $where = "story_id in ('0_1')";
 }
 
 use QL\QueryList;##引入querylist的采集器
@@ -36,9 +36,9 @@ $num = 200;//一次性抓取30个页面
 foreach($list as $key =>$val){
     $download_path = ROOT . 'log' . DS . 'chapter' .DS . $val['story_id'];//下载路径
     // //创建地址目录信息
-    // if(!is_dir($download_path)){
-    //         createFolders($download_path);
-    // }
+    if(!is_dir($download_path)){
+        createFolders($download_path);
+    }
     $story_id = trim($val['story_id']);
     if(!$story_id){
         continue;
@@ -62,12 +62,23 @@ $exec_end_time =microtime(true); //执行结束时间
 $executionTime = $exec_end_time - $exec_start_time;
 echo "Script execution time: ".($executionTime/60)." minutes \r\n";
 
-function saveLocalFile($save_local,$data){
+/**
+* @note 生成保存的文件
+*
+* @param $save_path string 保存路径
+* @param $data array 需要处理的数据
+* @return unknow
+*/
+
+function saveLocalFile($save_path,$data){
     foreach($data as $key =>$val){
         $content = $val['content'] ?? '';//提交的内容
-        $filename = $save_local .DS. md5($val['link_name']).'.txt';
+        $filename = $save_path .DS. md5($val['link_name']).'.txt';
+        // echo $val['link_name'];
+        // echo "\r\n";
+        // echo $filename;die;
         //应该是这里的问题导致部分没有写入，标题中含有特殊字符的原因，需要到时候处理一下link_name的内容
-        @$res= file_put_contents($filename,$content); //防止文件名出错
+        $res= file_put_contents($filename,$content); //防止文件名出错
     }
 }
 ?>
