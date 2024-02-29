@@ -20,17 +20,17 @@ $url =Env::get('BAODE.STORE_HOST_CATE') . '1_1/';
 $key = Env::get('BAODE.NOVEL_STR');
 $rules = $urlRules[$key]['info'];
 $story_link =Env::get('BAODE.STORE_HOST_INFO') . '7465/';//小说地址
-echo '<pre>';
-print_R($story_link);
-echo '</pre>';
-exit;
 
 //爬取相关规则下的类
 $info_data=QueryList::get($story_link)
         ->rules($rules)
         ->query()->getData();
+
+$info = $info_data->all();
+
+$info['cover_logo'] = Env::get('BAODE.STORE_HOST_LIST').$info['cover_logo'];
 echo '<pre>';
-print_R($info_data);
+print_R($info);
 echo '</pre>';
 exit;
 ?>
