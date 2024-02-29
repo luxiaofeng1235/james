@@ -18,9 +18,41 @@ class NovelModel{
       'nearby_chapter'             =>   'last_chapter_title',//最新章节
       'story_link'          =>  'source_url',//采集来源
       'cate_name'          =>  'class_name',//小说分类名称
-  ];
+   ];
+
+   //过滤不必要的章节
+    private static $filterWords = [
+        '新书',
+        '发布',
+        '番外',
+        '高考祝愿',
+        '上架',
+        '通知',
+        '冲榜求票'
+    ];
     private static $db_conn = 'db_novel_pro';
     private static $table_name = 'mc_book';
+
+
+     /**
+    * @note 移除不必要的广告章节
+    * @param $data array需要处理的数据
+    *
+    */
+    public static function removeAdInfo($data){
+      if($data){
+         foreach($data as $key =>$val){
+              foreach(self::$filterWords as $v){
+                   if( strstr($val['link_name'] , $v)){
+                          unset($data[$key]);
+                          break;
+                   }
+              }
+         }
+         $list = array_values($data);
+         return $list;
+      }
+    }
 
     /**
     * @note 自动加载分类配置文件
