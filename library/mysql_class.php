@@ -243,11 +243,16 @@ class  Mysql_class{
 	* @param [string] $[table_name] [<表名称>]
 	* @return
 	*/
-	public function add_data($data,$table_name=''){
+	public function add_data($data,$table_name='',$db_conf=''){
 	    if(!$data || !$table_name){
 	        return false;
 	    }
-	    $db_name = $this->db_master;
+	    if(empty($db_conf)){
+	    	$db_name = $this->db_master;
+	    }else{//配置启用配置里的mysql
+	    	$db_name = $db_conf;
+	    }
+
 	    $sql ="insert into `{$table_name}`";
 
 	    if(!isset($data[0])){
