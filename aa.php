@@ -3,27 +3,15 @@
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-$cate_name = NovelModel::getNovelCateId('女生');
-echo '<pre>';
-print_R($cate_name);
-echo '</pre>';
-exit;
-//加载分类
-if (is_file(__DIR__ . '/config/novel_class.php')) {
-    $config = require  __DIR__ .  '/config/novel_class.php';
-    echo '<pre>';
-    print_R($config);
-    echo '</pre>';
-    exit;
-}
+// $cate_name = NovelModel::getNovelCateId('女生');
+// echo '<pre>';
+// print_R($cate_name);
+// echo '</pre>';
+// exit;
 
-$aa = Env::get('PROXY.URL_HOST');
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
-$title = '12|**""\'<>（）[]22（2
-123）55:  55';
+
+
+$title = '第4章 偏执大佬，姐姐香吗？（4）';
 $t = replaceCnWords($title);
 echo '<pre>';
 print_R($t);
