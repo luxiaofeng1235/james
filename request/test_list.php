@@ -56,14 +56,15 @@ if($itemList->all()){
         $novel_list = array_slice($novel_list, 0 , 1);
         foreach($novel_list as $key => $info){
             //判断线上是否存在记录
-            $sql = "select id from mc_book where book_name='".$info['title']."' limit 1";
+            $sql = "select id from ".Env::get('TABLE_MC_BOOK')." where book_name='".$info['title']."' limit 1";
+            echo $sql;die;
             $pro_ret = $mysql_obj->fetch($sql,'db_novel_pro');
             if($pro_ret){
                 $pro_book_id = $pro_ret['id'];
             }else{
                 //线上小说数据转换
                 $pro_data= exchange_book_handle($info);
-                $pro_book_id = $mysql_obj->add_data($pro_data,'mc_book','db_novel_pro');
+                $pro_book_id = $mysql_obj->add_data($pro_data,Env::get('TABLE_MC_BOOK'),'db_novel_pro');
             }
             $info['pro_book_id'] = $pro_book_id;
             $novel_list[$key]['pro_book_id'] = $pro_book_id;
