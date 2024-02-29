@@ -1,9 +1,42 @@
 <?php
+//http://www.paoshu8.info/211_211868/195729028.html
+//10111 10
+//110221 110
+
+//http://www.paoshu8.info/0_99/
+
+for ($i=1; $i <=200000 ; $i++) {
+    // echo $i;
+     $url=  'http://www.paoshu8.info/' . ((int) (($i/1000))) .'_'.$i;
+     echo $url."<br />";
+}
+die;
 
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
+ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+$step = 300;
+$key ='foleder_data_';
+$info = $redis_data->get_redis($key);
+if(!empty($info)){
+    $startData = json_decode($info,true);
+    $t= range(1,$step);
+    foreach($startData as $key =>$val){
+        foreach($t as $k =>$v){
+            echo "index---".($val.$v)."<br/>";
+        }
+    }
+}
+die;
+die;
 
+
+$t = remote_file_exists('https://www.baode.cc/ob/7465/');
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
 
 $res = NovelModel::curl_file_get_contents('https://www.baode.cc/booklogo/758ba256ec3140fd917179844b491071.jpeg');
 echo '<pre>';
