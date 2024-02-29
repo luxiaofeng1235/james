@@ -64,5 +64,29 @@ class NovelModel{
        curl_close($ch);
        return $r;
     }
+
+
+     /**
+    * @note 远程抓取图片保存到本地
+    *
+    * @param $cate_name str分类名称
+    * @return string
+    */
+    public static function saveImgToLocal($url){
+      if(!$url){
+          return false;
+      }
+      $save_img_path = Env::get('SAVE_IMG_PATH');
+      $t= explode('/',$url);
+      $filename = $save_img_path . DS . end($t);
+      if(!file_exists($filename)){
+        $save_img_path =Env::get('SAVE_IMG_PATH');
+        if(!is_dir($save_img_path)){
+            createFolders($save_img_path);
+        }
+        $img_con = self::curl_file_get_contents($url);
+        @file_put_contents($filename, $img_con);
+      }
+    }
 }
 ?>

@@ -73,6 +73,10 @@ if($info){
     $store_data = $info_data->all();
     if(!empty($store_data)){
 
+
+        //保存图片到本地
+        NovelModel::saveImgToLocal($store_data['cover_logo']);
+        echo 3;die;
         $story_id = trim($info[0]['story_id']); //小说的id
         //处理空字符串
         $location = str_replace("\r\n",'',$store_data['location']);
