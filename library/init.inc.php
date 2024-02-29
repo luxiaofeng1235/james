@@ -50,9 +50,9 @@ require_once ROOT.'library/novelModel.php';//小说业务模型类
 
 
 //小说的采集规则配置
-$urlsRules  = [];
+$urlRules  = [];
 if (is_file(dirname(__DIR__) . '/config/urls_class.php')) {
-    $urlsRules = require  dirname(__DIR__) . '/config/urls_class.php';
+    $urlRules = require  dirname(__DIR__) . '/config/urls_class.php';
 }
 
 // require_once ROOT.'include/pimage.cls.php';
