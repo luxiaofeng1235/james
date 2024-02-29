@@ -3,6 +3,17 @@
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
+
+$res = NovelModel::curl_file_get_contents('https://www.baode.cc/booklogo/758ba256ec3140fd917179844b491071.jpeg');
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
+// $res= webRequest('https://www.baode.cc/class/1_1/','GET');
+// echo '<pre>';
+// print_R($res);
+// echo '</pre>';
+// exit;
 // $cate_name = NovelModel::getNovelCateId('女生');
 // echo '<pre>';
 // print_R($cate_name);
@@ -11,10 +22,13 @@ require_once($dirname.'/library/init.inc.php');
 
 
 
-$title = '第1629章 前置任务，我失忆了（17）';
+$title = '第242章 替身少帅，姐姐撩吗？（47）';
 $t = replaceCnWords($title);
+echo "<pre>";
+var_dump($title);
+echo "<br/>";
 echo '<pre>';
-print_R($t);
+var_dump($t);
 echo '</pre>';
 exit;
 

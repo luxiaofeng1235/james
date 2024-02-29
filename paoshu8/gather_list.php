@@ -29,7 +29,6 @@ $range = '.novellist'; //循环的范围
 $data = readFileData('./jsonList.txt');
 //定义每本小说的标题信息
 $item_rules = [
-    // 'title'     =>  ['a','title'],
     'story_link'       => ['a','href'],
     'title'     =>  ['a','text'],
 ];

@@ -45,5 +45,24 @@ class NovelModel{
         }
          return $cate_id;
     }
+
+    /**
+    * @note 获取远程图片
+    *
+    * @param $cate_name str分类名称
+    * @return string
+    */
+    public static function curl_file_get_contents($durl){
+       $ch = curl_init();
+       curl_setopt($ch, CURLOPT_URL, $durl);
+       curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+       curl_setopt($ch, CURLOPT_ENCODING,'gzip');
+       // curl_setopt($ch, CURLOPT_USERAGENT, _USERAGENT_);
+       curl_setopt($ch, CURLOPT_REFERER,0);
+       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+       $r = curl_exec($ch);
+       curl_close($ch);
+       return $r;
+    }
 }
 ?>
