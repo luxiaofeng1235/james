@@ -106,7 +106,7 @@ if($info){
         $third_update_time = $update_time.' 00:00:00';
         $third_update_time = strtotime($third_update_time);
         $store_data['third_update_time'] = $third_update_time;
-
+        $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
         //处理作者
         $author_data = explode('：',$store_data['author']);
         $store_data['author']  = $author_data[1] ?? '';
@@ -127,7 +127,6 @@ if($info){
         //同步小说的基础信息到mc_book
         $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
         $store_data['pro_book_id'] = $sync_pro_id;
-
 
         $range = '#list dd';
         $rt = QueryList::get($story_link)
