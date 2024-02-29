@@ -46,6 +46,7 @@ require_once ROOT.'vendor/autoload.php';//自动加载第三方类的初始文�
 require_once ROOT.'library/Env.php'; //环境变量
 require_once ROOT.'library/redis_codes.php';
 require_once ROOT.'library/mysql_class_pro.php';//线上操作库信息
+require_once ROOT.'library/novelModel.php';//小说业务模型类
 
 
 // require_once ROOT.'include/pimage.cls.php';

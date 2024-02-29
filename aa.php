@@ -5,6 +5,19 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
+$cate_name = NovelModel::getNovelCateId('都市言情');
+echo '<pre>';
+print_R($cate_name);
+echo '</pre>';
+exit;
+//加载分类
+if (is_file(__DIR__ . '/config/novel_class.php')) {
+    $config = require  __DIR__ .  '/config/novel_class.php';
+    echo '<pre>';
+    print_R($config);
+    echo '</pre>';
+    exit;
+}
 
 $aa = Env::get('PROXY.URL_HOST');
 echo '<pre>';
