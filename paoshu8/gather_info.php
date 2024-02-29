@@ -59,6 +59,7 @@ if($info){
         'third_update_time'    =>array('#info p:eq(2)','text'), //最近的更新时间
         'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
         // 'intro' => array('#intro','text'),//小说的简介
+        'cate_name' =>array('meta[property=og:novel:category]','content'),//分类
         'intro' =>array('meta[property=og:description]','content'),
         'tag'   => array('meta[property=og:novel:category]','content'),
         'location'  =>  array('.con_top','text'),//小说的面包屑位置
@@ -88,18 +89,24 @@ if($info){
         $store_data['author']  = $author_data[1] ?? '';
         $store_data['updatetime'] = time();
         $store_data['intro'] = addslashes($store_data['intro']);//转义 特殊字符
+        $store_data['tag'] = str_replace('小说','',$store_data['tag']);
         //执行更新操作
+        if($info[0]['createtime'] == 0){
+            $store_data['createtime']  = time();
+        }
         $where_data = "story_id = '".$story_id."'";
         //定义章节的目录信息
         $list_rule = array(
             'link_name'     =>array('a','text'),
             'link_url'       =>array('a','href'),
         );
+
         $range = '#list dd';
         $rt = QueryList::get($story_link)
                 ->rules($list_rule)
                 ->range($range)
                 ->query()->getData();
+
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt->all())){
             $now_time = time();
@@ -124,7 +131,6 @@ if($info){
             $item_list = array_values($items);
         }
         array_multisort($sort_ids , SORT_ASC , $item_list);
-
         //清晰不需要的数据信息
         $item_list = cleanData($item_list,['chapter_id']);
 
