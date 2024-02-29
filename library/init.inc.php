@@ -47,11 +47,12 @@ require_once ROOT.'library/Env.php'; //环境变量
 require_once ROOT.'library/redis_codes.php';
 require_once ROOT.'library/mysql_class_pro.php';//线上操作库信息
 require_once ROOT.'library/novelModel.php';//小说业务模型类
-// require_once ROOT.'config/urls_class.php'; //小说的采集规则配置
 
-$urls_rules  = [];
+
+//小说的采集规则配置
+$urlsRules  = [];
 if (is_file(dirname(__DIR__) . '/config/urls_class.php')) {
-    $urls_rules = require  dirname(__DIR__) . '/config/urls_class.php';
+    $urlsRules = require  dirname(__DIR__) . '/config/urls_class.php';
 }
 
 // require_once ROOT.'include/pimage.cls.php';
