@@ -4,6 +4,7 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
+
 $res = NovelModel::curl_file_get_contents('https://www.baode.cc/booklogo/758ba256ec3140fd917179844b491071.jpeg');
 echo '<pre>';
 print_R(Env::get('SAVE_NOVEL_PATH'));
