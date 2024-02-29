@@ -9,6 +9,11 @@
  */
 class NovelModel{
 
+
+    /**
+    * @note 自动加载分类配置文件
+    *
+    */
     public static function getCateConf(){
         if (is_file(dirname(__DIR__) . '/config/novel_class.php')) {
             $config = require  dirname(__DIR__) . '/config/novel_class.php';

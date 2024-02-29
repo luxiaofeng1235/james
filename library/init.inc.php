@@ -20,7 +20,7 @@ if($_SERVER['SERVER_ADDR']=="127.0.0.1"){
 //error_reporting(E_ALL);
 error_reporting(E_ALL);   //屏蔽所有错误
 define('ROOT', str_replace("\\",'/',substr(dirname(__FILE__), 0, -7)));//ROOT => 根目录
-
+define('BASE_PATH',ROOT);//定义基础项目的基础路径
 define('IN', true);
 define('DS', DIRECTORY_SEPARATOR);
 
