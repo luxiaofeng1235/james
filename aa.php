@@ -6,6 +6,11 @@ $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
 
+$aa = Env::get('PROXY.URL_HOST');
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 $title = '12|**""\'<>（）[]22（2
 123）55:  55';
 $t = replaceCnWords($title);
