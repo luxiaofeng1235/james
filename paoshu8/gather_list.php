@@ -76,6 +76,10 @@ if(!empty($storeData)){
             }
         }
     }
+    echo '<pre>';
+    print_R($nover_list);
+    echo '</pre>';
+    exit;
     if(!empty($nover_list)){
          $nover_list = array_merge(array(),$nover_list);
         // $test_data = array_slice($return , 0 ,1);

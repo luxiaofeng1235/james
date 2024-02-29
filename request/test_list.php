@@ -17,7 +17,7 @@ use QL\QueryList;##引入querylist的采集器
 $url = 'https://www.baode.cc/class/1_1/';
 
 $item_rules = [
-    'category'       => ['.s1','text'],
+    'cate_name'       => ['.s1','text'],
     'title'     =>  ['.s2 a','text'],
     'story_link'     =>  ['.s2 a','href'],
 ];
@@ -25,7 +25,7 @@ $item_rules = [
 $dict_exchange = [
     'title'     =>  'book_name',//小说书名
     'story_link'          =>  'source_url',//采集来源
-    'category'          =>  'class_name',//小说分类名称
+    'cate_name'          =>  'class_name',//小说分类名称
     'createtime'    =>  'addtime',//添加时间
 ];
 $range = '#newscontent li';
@@ -48,11 +48,11 @@ if($itemList->all()){
             // //查是否存在当前小说信息
             $info = $mysql_obj->get_data_by_condition($where_data,$novel_table_name,'store_id');
             if(!empty($info)){
+                $t[]=$gval;
                 unset($novel_list[$gkey]);
             }
         }
         $novel_list = array_merge(array(),$novel_list);
-
         $novel_list = array_slice($novel_list, 0 , 1);
         foreach($novel_list as $key => $info){
             //判断线上是否存在记录
