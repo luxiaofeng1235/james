@@ -293,6 +293,7 @@ class  Mysql_class{
 	        $inner_sql = rtrim($inner_sql,',');
 	        $sql .=$inner_sql;
 	    }
+	    // echo $sql;die;
 	    if($sql){//开始添加数据
 	    	$db_obj = $this->getMysqlInfo($db_name);
 	    	$ret = $db_obj->query($sql);

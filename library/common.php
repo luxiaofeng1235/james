@@ -713,6 +713,22 @@ function replaceCnWords($str){
 }
 
 
+/**
+* @note 处理数组中的key进行添加
+*
+* @param $key_data array需要处理的数据
+* @return
+*/
+function handleArrayKey($key_data){
+    if(!$key_data) return false;
+    $new_data =[];
+    foreach($key_data as $key =>$val){
+        $tkey ="`$key`";
+        $new_data[$tkey] = $val;
+    }
+    return $new_data;
+}
+
 
 
 ?>

@@ -100,7 +100,13 @@ class NovelModel{
       }
     }
 
-  //转换对应的字段信息并同步数据到mc_book表
+     /**
+    * @note 转换对应的字段信息并同步数据到mc_book表
+    *
+    * @param $data 预处理的数据
+    * @param $mysql_obj string 连接句柄
+    * @return string
+    */
   public static  function exchange_book_handle($data,$mysql_obj){
       if(!$data)
           return false;
@@ -118,14 +124,18 @@ class NovelModel{
       }
 
       $info['cid'] = self::getNovelCateId($info['class_name']);
-      $info['createtime']  = time();
+      $info['addtime']  = time();
 
       $where_data = "book_name ='".trim($info['book_name'])."' and author ='".trim($info['author'])."' limit 1";
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,'mc_book','id',false,self::$db_conn);
       if(empty($novelInfo)){
-          // $mysql_obj->add_data($info,'mc_book',self::$db_conn);
+          $data=  handleArrayKey($info);
+          $id =  $mysql_obj->add_data($data,'mc_book',self::$db_conn);
+
+      }else{
+          $id = intval($novelInfo[0]['id']);
       }
-      //计算当前的分类ID信息
+      return $id;
   }
 }
 ?>

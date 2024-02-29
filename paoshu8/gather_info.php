@@ -125,11 +125,9 @@ if($info){
         );
 
         //同步小说的基础信息到mc_book
-        $mc_novel_data = NovelModel::exchange_book_handle($store_data,$mysql_obj);
-        echo '<pre>';
-        var_dump($mc_novel_data);
-        echo '</pre>';
-        exit;
+        $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
+        $store_data['pro_book_id'] = $sync_pro_id;
+
 
         $range = '#list dd';
         $rt = QueryList::get($story_link)
