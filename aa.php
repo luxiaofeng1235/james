@@ -5,7 +5,7 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 
-$cate_name = NovelModel::getNovelCateId('都市言情');
+$cate_name = NovelModel::getNovelCateId('悬疑推理');
 echo '<pre>';
 print_R($cate_name);
 echo '</pre>';
