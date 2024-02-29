@@ -20,6 +20,7 @@ class NovelModel{
       'cate_name'          =>  'class_name',//小说分类名称
   ];
     private static $db_conn = 'db_novel_pro';
+    private static $table_name = 'mc_book';
 
     /**
     * @note 自动加载分类配置文件
@@ -123,15 +124,14 @@ class NovelModel{
           }
       }
 
+      $info['chapter_title'] = $info['last_chapter_title'];
       $info['cid'] = self::getNovelCateId($info['class_name']);
       $info['addtime']  = time();
-
       $where_data = "book_name ='".trim($info['book_name'])."' and author ='".trim($info['author'])."' limit 1";
-      $novelInfo = $mysql_obj->get_data_by_condition($where_data,'mc_book','id',false,self::$db_conn);
+      $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
       if(empty($novelInfo)){
           $data=  handleArrayKey($info);
-          $id =  $mysql_obj->add_data($data,'mc_book',self::$db_conn);
-
+          $id =  $mysql_obj->add_data($data, self::$table_name ,self::$db_conn);
       }else{
           $id = intval($novelInfo[0]['id']);
       }

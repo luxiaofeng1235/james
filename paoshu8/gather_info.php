@@ -4,8 +4,8 @@
  * 主要同步的数据有以下几个流程：
  * 1、同步ims_novel_info表信息和状态 --已实现
  * 2、下载图片到本地的指定目录 --已实现
- * 3、同步章节数据暂时放到chapter表，后期采用json存储 -待完善
- * 4、同步线上mc_book数据比对--目前未实现
+ * 3、同步章节数据暂时放到ims_chapter表，后期采用json存储 -待完善
+ * 4、同步线上mc_book数据比对--已实现
  *
  * Copyright (c) 2017 - Linktone
  * @author xiaofeng.lu <xiaofeng.200@163.com>
@@ -160,6 +160,10 @@ if($info){
         array_multisort($sort_ids , SORT_ASC , $item_list);
         //清晰不需要的数据信息
         $item_list = cleanData($item_list,['chapter_id']);
+
+        //创建生成json目录结构
+        NovelModel::createJsonFile($store_data,$item_list);
+
 
         $update_id = $info[0]['store_id'];
         //删除章节关联的数据信息
