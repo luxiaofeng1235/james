@@ -9,6 +9,17 @@
  */
 class NovelModel{
 
+    public static $dict_exchange = [
+       'title'     =>  'book_name',//小说书名
+      'cover_logo'       =>  'pic',//小说封面
+      'author'          =>      'author',//作者
+      'tag'       =>  'tags',//标签
+      'intro'          =>  'desc',//简介
+      'nearby_chapter'             =>   'last_chapter_title',//最新章节
+      'story_link'          =>  'source_url',//采集来源
+      'cate_name'          =>  'class_name',//小说分类名称
+  ];
+    private static $db_conn = 'db_novel_pro';
 
     /**
     * @note 自动加载分类配置文件
@@ -88,5 +99,33 @@ class NovelModel{
         @file_put_contents($filename, $img_con);
       }
     }
+
+  //转换对应的字段信息并同步数据到mc_book表
+  public static  function exchange_book_handle($data,$mysql_obj){
+      if(!$data)
+          return false;
+      //先按照源数据进行判断
+      $ex_key =[];
+      foreach(self::$dict_exchange as $key  => $val){
+          if(!$key)
+              continue;
+          $ex_key[$key] = 1;
+      }
+      foreach($data as $key =>$val){
+          if(isset($ex_key[$key])){
+              $info[self::$dict_exchange[$key]]=trim($val);
+          }
+      }
+
+      $info['cid'] = self::getNovelCateId($info['class_name']);
+      $info['createtime']  = time();
+
+      $where_data = "book_name ='".trim($info['book_name'])."' and author ='".trim($info['author'])."' limit 1";
+      $novelInfo = $mysql_obj->get_data_by_condition($where_data,'mc_book','id',false,self::$db_conn);
+      if(empty($novelInfo)){
+          // $mysql_obj->add_data($info,'mc_book',self::$db_conn);
+      }
+      //计算当前的分类ID信息
+  }
 }
 ?>

@@ -79,20 +79,23 @@ if($info){
         // 'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
         // 'novel_url'   =>array('.info a:eq(2)','href'),//获取小说的跳转地址
     );
+
     // $redis_book_key = 'store_info:'.$store_id;
     // $redis_data  = $redis_data->get_redis($redis_book_key);
     // if(!$redis_data){
     //     //爬取相关规则下的类
-    //     $info_data=QueryList::get($story_link)
-    //             ->rules($rules)
-    //             ->query()->getData();
-    //     $store_data = $info_data->all();
+         $info_data=QueryList::get($story_link)
+                ->rules($rules)
+                ->query()->getData();
+        $store_data = $info_data->all();
     //     $redis_data->set_redis($)
     // }
-
     if(!empty($store_data)){
         //保存图片到本地
         NovelModel::saveImgToLocal($store_data['cover_logo']);
+        //同步数据到mc_book表
+        $store_data['story_link'] = $story_link;
+
         $story_id = trim($info[0]['story_id']); //小说的id
         //处理空字符串
         $location = str_replace("\r\n",'',$store_data['location']);
@@ -120,6 +123,13 @@ if($info){
             'link_name'     =>array('a','text'),
             'link_url'       =>array('a','href'),
         );
+
+        //同步小说的基础信息到mc_book
+        $mc_novel_data = NovelModel::exchange_book_handle($store_data,$mysql_obj);
+        echo '<pre>';
+        var_dump($mc_novel_data);
+        echo '</pre>';
+        exit;
 
         $range = '#list dd';
         $rt = QueryList::get($story_link)
