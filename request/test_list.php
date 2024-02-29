@@ -14,7 +14,7 @@ set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
-$url = 'https://www.baode.cc/class/1_1/';
+$url =Env::get('BAODE.STORE_HOST_CATE') . '1_1/';
 
 $item_rules = [
     'cate_name'       => ['.s1','text'],
