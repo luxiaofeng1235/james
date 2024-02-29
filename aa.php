@@ -11,7 +11,7 @@ require_once($dirname.'/library/init.inc.php');
 
 
 
-$title = '第4章 偏执大佬，姐姐香吗？（4）';
+$title = '第1629章 前置任务，我失忆了（17）';
 $t = replaceCnWords($title);
 echo '<pre>';
 print_R($t);

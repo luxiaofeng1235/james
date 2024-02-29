@@ -147,7 +147,9 @@ if($info){
     echo "no data";
 }
 
-//处理抓取中不需要的数据信息
+//处理抓取中按照章节名称返回
+//将章节中的全角符号转换成英文
+//过滤调一些特殊分符号
 function removeDataRepeat($data){
     if(!$data) return false;
     foreach($data as $key=>$val){
