@@ -137,5 +137,50 @@ class NovelModel{
       }
       return $id;
   }
+
+
+    /**
+    * @note 创建生成json文件
+    *
+    * @param $data 预处理的数据
+    * @param $mysql_obj string 连接句柄
+    * @return string
+    */
+  public static function createJsonFile($info,$data){
+    if(!$data || !$info){
+      return false;
+    }
+    /*
+    $data[] = [
+                'id'    =>$key+1 ,
+                'sort'  =>$key+1,
+                'chapter_link'  =>$val['link_url'],
+                'chapter_name'  =>$val['link_name'],
+                'vip'   =>  0,
+                'cion'  =>  0,
+                'is_first' =>   0,
+                'is_last'   => 0,
+                'text_num'  => 2000,
+                'addtime'   =>$val['createtime'],
+            ];
+
+     */
+      $json_list= [];
+      foreach($data as $key =>$val){
+         $json_list[] = [
+                'id'    =>$key+1 ,
+                'sort'  =>$key+1,
+                'chapter_link'  =>Env::get('APICONFIG.PAOSHU_HOST') . $val['link_url'],
+                'chapter_name'  =>$val['link_name'],
+                'vip'   =>  0,
+                'cion'  =>  0,
+                'is_first' =>   0,
+                'is_last'   => 0,
+                'text_num'  => 2000,
+                'addtime'   =>$val['createtime'],
+          ];
+      }
+      return $json_list;
+  }
 }
 ?>

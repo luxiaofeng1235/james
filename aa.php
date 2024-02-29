@@ -4,7 +4,7 @@
 //110221 110
 
 //http://www.paoshu8.info/0_99/
-echo md5('第一章 龙的骨');
+echo md5('第二章 远古龙洞');
 die;
 for ($i=1; $i <=200000 ; $i++) {
     // echo $i;
