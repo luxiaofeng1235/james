@@ -6,7 +6,7 @@ require_once($dirname.'/library/init.inc.php');
 
 $res = NovelModel::curl_file_get_contents('https://www.baode.cc/booklogo/758ba256ec3140fd917179844b491071.jpeg');
 echo '<pre>';
-print_R($res);
+print_R(Env::get('SAVE_NOVEL_PATH'));
 echo '</pre>';
 exit;
 // $res= webRequest('https://www.baode.cc/class/1_1/','GET');
