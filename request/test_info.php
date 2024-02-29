@@ -19,7 +19,11 @@ $url =Env::get('BAODE.STORE_HOST_CATE') . '1_1/';
 //从配置中取
 $key = Env::get('BAODE.NOVEL_STR');
 $rules = $urlRules[$key]['info'];
-$story_link ='https://www.baode.cc/ob/7465/';//小说地址
+$story_link =Env::get('BAODE.STORE_HOST_INFO') . '7465/';//小说地址
+echo '<pre>';
+print_R($story_link);
+echo '</pre>';
+exit;
 
 //爬取相关规则下的类
 $info_data=QueryList::get($story_link)
