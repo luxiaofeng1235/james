@@ -31,7 +31,15 @@ return [
             'story_link'     =>  ['.s2 a','href'],
         ],
         'info'  =>  [
-
+            'cover_logo'       =>array('#fmimg img','src'),//小说封面
+            'author'    => array('#info p:eq(0)','text'),//小说作者
+            'title'     =>array('#info>h1','text'),//小说标题
+            'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
+            'third_update_time'    =>array('#info p:eq(2)','text'), //最近的更新时间
+            'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
+            'intro' =>array('meta[property=og:description]','content'),
+            'tag'   => array('meta[property=og:novel:category]','content'),
+            'location'  =>  array('.con_top','html'),//小说的面包屑位置
         ],
     ],
 ];
