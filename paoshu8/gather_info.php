@@ -100,7 +100,6 @@ if($info){
                 ->rules($list_rule)
                 ->range($range)
                 ->query()->getData();
-
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt->all())){
             $now_time = time();
