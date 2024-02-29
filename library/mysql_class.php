@@ -12,6 +12,7 @@ class  Mysql_class{
 
 	public $db_slave='db_slave'; //从库
 	public $db_master='db_master'; //主库
+	public $db_novel_pro = 'db_novel_pro';//线上小说库
 
 	//连接mysql的列表
 	private function mysqlList()
@@ -263,7 +264,6 @@ class  Mysql_class{
 	    }else{//配置启用配置里的mysql
 	    	$db_name = $db_conf;
 	    }
-
 	    $sql ="insert into `{$table_name}`";
 
 	    if(!isset($data[0])){
