@@ -57,7 +57,6 @@ if($itemList->all()){
         foreach($novel_list as $key => $info){
             //判断线上是否存在记录
             $sql = "select id from ".Env::get('TABLE_MC_BOOK')." where book_name='".$info['title']."' limit 1";
-            echo $sql;die;
             $pro_ret = $mysql_obj->fetch($sql,'db_novel_pro');
             if($pro_ret){
                 $pro_book_id = $pro_ret['id'];
