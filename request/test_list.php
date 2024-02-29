@@ -17,7 +17,7 @@ use QL\QueryList;##引入querylist的采集器
 $url =Env::get('BAODE.STORE_HOST_CATE') . '1_1/';
 
 //从配置中取
-$item_rules = $urlsRules['baode']['list'];
+$item_rules = $urlsRules[Env::get('BAODE.NOVEL_STR')]['list'];
 
 $dict_exchange = [
     'title'     =>  'book_name',//小说书名
