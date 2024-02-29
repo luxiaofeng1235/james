@@ -6,8 +6,8 @@ return [
         'range' =>  '.novellist',
         //列表数据
         'list'  =>  [
-            'cate_name' => ['h2','text'], //取小说的标题
-            'dataItem' => ['ul', 'html'], //文章的一直
+                'story_link'       => ['a','href'],
+                'title'     =>  ['a','text'],
         ],
         //详情
         'info'  =>[
@@ -20,6 +20,18 @@ return [
             'intro' =>array('meta[property=og:description]','content'),
             'tag'   => array('meta[property=og:novel:category]','content'),
             'location'  =>  array('.con_top','text'),//小说的面包屑位置
+        ],
+    ],
+    //报的网站的基本配置
+    'baode' =>  [
+        'range' =>  '#newscontent li',
+        'list'  => [
+            'cate_name'       => ['.s1','text'],
+            'title'     =>  ['.s2 a','text'],
+            'story_link'     =>  ['.s2 a','href'],
+        ],
+        'info'  =>  [
+
         ],
     ],
 ];

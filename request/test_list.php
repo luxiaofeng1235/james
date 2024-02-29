@@ -15,16 +15,9 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
 $url =Env::get('BAODE.STORE_HOST_CATE') . '1_1/';
-// $aa = require_once ROOT.'/config/urls_class.php';
-// echo '<pre>';
-// print_R($aa);
-// echo '</pre>';
-// exit;
-$item_rules = [
-    'cate_name'       => ['.s1','text'],
-    'title'     =>  ['.s2 a','text'],
-    'story_link'     =>  ['.s2 a','href'],
-];
+
+//从配置中取
+$item_rules = $urls_rules['baode']['list'];
 
 $dict_exchange = [
     'title'     =>  'book_name',//小说书名
@@ -32,7 +25,7 @@ $dict_exchange = [
     'cate_name'          =>  'class_name',//小说分类名称
     'createtime'    =>  'addtime',//添加时间
 ];
-$range = '#newscontent li';
+$range = $urls_rules['baode']['range'];
 $itemList = QueryList::get($url)
                 ->rules($item_rules)
                 ->range($range)
