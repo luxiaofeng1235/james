@@ -229,5 +229,29 @@ class NovelModel{
       }
       return $json_list;
   }
+
+
+   /**
+    * @note 从远程获取相关内容并存储到缓存里
+    *
+    * @param $url string 链接地址
+    * @param $timeout stirng 缓存的超时时间
+    * @param $tag string 缓存标记
+    * @return string
+    */
+  public static function getRemoteHmtlToCache($url , $tag ='',$timeout = 0){
+      if(!$url || !$tag){
+          return '';
+      }
+      global $redis_data;
+      $content = $redis_data->get_redis($tag);
+      if(!$content){
+            //使用代理获取数据
+            $info = MultiHttp::curlGet([$url],null,true);
+            $content = $info[0] ?? '';//获取内容信息
+            $redis_data->set_redis($tag, $content,$timeout);
+      }
+      return $content;
+  }
 }
 ?>

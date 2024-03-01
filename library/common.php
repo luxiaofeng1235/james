@@ -276,7 +276,12 @@ function double_array_exchange_by_field($trips,$field=''){
  */
 function printlog($str='',$file_name='file_log')
 {
-    $fp = fopen("{$file_name}_".date('Ymd').".txt", 'a+');
+    $dir = ROOT .'log';
+    if(!$dir){
+        createFolders($dir);
+    }
+    $filename = $dir . DS . $file_name;
+    $fp = fopen("{$filename}_".date('Ymd').".txt", 'a+');
     flock($fp, LOCK_EX) ;
     $sdfsd=fwrite($fp,strftime("%Y/%m/%d %H:%M:%S",time())."\t -- $str \t\n");
     flock($fp, LOCK_UN);
@@ -516,7 +521,7 @@ function getProxyInfo(){
             $item = webRequest($url,'GET');
             $tscode  = json_decode($item,true);
             $proxy_data = $tscode['data']['list'][0] ?? [];
-            $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),200);
+            $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),8*24*3600);
 
      }else{
         $proxy_data = json_decode($api_proxy_data,true);

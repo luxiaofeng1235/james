@@ -3,21 +3,36 @@
 //10111 10
 //110221 110
 
-//http://www.paoshu8.info/0_99/
-echo md5('第二章 远古龙洞');
-die;
-for ($i=1; $i <=200000 ; $i++) {
-    // echo $i;
-     $url=  'http://www.paoshu8.info/' . ((int) (($i/1000))) .'_'.$i;
-     echo $url."<br />";
-}
-die;
+// $info -
+// //http://www.paoshu8.info/0_99/
+// echo md5('第二章 远古龙洞');
+// die;
+// for ($i=1; $i <=200000 ; $i++) {
+//     // echo $i;
+//      $url=  'http://www.paoshu8.info/' . ((int) (($i/1000))) .'_'.$i;
+//      echo $url."<br />";
+// }
+// die;
+
 
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
-$step = 300;
+//http://www.paoshu8.info/211_211506/195745608.html
+$ret = MultiHttp::curlGet(['http://www.paoshu8.info/0_111/'],null,true);
+echo '<pre>';
+print_R($ret);
+echo '</pre>';
+exit;
+$content = $ret[0] ?? '';
+file_put_contents('aaa.jpg', $content);
+echo 1;die;
+$info = getProxyInfo();
+echo '<pre>';
+print_R($info);
+echo '</pre>';
+exit;
 $key ='foleder_data_';
 $info = $redis_data->get_redis($key);
 if(!empty($info)){
