@@ -584,7 +584,7 @@ function readFileData($file_path){
         while (!feof($fp)) {//循环读取，直至读取完整个文件
             $str .= fread($fp, $buffer);
         }
-        $str = str_replace("\r\n", "<br />", $str);
+        // $str = str_replace("\r\n", "<br />", $str);
         return $str;
     }
 }

@@ -8,8 +8,11 @@ use QL\QueryList;
 set_time_limit(0);
 
 $exec_start_time =microtime(true);
+$where_condition = 'id>10000';
+$num = $mysql_obj->fetch('select count(1) as num from ims_link_url where '.$where_condition,'db_slave');
 
-$all_num = 10000;//先执行一万本，看下内存
+
+$all_num = $num['num'] ?? 0;//先执行一万本，看下内存
 $limit = 5000;
 $t = $all_num/$limit;
 
@@ -17,7 +20,10 @@ $t = $all_num/$limit;
 $curl_num = 500;//设置一次curl的并发数量
 for ($i=0; $i <$t ; $i++) {
     $str = $i*$limit.','.$limit;//设置执行的步长
-    $list = $mysql_obj->fetchAll("select story_link from ims_link_url limit ".$str,'db_slave');
+    $sql  = "select story_link from ims_link_url where  {$where_condition} limit ".$str;
+    // echo $sql;
+    // echo "\r\n";
+    $list = $mysql_obj->fetchAll($sql,'db_slave');
     $urls = array_column($list,'story_link');
     $item = array_chunk($urls,$curl_num);
     foreach($item as $key =>$url){

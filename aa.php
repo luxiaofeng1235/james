@@ -1,27 +1,43 @@
 <?php
-//http://www.paoshu8.info/211_211868/195729028.html
-//10111 10
-//110221 110
-
-// $info -
-// //http://www.paoshu8.info/0_99/
-// echo md5('第二章 远古龙洞');
-// die;
-// for ($i=1; $i <=200000 ; $i++) {
-//     // echo $i;
-//      $url=  'http://www.paoshu8.info/' . ((int) (($i/1000))) .'_'.$i;
-//      echo $url."<br />";
-// }
-// die;
-
-
-
-
-
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+use QL\QueryList;
+
+
+
+$html = readFileData('E:\html_data\detail_0_103.txt');
+preg_match_all('/<div id=\"list\".*?>.*?<\/dl>/ism',$html,$list);
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
+
+$list_rule = array(
+            'link_name'     =>array('a','text'),
+            'link_url'       =>array('a','href'),
+        );
+
+$range = '#list dd';
+$rt = QueryList::html($html)
+        ->rules($list_rule)
+        ->range($range)
+        ->query()->getData();
+echo '<pre>';
+print_R($rt->all());
+echo '</pre>';
+exit;
+
+$data = QueryList::html($html)->rules($rules)->query()
+->getData();
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+exit;
+$list = $data->all();
+
+
 $list = $mysql_obj->fetchAll("select story_link from ims_link_url limit 500",'db_slave');
 $urls = array_column($list,'story_link');
 $ret = MultiHttp::curlGet($urls,null,true);
@@ -121,7 +137,6 @@ echo '<pre>';
 print_R($list);
 echo '</pre>';
 exit;
-use QL\QueryList;##引入querylist的采集器
 // $aa= filter_words("112<br/>2qqq");
 $meta_data ='format=html5; url=http://m.paoshu8.info/wapbook-92763-178209219/';
 $real_path = explode('/',$meta_data);
