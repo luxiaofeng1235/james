@@ -512,21 +512,35 @@ if (!function_exists('createFolders')) {
  */
 function getProxyInfo(){
     $redis_data = new redis_codes();
-    $proxy_cache_key = 'proxy_config:'.date('Ymd_H');
+    $proxy_cache_key = 'proxy_config:'.date('Ymd');
     //取代理的配置信息
+    // $redis_data->del_redis($proxy_cache_key);
+    // echo 1;die;
     $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
-     if(!$api_proxy_data){
-            //请求代理的接口请求信息
-            $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN';
-            $item = webRequest($url,'GET');
-            $tscode  = json_decode($item,true);
-            $proxy_data = $tscode['data']['list'][0] ?? [];
-            $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),8*24*3600);
-
-     }else{
+    // echo '<pre>';
+    // print_R($api_proxy_data);
+    // echo '</pre>';
+    // exit;
+    if(!$api_proxy_data){
+        $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN&loop=1';
+        $item = webRequest($url,'GET');
+        $tscode  = json_decode($item,true);
+        $proxy_data = $tscode['data']['list'][0] ?? [];
+        $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),60 * 60 * 8);
+    }else{
         $proxy_data = json_decode($api_proxy_data,true);
-     }
-     return $proxy_data;
+    }
+    return $proxy_data;
+    // $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
+    //  if(!$api_proxy_data){
+    //         //请求代理的接口请求信息
+
+    //         $redis_data->set_redis($proxy_cache_key,json_encode($proxy_data),60*60*8);
+
+    //  }else{
+    //     $proxy_data = json_decode($api_proxy_data,true);
+    //  }
+    //  return $proxy_data;
 }
 
 /**
