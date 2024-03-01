@@ -67,6 +67,14 @@ class NovelModel{
         }
     }
 
+  /**
+  * 简单的日志信息输出
+  * @param string $msg
+  */
+  public function log($message=""){
+    echo "[" . date ( "Y-m-d H:i:s", time () ) . "]--" . $message . "\n";
+  }
+
 
     /**
     * @note 根据小说内容获取对应的分类id
@@ -216,7 +224,7 @@ class NovelModel{
                 'is_first' =>   0,
                 'is_last'   => 0,
                 'text_num'  => 2000,
-                'addtime'   =>$val['createtime'],
+                'addtime'   =>(int) $val['createtime'],
           ];
       }
       return $json_list;

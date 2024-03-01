@@ -1,9 +1,12 @@
 <?
 require_once(dirname(__DIR__).'/library/init.inc.php');
 $table_local_name ='ims_novel_info';
-$sql = "select title,story_id,pro_book_id from ".$table_local_name." where pro_book_id>0";
+$sql = "select title,story_id,pro_book_id from ".$table_local_name." where pro_book_id>0 and store_id<=3000 ";
 $list =$mysql_obj->fetchAll($sql,'db_slave');
 $basedir = 'E:\novel_json\\';
+if(!is_dir($basedir)){
+    createFolders($basedir);
+}
 foreach($list as $key =>$val){
     $story_id = $val['story_id'] ?? '';
     $pro_id = $val['pro_book_id'];
@@ -24,7 +27,7 @@ foreach($list as $key =>$val){
                 'is_first' =>   0,
                 'is_last'   => 0,
                 'text_num'  => 2000,
-                'addtime'   =>$val['createtime'],
+                'addtime'   =>(int) $val['createtime'],
             ];
         }
         //存储的路径的位置
