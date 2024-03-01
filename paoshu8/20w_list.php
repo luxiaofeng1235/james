@@ -5,12 +5,9 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 
 
-$sql = 'select story_link from ims_link_url order by id asc limit 200000';
+$sql = 'select story_link from ims_link_url order by id asc limit 2';
 $list = $mysql_obj->fetchAll($sql,'db_slave');
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
+$t_data = [];
 foreach($list as $key =>$val){
     extract($val);
     $linkData = explode('/',$story_link);
@@ -22,9 +19,12 @@ foreach($list as $key =>$val){
         $t_data[] =[
             'story_id'  =>  $story_id,
             'story_link'    =>$story_link,
+            'source'   =>   Env::get('APICONFIG.PAOSHU_STR'),
+            'createtime'   =>   time(),
         ];
     }
 }
 $result = $mysql_obj->add_data($t_data,'ims_novel_info');
+echo "total-num：".count($t_data) . "\r\n";
 echo "over\r\n";
 ?>
