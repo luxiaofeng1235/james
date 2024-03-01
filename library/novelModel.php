@@ -243,11 +243,16 @@ class NovelModel{
       if(!$url || !$tag){
           return '';
       }
+      if(!is_array($url)){
+          $t_url[] = $url;
+      }else{
+          $t_url = $url;
+      }
       global $redis_data;
       $content = $redis_data->get_redis($tag);
       if(!$content){
             //使用代理获取数据
-            $info = MultiHttp::curlGet([$url],null,true);
+            $info = MultiHttp::curlGet($t_url,null,true);
             $content = $info[0] ?? '';//获取内容信息
             $redis_data->set_redis($tag, $content,$timeout);
       }

@@ -20,11 +20,21 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 //http://www.paoshu8.info/211_211506/195745608.html
-$ret = MultiHttp::curlGet(['http://www.paoshu8.info/0_111/'],null,true);
+$url = 'http://www.paoshu8.info/0_2/';
+$list = NovelModel::getRemoteHmtlToCache($url,'detail:1');
 echo '<pre>';
-print_R($ret);
+print_R($list);
 echo '</pre>';
 exit;
+
+$ret = MultiHttp::curlGet(['http://www.paoshu8.info/0_2/'],null,true);
+$content = $ret[0] ?? '';
+echo '<pre>';
+print_R($content);
+echo '</pre>';
+exit;
+
+
 $content = $ret[0] ?? '';
 file_put_contents('aaa.jpg', $content);
 echo 1;die;
