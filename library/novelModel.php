@@ -205,12 +205,13 @@ class NovelModel{
       $info['chapter_title'] = $info['last_chapter_title'];
       $info['cid'] = self::getNovelCateId($info['class_name']);
       $info['addtime']  = time();
-
+      $info['author'] = $info['author'] ? trim($info['author']) : '未知';
       //处理图片的存储路径
       if(!empty($info['pic'])){
           $cover_logo =  explode('/',$info['pic']);
           $info['pic'] = Env::get('SAVE_IMG_PATH') . DS . end($cover_logo);
       }
+      //根据书籍名称和坐着来进行匹配
       $where_data = "book_name ='".trim($info['book_name'])."' and author ='".trim($info['author'])."' limit 1";
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
       if(empty($novelInfo)){

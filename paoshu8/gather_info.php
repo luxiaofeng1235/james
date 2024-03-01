@@ -63,31 +63,16 @@ if($info){
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步\r\n";
         exit();
     }
-    //定义抓取规则
-    $rules = array(
-        'cover_logo'       =>array('#fmimg img','src'),//小说封面
-        'author'    => array('#info p:eq(0)','text'),//小说作者
-        'title'     =>array('#info>h1','text'),//小说标题
-        'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
-        'third_update_time'    =>array('#info p:eq(2)','text'), //最近的更新时间
-        'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
-        // 'intro' => array('#intro','text'),//小说的简介
-        'cate_name' =>array('meta[property=og:novel:category]','content'),//分类
-        'intro' =>array('meta[property=og:description]','content'),
-        'tag'   => array('meta[property=og:novel:category]','content'),
-        'location'  =>  array('.con_top','text'),//小说的面包屑位置
-        // 'link_url'    =>array('.place a:eq(2)','href'),//当前书籍的url
-        // 'novel_url'   =>array('.info a:eq(2)','href'),//获取小说的跳转地址
-    );
-
+    //定义小说信息的抓取规则
+    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
     // $redis_book_key = 'store_info:'.$store_id;
     // $redis_data  = $redis_data->get_redis($redis_book_key);
     // if(!$redis_data){
     //     //爬取相关规则下的类
-         $info_data=QueryList::get($story_link)
-                ->rules($rules)
-                ->query()->getData();
-        $store_data = $info_data->all();
+    $info_data=QueryList::get($story_link)
+            ->rules($rules)
+            ->query()->getData();
+    $store_data = $info_data->all();
     //     $redis_data->set_redis($)
     // }
     if(!empty($store_data)){
@@ -133,7 +118,6 @@ if($info){
                 ->rules($list_rule)
                 ->range($range)
                 ->query()->getData();
-
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt->all())){
             $now_time = time();
