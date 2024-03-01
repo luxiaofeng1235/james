@@ -175,6 +175,7 @@ function removeDataRepeat($data){
     foreach($data as $key=>$val){
         //处理连接中的特殊字符
         $link_name = replaceCnWords($val['link_name']);
+        // echo $link_name."<br/>";
         if(!empty($link_name)){
             $t[$link_name] = [
                 'link_name' =>$link_name,
