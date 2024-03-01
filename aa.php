@@ -15,10 +15,21 @@
 // die;
 
 
+
+
+
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+$list = $mysql_obj->fetchAll("select story_link from ims_link_url limit 500",'db_slave');
+$urls = array_column($list,'story_link');
+$ret = MultiHttp::curlGet($urls,null,true);
+echo '<pre>';
+print_R($ret);
+echo '</pre>';
+exit;
+
 //http://www.paoshu8.info/211_211506/195745608.html
 $url = 'http://www.paoshu8.info/0_2/';
 $list = NovelModel::getRemoteHmtlToCache($url,'detail:1');

@@ -14,20 +14,19 @@ $limit = 5000;
 $t = $all_num/$limit;
 
 
-$curl_num = 200;
+$curl_num = 500;//设置一次curl的并发数量
 for ($i=0; $i <$t ; $i++) {
-    $str = $i*$limit.','.$limit;
-    $list = $mysql_obj->fetchAll("select * from ims_link_url limit ".$str,'db_slave');
+    $str = $i*$limit.','.$limit;//设置执行的步长
+    $list = $mysql_obj->fetchAll("select story_link from ims_link_url limit ".$str,'db_slave');
     $urls = array_column($list,'story_link');
     $item = array_chunk($urls,$curl_num);
     foreach($item as $key =>$url){
+        //采集内容到txt文件里
         curlGetHtml($url);
-        die;
-
+        sleep(1);
     }
+    echo "index-page:".($i+1)."\r\n";
 }
-
-
 $exec_end_time =microtime(true); //执行结束时间
 $executionTime = $exec_end_time - $exec_start_time;
 echo "Script execution time: ".sprintf('%.2f',($executionTime/60))." minutes \r\n";
@@ -53,7 +52,7 @@ function curlGetHtml($urls){
     if(!empty($html_data)){
         foreach($html_data as $k =>$v){
              $index = str_replace('/','',$k);
-             $file_name = $save_dir . DS . 'detail_'.$index.'.html';
+             $file_name = $save_dir . DS . 'detail_'.$index.'.txt';
              file_put_contents($file_name,$v);
         }
     }
