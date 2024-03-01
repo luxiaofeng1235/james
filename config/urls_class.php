@@ -1,15 +1,15 @@
 <?php
 return [
     //泡书吧的规则
-    'pashu8'    =>  [
-        //列表的取值范围
+    'paoshu8'    =>  [
+        //小说列表的轮训取值范围
         'range' =>  '.novellist',
-        //列表数据
+        //小说列表数据
         'list'  =>  [
                 'story_link'       => ['a','href'],
                 'title'     =>  ['a','text'],
         ],
-        //详情
+        //小说详情
         'info'  =>[
             'cover_logo'       =>array('#fmimg img','src'),//小说封面
             'author'    => array('#info p:eq(0)','text'),//小说作者
@@ -20,6 +20,12 @@ return [
             'intro' =>array('meta[property=og:description]','content'),
             'tag'   => array('meta[property=og:novel:category]','content'),
             'location'  =>  array('.con_top','text'),//小说的面包屑位置
+        ],
+        //采集文章的内容配置
+        'content'   => [
+            'content'    =>['#content','html'],
+            'meta_data'       =>['meta[name=mobile-agent]','content'],
+            'href'      =>['.con_top a:eq(2)','href'],
         ],
     ],
     //报的网站的基本配置

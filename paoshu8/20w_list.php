@@ -5,8 +5,12 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 
 
-$sql = 'select story_link from ims_link_url order by id asc limit 1';
+$sql = 'select story_link from ims_link_url order by id asc limit 200000';
 $list = $mysql_obj->fetchAll($sql,'db_slave');
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
 foreach($list as $key =>$val){
     extract($val);
     $linkData = explode('/',$story_link);
