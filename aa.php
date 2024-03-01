@@ -7,7 +7,22 @@ use QL\QueryList;
 
 
 
-$html = readFileData('E:\html_data\detail_24_24500.txt');
+$html = readFileData('E:\html_data\detail_29_29995.txt');
+$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
+// $rules =
+
+    // $redis_book_key = 'store_info:'.$store_id;
+    // $redis_data  = $redis_data->get_redis($redis_book_key);
+    // if(!$redis_data){
+    //     //爬取相关规则下的类
+         $info_data=QueryList::html($html)
+                ->rules($rules)
+                ->query()->getData();
+        $list = $info_data->all();
+        echo '<pre>';
+        print_R($list);
+        echo '</pre>';
+        exit;
 
 $aa = NovelModel::getCharaList($html);
 echo '<pre>';
