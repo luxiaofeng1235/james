@@ -7,8 +7,14 @@ use QL\QueryList;
 
 
 
-$html = readFileData('E:\html_data\detail_0_103.txt');
-preg_match_all('/<div id=\"list\".*?>.*?<\/dl>/ism',$html,$list);
+$html = readFileData('E:\html_data\detail_24_24500.txt');
+
+$aa = NovelModel::getCharaList($html);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+preg_match('/<div id=\"list\".*?>.*?<\/dl>/ism',$html,$list);
 echo '<pre>';
 print_R($list);
 echo '</pre>';

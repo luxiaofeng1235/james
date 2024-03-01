@@ -67,6 +67,40 @@ class NovelModel{
         }
     }
 
+
+    /**
+    * @note 从特定的url中获取对应的数据信息
+    * @param $html string 文本内容
+    * @return array
+    *
+    */
+   public static function getCharaList($html){
+      if(!$html){
+        return '';
+      }
+      //</div><dt>
+      preg_match('/<\/div>.*?>.*?<\/dl>/ism',$html,$list);
+      if(isset($list[0]) && !empty($list)){
+           $list_item= preg_split('/<dt>/', $list[0]);
+           $contents  = $list_item[2] ?? '';
+           if($contents){
+              preg_match_all('/<a.+?href=\"(.+?)\".*>/i',$contents,$link_list);//匹配链接
+              preg_match_all('/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i',$contents,$link_text);//匹配文本
+              $len = count($link_list[1]);
+              $chapter_list = [];
+              for ($i=0; $i <$len ; $i++) {
+                 $chapter_list[] =[
+                    'link_name' => $link_text[1][$i],
+                    'link_url'  => $link_list[1][$i],
+                 ];
+              }
+              return $chapter_list;
+           }
+      }else{
+        return array();
+     }
+   }
+
   /**
   * 简单的日志信息输出
   * @param string $msg
