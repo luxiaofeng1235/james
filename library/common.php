@@ -514,13 +514,11 @@ function getProxyInfo(){
     $redis_data = new redis_codes();
     $proxy_cache_key = 'proxy_config:'.date('Ymd');
     //取代理的配置信息
+    global $redis_data;
     // $redis_data->del_redis($proxy_cache_key);
     // echo 1;die;
     $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
-    // echo '<pre>';
-    // print_R($api_proxy_data);
-    // echo '</pre>';
-    // exit;
+
     if(!$api_proxy_data){
         $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN&loop=1';
         $item = webRequest($url,'GET');
