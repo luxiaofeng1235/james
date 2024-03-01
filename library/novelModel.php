@@ -24,11 +24,14 @@ class NovelModel{
     private static $filterWords = [
         '新书',
         '发布',
+        '新书预告',
         '番外',
         '高考祝愿',
         '上架',
         '通知',
-        '冲榜求票'
+        '冲榜求票',
+        '请假',
+        '注释'
     ];
     private static $db_conn = 'db_novel_pro';
     private static $table_name = 'mc_book';
