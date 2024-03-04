@@ -146,7 +146,7 @@ if($info){
         $item_list = cleanData($item_list,['chapter_id']);
 
         //创建生成json目录结构
-        NovelModel::createJsonFile($store_data,$item_list);
+        NovelModel::createJsonFile($store_data,$item_list,$sync_pro_id);
 
 
         $update_id = $info[0]['store_id'];
