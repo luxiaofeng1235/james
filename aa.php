@@ -5,21 +5,21 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
-$img_url ='http://www.paoshu8.info/files/article/image/0/1/1s.jpg';
-$dd = NovelModel::saveImgToLocal($img_url);
-echo '<pre>';
-print_R($dd);
-echo '</pre>';
-exit;
+// $img_url ='http://www.paoshu8.info/files/article/image/0/1/1s.jpg';
+// $dd = NovelModel::saveImgToLocal($img_url);
+// echo '<pre>';
+// print_R($dd);
+// echo '</pre>';
+// exit;
 
-printlog('测试哈哈哈,同步ID=1235');
-die;
-// $aa = replaceCnWords('第（1）章：西关桥头');
+// printlog('测试哈哈哈,同步ID=1235');
+// die;
+// $aa = replaceCnWords('第十六章 提审孙致远【上】');
 // echo '<pre>';
 // print_R($aa);
 // echo '</pre>';
 // exit;
-$html = readFileData('E:\html_data\detail_137_137999.txt');
+$html = readFileData('E:\html_data\detail_174_174500.txt');
 $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
 // $rules =
     // $redis_book_key = 'store_info:'.$store_id;

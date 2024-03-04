@@ -518,7 +518,10 @@ function getProxyInfo(){
     // $redis_data->del_redis($proxy_cache_key);
     // echo 1;die;
     $api_proxy_data = $redis_data->get_redis($proxy_cache_key);
-
+    // echo '<pre>';
+    // print_R($api_proxy_data);
+    // echo '</pre>';
+    // exit;
     if(!$api_proxy_data){
         $url ='https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN&loop=1';
         $item = webRequest($url,'GET');
@@ -601,13 +604,11 @@ function getContenetNew($data){
         $urls[$val['link_url']]= Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
         $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
     }
-    $rules = [
-        'content'    =>['#content','html'],
-        'meta_data'       =>['meta[name=mobile-agent]','content'],
-        'href'      =>['.con_top a:eq(2)','href'],
-    ];
-    //开启多线程请求
-    $list = MultiHttp::curlGet($t_url,null,false);
+    global $urlRules;
+    //获取采集的标识
+    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content'];
+    //开启多线程请求,使用当前代理IP去请求，牵扯到部署需要再境外服务器
+    $list = MultiHttp::curlGet($t_url,null,true);
     foreach($list as $key =>$val){
 
         $data = QueryList::html($val)->rules($rules)->query()->getData();

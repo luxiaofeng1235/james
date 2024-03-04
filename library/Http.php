@@ -49,6 +49,10 @@ class MultiHttp
         $std_options[CURLOPT_HTTPHEADER] =array(
             'Content-Type: application/json'
         );
+        // echo '<pre>';
+        // print_R($std_options);
+        // echo '</pre>';
+        // exit;
         $options = ($custom_options) ? ($std_options + $custom_options) : $std_options;
         // start the first batch批 of requests
         for ($i = 0; $i < $rolling_window; $i++) {
@@ -74,6 +78,10 @@ class MultiHttp
             // a request was just completed -- find out which one
             while ($done = curl_multi_info_read($master)) {
                 $info = curl_getinfo($done['handle']);
+                // echo '<pre>';
+                // print_R($info);
+                // echo '</pre>';
+                // exit;
                 if ($info['http_code'] == 200) {
                     $output = curl_multi_getcontent($done['handle']); //获取结果
                     $data[] =$output;
