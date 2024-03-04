@@ -5,6 +5,11 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
+$sql = "select * from ims_novel_info limit 10";
+$list = $mysql_obj->fetchAll($sql,'db_slave');
+file_put_contents('./1111.json',json_encode($list,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+echo 1;die;
+
 // $img_url ='http://www.paoshu8.info/files/article/image/0/1/1s.jpg';
 // $dd = NovelModel::saveImgToLocal($img_url);
 // echo '<pre>';
