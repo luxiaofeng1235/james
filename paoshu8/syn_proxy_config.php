@@ -113,5 +113,5 @@ do{
 }while(true);
 $exec_end_time =microtime(true); //执行结束时间
 $executionTime = $exec_end_time - $exec_start_time;
-echo "search proxy IP all-time: ".sprintf('%.2f',($executionTime/60))." minutes \r\n";
+echo "\r\nsearch proxy IP all-time: ".sprintf('%.2f',($executionTime/60))." minutes \r\n";
 ?>
