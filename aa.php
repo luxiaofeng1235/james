@@ -4,7 +4,7 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
-$html = readFileData('E:\html_data\detail_0_56.txt');
+$html = readFileData('E:\html_data\detail_68_68996.txt');
 $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
 // $rules =
     // $redis_book_key = 'store_info:'.$store_id;
@@ -15,10 +15,6 @@ $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
                 ->rules($rules)
                 ->query()->getData();
         $list = $info_data->all();
-        // echo '<pre>';
-        // print_R($list);
-        // echo '</pre>';
-        // exit;
 
 $aa = NovelModel::getCharaList($html);
 echo '<pre>';
