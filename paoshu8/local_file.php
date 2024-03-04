@@ -23,18 +23,20 @@ if(!empty($id)){
     $ss = join(',',$run_ids);
    $where ="story_id in (".$ss.")";
 }else{
-        $where = "story_id in ('0_1')";
+    $where = "story_id in ('0_1')";
 }
 
 use QL\QueryList;##引入querylist的采集器
 
 $exec_start_time = microtime(true); //执行开始时间
-$sql = "select story_id,story_link from ims_novel_info where $where limit 3000";
+$sql = "select story_id,story_link,pro_book_id from ims_novel_info where $where limit 3000";
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 
 $num = 200;//一次性抓取30个页面
 foreach($list as $key =>$val){
-    $download_path = ROOT . 'log' . DS . 'chapter' .DS . $val['story_id'];//下载路径
+    $pro_book_id = intval($val['pro_book_id']); //线上的对应的小说id
+    $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $pro_book_id;//下载路径
+    // echo $download_path;die;
     // //创建地址目录信息
     if(!is_dir($download_path)){
         createFolders($download_path);
