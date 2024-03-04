@@ -12,6 +12,15 @@ require_once($dirname.'/library/init.inc.php');
 $exec_start_time =microtime(true);
 
 $target_url = Env::get('APICONFIG.WEB_SOTRE_HOST');//需要抓取的url
+$expire_time = 180;//过期时间设置三分钟的缓存时间
+//设置缓存的key
+$year = date('Y');
+$month = date('m');
+$day = date('d');
+$env_cache_key  = Env::get('CACHE_LIST_KEY');//缓存的key
+$redis_cache_key = str_replace('{$year}',$year,$env_cache_key);
+$redis_cache_key = str_replace('{$month}',$month,$redis_cache_key);
+$redis_cache_key = str_replace('{$day}',$day,$redis_cache_key);
 
 /**
 * @note 获取当前的curl信息
@@ -65,19 +74,41 @@ function getCurlData($url,$data=[],$is_proxy =false){
 
 $i = 0;
 do{
-    //轮训程序一直判断当前的url进行抓取判断
-    $i++;
-    $url =Env::get('PROXY_GET_URL');
-    $proxy_data = getCurlData($url,[],false);
-    $res  =getCurlData($target_url , $proxy_data,true);
-    //如果能扫描到http_code=200的说明当前的curl是有效的
-    if(!empty($res)  && $res['curl']['http_code'] == 200){
-        echo "匹配到当前的可用代理配置:"."\r\n";
+    /*
+    * 整体思路：
+     *
+    * 1、先判断缓存中是否有可用的代理配置，如果没有缓存就刷新到cache中
+    * 2、还有一种情况是，缓存未过期，但是代理失效了，还需要去更新
+     */
+    $is_save_data = $redis_data->get_redis($redis_cache_key);
+    if(!$is_save_data){
+        //轮训程序一直判断当前的url进行抓取判断
+        $i++;
+        $url =Env::get('PROXY_GET_URL');
+        $proxy_data = getCurlData($url,[],false);
+        $res  =getCurlData($target_url , $proxy_data,true);
+        //如果能扫描到http_code=200的说明当前的curl是有效的
+        if(!empty($res)  && $res['curl']['http_code'] == 200){
+            echo "匹配到当前的可用代理配置:"."\r\n";
+            echo '<pre>';
+            print_R($res['proxy']);
+            echo '</pre>';
+            $redis_data->set_redis(
+                $redis_cache_key,
+                json_encode($res['proxy']) ,
+                $expire_time
+            );
+            break;
+        }
+    }else{
+        $have_data = json_decode($is_save_data);
+        echo "当前代理未过期，缓存数据仍然可用\r\n";
         echo '<pre>';
-        print_R($res['proxy']);
+        print_R($have_data);
         echo '</pre>';
         break;
     }
+
 
 }while(true);
 $exec_end_time =microtime(true); //执行结束时间
