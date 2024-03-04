@@ -11,12 +11,6 @@ echo '<pre>';
 print_R($dd);
 echo '</pre>';
 exit;
-$res = MultiHttp::curlGet([$img_url],null,true);
-$content = $res[0] ?? '';
-echo '<pre>';
-print_R($content);
-echo '</pre>';
-exit;
 
 printlog('测试哈哈哈,同步ID=1235');
 die;

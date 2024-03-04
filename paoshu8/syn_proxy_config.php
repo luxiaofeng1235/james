@@ -102,7 +102,7 @@ do{
             break;
         }
     }else{
-        $have_data = json_decode($is_save_data);
+        $have_data = json_decode($is_save_data,true);
         echo "当前代理未过期，缓存数据仍然可用\r\n";
         echo '<pre>';
         print_R($have_data);
