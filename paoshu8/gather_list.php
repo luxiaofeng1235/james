@@ -26,7 +26,7 @@ $rules = [
 ];
 $range = '.novellist'; //循环的范围
 //读取当前的从小说网拔下来的数据
-$data = readFileData('./jsonList.txt');
+$data = readFileData('./jsonList.'.NovelModel::$file_type);
 //定义每本小说的标题信息
 $item_rules = [
     'story_link'       => ['a','href'],
