@@ -4,12 +4,12 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
-$aa = replaceCnWords('2.19崩坏的大会');
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
-$html = readFileData('E:\html_data\detail_80_80999.txt');
+// $aa = replaceCnWords('第（1）章：西关桥头');
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
+$html = readFileData('E:\html_data\detail_135_135000.txt');
 $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
 // $rules =
     // $redis_book_key = 'store_info:'.$store_id;

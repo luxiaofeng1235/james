@@ -11,7 +11,7 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 $exec_start_time =microtime(true);
 
-$target_url = Env::get('APICONFIG.WEB_SOTRE_HOST');//需要抓取的url
+$target_url = Env::get('APICONFIG.PAOSHU_HOST');//需要抓取的url
 $expire_time = 180;//过期时间设置三分钟的缓存时间
 //设置缓存的key
 $year = date('Y');
@@ -73,6 +73,7 @@ function getCurlData($url,$data=[],$is_proxy =false){
 }
 
 $i = 0;
+echo "link-url：".$target_url."\r\n";
 do{
     /*
     * 整体思路：
@@ -106,6 +107,7 @@ do{
         echo '<pre>';
         print_R($have_data);
         echo '</pre>';
+        // $res  =getCurlData($target_url , $have_data,true);
         break;
     }
 
