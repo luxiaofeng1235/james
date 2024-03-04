@@ -65,16 +65,11 @@ if($info){
     }
     //定义小说信息的抓取规则
     $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
-    // $redis_book_key = 'store_info:'.$store_id;
-    // $redis_data  = $redis_data->get_redis($redis_book_key);
-    // if(!$redis_data){
     //     //爬取相关规则下的类
     $info_data=QueryList::get($story_link)
             ->rules($rules)
             ->query()->getData();
     $store_data = $info_data->all();
-    //     $redis_data->set_redis($)
-    // }
     if(!empty($store_data)){
         //保存图片到本地
         NovelModel::saveImgToLocal($store_data['cover_logo']);

@@ -4,12 +4,28 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
+
+$img_url ='http://www.paoshu8.info/files/article/image/0/1/1s.jpg';
+$dd = NovelModel::saveImgToLocal($img_url);
+echo '<pre>';
+print_R($dd);
+echo '</pre>';
+exit;
+$res = MultiHttp::curlGet([$img_url],null,true);
+$content = $res[0] ?? '';
+echo '<pre>';
+print_R($content);
+echo '</pre>';
+exit;
+
+printlog('测试哈哈哈,同步ID=1235');
+die;
 // $aa = replaceCnWords('第（1）章：西关桥头');
 // echo '<pre>';
 // print_R($aa);
 // echo '</pre>';
 // exit;
-$html = readFileData('E:\html_data\detail_135_135000.txt');
+$html = readFileData('E:\html_data\detail_137_137999.txt');
 $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
 // $rules =
     // $redis_book_key = 'store_info:'.$store_id;

@@ -179,7 +179,10 @@ class NovelModel{
         if(!is_dir($save_img_path)){
             createFolders($save_img_path);
         }
-        $img_con = self::curl_file_get_contents($url);
+        //开启使用代理IP去请求
+        $res = MultiHttp::curlGet([$url],null,true);
+        $img_con = $res[0] ?? '';
+        // $img_con = self::curl_file_get_contents($url);
         @file_put_contents($filename, $img_con);
       }
     }
