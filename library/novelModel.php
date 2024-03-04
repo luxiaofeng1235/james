@@ -273,7 +273,7 @@ class NovelModel{
         createFolders($save_path);
       }
       $filename = $save_path . DS . $pro_book_id.'.'.self::$file_type;
-
+      //保存对应的数据到文件中方便后期读取
       $json_data = json_encode($json_list ,JSON_UNESCAPED_UNICODE);
       file_put_contents($filename,$json_data);//把json信息存储为对应的目录中去
       return $json_list;
