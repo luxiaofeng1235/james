@@ -78,7 +78,7 @@ do{
     * 整体思路：
      *
     * 1、先判断缓存中是否有可用的代理配置，如果没有缓存就刷新到cache中
-    * 2、还有一种情况是，缓存未过期，但是代理失效了，还需要去更新
+    * 2、还有一种情况是，缓存未过期，但是代理失效了，还需要请求后去更新
      */
     $is_save_data = $redis_data->get_redis($redis_cache_key);
     if(!$is_save_data){
@@ -113,5 +113,6 @@ do{
 }while(true);
 $exec_end_time =microtime(true); //执行结束时间
 $executionTime = $exec_end_time - $exec_start_time;
+echo "now-time：".date('Y-m-d H:i:s')."\r\n";
 echo "\r\nsearch proxy IP all-time: ".sprintf('%.2f',($executionTime/60))." minutes \r\n";
 ?>

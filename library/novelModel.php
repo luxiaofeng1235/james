@@ -35,7 +35,8 @@ class NovelModel{
         '冲榜求票',
         '请假',
         '注释',
-        '完本感言'
+        '完本感言',
+        '完结'
     ];
     private static $db_conn = 'db_novel_pro';
     private static $table_name = 'mc_book';
