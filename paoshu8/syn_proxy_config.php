@@ -9,6 +9,8 @@ $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+$exec_start_time =microtime(true);
+
 $target_url = Env::get('APICONFIG.WEB_SOTRE_HOST');//需要抓取的url
 
 function getCurlData($url,$data){
@@ -31,6 +33,10 @@ function getCurlData($url,$data){
     $curl_scraped_page = curl_exec($ch);
     $httpcode = curl_getinfo($ch);
     $return = ['curl' => $httpcode,'proxy'=>$data];
+    echo '<pre>';
+    print_R($return);
+    echo '</pre>';
+    exit;
     return $return;
 }
 
@@ -53,4 +59,7 @@ do{
     }
 
 }while(true);
+$exec_end_time =microtime(true); //执行结束时间
+$executionTime = $exec_end_time - $exec_start_time;
+echo "search proxy IP time: ".sprintf('%.2f',($executionTime/60))." minutes \r\n";
 ?>
