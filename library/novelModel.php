@@ -21,7 +21,7 @@ class NovelModel{
    ];
 
 
-   private static $file_type = 'txt'; //存储为txt的格式文件
+   public static $file_type = 'txt'; //存储为txt的格式文件
 
    //过滤不必要的章节
     private static $filterWords = [

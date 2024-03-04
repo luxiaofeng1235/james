@@ -9,7 +9,6 @@ set_time_limit(0);
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
-
 $id = isset($argv[1]) ? trim($argv[1]) : '';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
 $where = '1 and syn_chapter_status = 0 ';//只搜索状态为0 的
@@ -48,6 +47,11 @@ if($list){
             continue;
         }
         $sql = "select novelid,link_name, link_url  from ims_chapter where story_id ='".$story_id."'";
+        //读取json的目录信息
+        // $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$file_type;
+        // $json_data = readFileData($file_name);
+        // $res = json_decode($json_data,true);
+
         $chapter_item = $mysql_obj->fetchAll($sql,'db_slave');
         if(!$chapter_item) continue;
         $items = array_chunk($chapter_item,$num);
