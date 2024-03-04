@@ -50,6 +50,7 @@ if($list){
         //读取json的目录信息
         // $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$file_type;
         // $json_data = readFileData($file_name);
+        // if(!$json_data) continue;
         // $res = json_decode($json_data,true);
 
         $chapter_item = $mysql_obj->fetchAll($sql,'db_slave');
