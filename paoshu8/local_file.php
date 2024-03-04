@@ -29,7 +29,7 @@ if(!empty($id)){
 use QL\QueryList;##引入querylist的采集器
 
 $exec_start_time = microtime(true); //执行开始时间
-$sql = "select story_id,story_link,pro_book_id from ims_novel_info where $where limit 3000";
+$sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where limit 3000";
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 if($list){
     $num = 200;//一次性抓取30个页面
@@ -72,6 +72,8 @@ if($list){
         $mysql_obj->update_data($update_novel_data,$where_up_data,$novel_table_name);
         /***********更新小说里的章节已同步状态 end******************/
 
+        printlog('当前小说('.$va['title'].')同步完成，线上小说id：'.$pro_book_id);
+
         echo "succes story_id：".$story_id."\t拉取本地章节：".count($chapter_item)."\turl:".$val['story_link']."\r\n";
     }
     $exec_end_time =microtime(true); //执行结束时间
@@ -92,7 +94,7 @@ if($list){
 function saveLocalFile($save_path,$data){
     foreach($data as $key =>$val){
         $content = $val['content'] ?? '';//提交的内容
-        $filename = $save_path .DS. md5($val['link_name']).'.txt';
+        $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
         // echo $val['link_name'];
         // echo "\r\n";
         // echo $filename;die;

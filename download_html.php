@@ -8,7 +8,7 @@ use QL\QueryList;
 set_time_limit(0);
 
 $exec_start_time =microtime(true);
-$where_condition = 'id>48500';
+$where_condition = 'id>138000';
 $num = $mysql_obj->fetch('select count(1) as num from ims_link_url where '.$where_condition,'db_slave');
 
 
