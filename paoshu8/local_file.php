@@ -12,6 +12,7 @@ require_once($dirname.'/library/init.inc.php');
 
 $id = isset($argv[1]) ? trim($argv[1]) : '';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
+$where = '1 and syn_chapter_status = 0 ';//只搜索状态为0 的
 if(!empty($id)){
     $run_data = explode(',',$id);
     //通过cli的方式来进行配置开启多个窗口抓取
@@ -21,9 +22,9 @@ if(!empty($id)){
         $run_ids[]="'".$val."'";
     }
     $ss = join(',',$run_ids);
-   $where ="story_id in (".$ss.")";
+   $where.=" and story_id in (".$ss.")";
 }else{
-    $where = "story_id in ('0_1')";
+    $where.= "and story_id in ('0_1')";
 }
 
 use QL\QueryList;##引入querylist的采集器
@@ -72,7 +73,7 @@ if($list){
     $executionTime = $exec_end_time - $exec_start_time;
     echo "Script execution time: ".sprintf('%.2f',($executionTime/60))." minutes \r\n";
 }else{
-    echo "no data\r\n";
+    echo "暂未发现需要去同步的章节的小说\r\n";
 }
 
 /**
