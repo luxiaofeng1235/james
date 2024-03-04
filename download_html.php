@@ -8,8 +8,9 @@ use QL\QueryList;
 set_time_limit(0);
 
 $exec_start_time =microtime(true);
-$where_condition = 'id>32000';
+$where_condition = 'id>48500';
 $num = $mysql_obj->fetch('select count(1) as num from ims_link_url where '.$where_condition,'db_slave');
+
 
 
 $all_num = $num['num'] ?? 0;//先执行一万本，看下内存
@@ -59,7 +60,7 @@ function curlGetHtml($urls){
         foreach($html_data as $k =>$v){
              $index = str_replace('/','',$k);
              $file_name = $save_dir . DS . 'detail_'.$index.'.txt';
-             file_put_contents($file_name,$v);
+             @file_put_contents($file_name,$v);
         }
     }
 }
