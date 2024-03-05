@@ -20,10 +20,14 @@ class NovelModel{
       'cate_name'          =>  'class_name',//小说分类名称
    ];
 
+   public static $prefix_html = 'detail_'; //html的前缀
+
    protected static $run_status = 1;//已经运行完毕的
 
 
    public static $file_type = 'txt'; //存储为txt的格式文件
+
+   public static $json_file_type ='json';//存储为json文件格式
 
    //过滤不必要的章节
     private static $filterWords = [
@@ -293,7 +297,7 @@ class NovelModel{
       if(!is_dir($save_path)){
         createFolders($save_path);
       }
-      $filename = $save_path . DS . $pro_book_id.'.'.self::$file_type;
+      $filename = $save_path . DS . $pro_book_id.'.'.self::$json_file_type;
       //保存对应的数据到文件中方便后期读取
       $json_data = json_encode($json_list ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
       file_put_contents($filename,$json_data);//把json信息存储为对应的目录中去
