@@ -5,6 +5,12 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
+$d = getProxyInfo();
+echo '<pre>';
+print_R($d);
+echo '</pre>';
+exit;
+
 $php_path = dirname(dirname(dirname(__DIR__))).'Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径
 $php_path = str_replace('\\','/',$php_path);
 
