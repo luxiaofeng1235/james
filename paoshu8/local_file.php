@@ -21,23 +21,22 @@ if(!empty($id)){
         $run_ids[]="'".$val."'";
     }
     $ss = join(',',$run_ids);
-   $where.=" and story_id in (".$ss.")";
+   $where.=" and story_id = ".$ss."";
 }else{
-    $where.= "and story_id in ('0_1')";
+    $where.= "and story_id = '0_1'";
 }
 
 use QL\QueryList;##引入querylist的采集器
 
 $exec_start_time = microtime(true); //执行开始时间
-$sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where limit 3000";
+$sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where limit 1";
 $list = $mysql_obj->fetchAll($sql,'db_slave');
 if($list){
     $num = 200;//一次性抓取30个页面
     foreach($list as $key =>$val){
         $pro_book_id = intval($val['pro_book_id']); //线上的对应的小说id
         $story_id = trim($val['story_id']);
-        $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $pro_book_id;//下载路径
-        // echo $download_path;die;
+        $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $pro_book_id;//下载路径;
         // //创建地址目录信息
         if(!is_dir($download_path)){
             createFolders($download_path);
@@ -46,21 +45,21 @@ if($list){
             echo "未同步线上小说id\r\n";
             continue;
         }
-        $sql = "select novelid,link_name, link_url  from ims_chapter where story_id ='".$story_id."'";
         //读取json的目录信息
-        // $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$file_type;
-        // $json_data = readFileData($file_name);
-        // if(!$json_data) continue;
-        // $res = json_decode($json_data,true);
-
-        $chapter_item = $mysql_obj->fetchAll($sql,'db_slave');
+        $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$json_file_type;
+        $json_data = readFileData($file_name);
+        if(!$json_data) continue;
+        $chapter_item = json_decode($json_data,true);
         if(!$chapter_item) continue;
+
+        //对数据做字段 转换，主要修改的程序太多了
+        $chapter_item = NovelModel::changeChapterInfo($chapter_item);
         $items = array_chunk($chapter_item,$num);
         $ids = [];
         foreach($items as $k =>&$v){
             //抓取内容信息
             $html_data= getContenetNew($v);
-            $ids = array_column($v, 'novelid');
+            $ids = array_column($v, 'id');
             //更新对应的is_async状态
             // //保存本地存储数据
             saveLocalFile($download_path,$html_data);
@@ -71,8 +70,7 @@ if($list){
         $where_up_data = "story_id='".$story_id."' limit 1";
         $mysql_obj->update_data($update_novel_data,$where_up_data,$novel_table_name);
         /***********更新小说里的章节已同步状态 end******************/
-
-        printlog('当前小说('.$va['title'].')同步完成，线上小说id：'.$pro_book_id);
+        printlog('当前小说('.$va['title'].')同步完成，线上小说id：'.$pro_book_id.'---story_id：'.$story_id);
 
         echo "succes story_id：".$story_id."\t拉取本地章节：".count($chapter_item)."\turl:".$val['story_link']."\r\n";
     }

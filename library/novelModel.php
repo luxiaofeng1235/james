@@ -52,6 +52,26 @@ class NovelModel{
 
 
 
+
+    /**
+    * @note 转换数据信息
+    * @param $data 需要转换的数据
+    * @return array
+    *
+    */
+    public static function changeChapterInfo($data){
+        if(!$data)
+          return false;
+         foreach($data as $key =>$val){
+          $link_url = $val['chapter_link'] ?? '';
+            $pathData = parse_url($link_url);
+            $data[$key]['link_url'] = $pathData['path'] ?? '';
+            $data[$key]['link_name'] = $val['chapter_name']??'';
+         }
+        return $data;
+    }
+
+
      /**
     * @note 移除不必要的广告章节
     * @param $data array需要处理的数据
