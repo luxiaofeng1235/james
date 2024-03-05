@@ -6,19 +6,17 @@ require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
 set_time_limit(0);
-$file = file('./copare_diff.txt');
+$file = file('./compare_diff.txt');
 foreach($file as &$val){
     $val = str_replace("\r\n",'',$val);
     //判断远端url是否存在
 }
-$size = 300;//控制长度
+$size = 200;//控制长度
 $item = array_chunk($file,$size);
-foreach($item as $key =>$val){
+foreach($item as $k =>$v){
     //保存文件到本地
-    curlGetHtml1($val);
+    curlGetHtml1($v);
 }
-
-echo "over\r\n";
 
 function curlGetHtml1($urls){
     if(!$urls) return false;
@@ -50,32 +48,7 @@ function curlGetHtml1($urls){
 
 }
 
-//82_82356
-
-// $exec_start_time =microtime(true);
-// $where_condition = 'id<143000';
-// $num = $mysql_obj->fetch('select count(1) as num from ims_link_url where '.$where_condition,'db_slave');
-
-// $all_num = $num['num'] ?? 0;
-// $limit = 5000;
-// $t =ceil($all_num/$limit);
-// $res = [];
-// for ($i=0; $i <$t ; $i++) {
-//     $str = $i*$limit.','.$limit;//设置执行的步长
-
-//     $sql  = "select story_link from ims_link_url where  {$where_condition} limit ".$str;
-//     $query = $mysql_obj->fetchAll($sql,'db_slave');
-//     foreach($query as $value){
-//         $parse_url = explode('/',$value['story_link']);
-//         $file_name = 'E:\html_data'.DS.'detail_'.$parse_url[3].'.'.NovelModel::$file_type;
-//         if(!file_exists($file_name)){
-//             echo $value['story_link'];
-//             echo "<br />";
-//             $res[]=$value['story_link'];
-//         }
-//     }
-// }
-// die;
+echo "over\r\n";
 
 
 ?>
