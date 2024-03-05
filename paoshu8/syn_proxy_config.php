@@ -18,9 +18,7 @@ $year = date('Y');
 $month = date('m');
 $day = date('d');
 $env_cache_key  = Env::get('CACHE_LIST_KEY');//缓存的key
-$redis_cache_key = str_replace('{$year}',$year,$env_cache_key);
-$redis_cache_key = str_replace('{$month}',$month,$redis_cache_key);
-$redis_cache_key = str_replace('{$day}',$day,$redis_cache_key);
+$redis_cache_key = getRedisProyKey();
 
 echo "key：".$redis_cache_key."\r\n";
 /**
@@ -107,6 +105,7 @@ do{
         echo '111111111111111111111';
         $have_data = json_decode($is_save_data,true);
         $res  =getCurlData($target_url , $have_data,true);
+
         //如果访问不是200的话，重新请求刷新到redis
         if($res['curl']['http_code'] != 200){
              //先删除redis的缓存信息

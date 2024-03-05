@@ -515,13 +515,7 @@ function getProxyInfo(){
     // $proxy_cache_key = 'proxy_config:'.date('Ymd');
     //取代理的配置信息
     global $redis_data;
-    $year = date('Y');
-    $month = date('m');
-    $day = date('d');
-    $env_cache_key  = Env::get('CACHE_LIST_KEY');//缓存的key
-    $redis_cache_key = str_replace('{$year}',$year,$env_cache_key);
-    $redis_cache_key = str_replace('{$month}',$month,$redis_cache_key);
-    $redis_cache_key = str_replace('{$day}',$day,$redis_cache_key);
+    $redis_cache_key = getRedisProyKey();
     //默认先从配置去取
     $api_proxy_data = $redis_data->get_redis($redis_cache_key);
     if($api_proxy_data){
@@ -536,6 +530,23 @@ function getProxyInfo(){
         return $redis_data;
     }
 }
+
+
+/**
+ * 获取代理的对应的key
+ * @param $str 需要处理的路径
+ * @return mixed
+ */
+    function getRedisProyKey(){
+        $year = date('Y');
+        $month = date('m');
+        $day = date('d');
+        $env_cache_key  = Env::get('CACHE_LIST_KEY');//缓存的key
+        $redis_cache_key = str_replace('{$year}',$year,$env_cache_key);
+        $redis_cache_key = str_replace('{$month}',$month,$redis_cache_key);
+        $redis_cache_key = str_replace('{$day}',$day,$redis_cache_key);
+        return $redis_cache_key;
+    }
 
 /**
  * 获取小说的目录和文件信息
