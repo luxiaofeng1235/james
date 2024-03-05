@@ -21,9 +21,10 @@ if($list){
         }
         $shell_cmd = 'nohup php gather_info_local.php '.$store_id.' &';
         exec($shell_cmd , $output,$status);
-        echo '<pre>';
-        print_R($shell_cmd);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_R($shell_cmd);
+        // echo '</pre>';
+        echo "(".$shell_cmd.") run store_id：".$store_id."\r\n";
     }
 }
 echo "over\r\n";
