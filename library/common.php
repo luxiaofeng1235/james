@@ -511,24 +511,24 @@ if (!function_exists('createFolders')) {
  * @return mixed
  */
 function getProxyInfo(){
-    $redis_data = new redis_codes();
-    // $proxy_cache_key = 'proxy_config:'.date('Ymd');
     //取代理的配置信息
     global $redis_data;
     $redis_cache_key = getRedisProyKey();
     //默认先从配置去取
     $api_proxy_data = $redis_data->get_redis($redis_cache_key);
-    if($api_proxy_data){
-         $proxy_data = json_decode($api_proxy_data,true);
-         return $proxy_data;
-    }else{
-        $url =Env::get('PROXY_GET_URL');
-        $item = webRequest($url,'GET');
-        $tscode  = json_decode($item,true);
-        $proxy_data = $tscode['data']['list'][0] ?? [];
-        $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),NovelModel::$redis_expire_time);
-        return $redis_data;
-    }
+    $proxy_data = json_decode($api_proxy_data,true);
+    return $proxy_data ?? [];
+    // if($api_proxy_data){
+    //      $proxy_data = json_decode($api_proxy_data,true);
+    //      return $proxy_data;
+    // }else{
+    //     $url =Env::get('PROXY_GET_URL');
+    //     $item = webRequest($url,'GET');
+    //     $tscode  = json_decode($item,true);
+    //     $proxy_data = $tscode['data']['list'][0] ?? [];
+    //     $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),NovelModel::$redis_expire_time);
+    //     return $redis_data;
+    // }
 }
 
 

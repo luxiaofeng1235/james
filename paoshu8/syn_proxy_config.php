@@ -110,6 +110,7 @@ do{
         if($res['curl']['http_code'] != 200){
              //先删除redis的缓存信息
             $redis_data->del_redis($redis_cache_key);
+            //默认轮询100次去请求最新的未使用的代理
             for ($i=0; $i <100 ; $i++) {
                  $proxy_try_data = getCurlData($url,[],false);
                  //使用代理
