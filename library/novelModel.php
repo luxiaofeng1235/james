@@ -20,6 +20,8 @@ class NovelModel{
       'cate_name'          =>  'class_name',//小说分类名称
    ];
 
+   protected static $run_status = 1;//已经运行完毕的
+
 
    public static $file_type = 'txt'; //存储为txt的格式文件
 
@@ -42,6 +44,8 @@ class NovelModel{
     private static $table_name = 'mc_book';
 
 
+
+
      /**
     * @note 移除不必要的广告章节
     * @param $data array需要处理的数据
@@ -60,6 +64,18 @@ class NovelModel{
          $list = array_values($data);
          return $list;
       }
+    }
+
+   /**
+  * @note 获取上次运行的最大ID
+  *
+  */
+    public static function getMaxRunId(){
+      global $mysql_obj;
+      $sql = "select max(store_id) as last_store_id from ".Env::get('APICONFIG.TABLE_NOVEL')." where syn_chapter_status =".self::$run_status;
+      $info = $mysql_obj->fetch($sql,'db_slave');
+      $last_max_id = $info['last_store_id'] ?? 0;
+      return $last_max_id;
     }
 
     /**
