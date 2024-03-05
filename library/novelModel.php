@@ -9,6 +9,8 @@
  */
 class NovelModel{
 
+
+    public static $redis_expire_time = 7200; //默认2个小时
     public static $dict_exchange = [
        'title'     =>  'book_name',//小说书名
       'cover_logo'       =>  'pic',//小说封面

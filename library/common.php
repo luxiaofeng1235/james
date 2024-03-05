@@ -515,7 +515,6 @@ function getProxyInfo(){
     // $proxy_cache_key = 'proxy_config:'.date('Ymd');
     //取代理的配置信息
     global $redis_data;
-
     $year = date('Y');
     $month = date('m');
     $day = date('d');
@@ -533,7 +532,7 @@ function getProxyInfo(){
         $item = webRequest($url,'GET');
         $tscode  = json_decode($item,true);
         $proxy_data = $tscode['data']['list'][0] ?? [];
-        $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),3600*2);
+        $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),NovelModel::$redis_expire_time);
         return $redis_data;
     }
 }

@@ -12,7 +12,7 @@ require_once($dirname.'/library/init.inc.php');
 $exec_start_time =microtime(true);
 
 $target_url = Env::get('APICONFIG.PAOSHU_HOST');//需要抓取的url
-$expire_time = 3600*2;//过期时间设置三分钟的缓存时间
+$expire_time = NovelModel::$redis_expire_time;//过期时间设置2个小时的过期
 //设置缓存的key
 $year = date('Y');
 $month = date('m');
@@ -21,6 +21,7 @@ $env_cache_key  = Env::get('CACHE_LIST_KEY');//缓存的key
 $redis_cache_key = str_replace('{$year}',$year,$env_cache_key);
 $redis_cache_key = str_replace('{$month}',$month,$redis_cache_key);
 $redis_cache_key = str_replace('{$day}',$day,$redis_cache_key);
+
 echo "key：".$redis_cache_key."\r\n";
 /**
 * @note 获取当前的curl信息
