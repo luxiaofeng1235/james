@@ -24,6 +24,8 @@ class NovelModel{
 
    protected static $run_status = 1;//已经运行完毕的
 
+   public static $is_no_async = 0;//未同步的
+
 
    public static $file_type = 'txt'; //存储为txt的格式文件
 
