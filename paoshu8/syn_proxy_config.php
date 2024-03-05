@@ -75,6 +75,7 @@ function getCurlData($url,$data=[],$is_proxy =false){
 
 $i = 0;
 echo "link-url：".$target_url."\r\n";
+$url =Env::get('PROXY_GET_URL');
 do{
     /*
     * 整体思路：
@@ -86,7 +87,7 @@ do{
     if(!$is_save_data){
         //轮训程序一直判断当前的url进行抓取判断
         $i++;
-        $url =Env::get('PROXY_GET_URL');
+
         $proxy_data = getCurlData($url,[],false);
         $res  =getCurlData($target_url , $proxy_data,true);
         //如果能扫描到http_code=200的说明当前的curl是有效的
@@ -103,16 +104,43 @@ do{
             break;
         }
     }else{
+        echo '111111111111111111111';
         $have_data = json_decode($is_save_data,true);
-        echo "当前代理未过期，缓存数据仍然可用\r\n";
-        echo '<pre>';
-        print_R($have_data);
-        echo '</pre>';
-        // $res  =getCurlData($target_url , $have_data,true);
-        break;
+        $res  =getCurlData($target_url , $have_data,true);
+        //如果访问不是200的话，重新请求刷新到redis
+        if($res['curl']['http_code'] != 200){
+             //先删除redis的缓存信息
+            $redis_data->del_redis($redis_cache_key);
+            for ($i=0; $i <100 ; $i++) {
+                 $proxy_try_data = getCurlData($url,[],false);
+                 //使用代理
+                 $t_res =getCurlData($target_url , $proxy_try_data,true);
+                 //如果在请求里重新匹配到了新的代理，就重新刷新缓存
+                 if( $t_res['curl']['http_code'] == 200 ){
+                     $now_proxy_use = $t_res['proxy'] ?? [];
+                     echo "重新匹配到了新的可用的代理配置\r\n";
+                     $redis_data->set_redis(
+                            $redis_cache_key,
+                            json_encode($now_proxy_use) ,
+                            $expire_time
+                        );
+                     echo '<pre>';
+                     print_R($now_proxy_use);
+                     echo '</pre>';
+                     break;
+                 }
+            }
+            break;
+        }else{
+            echo "当前的代理可用\r\n";
+            echo '<pre>';
+            print_R($have_data);
+            echo '</pre>';
+            //如果是200就直接退出
+            break;
+        }
+
     }
-
-
 }while(true);
 $exec_end_time =microtime(true); //执行结束时间
 $executionTime = $exec_end_time - $exec_start_time;
