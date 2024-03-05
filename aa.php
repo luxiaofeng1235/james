@@ -5,6 +5,12 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
+$aa = NovelModel::cmdRunPath();
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+
 $d = getProxyInfo();
 echo '<pre>';
 print_R($d);

@@ -53,7 +53,17 @@ class NovelModel{
 
 
 
-
+     /**
+    * @note 返回对应的cmd的具体的路径信息
+    * @param $data 需要转换的数据
+    * @return array
+    *
+    */
+    public static function cmdRunPath(){
+      $base_dir = ROOT.'library' .DS;
+      $base_dir = str_replace('\\','/',$base_dir);
+      return $base_dir;
+    }
 
     /**
     * @note 转换数据信息
