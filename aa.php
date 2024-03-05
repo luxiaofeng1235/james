@@ -5,10 +5,24 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
-$sql = "select * from ims_novel_info limit 10";
-$list = $mysql_obj->fetchAll($sql,'db_slave');
-file_put_contents('./1111.json',json_encode($list,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-echo 1;die;
+$php_path = dirname(dirname(dirname(__DIR__))).'Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径
+$php_path = str_replace('\\','/',$php_path);
+
+// $shell_cmd = 'nohup php paoshu8/gather_info_local.php 3729 &';
+// echo $shell_cmd.PHP_EOL;
+// exec($shell_cmd , $output,$status);
+// echo '<pre>';
+// print_R($output);
+// echo '</pre>';
+// exit;
+
+
+echo $php_path;die;
+
+// $sql = "select * from ims_novel_info limit 10";
+// $list = $mysql_obj->fetchAll($sql,'db_slave');
+// file_put_contents('./1111.json',json_encode($list,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+// echo 1;die;
 
 // $img_url ='http://www.paoshu8.info/files/article/image/0/1/1s.jpg';
 // $dd = NovelModel::saveImgToLocal($img_url);
@@ -24,7 +38,7 @@ echo 1;die;
 // print_R($aa);
 // echo '</pre>';
 // exit;
-$html = readFileData('E:\html_data\detail_174_174500.txt');
+$html = readFileData('E:\html_data\detail_199_199500.txt');
 $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
 // $rules =
     // $redis_book_key = 'store_info:'.$store_id;
