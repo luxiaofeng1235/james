@@ -102,7 +102,7 @@ do{
             break;
         }
     }else{
-        echo "我是缓存里取出来的代理信息\r\n";
+        echo "加载redis中缓存中的代理信息\r\n";
         $have_data = json_decode($is_save_data,true);
         $res  =getCurlData($target_url , $have_data,true);
 
@@ -132,7 +132,7 @@ do{
             }
             break;
         }else{
-            echo "当前的代理可用\r\n";
+            echo "当前的代理可用,缓存中的数据还能用\r\n";
             echo '<pre>';
             print_R($have_data);
             echo '</pre>';
