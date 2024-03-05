@@ -161,7 +161,7 @@ if($info){
         $update_data['is_async'] = 1;
         $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
         //打印日志信息
-        printlog('同步小说：'.$store_data['title'].'|基本信息数据--book_id：'.$sync_pro_id);
+        printlog('同步小说：'.$store_data['title'].'|基本信息数据--book_id：'.$sync_pro_id.'--update_id：'.$update_id);
         echo "insert_id：".$update_id."\tmc_book_id：".$sync_pro_id."\t当前小说：".$store_data['title']."|novelid=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
     }
 }else{
