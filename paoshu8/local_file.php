@@ -37,14 +37,16 @@ if($list){
         $pro_book_id = intval($val['pro_book_id']); //线上的对应的小说id
         $story_id = trim($val['story_id']);
         $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $pro_book_id;//下载路径;
-        // //创建地址目录信息
-        if(!is_dir($download_path)){
-            createFolders($download_path);
-        }
         if(!$pro_book_id){
             echo "未同步线上小说id\r\n";
             continue;
         }
+
+        //创建地址目录信息
+        if(!is_dir($download_path)){
+            createFolders($download_path);
+        }
+
         //读取json的目录信息
         $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$json_file_type;
         $json_data = readFileData($file_name);
