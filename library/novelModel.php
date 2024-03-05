@@ -60,7 +60,7 @@ class NovelModel{
     *
     */
     public static function cmdRunPath(){
-      $base_dir = ROOT.'library' .DS;
+      $base_dir = ROOT.'paoshu8' .DS;
       $base_dir = str_replace('\\','/',$base_dir);
       return $base_dir;
     }
