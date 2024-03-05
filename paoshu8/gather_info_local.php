@@ -161,7 +161,7 @@ if($info){
         $update_data['is_async'] = 1;
         $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
         //执行相关的章节批处理程序
-        $shell_cmd = 'php local_file.php '.$story_id;
+        $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
         exec($shell_cmd,$output , $status);
         echo $shell_cmd."\r\n";
         //打印日志信息
