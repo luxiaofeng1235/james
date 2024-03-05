@@ -70,7 +70,7 @@ if($list){
         $where_up_data = "story_id='".$story_id."' limit 1";
         $mysql_obj->update_data($update_novel_data,$where_up_data,$novel_table_name);
         /***********更新小说里的章节已同步状态 end******************/
-        printlog('当前小说('.$val['title'].')同步完成，线上小说id：'.$pro_book_id.'---story_id：'.$story_id);
+        printlog('章节同步=====当前小说('.$val['title'].')同步完成，线上小说id：'.$pro_book_id.'---story_id：'.$story_id);
 
         echo "succes story_id：".$story_id."\t拉取本地章节：".count($chapter_item)."\turl:".$val['story_link']."\r\n";
     }
