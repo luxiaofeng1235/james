@@ -26,7 +26,7 @@ if($list){
             continue;
         }
         //挂起在后台去运行
-        $shell_cmd = 'nohup '.Env::get('PHP_BIN_PATH').' gather_info_local.php '.$store_id.'  > ./zdz.out 2>&1 &';
+        $shell_cmd = 'cd '.NovelModel::cmdRunPath().'&& nohup '.Env::get('PHP_BIN_PATH').' gather_info_local.php '.$store_id.'  > ./zdz.out 2>&1 &';
         echo $shell_cmd;die;
         echo 'shell-cmd：'. $shell_cmd . PHP_EOL;
         exec($shell_cmd , $output,$status);
