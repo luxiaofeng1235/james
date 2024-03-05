@@ -10,7 +10,7 @@ $sql  = "select count(1) as num from ims_link_url where ".$where;
 $info = $mysql_obj->fetch($sql,'db_slave');
 $num = $info['num'] ?? 0;
 if($num>0){
-    $limit =5000;
+    $limit =500;
     $pages = ceil($num/$limit);
     for ($i=0; $i < $pages; $i++) {
         // code...
@@ -37,9 +37,11 @@ if($num>0){
                     ];
                 }
             }
-            //更新对应的runid
-            $id_str= join(',',$ids);
-            $sql = 'update ims_link_url set is_run = 1 where id in ('.$id_str.')';
+            if($ids){
+                //更新对应的是否运行的状态
+                $id_str= join(',',$ids);
+                $sql = 'update ims_link_url set is_run = 1 where id in ('.$id_str.')';
+            }
             $mysql_obj->query($sql,'db_master');//更新对应的状态
             $result = $mysql_obj->add_data($t_data,'ims_novel_info');
         }
