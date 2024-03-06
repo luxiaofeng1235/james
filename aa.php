@@ -4,14 +4,15 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
-$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter limit 3','db_slave');
+$exec_start_time = microtime(true);
+$limit =Env::get('LIMIT_SIZE');
+$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter limit '.$limit,'db_slave');
 $urls = array_column($list,'link_url');
 $aa= MultiHttp::curlGet($urls,null,true);
-// $aa= MultiHttp::curlGet(['http://www.baidu.com'],null,true);
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time;
+echo "请求完成，一次爬取{$limit}个url,数据爬取过来的有".count($aa)."个页面\r\n";
+echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 
 
 $d = getProxyInfo();
