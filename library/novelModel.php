@@ -12,14 +12,15 @@ class NovelModel{
 
     public static $redis_expire_time = 7200; //默认2个小时
     public static $dict_exchange = [
-       'title'     =>  'book_name',//小说书名
-      'cover_logo'       =>  'pic',//小说封面
+      'title'          =>      'book_name',//小说书名
+      'cover_logo'      =>      'pic',//小说封面
       'author'          =>      'author',//作者
-      'tag'       =>  'tags',//标签
-      'intro'          =>  'desc',//简介
-      'nearby_chapter'             =>   'last_chapter_title',//最新章节
-      'story_link'          =>  'source_url',//采集来源
-      'cate_name'          =>  'class_name',//小说分类名称
+      'tag'             =>      'tags',//标签
+      'intro'           =>      'desc',//简介
+      'nearby_chapter'  =>      'last_chapter_title',//最新章节
+      'story_link'      =>      'source_url',//采集来源
+      'cate_name'       =>      'class_name',//小说分类名称
+      'status'          =>      'serialize',//是否完本状态
    ];
 
    public static $prefix_html = 'detail_'; //html的前缀
@@ -273,14 +274,28 @@ class NovelModel{
           $cover_logo =  explode('/',$info['pic']);
           $info['pic'] = Env::get('SAVE_IMG_PATH') . DS . end($cover_logo);
       }
+      //处理小说是否完本状态
+      if( $info['serialize'] == '连载中'){
+          $serialize = 1;//连载
+      }else if( $info['serialize'] == '已经完本'){
+          $serialize = 2;//完结
+      }else {
+          $serialize =3;//太监
+      }
+      $info['serialize'] = $serialize;
       //根据书籍名称和坐着来进行匹配
       $where_data = "book_name ='".trim($info['book_name'])."' and author ='".trim($info['author'])."' limit 1";
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
       if(empty($novelInfo)){
+          //插入入库
           $data=  handleArrayKey($info);
           $id =  $mysql_obj->add_data($data, self::$table_name ,self::$db_conn);
       }else{
-          $id = intval($novelInfo[0]['id']);
+        //更新书籍的主要信息
+        $update_where = "id =".$novelInfo[0]['id'];
+        unset($info['addtime']);
+        $mysql_obj->update_data($info,$update_where,self::$table_name,false,0,self::$db_conn);
+        $id = intval($novelInfo[0]['id']);
       }
       return $id;
   }
