@@ -24,7 +24,7 @@ class FileFactory{
         $this->mysql_conf = $mysql_obj; //MySQL链接句柄
         $this->redis_conf = $redis_obj;//redis连接对象
         $this->table_novel_name = Env::get('APICONFIG.TABLE_NOVEL');//待处理的文件名
-        $this->where_data .= $this->syn_wait_status;
+        $this->where_data .= $this->syn_wait_status;//搜索的前置条件
     }
 
 
