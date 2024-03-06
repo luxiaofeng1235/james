@@ -1,6 +1,5 @@
 <?php
 use QL\QueryList;
-require_once(ROOT.'library/redis_codes.php');
 //数组转换，主要导需要用
 function Array_transdata($array,$field){
     $trans_data =array();
@@ -505,17 +504,19 @@ if (!function_exists('createFolders')) {
 }
 
 
-    /**
- * 获取芝麻的代理IP
- * @return mixed
- */
+/**
+* 获取芝麻的代理IP
+* @return mixed
+*/
 function getZhimaProxy(){
     global $redis_data;
     $redis_cache_key = 'zhima_proxy:';
-    $time_out = 3600*2;//根据网站获取25-2个小时以内的IP访问
+    // $redis_data->del_redis($redis_cache_key);
     $api_proxy_data = $redis_data->get_redis($redis_cache_key);
     if(!$api_proxy_data){
-        $url = 'http://webapi.http.zhimacangku.com/getip?neek=321a408a&num=1&type=1&time=2&pro=0&city=0&yys=0&port=2&pack=0&ts=0&ys=0&cs=0&lb=1&sb=&pb=4&mr=1®ions=';
+        $time_out = 3600*2.5;//设置3个小时的访问
+        //默认用三个小时的代理IP
+        $url = Env::get('ZHIMAURL');
         $info = webRequest($url,'GET');
         $res = str_replace("\r\n",'',$info);
         if($res){
@@ -688,7 +689,7 @@ function getHtmlUrl($meta,$href){
     $real_path = explode('/',$meta_data);
     $str = $real_path[3] ?? '';
     $c_data = explode('-',$str);
-    $link = $href .$c_data[2].'.html';
+    @$link = $href .$c_data[2].'.html';
     return  $link;
 }
 

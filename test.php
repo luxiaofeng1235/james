@@ -1,7 +1,25 @@
 <?
 
+
+
 require_once(__DIR__.'/library/init.inc.php');
+require_once(__DIR__.'/library/file_factory.php');
+$factory = new FileFactory($mysql_obj,$redis_data);
+$list = $factory->synChapterInfo('0_5');
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
+
 use QL\QueryList;##引入querylist的采集器
+for ($i=0; $i <200 ; $i++) {
+    $shell_cmd = 'nohup php ./test_arr.php > ./output.log 2>&1 &';
+    exec($shell_cmd,$output,$status);
+    printlog('循环第'.$i.'次nohup任务');
+}
+echo "over\r\n";
+die;
+
 
 // $str = "第四百二十六章 我们能赢2_2.txt";
 // $newStr = preg_replace('# #', '', $str);

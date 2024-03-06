@@ -15,6 +15,7 @@
 ini_set("memory_limit", "5000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
+require_once dirname(__DIR__).'/library/file_factory.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
 
@@ -27,6 +28,10 @@ if(!$store_id){
     echo '请选择要抓取的内容id';
     exit();
 }
+
+//实例化文件存储工厂类
+$factory = new FileFactory($mysql_obj,$redis_data);
+
 $table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
 $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //获取配置的域名信息
@@ -120,11 +125,6 @@ if($info){
 
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html);
-        // $range = '#list dd';
-        // $rt = QueryList::get($story_link)
-        //         ->rules($list_rule)
-        //         ->range($range)
-        //         ->query()->getData();
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
@@ -161,11 +161,14 @@ if($info){
         $update_data['is_async'] = 1;
         $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
         //执行相关的章节批处理程序
-        $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
-        exec($shell_cmd,$output , $status);
-        echo $shell_cmd."\r\n";
+        // $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
+        // exec($shell_cmd,$output , $status);
+        // echo $shell_cmd."\r\n";
         //打印日志信息
-        printlog('同步小说：'.$store_data['title'].'|基本信息数据--book_id：'.$sync_pro_id.'--update_id：'.$update_id);
+        printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
+        $another_data = array_merge(['pro_book_id'=>$sync_pro_id,'story_id'=>$story_id],$store_data);
+        //同步章节内容信息
+        $factory->synChapterInfo($story_id,$another_data);//同步章节内容
         echo "insert_id：".$update_id."\tmc_book_id：".$sync_pro_id."\t当前小说：".$store_data['title']."|novelid=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
     }
 }else{

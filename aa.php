@@ -4,123 +4,33 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
-$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter limit 3','db_slave');
-$urls = array_column($list,'link_url');
-$aa= MultiHttp::curlGet($urls,null,true);
-// $aa= MultiHttp::curlGet(['http://www.baidu.com'],null,true);
+$exec_start_time = microtime(true);
+$limit =Env::get('LIMIT_SIZE');
+
+$redis_data->set_redis('trest',111);
+$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="106_106595"   order by chapter_id desc  limit 3','db_slave');
+$t =array_chunk($list, $limit);
+$i = 0;
+foreach($t as $key =>$val){
+     $urls = array_column($val,'link_url');
+     $content= MultiHttp::curlGet($urls,null,true);
+     echo 'index-num：'.count($val)."\r\n";
+     echo 'curl-num：'.count($content)."====\r\n";
+     foreach($content as $k =>$v){
+        $i++;
+        $filename = './txt/'.($key+1).'---'.$k.'.txt';
+        //file_put_contents($filename,$v);
+     }
+     sleep(1);
+}
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time;
+$proxyInfo = getZhimaProxy();
 echo '<pre>';
-print_R($aa);
+print_R($proxyInfo);
 echo '</pre>';
-exit;
-
-
-$d = getProxyInfo();
-echo '<pre>';
-print_R($d);
-echo '</pre>';
-exit;
-
-$php_path = dirname(dirname(dirname(__DIR__))).'Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径
-$php_path = str_replace('\\','/',$php_path);
-
-// $shell_cmd = 'nohup php paoshu8/gather_info_local.php 3729 &';
-// echo $shell_cmd.PHP_EOL;
-// exec($shell_cmd , $output,$status);
-// echo '<pre>';
-// print_R($output);
-// echo '</pre>';
-// exit;
-
-
-echo $php_path;die;
-
-// $sql = "select * from ims_novel_info limit 10";
-// $list = $mysql_obj->fetchAll($sql,'db_slave');
-// file_put_contents('./1111.json',json_encode($list,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-// echo 1;die;
-
-// $img_url ='http://www.paoshu8.info/files/article/image/0/1/1s.jpg';
-// $dd = NovelModel::saveImgToLocal($img_url);
-// echo '<pre>';
-// print_R($dd);
-// echo '</pre>';
-// exit;
-
-// printlog('测试哈哈哈,同步ID=1235');
-// die;
-// $aa = replaceCnWords('第十六章 提审孙致远【上】');
-// echo '<pre>';
-// print_R($aa);
-// echo '</pre>';
-// exit;
-$html = readFileData('E:\html_data\detail_199_199500.txt');
-$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
-// $rules =
-    // $redis_book_key = 'store_info:'.$store_id;
-    // $redis_data  = $redis_data->get_redis($redis_book_key);
-    // if(!$redis_data){
-    //     //爬取相关规则下的类
-         $info_data=QueryList::html($html)
-                ->rules($rules)
-                ->query()->getData();
-        $list = $info_data->all();
-
-$aa = NovelModel::getCharaList($html);
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
-preg_match('/<div id=\"list\".*?>.*?<\/dl>/ism',$html,$list);
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
-
-$list_rule = array(
-            'link_name'     =>array('a','text'),
-            'link_url'       =>array('a','href'),
-        );
-
-$range = '#list dd';
-$rt = QueryList::html($html)
-        ->rules($list_rule)
-        ->range($range)
-        ->query()->getData();
-echo '<pre>';
-print_R($rt->all());
-echo '</pre>';
-exit;
-
-$data = QueryList::html($html)->rules($rules)->query()
-->getData();
-echo '<pre>';
-print_R($data);
-echo '</pre>';
-exit;
-$list = $data->all();
-
-
-$list = $mysql_obj->fetchAll("select story_link from ims_link_url limit 500",'db_slave');
-$urls = array_column($list,'story_link');
-$ret = MultiHttp::curlGet($urls,null,true);
-echo '<pre>';
-print_R($ret);
-echo '</pre>';
-exit;
-
-//http://www.paoshu8.info/211_211506/195745608.html
-$url = 'http://www.paoshu8.info/0_2/';
-$list = NovelModel::getRemoteHmtlToCache($url,'detail:1');
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
-
-$ret = MultiHttp::curlGet(['http://www.paoshu8.info/0_2/'],null,true);
-$content = $ret[0] ?? '';
-echo '<pre>';
-print_R($content);
-echo '</pre>';
+echo "请求完成，一次配置爬取".count($list)."个url,数据爬取过来的有".$i."个页面\r\n";
+echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 exit;
 
 

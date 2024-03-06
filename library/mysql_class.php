@@ -317,7 +317,7 @@ class  Mysql_class{
 	* @param [string] $[table_name] [<表名称>]
 	* @return bool
 	*/
-	function update_data($data =[],$where='',$table_name='',$limit = false,$limit_size=0){
+	function update_data($data =[],$where='',$table_name='',$limit = false,$limit_size=0,$db_name_conn=''){
 	    if(!$data || !$where){
 	        return false;
 	    }
@@ -354,7 +354,11 @@ class  Mysql_class{
 	    }
 	    //exec mysql
 	    if($sql){
-	    	$db_name = $this->db_master;
+	    	if(!empty($db_name_conn)){
+	    		$db_name = $db_name_conn;
+	    	}else{
+	    		$db_name = $this->db_master;
+	    	}
 	    	$db_obj = $this->getMysqlInfo($db_name);
 	    	if($db_obj->query($sql)){
 	    		return 1;
