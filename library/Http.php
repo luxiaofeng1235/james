@@ -74,10 +74,7 @@ class MultiHttp
             // a request was just completed -- find out which one
             while ($done = curl_multi_info_read($master)) {
                 $info = curl_getinfo($done['handle']);
-                // echo '<pre>';
-                // print_R($info);
-                // echo '</pre>';
-                // exit;
+
                 if ($info['http_code'] == 200) {
                     $output = curl_multi_getcontent($done['handle']); //获取结果
                     $data[] =$output;

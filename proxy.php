@@ -4,10 +4,13 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 
+
+$proxyInfo = getProxyInfo();
 $url =Env::get('APICONFIG.PAOSHU_HOST');
-$proxy = Env::get('PROXY.URL_HOST');
-$port = Env::get('PROXY.PORT');
-$proxyauth = Env::get('PROXY.PROXY_AUTH');
+$proxy = $proxyInfo['ip'];
+$port = $proxyInfo['port'];
+
+$proxyauth = $proxyInfo['username'].':'.$proxyInfo['password'];
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -30,7 +33,7 @@ $httpcode = curl_getinfo($ch);
 $header =  curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 curl_close($ch);//关闭cURL会话
 echo '<pre>';
-var_dump($curl_scraped_page);
+var_dump($httpcode);
 echo '</pre>';
 exit;
 ?>

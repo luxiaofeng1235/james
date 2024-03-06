@@ -5,12 +5,11 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 
-
-// $aa= MultiHttp::curlGet(['http://www.paoshu8.info/0_859/653518.html'],null,true);
-// echo '<pre>';
-// print_R($aa);
-// echo '</pre>';
-// exit;
+$aa= MultiHttp::curlGet(['http://www.paoshu8.info/95_95678/153784682.html'],null,true);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 
 
 $d = getProxyInfo();
