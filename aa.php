@@ -10,15 +10,17 @@ $list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST'
 $urls = array_column($list,'link_url');
 $aa= MultiHttp::curlGet($urls,null,true);
 $exec_end_time = microtime(true);
+$proxyInfo = getZhimaProxy();
+echo '<pre>';
+print_R($proxyInfo);
+echo '</pre>';
 $executionTime = $exec_end_time - $exec_start_time;
+foreach($aa as $key =>$value){
+    $filename = './txt/'.($key+1).'.txt';
+    file_put_contents($filename,$value);
+}
 echo "请求完成，一次爬取{$limit}个url,数据爬取过来的有".count($aa)."个页面\r\n";
 echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
-
-
-$d = getProxyInfo();
-echo '<pre>';
-print_R($d);
-echo '</pre>';
 exit;
 
 $php_path = dirname(dirname(dirname(__DIR__))).'Extensions/php/php7.2.9nts/php.exe';//定义PHP扩展的路径

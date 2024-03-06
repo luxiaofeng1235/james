@@ -512,7 +512,6 @@ if (!function_exists('createFolders')) {
 function getZhimaProxy(){
     global $redis_data;
     $redis_cache_key = 'zhima_proxy:';
-
     // $redis_data->del_redis($redis_cache_key);
     $api_proxy_data = $redis_data->get_redis($redis_cache_key);
     if(!$api_proxy_data){
