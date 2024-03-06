@@ -66,7 +66,7 @@ class FileFactory{
                 //抓取内容信息
                 $html_data= getContenetNew($v);
                 //保存本地存储数据
-                $this->saveLocalFile11($download_path,$html_data);
+                $this->synLocalFile($download_path,$html_data);
                 sleep(1);
             }
             //更细对应的状态信息
@@ -89,7 +89,7 @@ class FileFactory{
      * @param array $data 读取出来的数据
      * @return string
      */
-    protected function saveLocalFile11($save_path,$data){
+    protected function synLocalFile($save_path,$data){
         foreach($data as $key =>$val){
             if( !$val ) continue;
             $content = $val['content'] ?? '';//提交的内容
