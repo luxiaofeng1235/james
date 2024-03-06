@@ -36,10 +36,6 @@ class MultiHttp
             //获取代理的配置方式
             $proxy_data = getZhimaProxy();
             // $proxy_data = getProxyInfo();
-            // echo '<pre>';
-            // print_R($proxy_data);
-            // echo '</pre>';
-            // exit;
             if($proxy_data){
                 //是否开启代理
                 $std_options[CURLOPT_PROXY] = $proxy_data['ip'];

@@ -1,6 +1,5 @@
 <?php
 use QL\QueryList;
-require_once(ROOT.'library/redis_codes.php');
 //数组转换，主要导需要用
 function Array_transdata($array,$field){
     $trans_data =array();
