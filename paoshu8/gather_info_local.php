@@ -149,7 +149,7 @@ if($info){
             $item_list = array_values($items);
         }
         array_multisort($sort_ids , SORT_ASC , $item_list);
-        //清晰不需要的字段
+        //清洗掉不需要的字段
         $item_list = cleanData($item_list,['chapter_id']);
 
         //创建生成json目录结构
