@@ -12,7 +12,7 @@ set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 //取出来所有未同步的数据信息
 $where =  "is_async = ".NovelModel::$is_no_async;
-// $where .=" and story_id ='95_95678'";
+$where .=" and story_id ='95_95678'";
 
 $sql = "select store_id from ".Env::get('APICONFIG.TABLE_NOVEL')." where $where limit 1";
 // echo $sql;die;

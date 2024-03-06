@@ -5,11 +5,11 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 
 //http://webapi.http.zhimacangku.com/getip?neek=321a408a&num=1&type=1&time=3&pro=0&city=0&yys=0&port=2&pack=0&ts=0&ys=0&cs=0&lb=1&sb=&pb=4&mr=1&regions=
-$proxyInfo = getProxyInfo();
-$url ='http://www.paoshu8.info/';
-$proxy = '122.230.59.154';
-$port = '4215';
-$proxyauth = $proxyInfo['username'].':'.$proxyInfo['password'];
+$proxyInfo = getZhimaProxy();
+$url ='http://www.paoshu8.info/52_52542/20435783.html';
+$proxy = $proxyInfo['ip'];
+$port = $proxyInfo['port'];
+$proxyauth = '';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -18,7 +18,9 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_PROXY, $proxy);
 curl_setopt($ch, CURLOPT_PROXYPORT, $port);
-// curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+if($proxyauth){
+    curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+}
 curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 0);
 curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
@@ -32,7 +34,7 @@ $httpcode = curl_getinfo($ch);
 $header =  curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 curl_close($ch);//关闭cURL会话
 echo '<pre>';
-var_dump($httpcode);
+var_dump($curl_scraped_page);
 echo '</pre>';
 exit;
 ?>
