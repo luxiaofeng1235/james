@@ -12,7 +12,7 @@
  * @version 0.1
  *
  */
-ini_set("memory_limit", "5000M");
+ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 require_once dirname(__DIR__).'/library/file_factory.php';
