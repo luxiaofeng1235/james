@@ -2,6 +2,13 @@
 
 require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;##引入querylist的采集器
+for ($i=0; $i <100 ; $i++) {
+    $shell_cmd = 'nohup php test_arr.php > /dev/null 2>&1 &';
+    exec($shell_cmd,$output,$status);
+}
+echo "over\r\n";
+die;
+
 
 // $str = "第四百二十六章 我们能赢2_2.txt";
 // $newStr = preg_replace('# #', '', $str);
