@@ -505,18 +505,59 @@ if (!function_exists('createFolders')) {
 }
 
 
+    /**
+ * 获取芝麻的代理IP
+ * @return mixed
+ */
+function getZhimaProxy(){
+    global $redis_data;
+    $redis_cache_key = 'zhima_proxy:';
+    $time_out = 3600*2;//根据网站获取25-2个小时以内的IP访问
+    $api_proxy_data = $redis_data->get_redis($redis_cache_key);
+    if(!$api_proxy_data){
+        $url = 'http://webapi.http.zhimacangku.com/getip?neek=321a408a&num=1&type=1&time=2&pro=0&city=0&yys=0&port=2&pack=0&ts=0&ys=0&cs=0&lb=1&sb=&pb=4&mr=1®ions=';
+        $info = webRequest($url,'GET');
+        $res = str_replace("\r\n",'',$info);
+        if($res){
+            if(strpos($res,':')){
+                 list($proxy_url , $port) = explode(':' , $res);
+                $proxy_data  = array(
+                    'ip'    =>  $proxy_url,
+                    'port'  =>  $port,
+                );
+                $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$time_out);
+                return $proxy_data;
+            }else{
+                return [];
+            }
+        }
+    }else{//取出来缓存的数据信息
+        $proxy_conf = json_decode($api_proxy_data , true);
+        return $proxy_conf;
+    }
+
+}
+
 /**
  * 获取代理的配置
  * @param $str 需要处理的路径
  * @return mixed
  */
 function getProxyInfo(){
+
+    $proxy = [
+        'ip'        =>  Env::get('PROXY.URL_HOST'), //代理的IP
+        'port'      =>  Env::get('PROXY.PORT'), //代理的端口号
+        'username'  =>  Env::get('PROXY.username'), //用户名
+        'password'  =>  Env::get('PROXY.password'), //密码
+    ];
+    return $proxy;
     //取代理的配置信息
-    global $redis_data;
-    $redis_cache_key = getRedisProyKey();
-    //默认先从配置去取
-    $api_proxy_data = $redis_data->get_redis($redis_cache_key);
-    $proxy_data = json_decode($api_proxy_data,true);
+    // global $redis_data;
+    // $redis_cache_key = getRedisProyKey();
+    // //默认先从配置去取
+    // $api_proxy_data = $redis_data->get_redis($redis_cache_key);
+    // $proxy_data = json_decode($api_proxy_data,true);
     return $proxy_data ?? [];
     // if($api_proxy_data){
     //      $proxy_data = json_decode($api_proxy_data,true);
