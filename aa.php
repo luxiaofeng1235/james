@@ -4,7 +4,7 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
-$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter limit 1','db_slave');
+$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter limit 200','db_slave');
 $urls = array_column($list,'link_url');
 $aa= MultiHttp::curlGet($urls,null,true);
 echo '<pre>';
