@@ -6,7 +6,7 @@ require_once($dirname.'/library/init.inc.php');
 use QL\QueryList;
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
-$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter limit '.$limit,'db_slave');
+$list = $mysql_obj->fetchAll('select CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter order by chapter_id desc limit '.$limit,'db_slave');
 $urls = array_column($list,'link_url');
 $aa= MultiHttp::curlGet($urls,null,true);
 $exec_end_time = microtime(true);
