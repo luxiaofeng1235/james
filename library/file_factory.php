@@ -59,6 +59,8 @@ class FileFactory{
                 return false;
             }
             $chapter_item = json_decode($json_data,true);
+            if(!$chapter_item)
+                return false;
             //转换数据字典
             $chapter_item = NovelModel::changeChapterInfo($chapter_item);
             $items = array_chunk($chapter_item,$this->num);
