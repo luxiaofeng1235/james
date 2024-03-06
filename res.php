@@ -14,13 +14,5 @@ set_time_limit(200);
 $dirname =str_replace("\\",'/',dirname(__FILE__)).'/library/' ;
 
 require_once ($dirname.'/init.inc.php');
-
-//$sql = "select * from `a_table` where id>10 group by a_name order by a_id asc limit 199";
-//#查当前的记录信息方便进行存储
-//$items = $mysql_obj->fetchAll($sql  , $mysql_obj->db_slave);
-//echo '<pre>';
-//print_R($items);
-//echo '</pre>';
-//exit;
-
+printlog('11111111111111111111111111');
 

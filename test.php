@@ -1,14 +1,21 @@
 <?
 
+
+
 require_once(__DIR__.'/library/init.inc.php');
+require_once(__DIR__.'/library/file_factory.php');
+$factory = new FileFactory($mysql_obj,$redis_data);
+$list = $factory->getMyData('70_70047');
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
+
 use QL\QueryList;##引入querylist的采集器
-for ($i=0; $i <100 ; $i++) {
-    $shell_cmd = 'nohup php ./test_arr.php > /dev/null 2>&1 &';
+for ($i=0; $i <200 ; $i++) {
+    $shell_cmd = 'nohup php ./test_arr.php > ./output.log 2>&1 &';
     exec($shell_cmd,$output,$status);
-    echo '<pre>';
-    var_dump($output);
-    echo '</pre>';
-    exit;
+    printlog('循环第'.$i.'次nohup任务');
 }
 echo "over\r\n";
 die;

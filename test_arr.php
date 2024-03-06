@@ -32,5 +32,6 @@ $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
 $header =  curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 printlog('我是来请求curl内容的===');
-
+$shell_cmd = 'nohup php ./res.php > ./output1.log 2>&1 &';
+exec($shell_cmd , $shell_cmd,$status);
 ?>
