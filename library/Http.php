@@ -34,8 +34,8 @@ class MultiHttp
         );
         if($is_proxy){
             //获取代理的配置方式
-            $proxy_data = getZhimaProxy();
-            // $proxy_data = getProxyInfo();
+            // $proxy_data = getZhimaProxy();
+            $proxy_data = getProxyInfo();
             if($proxy_data){
                 //是否开启代理
                 $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
@@ -77,7 +77,6 @@ class MultiHttp
             // a request was just completed -- find out which one
             while ($done = curl_multi_info_read($master)) {
                 $info = curl_getinfo($done['handle']);
-
                 if ($info['http_code'] == 200) {
                     $output = curl_multi_getcontent($done['handle']); //获取结果
                     $data[] =$output;
