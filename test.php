@@ -5,7 +5,7 @@
 require_once(__DIR__.'/library/init.inc.php');
 require_once(__DIR__.'/library/file_factory.php');
 $factory = new FileFactory($mysql_obj,$redis_data);
-$list = $factory->getMyData('70_70047');
+$list = $factory->synChapterInfo('70_70047');
 echo '<pre>';
 print_R($list);
 echo '</pre>';

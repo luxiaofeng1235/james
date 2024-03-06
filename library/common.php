@@ -689,7 +689,7 @@ function getHtmlUrl($meta,$href){
     $real_path = explode('/',$meta_data);
     $str = $real_path[3] ?? '';
     $c_data = explode('-',$str);
-    $link = $href .$c_data[2].'.html';
+    @$link = $href .$c_data[2].'.html';
     return  $link;
 }
 
