@@ -105,13 +105,12 @@ do{
         echo "加载redis中缓存中的代理信息\r\n";
         $have_data = json_decode($is_save_data,true);
         $res  =getCurlData($target_url , $have_data,true);
-
         //如果访问不是200的话，重新请求刷新到redis
         if($res['curl']['http_code'] != 200){
              //先删除redis的缓存信息
             $redis_data->del_redis($redis_cache_key);
             //默认轮询100次去请求最新的未使用的代理
-            for ($i=0; $i <100 ; $i++) {
+            for ($i=0; $i <300 ; $i++) {
                  $proxy_try_data = getCurlData($url,[],false);
                  //使用代理
                  $t_res =getCurlData($target_url , $proxy_try_data,true);
