@@ -505,6 +505,19 @@ if (!function_exists('createFolders')) {
 
 
 /**
+ * @note   判断是否为json数据
+ * @param url_file str url对应的文件
+ * @author xiaofeng   2020-10-27
+ */
+function is_json($string)
+{
+    if (is_string($string)) {
+        @json_decode($string);
+        return (json_last_error() === JSON_ERROR_NONE);
+    }
+}
+
+/**
 * 获取芝麻的代理IP
 * @return mixed
 */
@@ -518,19 +531,24 @@ function getZhimaProxy(){
         //默认用三个小时的代理IP
         $url = Env::get('ZHIMAURL');
         $info = webRequest($url,'GET');
-        $res = str_replace("\r\n",'',$info);
-        if($res){
-            if(strpos($res,':')){
-                 list($proxy_url , $port) = explode(':' , $res);
-                $proxy_data  = array(
-                    'ip'    =>  $proxy_url,
-                    'port'  =>  $port,
-                );
-                $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$time_out);
-                return $proxy_data;
-            }else{
-                return [];
+        //如果是JSON返回说明当前的接口有问题
+        if(!is_json($info)){
+            $res = str_replace("\r\n",'',$info);
+            if($res){
+                if(strpos($res,':')){
+                     list($proxy_url , $port) = explode(':' , $res);
+                    $proxy_data  = array(
+                        'ip'    =>  $proxy_url,
+                        'port'  =>  $port,
+                    );
+                    $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$time_out);
+                    return $proxy_data;
+                }else{
+                    return [];
+                }
             }
+        }else{
+            return false;
         }
     }else{//取出来缓存的数据信息
         $proxy_conf = json_decode($api_proxy_data , true);

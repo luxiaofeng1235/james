@@ -15,6 +15,13 @@ class MultiHttp
 
 
 
+    /**
+    * https 发起多线程curl的GET请求
+    * @param string $url url信息
+    * @param mixed $custom_options 客户端参数[$data = '{"a":1,"b":2}' or $data = array("a" => 1,"b" => 2)]
+    * @param int $is_proxy 是否启用代理
+    * @return string
+    */
    public static function curlGet($urls,$custom_options = null,$is_proxy =false){//多个url访问
         if (sizeof($urls)==0) return;
         // make sure the rolling window isn't greater than the # of urls
