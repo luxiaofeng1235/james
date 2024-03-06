@@ -17,11 +17,15 @@ $where =  "is_async = ".NovelModel::$is_no_async;
 $sql = "select store_id from ".Env::get('APICONFIG.TABLE_NOVEL')." where $where limit 1";
 // echo $sql;die;
 $list = $mysql_obj->fetchAll($sql,'db_slave');
-
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
 if($list){
     //如果列表中存在可用数据信息
     foreach($list as $key =>$value){
         $store_id = intval($value['store_id']);
+        $pro_book_id = intval($value['pro_book_id']);
         if(!$store_id){
             continue;
         }
@@ -34,7 +38,7 @@ if($list){
         print_R($shell_cmd);
         echo '</pre>';
         echo PHP_EOL;
-        //echo "(".$shell_cmd.") run store_id：".$store_id."\r\n";
+        echo " run store_id：".$store_id."\r\n";
     }
 }
 echo "over\r\n";
