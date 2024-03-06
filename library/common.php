@@ -524,8 +524,8 @@ function is_json($string)
 function getZhimaProxy(){
     global $redis_data;
     $redis_cache_key = 'zhima_proxy:';
-    // $redis_data->del_redis($redis_cache_key);
-    $api_proxy_data = $redis_data->get_redis($redis_cache_key);
+    //$redis_data->del_redis($redis_cache_key);
+     $api_proxy_data = $redis_data->get_redis($redis_cache_key);
     if(!$api_proxy_data){
         $time_out = 3600*2.5;//设置3个小时的访问
         //默认用三个小时的代理IP
