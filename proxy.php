@@ -4,12 +4,11 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 
-
+//http://webapi.http.zhimacangku.com/getip?neek=321a408a&num=1&type=1&time=3&pro=0&city=0&yys=0&port=2&pack=0&ts=0&ys=0&cs=0&lb=1&sb=&pb=4&mr=1&regions=
 $proxyInfo = getProxyInfo();
-$url =Env::get('APICONFIG.PAOSHU_HOST');
-$proxy = $proxyInfo['ip'];
-$port = $proxyInfo['port'];
-
+$url ='http://www.paoshu8.info/';
+$proxy = '122.230.59.154';
+$port = '4215';
 $proxyauth = $proxyInfo['username'].':'.$proxyInfo['password'];
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -19,7 +18,7 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_PROXY, $proxy);
 curl_setopt($ch, CURLOPT_PROXYPORT, $port);
-curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+// curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
 curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 0);
 curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
