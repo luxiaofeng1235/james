@@ -27,13 +27,13 @@ if($list){
         }
         //挂起在后台去运行
         $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && nohup '.Env::get('PHP_BIN_PATH').' gather_info_local.php '.$store_id.'  > '.Env::get('NOHUP_BIN_PATH').' 2>&1 &';
-        echo 'shell-cmd：'. $shell_cmd . PHP_EOL;
+        //echo 'shell-cmd：'. $shell_cmd . PHP_EOL;
         exec($shell_cmd , $output,$status);
         echo '<pre>';
         print_R($shell_cmd);
         echo '</pre>';
         echo PHP_EOL;
-        echo "(".$shell_cmd.") run store_id：".$store_id."\r\n";
+        //echo "(".$shell_cmd.") run store_id：".$store_id."\r\n";
     }
 }
 echo "over\r\n";
