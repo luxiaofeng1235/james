@@ -33,13 +33,17 @@ class FileFactory{
      * @param string $story_id 小说ID
      * @return string
      */
-    public function synChapterInfo($story_id = ''){
+    public function synChapterInfo($story_id = '',$info_data= []){
         if(!$story_id){
             return false;
         }
-        $where = $this->where_data . ' and story_id =\''.$story_id.'\'';
-        $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
-        $info = $this->mysql_conf->fetch($sql,'db_slave');
+        if(!empty($info_data)){
+            $info = $info_data;
+        }else{
+            $where = $this->where_data . ' and story_id =\''.$story_id.'\'';
+            $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
+            $info = $this->mysql_conf->fetch($sql,'db_slave');
+        }
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']);

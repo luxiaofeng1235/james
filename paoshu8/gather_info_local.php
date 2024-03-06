@@ -15,6 +15,7 @@
 ini_set("memory_limit", "5000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
+require_once dirname(__DIR__).'/library/file_factory.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
 
@@ -27,6 +28,10 @@ if(!$store_id){
     echo '请选择要抓取的内容id';
     exit();
 }
+
+//实例化文件存储工厂类
+$factory = new FileFactory($mysql_obj,$redis_data);
+
 $table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
 $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //获取配置的域名信息
@@ -160,6 +165,8 @@ if($info){
         // exec($shell_cmd,$output , $status);
         // echo $shell_cmd."\r\n";
         //打印日志信息
+        $another_data = array_merge(['pro_book_id'=>$sync_pro_id,'story_id'=>$story_id],$store_data);
+        $factory->synChapterInfo($story_id,$another_data);//同步章节内容
         printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
         echo "insert_id：".$update_id."\tmc_book_id：".$sync_pro_id."\t当前小说：".$store_data['title']."|novelid=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
     }
