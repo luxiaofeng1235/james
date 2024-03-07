@@ -552,7 +552,7 @@ function getZhimaProxy(){
         }
     }else{//取出来缓存的数据信息
         $proxy_conf = json_decode($api_proxy_data , true);
-        return $proxy_conf;
+        return $proxy_conf ?? [];
     }
 
 }

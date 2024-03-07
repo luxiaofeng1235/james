@@ -52,13 +52,20 @@ class MultiHttp
                 }
                 $std_options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
                 $std_options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
+
             }
         }
+         $cookie = "name=value; another_name=another_value";
         $std_options[CURLOPT_SSL_VERIFYPEER] = FALSE;
         $std_options[CURLOPT_SSL_VERIFYHOST] = FALSE;
+        $std_options[CURLOPT_COOKIE] =  $cookie;
         $std_options[CURLOPT_HTTPHEADER] =array(
             'Content-Type: application/json'
         );
+        // echo '<pre>';
+        // print_R($std_options);
+        // echo '</pre>';
+        // exit;
         $options = ($custom_options) ? ($std_options + $custom_options) : $std_options;
         // start the first batch批 of requests
         for ($i = 0; $i < $rolling_window; $i++) {
@@ -94,6 +101,10 @@ class MultiHttp
                     // 把请求已经完成了得 curl handle 删除
                     curl_multi_remove_handle($master, $done['handle']);
                     // start a new request (it's important to do this before removing the old one)
+                    }else{
+                        echo '<pre>';
+                        print_R($info);
+                        echo '</pre>';
                     }
                 if($i<sizeof($urls)){
                     $ch                   = curl_init();
