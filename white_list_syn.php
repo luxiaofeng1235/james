@@ -41,6 +41,7 @@ if($white_list){
                     sleep(5);
                 }
             }
+            //11
             //这里面直接获取外网的IP地址判断是否在获取的白名单里，如果没有直接添加进去
             $remote_ip = getRemoteIp();
             if(!empty($remote_ip)){
