@@ -15,5 +15,9 @@
 *.tar.gz
 *.rar
 log/
+*.sftp-config
 sftp-config.json.bak
+sftp-config.json
 paoshu8/runinfo.out
+#sublime save profile
+my_wordk.sublime-project
