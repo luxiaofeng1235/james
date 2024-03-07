@@ -72,6 +72,7 @@ class FileFactory{
                 return false;
             //转换数据字典用业务里的字段，不和字典里的冲突
             $chapter_item = NovelModel::changeChapterInfo($chapter_item);
+            //按照长度进行切割轮询处理数据
             $items = array_chunk($chapter_item,$this->num);
             foreach($items as $k =>&$v){
                 //抓取内容信息
