@@ -37,7 +37,6 @@ if($white_list){
                     sleep(1);
                 }
             }
-
             //这里面直接获取外网的IP地址判断是否在获取的白名单里，如果没有直接添加进去
             $remote_ip = getRemoteIp();
             if(!empty($remote_ip)){
@@ -48,7 +47,20 @@ if($white_list){
                 }
             }
         }else{
-            echo "当天IP添加数量已超过".$add_num.'个'.PHP_EOL;
+            //如果当前IP有五个以上，只保留这两个IP其他的都干掉
+            //需要重新获取一次客户端IP，防止把服务器里的IP也给删除掉
+            $remote_ip = getRemoteIp();
+            $all_ip = $ips + $remote_ip; //实际的保留的IP地址为：允许设置的IP+本机的IP地址
+            $allow_ip_info = array_unique($all_ip);
+            foreach($allow_ip_info as $current_ip){
+                if(!in_array($current_ip,$allow_ip)){
+                    $del_ip_url = $white_del_url.$current_ip;
+                    webRequest($del_ip_url,'GET');
+                    echo "delete-remote-ip success：".$current_ip."\r\n";
+                    sleep(1);
+                }
+            }
+            echo "当天IP添加数量已超过".$add_num.'个，请进行检查IP总数'.PHP_EOL;
         }
     }
 }
