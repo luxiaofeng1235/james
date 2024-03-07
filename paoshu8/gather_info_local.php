@@ -18,7 +18,8 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 require_once dirname(__DIR__).'/library/file_factory.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
-
+$exec_start_time = microtime(true);
+$startMemory = memory_get_peak_usage();
 if(is_cli()){
     $store_id = $argv[1] ?? 0;
 }else{
@@ -191,6 +192,12 @@ if($info){
 }else{
     echo "no data";
 }
+$exec_end_time = microtime(true);
+$endMemory = memory_get_peak_usage();
+$memoryUsage = $endMemory - $startMemory;//内存占用情况
+$executionTime = $exec_end_time - $exec_start_time; //执行时间
+echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
+echo "peak memory usage:" . $memoryUsage ." bytes";
 
 //处理抓取中按照章节名称返回
 //将章节中的全角符号转换成英文

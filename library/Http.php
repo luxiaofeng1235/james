@@ -42,10 +42,6 @@ class MultiHttp
         if($is_proxy){
             //获取代理的配置方式
             $proxy_data = getZhimaProxy();
-            // echo '<pre>';
-            // print_R($proxy_data);
-            // echo '</pre>';
-            // exit;
             // $proxy_data = getProxyInfo();
             if($proxy_data){
                 //是否开启代理
@@ -107,11 +103,11 @@ class MultiHttp
                     curl_multi_remove_handle($master, $done['handle']);
                     // start a new request (it's important to do this before removing the old one)
                     }else{
-                        echo 111;
-                        echo '<pre>';
-                        print_R($info);
-                        echo '</pre>';
-                        die;
+                        // echo 111;
+                        // echo '<pre>';
+                        // print_R($info);
+                        // echo '</pre>';
+                        // die;
                     }
                 if($i<sizeof($urls)){
                     $ch                   = curl_init();

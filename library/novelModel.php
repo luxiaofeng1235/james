@@ -247,7 +247,12 @@ class NovelModel{
       }
       $save_img_path = Env::get('SAVE_IMG_PATH');
       $t= explode('/',$url);
-      $filename = $save_img_path . DS . end($t);
+      $end_file = end($t);
+      header("Content-type: application/octet-stream");
+      header("Accept-Ranges: bytes");
+      header("Accept-Length: 348");
+      header("Content-Disposition: attachment; filename=".$end_file);
+      $filename = $save_img_path . DS . $end_file;
       //判断文件是否存在，如果不存在就直接保存到本地
       if(!file_exists($filename)){
         $save_img_path =Env::get('SAVE_IMG_PATH');

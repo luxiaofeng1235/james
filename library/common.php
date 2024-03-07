@@ -524,7 +524,7 @@ function is_json($string)
 function getZhimaProxy(){
     global $redis_data;
     $redis_cache_key = 'zhima_proxy:';
-    //$redis_data->del_redis($redis_cache_key);
+    // $redis_data->del_redis($redis_cache_key);
      $api_proxy_data = $redis_data->get_redis($redis_cache_key);
     if(!$api_proxy_data){
         $time_out = 3600*2.5;//设置3个小时的访问
@@ -532,20 +532,29 @@ function getZhimaProxy(){
         $url = Env::get('ZHIMAURL');
         $info = webRequest($url,'GET');
         //如果是JSON返回说明当前的接口有问题
-        if(!is_json($info)){
-            $res = str_replace("\r\n",'',$info);
-            if($res){
-                if(strpos($res,':')){
-                     list($proxy_url , $port) = explode(':' , $res);
-                    $proxy_data  = array(
-                        'ip'    =>  $proxy_url,
-                        'port'  =>  $port,
+        if(is_json($info)){
+            // echo '<pre>';
+            // print_R($info);
+            // echo '</pre>';
+            // exit;
+            $proxy_info  =    json_decode($info , true);
+            if( $proxy_info['code'] == 0){
+                $data = $proxy_info['data'][0] ?? [];
+                $proxy_data  = array(
+                        'ip'    =>  $data['ip'],
+                        'port'  =>  $data['port'],
                     );
-                    $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$time_out);
-                    return $proxy_data;
-                }else{
-                    return [];
+                $expire_time = $data['expire_time'] ?? '';
+                //用过期时间减去当前的时间为缓存cache时间
+                $diff_time = strtotime($expire_time) - time();
+                if($diff_time <= 0){
+                    $diff_time = $time_out;
                 }
+                //以代理拨号返回的过期时间为准进行计算
+                $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$diff_time);
+                return $proxy_data;
+            }else{
+                return false;
             }
         }else{
             return false;
