@@ -129,6 +129,7 @@ if($info){
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
+            //重新赋值进行计算
             $chapter_detal = $rt;
             //处理过滤章节名称里的特殊字符---按照名称进行存储，部分章节可能重名
             $chapter_detal = removeDataRepeat($chapter_detal);

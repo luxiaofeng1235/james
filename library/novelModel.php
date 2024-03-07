@@ -47,7 +47,9 @@ class NovelModel{
         '请假',
         '注释',
         '完本感言',
-        '完结'
+        '完本',
+        '完结',
+        '发个公告',
     ];
     private static $db_conn = 'db_novel_pro';
     private static $table_name = 'mc_book';
