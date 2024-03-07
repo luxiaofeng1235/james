@@ -70,7 +70,7 @@ class FileFactory{
             $chapter_item = json_decode($json_data,true);
             if(!$chapter_item)
                 return false;
-            //转换数据字典
+            //转换数据字典用业务里的字段，不和字典里的冲突
             $chapter_item = NovelModel::changeChapterInfo($chapter_item);
             $items = array_chunk($chapter_item,$this->num);
             foreach($items as $k =>&$v){
@@ -104,6 +104,7 @@ class FileFactory{
         foreach($data as $key =>$val){
             if( !$val ) continue;
             $content = $val['content'] ?? '';//提交的内容
+            //用md5加密的方式去更新
             $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
             file_put_contents($filename,$content); //防止文件名出错
         }
