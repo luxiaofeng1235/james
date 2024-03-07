@@ -16,7 +16,7 @@ $white_del_url ='https://wapi.proxy.linkudp.com/api/del_white?neek=2605210&appke
 $allow_ip = [
     '61.52.83.3',//本地调试的ip
     '103.36.91.35',//线上服务器IP
-    '39.148.224.50',
+    '39.148.224.50',//国贸360的IP
 ];
 
 $white_list = webRequest($white_list_url,'GET');
