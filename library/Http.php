@@ -55,7 +55,8 @@ class MultiHttp
 
             }
         }
-         $cookie = "name=value; another_name=another_value";
+        //设置cookie头部信息。方便进行发送配置
+        $cookie = "name=value; another_name=another_value";
         $std_options[CURLOPT_SSL_VERIFYPEER] = FALSE;
         $std_options[CURLOPT_SSL_VERIFYHOST] = FALSE;
         $std_options[CURLOPT_COOKIE] =  $cookie;

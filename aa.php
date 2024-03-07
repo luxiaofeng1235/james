@@ -9,7 +9,7 @@ $limit =Env::get('LIMIT_SIZE');
 
 
 $redis_data->set_redis('trest',111);
-$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="106_106595"   order by rand()  limit 200','db_slave');
+$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="106_106595"   order by rand()  limit 500','db_slave');
 $t =array_chunk($list, $limit);
 $i = 0;
 foreach($t as $key =>$val){
@@ -23,6 +23,7 @@ foreach($t as $key =>$val){
         //file_put_contents($filename,$v);
      }
      sleep(1);
+     unset($t[$key]);
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
