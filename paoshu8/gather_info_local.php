@@ -114,14 +114,9 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
+        //更新的条件
         $where_data = "story_id = '".$story_id."'";
-        //定义章节的目录信息
-        $list_rule = array(
-            'link_name'     =>array('a','text'),
-            'link_url'       =>array('a','href'),
-        );
-
-        //同步小说的基础信息到mc_book
+        //同步小说的基础信息到线上mc_book表信息
         $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
         $store_data['pro_book_id'] = $sync_pro_id;
         if(!$sync_pro_id){

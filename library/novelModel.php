@@ -312,6 +312,10 @@ class NovelModel{
         //更新书籍的主要信息
         $update_where = "id =".$novelInfo[0]['id'];
         unset($info['addtime']);
+        //转义Windows的\更新的转义问题
+        if(strpos($info['pic'],'\\')){
+            $info['pic'] = str_replace('\\','\\\\' ,$info['pic']);
+        }
         $mysql_obj->update_data($info,$update_where,self::$table_name,false,0,self::$db_conn);
         $id = intval($novelInfo[0]['id']);
       }
