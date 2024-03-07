@@ -812,5 +812,23 @@ function handleArrayKey($key_data){
 }
 
 
+/**
+* @note 获取外网IP
+*
+* @return str
+*/
+function getRemoteIp(){
+    $url = 'https://api.ipify.org/?format=json';
+    $data = webRequest($url, 'GET', []);
+    if ($data) {
+        //获取远程的ip请求
+        $ret = json_decode($data, true);
+        $address_ip = isset($ret['ip']) ? $ret['ip'] : '';
+        return $address_ip;
+    } else {
+        return '';
+    }
+}
+
 
 ?>
