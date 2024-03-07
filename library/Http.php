@@ -15,6 +15,13 @@ class MultiHttp
 
 
 
+    /**
+    * https 发起多线程curl的GET请求
+    * @param string $url url信息
+    * @param mixed $custom_options 客户端参数[$data = '{"a":1,"b":2}' or $data = array("a" => 1,"b" => 2)]
+    * @param int $is_proxy 是否启用代理
+    * @return string
+    */
    public static function curlGet($urls,$custom_options = null,$is_proxy =false){//多个url访问
         if (sizeof($urls)==0) return;
         // make sure the rolling window isn't greater than the # of urls
@@ -45,13 +52,21 @@ class MultiHttp
                 }
                 $std_options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
                 $std_options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
+
             }
         }
+        //设置cookie头部信息。方便进行发送配置
+        $cookie = "name=value; another_name=another_value";
         $std_options[CURLOPT_SSL_VERIFYPEER] = FALSE;
         $std_options[CURLOPT_SSL_VERIFYHOST] = FALSE;
+        $std_options[CURLOPT_COOKIE] =  $cookie;
         $std_options[CURLOPT_HTTPHEADER] =array(
             'Content-Type: application/json'
         );
+        // echo '<pre>';
+        // print_R($std_options);
+        // echo '</pre>';
+        // exit;
         $options = ($custom_options) ? ($std_options + $custom_options) : $std_options;
         // start the first batch批 of requests
         for ($i = 0; $i < $rolling_window; $i++) {
@@ -87,6 +102,12 @@ class MultiHttp
                     // 把请求已经完成了得 curl handle 删除
                     curl_multi_remove_handle($master, $done['handle']);
                     // start a new request (it's important to do this before removing the old one)
+                    }else{
+                        // echo 111;
+                        // echo '<pre>';
+                        // print_R($info);
+                        // echo '</pre>';
+                        // die;
                     }
                 if($i<sizeof($urls)){
                     $ch                   = curl_init();

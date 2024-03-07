@@ -34,20 +34,12 @@ class NovelModel{
 
    public static $json_file_type ='json';//存储为json文件格式
 
-   //过滤不必要的章节
+   //过滤不必要的广告章节
     private static $filterWords = [
-        '新书',
-        '发布',
-        '新书预告',
-        '番外',
-        '高考祝愿',
-        '上架',
-        '通知',
-        '冲榜求票',
-        '请假',
-        '注释',
-        '完本感言',
-        '完结'
+        '新书','发布','新书预告','番外','高考祝愿',
+        '上架','通知','冲榜求票','请假','注释',
+        '完本感言','完本','完结','发个公告','结束语',
+        '引子！','订阅','更新','微信','qq','域名'
     ];
     private static $db_conn = 'db_novel_pro';
     private static $table_name = 'mc_book';
@@ -64,6 +56,24 @@ class NovelModel{
       $base_dir = ROOT.'paoshu8' .DS;
       $base_dir = str_replace('\\','/',$base_dir);
       return $base_dir;
+    }
+
+     /**
+    * @note 对比新旧数据进行返回处理
+    * @param $old array 旧数据
+    * @param $new array 新数据
+    * @return array
+    *
+    */
+    public static function arrayDiffFiled($old,$new){
+      if(!$old || !$new){
+          return false;
+      }
+      $diff_filed= array_diff_assoc($new,$old);
+      if( !$diff_filed ){
+          $diff_filed = [];
+      }
+      return $diff_filed;
     }
 
     /**
@@ -141,14 +151,15 @@ class NovelModel{
       if(!$html){
         return '';
       }
-      //</div><dt>
+      $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
+      $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
       preg_match('/<\/div>.*?>.*?<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
            $list_item= preg_split('/<dt>/', $list[0]);
            $contents  = $list_item[2] ?? '';
            if($contents){
-              preg_match_all('/<a.+?href=\"(.+?)\".*>/i',$contents,$link_list);//匹配链接
-              preg_match_all('/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i',$contents,$link_text);//匹配文本
+              preg_match_all($link_reg,$contents,$link_list);//匹配链接
+              preg_match_all($text_reg,$contents,$link_text);//匹配文本
               $len = count($link_list[1]);
               $chapter_list = [];
               for ($i=0; $i <$len ; $i++) {
@@ -160,7 +171,25 @@ class NovelModel{
               return $chapter_list;
            }
       }else{
-        return array();
+        //如果上面的没有匹配出来直接从dd里获取对应的连接
+        //直接从链接里开始遍历得了
+          preg_match_all('/<dd.*?>.*?<\/dd>/ism',$html,$urls);
+          $chapter_list = [];
+          if(isset($urls[0])){
+             foreach($urls[0] as $key =>$val){
+                 if(strpos($val,'.html')){
+                      preg_match($link_reg,$val,$t1);
+                      preg_match($text_reg,$val,$t2);
+                      if(isset($t1[1]) && !empty($t1[1])){
+                          $chapter_list[] = [
+                            'link_name' =>$t2[1]??'',
+                             'link_url' =>$t1[1] ?? '',
+                          ];
+                      }
+                 }
+             }
+          }
+          return $chapter_list;
      }
    }
 
@@ -227,17 +256,21 @@ class NovelModel{
       }
       $save_img_path = Env::get('SAVE_IMG_PATH');
       $t= explode('/',$url);
-      $filename = $save_img_path . DS . end($t);
+      $end_file = end($t);
+      header("Content-type: application/octet-stream");
+      header("Accept-Ranges: bytes");
+      header("Accept-Length: 348");
+      header("Content-Disposition: attachment; filename=".$end_file);
+      $filename = $save_img_path . DS . $end_file;
       //判断文件是否存在，如果不存在就直接保存到本地
       if(!file_exists($filename)){
         $save_img_path =Env::get('SAVE_IMG_PATH');
         if(!is_dir($save_img_path)){
             createFolders($save_img_path);
         }
-        //开启使用代理IP去请求
+        //开启使用代理IP去请求,由于服务器在海外要用代理去请求
         $res = MultiHttp::curlGet([$url],null,true);
         $img_con = $res[0] ?? '';
-        // $img_con = self::curl_file_get_contents($url);
         @file_put_contents($filename, $img_con);
       }
     }
@@ -294,6 +327,10 @@ class NovelModel{
         //更新书籍的主要信息
         $update_where = "id =".$novelInfo[0]['id'];
         unset($info['addtime']);
+        //转义Windows的\更新的转义问题
+        if(strpos($info['pic'],'\\')){
+            $info['pic'] = str_replace('\\','\\\\' ,$info['pic']);
+        }
         $mysql_obj->update_data($info,$update_where,self::$table_name,false,0,self::$db_conn);
         $id = intval($novelInfo[0]['id']);
       }

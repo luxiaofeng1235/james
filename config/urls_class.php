@@ -9,6 +9,11 @@ return [
                 'story_link'       => ['a','href'],
                 'title'     =>  ['a','text'],
         ],
+        //章节列表数据
+        'chapter_list'  =>  [
+                'link_url'       => ['a','href'],
+                'link_name'     =>  ['a','text'],
+        ],
         //小说详情
         'info'  =>[
             'cover_logo'       =>array('#fmimg img','src'),//小说封面

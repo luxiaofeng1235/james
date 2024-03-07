@@ -24,7 +24,7 @@ class FileFactory{
         $this->mysql_conf = $mysql_obj; //MySQL链接句柄
         $this->redis_conf = $redis_obj;//redis连接对象
         $this->table_novel_name = Env::get('APICONFIG.TABLE_NOVEL');//待处理的文件名
-        $this->where_data .= $this->syn_wait_status;
+        $this->where_data .= $this->syn_wait_status;//搜索的前置条件
     }
 
 
@@ -39,6 +39,11 @@ class FileFactory{
         }
         if(!empty($info_data)){
             $info = $info_data;
+            //判断当前小说是否已经同步
+            if( isset($info['syn_chapter_status']) &&  $info['syn_chapter_status'] == $this->syn_success_status ){
+                printlog('小说（'.$info['title'].'）章节已经同步无需要重复同步');
+                return false;
+            }
         }else{
             $where = $this->where_data . ' and story_id =\''.$story_id.'\'';
             $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
@@ -65,8 +70,9 @@ class FileFactory{
             $chapter_item = json_decode($json_data,true);
             if(!$chapter_item)
                 return false;
-            //转换数据字典
+            //转换数据字典用业务里的字段，不和字典里的冲突
             $chapter_item = NovelModel::changeChapterInfo($chapter_item);
+            //按照长度进行切割轮询处理数据
             $items = array_chunk($chapter_item,$this->num);
             foreach($items as $k =>&$v){
                 //抓取内容信息
@@ -75,6 +81,10 @@ class FileFactory{
                 $this->synLocalFile($download_path,$html_data);
                 sleep(1);
             }
+            //强制清除内存垃圾
+            gc_collect_cycles();
+            unset($items);
+            unset($chapter_item);
             //更细对应的状态信息
             //更新对应的is_async状态
             $update_novel_data= [
@@ -99,6 +109,7 @@ class FileFactory{
         foreach($data as $key =>$val){
             if( !$val ) continue;
             $content = $val['content'] ?? '';//提交的内容
+            //用md5加密的方式去更新
             $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
             file_put_contents($filename,$content); //防止文件名出错
         }

@@ -12,13 +12,14 @@
  * @version 0.1
  *
  */
-ini_set("memory_limit", "5000M");
+ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 require_once dirname(__DIR__).'/library/file_factory.php';
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
-
+$exec_start_time = microtime(true);
+$startMemory = memory_get_peak_usage();
 if(is_cli()){
     $store_id = $argv[1] ?? 0;
 }else{
@@ -75,10 +76,12 @@ if($info){
     $files = Env::get('SAVE_HTML_PATH').DS.'detail_'.$info[0]['story_id'].'.'.NovelModel::$file_type;
     if(!$files){
         echo "no this story ---".$story_link."\r\n";
+        exit();
     }
     $html = readFileData($files);
     if(!$html){
         echo "no this story files\r\n";
+        exit();
     }
     //爬取相关规则下的类
     $info_data=QueryList::html($html)
@@ -90,7 +93,6 @@ if($info){
         NovelModel::saveImgToLocal($store_data['cover_logo']);
         //同步数据到mc_book表
         $store_data['story_link'] = $story_link;
-
         $story_id = trim($info[0]['story_id']); //小说的id
         //处理空字符串
         $location = str_replace("\r\n",'',$store_data['location']);
@@ -112,22 +114,23 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
+        //更新的条件
         $where_data = "story_id = '".$story_id."'";
-        //定义章节的目录信息
-        $list_rule = array(
-            'link_name'     =>array('a','text'),
-            'link_url'       =>array('a','href'),
-        );
-
-        //同步小说的基础信息到mc_book
+        //同步小说的基础信息到线上mc_book表信息
         $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
         $store_data['pro_book_id'] = $sync_pro_id;
+        if(!$sync_pro_id){
+            printlog('未发现线上数据信息');
+            exit();
+        }
 
         //获取相关的列表数据
+
         $rt = NovelModel::getCharaList($html);
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
+            //重新赋值进行计算
             $chapter_detal = $rt;
             //处理过滤章节名称里的特殊字符---按照名称进行存储，部分章节可能重名
             $chapter_detal = removeDataRepeat($chapter_detal);
@@ -147,33 +150,53 @@ if($info){
             $sort_ids= array_keys($chapter_ids);
             //取出来章节
             $item_list = array_values($items);
-        }
+
         array_multisort($sort_ids , SORT_ASC , $item_list);
-        //清晰不需要的字段
+        //清洗掉不需要的字段
         $item_list = cleanData($item_list,['chapter_id']);
 
         //创建生成json目录结构
         NovelModel::createJsonFile($store_data,$item_list,$sync_pro_id);
 
         $update_id = $info[0]['store_id'] ?? 0;
-        $update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
+        //$update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
         //更新小说表的is_async为1，表示已经更新过了不需要重复更新
-        $update_data['is_async'] = 1;
-        $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
+        $store_data['is_async'] = 1;
+
+        //对比新旧数据返回最新的更新
+        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
+        //拼接章节目录信息
+        $novel_list_path = Env::get('SAVE_NOVEL_PATH').DS.$sync_pro_id;
+        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
+
         //执行相关的章节批处理程序
         // $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
         // exec($shell_cmd,$output , $status);
         // echo $shell_cmd."\r\n";
         //打印日志信息
+
         printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
-        $another_data = array_merge(['pro_book_id'=>$sync_pro_id,'story_id'=>$story_id],$store_data);
-        //同步章节内容信息
+        $another_data = array_merge(
+            [
+                'pro_book_id'=>$sync_pro_id,//线上书籍ID
+                'story_id'=>$story_id,//小说ID
+                'syn_chapter_status'    =>$info[0]['syn_chapter_status'] ?? 0,//章节状态
+            ],
+            $store_data);
+        //同步当前的章节的基础信息
         $factory->synChapterInfo($story_id,$another_data);//同步章节内容
-        echo "insert_id：".$update_id."\tmc_book_id：".$sync_pro_id."\t当前小说：".$store_data['title']."|novelid=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+        echo "insert_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+        }
     }
 }else{
     echo "no data";
 }
+$exec_end_time = microtime(true);
+$endMemory = memory_get_peak_usage();
+$memoryUsage = $endMemory - $startMemory;//内存占用情况
+$executionTime = $exec_end_time - $exec_start_time; //执行时间
+echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
+echo "peak memory usage:" . $memoryUsage ." bytes";
 
 //处理抓取中按照章节名称返回
 //将章节中的全角符号转换成英文
