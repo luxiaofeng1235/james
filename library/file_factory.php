@@ -40,7 +40,7 @@ class FileFactory{
         if(!empty($info_data)){
             $info = $info_data;
             //判断当前小说是否已经同步
-            if( isset($info['syn_chapter_status']) &&  $info['syn_chapter_status'] == 1 ){
+            if( isset($info['syn_chapter_status']) &&  $info['syn_chapter_status'] == $this->syn_success_status ){
                 printlog('小说（'.$info['title'].'）章节已经同步无需要重复同步');
                 return false;
             }
