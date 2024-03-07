@@ -73,7 +73,7 @@ if($white_list){
                     sleep(5);
                 }
             }
-            echo "当天IP添加数量已超过".$add_num.'个，已删除不可用的IP总数:'.$i."个\r\n";
+            echo "当天IP添加数量已超过".$add_num.'个，已删除释放出来的IP总数:'.$i."个\r\n";
         }
     }
 }
