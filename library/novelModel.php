@@ -34,7 +34,7 @@ class NovelModel{
 
    public static $json_file_type ='json';//存储为json文件格式
 
-   //过滤不必要的章节
+   //过滤不必要的广告章节
     private static $filterWords = [
         '新书',
         '发布',
@@ -50,6 +50,7 @@ class NovelModel{
         '完本',
         '完结',
         '发个公告',
+        '结束语',
     ];
     private static $db_conn = 'db_novel_pro';
     private static $table_name = 'mc_book';
