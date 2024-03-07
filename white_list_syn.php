@@ -14,7 +14,6 @@ $white_list_url ='https://wapi.proxy.linkudp.com/api/white_list?neek=2605210&app
 $white_add_url ='https://wapi.proxy.linkudp.com/api/save_white?neek=2605210&appkey=fb0cbe4573722eb914f7ed8bf573c2e9&white=';//白名单添加接口
 $white_del_url ='https://wapi.proxy.linkudp.com/api/del_white?neek=2605210&appkey=fb0cbe4573722eb914f7ed8bf573c2e9&white=';//白名单删除接口
 $allow_ip = [
-    '61.52.83.3',//本地调试的ip
     '103.36.91.35',//线上服务器IP
     '39.148.224.50',//国贸360的IP
 ];
@@ -47,7 +46,10 @@ if($white_list){
             if(!empty($remote_ip)){
                 if( !in_array($remote_ip , $ips)){
                     $add_remote_url = $white_add_url . $remote_ip;
-                    webRequest($add_remote_url,'GET');
+                    $res = webRequest($add_remote_url,'GET');
+                    echo '<pre>';
+                    var_dump($res);
+                    echo '</pre>';
                     sleep(5);
                     echo "add-remote-ip success：".$remote_ip."\r\n";
                 }
