@@ -8,8 +8,11 @@
  *
  */
 $dirname = dirname(__FILE__);
-ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+ini_set('memory_limit','9000M');
+set_time_limit(0);
+
+
 $white_list_url ='https://wapi.proxy.linkudp.com/api/white_list?neek=2605210&appkey=fb0cbe4573722eb914f7ed8bf573c2e9';//白名单列表
 $white_add_url ='https://wapi.proxy.linkudp.com/api/save_white?neek=2605210&appkey=fb0cbe4573722eb914f7ed8bf573c2e9&white=';//白名单添加接口
 $white_del_url ='https://wapi.proxy.linkudp.com/api/del_white?neek=2605210&appkey=fb0cbe4573722eb914f7ed8bf573c2e9&white=';//白名单删除接口
