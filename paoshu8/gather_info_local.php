@@ -92,7 +92,6 @@ if($info){
         NovelModel::saveImgToLocal($store_data['cover_logo']);
         //同步数据到mc_book表
         $store_data['story_link'] = $story_link;
-
         $story_id = trim($info[0]['story_id']); //小说的id
         //处理空字符串
         $location = str_replace("\r\n",'',$store_data['location']);
