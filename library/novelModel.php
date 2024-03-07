@@ -66,6 +66,24 @@ class NovelModel{
       return $base_dir;
     }
 
+     /**
+    * @note 对比新旧数据进行返回处理
+    * @param $old array 旧数据
+    * @param $new array 新数据
+    * @return array
+    *
+    */
+    public static function arrayDiffFiled($old,$new){
+      if(!$old || !$new){
+          return false;
+      }
+      $diff_filed= array_diff_assoc($new,$old);
+      if( !$diff_filed ){
+          $diff_filed = [];
+      }
+      return $diff_filed;
+    }
+
     /**
     * @note 转换数据信息
     * @param $data 需要转换的数据

@@ -156,10 +156,14 @@ if($info){
         NovelModel::createJsonFile($store_data,$item_list,$sync_pro_id);
 
         $update_id = $info[0]['store_id'] ?? 0;
-        $update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
+        //$update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
         //更新小说表的is_async为1，表示已经更新过了不需要重复更新
-        $update_data['is_async'] = 1;
-        $mysql_obj->update_data($update_data,$where_data,$table_novel_name);
+        $store_data['is_async'] = 1;
+
+        //对比新旧数据返回最新的更新
+        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
+
+        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
         //执行相关的章节批处理程序
         // $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
         // exec($shell_cmd,$output , $status);
