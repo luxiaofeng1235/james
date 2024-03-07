@@ -254,10 +254,9 @@ class NovelModel{
         if(!is_dir($save_img_path)){
             createFolders($save_img_path);
         }
-        //开启使用代理IP去请求
+        //开启使用代理IP去请求,由于服务器在海外要用代理去请求
         $res = MultiHttp::curlGet([$url],null,true);
         $img_con = $res[0] ?? '';
-        // $img_con = self::curl_file_get_contents($url);
         @file_put_contents($filename, $img_con);
       }
     }
