@@ -125,6 +125,7 @@ if($info){
         }
 
         //获取相关的列表数据
+
         $rt = NovelModel::getCharaList($html);
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
@@ -149,7 +150,7 @@ if($info){
             $sort_ids= array_keys($chapter_ids);
             //取出来章节
             $item_list = array_values($items);
-        }
+
         array_multisort($sort_ids , SORT_ASC , $item_list);
         //清洗掉不需要的字段
         $item_list = cleanData($item_list,['chapter_id']);
@@ -184,10 +185,8 @@ if($info){
             $store_data);
         //同步当前的章节的基础信息
         $factory->synChapterInfo($story_id,$another_data);//同步章节内容
-        //这里更新一下thir_update_time时间,方便查找对应的时间状态什么时候处理更新了章节，查找出来每本书都每天统计下时间
-        // $third_up_data = ['third_update_time' =>time()];
-        // $mysql_obj->update_data($third_up_data,$where_data,$table_novel_name);
         echo "insert_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+        }
     }
 }else{
     echo "no data";

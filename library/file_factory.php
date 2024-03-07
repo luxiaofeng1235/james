@@ -81,6 +81,10 @@ class FileFactory{
                 $this->synLocalFile($download_path,$html_data);
                 sleep(1);
             }
+            //强制清除内存垃圾
+            gc_collect_cycles();
+            unset($items);
+            unset($chapter_item);
             //更细对应的状态信息
             //更新对应的is_async状态
             $update_novel_data= [

@@ -151,14 +151,15 @@ class NovelModel{
       if(!$html){
         return '';
       }
-      //</div><dt>
+      $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
+      $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
       preg_match('/<\/div>.*?>.*?<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
            $list_item= preg_split('/<dt>/', $list[0]);
            $contents  = $list_item[2] ?? '';
            if($contents){
-              preg_match_all('/<a.+?href=\"(.+?)\".*>/i',$contents,$link_list);//匹配链接
-              preg_match_all('/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i',$contents,$link_text);//匹配文本
+              preg_match_all($link_reg,$contents,$link_list);//匹配链接
+              preg_match_all($text_reg,$contents,$link_text);//匹配文本
               $len = count($link_list[1]);
               $chapter_list = [];
               for ($i=0; $i <$len ; $i++) {
@@ -170,7 +171,25 @@ class NovelModel{
               return $chapter_list;
            }
       }else{
-        return array();
+        //如果上面的没有匹配出来直接从dd里获取对应的连接
+        //直接从链接里开始遍历得了
+          preg_match_all('/<dd.*?>.*?<\/dd>/ism',$html,$urls);
+          $chapter_list = [];
+          if(isset($urls[0])){
+             foreach($urls[0] as $key =>$val){
+                 if(strpos($val,'.html')){
+                      preg_match($link_reg,$val,$t1);
+                      preg_match($text_reg,$val,$t2);
+                      if(isset($t1[1]) && !empty($t1[1])){
+                          $chapter_list[] = [
+                            'link_name' =>$t2[1]??'',
+                             'link_url' =>$t1[1] ?? '',
+                          ];
+                      }
+                 }
+             }
+          }
+          return $chapter_list;
      }
    }
 
