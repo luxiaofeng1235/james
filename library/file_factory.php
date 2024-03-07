@@ -39,6 +39,11 @@ class FileFactory{
         }
         if(!empty($info_data)){
             $info = $info_data;
+            //判断当前小说是否已经同步
+            if( isset($info['syn_chapter_status']) &&  $info['syn_chapter_status'] == 1 ){
+                printlog('小说（'.$info['title'].'）章节已经同步无需要重复同步');
+                return false;
+            }
         }else{
             $where = $this->where_data . ' and story_id =\''.$story_id.'\'';
             $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
