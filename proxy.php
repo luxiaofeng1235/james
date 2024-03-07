@@ -3,10 +3,9 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
-
 //http://webapi.http.zhimacangku.com/getip?neek=321a408a&num=1&type=1&time=3&pro=0&city=0&yys=0&port=2&pack=0&ts=0&ys=0&cs=0&lb=1&sb=&pb=4&mr=1&regions=
 $proxyInfo = getZhimaProxy();
-$url ='http://www.paoshu8.info/0_111/';
+$url ='http://www.baidu.com/';
 $proxy = $proxyInfo['ip'];
 $port = $proxyInfo['port'];
 $proxyauth = '';
@@ -33,6 +32,10 @@ $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
 $header =  curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 curl_close($ch);//关闭cURL会话
+echo '<pre>';
+print_R($httpcode);
+echo '</pre>';
+exit;
 echo '<pre>';
 var_dump($curl_scraped_page);
 echo '</pre>';
