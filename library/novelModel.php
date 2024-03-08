@@ -24,6 +24,7 @@ class NovelModel{
       'status'          =>      'serialize',//是否完本状态
    ];
 
+   private static $imageType ='jpg';//默认的头像
    public static $prefix_html = 'detail_'; //html的前缀
 
    protected static $run_status = 1;//已经运行完毕的
@@ -261,14 +262,7 @@ class NovelModel{
       $save_img_path = Env::get('SAVE_IMG_PATH');
       //转换标题和作者名称
       if($title && $author){
-          $pinyin = new Pinyin();
-          $title_info =$pinyin->name($title);//利用多音字来进行转换标题
-          $author_info = $pinyin->name($author);//利用多音字来进行转换作者
-          $titleStr = implode('',$title_info);//标题拼音
-          $authorStr = implode('',$author_info);//作者拼音
-          $info = pathinfo($url);
-          $extension = $info['extension'];
-          $end_file = $titleStr.'-'.$authorStr .'.'. $extension;
+          $end_file = self::getFirstImgePath($title,$author ,$url);
       }else{
           //默认从规则里url取
           $t= explode('/',$url);
@@ -290,6 +284,44 @@ class NovelModel{
         $img_con = $res[0] ?? '';
         @file_put_contents($filename, $img_con);
       }
+    }
+
+     /**
+    * @note 获取字符的首字母
+    *
+    * @param $title string  小说名称
+    * @param $author string 作者名称
+    * @param $url string URL图片信息
+    * @param $mysql_obj string 连接句柄
+    * @return string
+    */
+    public static function getFirstImgePath($title , $author,$url){
+       if(!$title || !$author){
+          return false;
+       }
+
+       //构造函数
+      $trimBlank = function ($arr) {
+          $pinyin = new Pinyin();
+          $ext_data =$pinyin->name($arr);//利用多音字来进行转换标题
+          $str ='';
+          if(!empty($ext_data)){
+              foreach($ext_data as $val){
+                  $str .= $val[0];
+              }
+          }
+            return $str;
+      };
+
+      $cover_logo = '';
+      if(!empty($url)){
+          $title_string = $trimBlank($title);
+          $author_string = $trimBlank($author);
+          $imgInfo = pathinfo($url);
+          $extension = $imgInfo['extension'] ?? self::$imageType;
+          $cover_logo =  $title_string.'-'.$author_string .'.'. $extension;
+       }
+       return $cover_logo;
     }
 
      /**
@@ -319,10 +351,11 @@ class NovelModel{
       $info['cid'] = self::getNovelCateId($info['class_name']);
       $info['addtime']  = time();
       $info['author'] = $info['author'] ? trim($info['author']) : '未知';
-      //处理图片的存储路径
-      if(!empty($info['pic'])){
-          $cover_logo =  explode('/',$info['pic']);
-          $info['pic'] = Env::get('SAVE_IMG_PATH') . DS . end($cover_logo);
+       //处理图片的存储路径
+      if($info['book_name'] || $info['author']){
+         //获取头像信息
+          $image_str = Env::get('SAVE_IMG_PATH') . DS. self::getFirstImgePath($info['book_name'],$info['author'],$info['pic']);
+          $info['pic'] = $image_str;
       }
       //处理小说是否完本状态
       if( $info['serialize'] == '连载中'){
