@@ -96,7 +96,6 @@ if($info){
         $location = str_replace("\r\n",'',$store_data['location']);
         $location =trim($location);
         $store_data['location'] = $location;
-
         $update_time  = str_replace('最后更新：','',$store_data['third_update_time']);
         $third_update_time = $update_time.' 00:00:00';
         $third_update_time = strtotime($third_update_time);
@@ -114,7 +113,6 @@ if($info){
         }
         //保存图片到本地
         NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
-
         //更新的条件
         $where_data = "story_id = '".$story_id."'";
         //同步小说的基础信息到线上mc_book表信息
@@ -208,9 +206,9 @@ echo "peak memory usage:" . $memoryUsage ." bytes";
 function removeDataRepeat($data){
     if(!$data) return false;
     foreach($data as $key=>$val){
+        $chapter_name = trim($val['link_name']);
         //处理连接中的特殊字符
-        $link_name = replaceCnWords($val['link_name']);
-        // echo $link_name."<br/>";
+        $link_name = replaceCnWords($chapter_name);
         if(!empty($link_name)){
             $t[$link_name] = [
                 'link_name' =>$link_name,

@@ -67,7 +67,7 @@ function getCurlData($url,$data=[],$is_proxy =false){
     }else{
         //非代理模式请求下
         $proxy_api  = json_decode($curl_scraped_page,true);
-        $proxy_data = $proxy_api['data']['list'][0] ?? [];
+        $proxy_data = $proxy_api['data'][0] ?? [];
         return $proxy_data;
     }
 }
@@ -133,7 +133,7 @@ do{
             }
             break;
         }else{
-            echo "当前的代理可用,缓存中的数据还能用\r\n";
+            echo "当前的代理可用,缓存中的数据还能用!!!\r\n";
             echo '<pre>';
             print_R($have_data);
             echo '</pre>';
