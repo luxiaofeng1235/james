@@ -4,19 +4,8 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
-
 use Overtrue\Pinyin\Pinyin;
-$pinyin = new Pinyin();
-
-$exc =$pinyin->convert('你好-社会');
-echo '<pre>';
-print_R($exc);
-echo '</pre>';
-exit;
-echo '<pre>';
-print_R($pinyin);
-echo '</pre>';
-exit;
+use QL\QueryList;
 
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
