@@ -3,7 +3,8 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
-use QL\QueryList;
+require_once($dirname.'/library/file_factory.php');
+
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
 $redis_data->set_redis('trest',111);
