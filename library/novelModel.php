@@ -1,4 +1,5 @@
 <?php
+use Overtrue\Pinyin\Pinyin; //导入拼音转换类
 /*
  * 处理小说的主要模型业务（暂时放在这里）
  *
@@ -249,15 +250,30 @@ class NovelModel{
     * @note 远程抓取图片保存到本地
     *
     * @param $cate_name str分类名称
+    * @param $title string 小说标题
+    * @param $author string 作者
     * @return string
     */
-    public static function saveImgToLocal($url){
+    public static function saveImgToLocal($url,$title='',$author=''){
       if(!$url){
           return false;
       }
       $save_img_path = Env::get('SAVE_IMG_PATH');
-      $t= explode('/',$url);
-      $end_file = end($t);
+      //转换标题和作者名称
+      if($title && $author){
+          $pinyin = new Pinyin();
+          $title_info =$pinyin->name($title);//利用多音字来进行转换标题
+          $author_info = $pinyin->name($author);//利用多音字来进行转换作者
+          $titleStr = implode('',$title_info);//标题拼音
+          $authorStr = implode('',$author_info);//作者拼音
+          $info = pathinfo($url);
+          $extension = $info['extension'];
+          $end_file = $titleStr.'-'.$authorStr .'.'. $extension;
+      }else{
+          //默认从规则里url取
+          $t= explode('/',$url);
+          $end_file = end($t);
+      }
       header("Content-type: application/octet-stream");
       header("Accept-Ranges: bytes");
       header("Accept-Length: 348");

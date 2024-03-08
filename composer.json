@@ -8,7 +8,8 @@
 		"elasticsearch/elasticsearch": "^7.11",
 		"electrolinux/phpquery": "^0.9.7",
 		"jaeger/querylist": "^4.2",
-		"jaeger/curlmulti": "^1.0"
+		"jaeger/curlmulti": "^1.0",
+		"overtrue/pinyin": "^4.1"
   },
 	"config": {
 		"secure-http": false
