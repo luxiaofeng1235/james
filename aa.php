@@ -5,6 +5,12 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
 
+$t = getZhimaProxy();
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
 $redis_data->set_redis('trest',111);
