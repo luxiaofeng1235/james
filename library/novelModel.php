@@ -260,19 +260,19 @@ class NovelModel{
           return false;
       }
       $save_img_path = Env::get('SAVE_IMG_PATH');
-      //转换标题和作者名称
+      //转换标题和作者名称按照第一个英文首字母保存
       if($title && $author){
-          $end_file = self::getFirstImgePath($title,$author ,$url);
+          $imgFileName = self::getFirstImgePath($title,$author ,$url);
       }else{
           //默认从规则里url取
           $t= explode('/',$url);
-          $end_file = end($t);
+          $imgFileName = end($t);
       }
       header("Content-type: application/octet-stream");
       header("Accept-Ranges: bytes");
       header("Accept-Length: 348");
-      header("Content-Disposition: attachment; filename=".$end_file);
-      $filename = $save_img_path . DS . $end_file;
+      header("Content-Disposition: attachment; filename=".$imgFileName);
+      $filename = $save_img_path . DS . $imgFileName;
       //判断文件是否存在，如果不存在就直接保存到本地
       if(!file_exists($filename)){
         $save_img_path =Env::get('SAVE_IMG_PATH');
@@ -353,7 +353,7 @@ class NovelModel{
       $info['author'] = $info['author'] ? trim($info['author']) : '未知';
        //处理图片的存储路径
       if($info['book_name'] || $info['author']){
-         //获取头像信息
+         //处理图片的存储路径问题，直接保存对应的按照：中文转换成英文，取英文的首字母，书名+作者的首字母计算返回
           $image_str = Env::get('SAVE_IMG_PATH') . DS. self::getFirstImgePath($info['book_name'],$info['author'],$info['pic']);
           $info['pic'] = $image_str;
       }
