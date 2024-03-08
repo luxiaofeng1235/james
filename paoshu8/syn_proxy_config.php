@@ -67,7 +67,7 @@ function getCurlData($url,$data=[],$is_proxy =false){
     }else{
         //非代理模式请求下
         $proxy_api  = json_decode($curl_scraped_page,true);
-        $proxy_data = $proxy_api['data']['list'][0] ?? [];
+        $proxy_data = $proxy_api['data'][0] ?? [];
         return $proxy_data;
     }
 }
@@ -84,6 +84,7 @@ do{
     * 2、还有一种情况是，缓存未过期，但是代理失效了，还需要请求后去更新
      */
     $is_save_data = $redis_data->get_redis($redis_cache_key);
+    $redis_data->del_redis($redis_cache_key);
     if(!$is_save_data){
         //轮训程序一直判断当前的url进行抓取判断
         $i++;
