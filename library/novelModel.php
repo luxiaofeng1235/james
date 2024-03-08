@@ -381,8 +381,9 @@ class NovelModel{
           ];
       }
       $save_path = Env::get('SAVE_JSON_PATH');//保存json的路径
+      //获取对应的json目录信息
       if(!is_dir($save_path)){
-        createFolders($save_path);
+          createFolders($save_path);
       }
       $filename = $save_path . DS . $pro_book_id.'.'.self::$json_file_type;
       //保存对应的数据到文件中方便后期读取
