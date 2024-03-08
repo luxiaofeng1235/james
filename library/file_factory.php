@@ -14,17 +14,22 @@ class FileFactory{
 
     private $mysql_conf = null;
     private $redis_conf = null;
-    private $num =500;//配置抓取的内容
+    private $num =null;//配置抓取的内容
     private $where_data ='1 and syn_chapter_status =  ';//默认搜索的条件
     private $table_novel_name = null;
     private $syn_success_status = 1 ;//更新章节成功的状态
     private $syn_wait_status = 0; //待处理的同步状态
 
     public function __construct($mysql_obj  , $redis_obj){
+        $this->num = Env::get('LIMIT_SIZE');//获取对应的长度
         $this->mysql_conf = $mysql_obj; //MySQL链接句柄
         $this->redis_conf = $redis_obj;//redis连接对象
         $this->table_novel_name = Env::get('APICONFIG.TABLE_NOVEL');//待处理的文件名
         $this->where_data .= $this->syn_wait_status;//搜索的前置条件
+    }
+
+    public function testarr(){
+        return $this->num;
     }
 
 

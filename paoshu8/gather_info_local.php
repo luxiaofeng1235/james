@@ -89,9 +89,7 @@ if($info){
                 ->query()->getData();
     $store_data = $info_data->all();
     if(!empty($store_data)){
-        //保存图片到本地
-        NovelModel::saveImgToLocal($store_data['cover_logo']);
-        //同步数据到mc_book表
+
         $store_data['story_link'] = $story_link;
         $story_id = trim($info[0]['story_id']); //小说的id
         //处理空字符串
@@ -114,6 +112,9 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
+        //保存图片到本地
+        NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+
         //更新的条件
         $where_data = "story_id = '".$story_id."'";
         //同步小说的基础信息到线上mc_book表信息
@@ -186,6 +187,9 @@ if($info){
         //同步当前的章节的基础信息
         $factory->synChapterInfo($story_id,$another_data);//同步章节内容
         echo "insert_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+        }else{
+            printlog('未匹配到相关章节数据');
+            echo "no chapter list\r\n";
         }
     }
 }else{

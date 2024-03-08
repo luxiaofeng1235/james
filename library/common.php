@@ -523,9 +523,10 @@ function is_json($string)
 */
 function getZhimaProxy(){
     global $redis_data;
-    $redis_cache_key = 'zhima_proxy:';
+    //获取对应的缓存key的信息
+    $redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
     // $redis_data->del_redis($redis_cache_key);
-     $api_proxy_data = $redis_data->get_redis($redis_cache_key);
+    $api_proxy_data = $redis_data->get_redis($redis_cache_key);
     if(!$api_proxy_data){
         $time_out = 3600*2.5;//设置3个小时的访问
         //默认用三个小时的代理IP
@@ -533,17 +534,10 @@ function getZhimaProxy(){
         $info = webRequest($url,'GET');
         //如果是JSON返回说明当前的接口有问题
         if(is_json($info)){
-            // echo '<pre>';
-            // print_R($info);
-            // echo '</pre>';
-            // exit;
             $proxy_info  =    json_decode($info , true);
             if( $proxy_info['code'] == 0){
                 $data = $proxy_info['data'][0] ?? [];
-                $proxy_data  = array(
-                        'ip'    =>  $data['ip'],
-                        'port'  =>  $data['port'],
-                    );
+                $proxy_data  =$data;//用这个存储所有的信息
                 $expire_time = $data['expire_time'] ?? '';
                 //用过期时间减去当前的时间为缓存cache时间
                 $diff_time = strtotime($expire_time) - time();

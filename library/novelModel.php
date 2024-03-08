@@ -1,4 +1,5 @@
 <?php
+use Overtrue\Pinyin\Pinyin; //导入拼音转换类
 /*
  * 处理小说的主要模型业务（暂时放在这里）
  *
@@ -23,6 +24,7 @@ class NovelModel{
       'status'          =>      'serialize',//是否完本状态
    ];
 
+   private static $imageType ='jpg';//默认的头像
    public static $prefix_html = 'detail_'; //html的前缀
 
    protected static $run_status = 1;//已经运行完毕的
@@ -172,6 +174,7 @@ class NovelModel{
            }
       }else{
         //如果上面的没有匹配出来直接从dd里获取对应的连接
+        //直接暴力一点
         //直接从链接里开始遍历得了
           preg_match_all('/<dd.*?>.*?<\/dd>/ism',$html,$urls);
           $chapter_list = [];
@@ -248,20 +251,28 @@ class NovelModel{
     * @note 远程抓取图片保存到本地
     *
     * @param $cate_name str分类名称
+    * @param $title string 小说标题
+    * @param $author string 作者
     * @return string
     */
-    public static function saveImgToLocal($url){
+    public static function saveImgToLocal($url,$title='',$author=''){
       if(!$url){
           return false;
       }
       $save_img_path = Env::get('SAVE_IMG_PATH');
-      $t= explode('/',$url);
-      $end_file = end($t);
+      //转换标题和作者名称按照第一个英文首字母保存
+      if($title && $author){
+          $imgFileName = self::getFirstImgePath($title,$author ,$url);
+      }else{
+          //默认从规则里url取
+          $t= explode('/',$url);
+          $imgFileName = end($t);
+      }
       header("Content-type: application/octet-stream");
       header("Accept-Ranges: bytes");
       header("Accept-Length: 348");
-      header("Content-Disposition: attachment; filename=".$end_file);
-      $filename = $save_img_path . DS . $end_file;
+      header("Content-Disposition: attachment; filename=".$imgFileName);
+      $filename = $save_img_path . DS . $imgFileName;
       //判断文件是否存在，如果不存在就直接保存到本地
       if(!file_exists($filename)){
         $save_img_path =Env::get('SAVE_IMG_PATH');
@@ -273,6 +284,44 @@ class NovelModel{
         $img_con = $res[0] ?? '';
         @file_put_contents($filename, $img_con);
       }
+    }
+
+     /**
+    * @note 获取字符的首字母
+    *
+    * @param $title string  小说名称
+    * @param $author string 作者名称
+    * @param $url string URL图片信息
+    * @param $mysql_obj string 连接句柄
+    * @return string
+    */
+    public static function getFirstImgePath($title , $author,$url){
+       if(!$title || !$author){
+          return false;
+       }
+
+       //构造函数
+      $trimBlank = function ($arr) {
+          $pinyin = new Pinyin();
+          $ext_data =$pinyin->name($arr);//利用多音字来进行转换标题
+          $str ='';
+          if(!empty($ext_data)){
+              foreach($ext_data as $val){
+                  $str .= $val[0];
+              }
+          }
+            return $str;
+      };
+
+      $cover_logo = '';
+      if(!empty($url)){
+          $title_string = $trimBlank($title);
+          $author_string = $trimBlank($author);
+          $imgInfo = pathinfo($url);
+          $extension = $imgInfo['extension'] ?? self::$imageType;
+          $cover_logo =  $title_string.'-'.$author_string .'.'. $extension;
+       }
+       return $cover_logo;
     }
 
      /**
@@ -302,10 +351,11 @@ class NovelModel{
       $info['cid'] = self::getNovelCateId($info['class_name']);
       $info['addtime']  = time();
       $info['author'] = $info['author'] ? trim($info['author']) : '未知';
-      //处理图片的存储路径
-      if(!empty($info['pic'])){
-          $cover_logo =  explode('/',$info['pic']);
-          $info['pic'] = Env::get('SAVE_IMG_PATH') . DS . end($cover_logo);
+       //处理图片的存储路径
+      if($info['book_name'] || $info['author']){
+         //处理图片的存储路径问题，直接保存对应的按照：中文转换成英文，取英文的首字母，书名+作者的首字母计算返回
+          $image_str = Env::get('SAVE_IMG_PATH') . DS. self::getFirstImgePath($info['book_name'],$info['author'],$info['pic']);
+          $info['pic'] = $image_str;
       }
       //处理小说是否完本状态
       if( $info['serialize'] == '连载中'){
@@ -380,8 +430,9 @@ class NovelModel{
           ];
       }
       $save_path = Env::get('SAVE_JSON_PATH');//保存json的路径
+      //获取对应的json目录信息
       if(!is_dir($save_path)){
-        createFolders($save_path);
+          createFolders($save_path);
       }
       $filename = $save_path . DS . $pro_book_id.'.'.self::$json_file_type;
       //保存对应的数据到文件中方便后期读取
