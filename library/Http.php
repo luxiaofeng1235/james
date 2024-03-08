@@ -99,11 +99,11 @@ class MultiHttp
                     curl_multi_remove_handle($master, $done['handle']);
                     // start a new request (it's important to do this before removing the old one)
                     }else{
-                        // echo 111;
-                        // echo '<pre>';
-                        // print_R($info);
-                        // echo '</pre>';
-                        // die;
+                        echo 111;
+                        echo '<pre>';
+                        print_R($info);
+                        echo '</pre>';
+                        die;
                     }
                 if($i<sizeof($urls)){
                     $ch                   = curl_init();
