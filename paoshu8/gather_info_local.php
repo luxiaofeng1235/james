@@ -198,7 +198,7 @@ $endMemory = memory_get_peak_usage();
 $memoryUsage = $endMemory - $startMemory;//内存占用情况
 $executionTime = $exec_end_time - $exec_start_time; //执行时间
 echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
-echo "peak memory usage:" . $memoryUsage ." bytes";
+echo "peak memory usage:" . $memoryUsage ." bytes \r\n";
 
 //处理抓取中按照章节名称返回
 //将章节中的全角符号转换成英文
