@@ -14,11 +14,8 @@ $exec_start_time =microtime(true);
 $target_url = Env::get('APICONFIG.PAOSHU_HOST');//需要抓取的url
 $expire_time = NovelModel::$redis_expire_time;//过期时间设置2个小时的过期
 //设置缓存的key
-$year = date('Y');
-$month = date('m');
-$day = date('d');
-$env_cache_key  = Env::get('CACHE_LIST_KEY');//缓存的key
-$redis_cache_key = getRedisProyKey();
+
+$redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
 
 echo "key：".$redis_cache_key."\r\n";
 /**
@@ -36,7 +33,9 @@ function getCurlData($url,$data=[],$is_proxy =false){
     if($is_proxy){
         $proxy = $data['ip']; //代理IP
         $port = $data['port']; //端口
-        $proxyauth = $data['username'].':'.$data['password']; //用户名密码
+        if(isset($data['username']) && isset($data['password'])){
+            $proxyauth = $data['username'].':'.$data['password']; //用户名密码
+        }
     }
 
     $ch = curl_init();
@@ -49,7 +48,9 @@ function getCurlData($url,$data=[],$is_proxy =false){
     if($is_proxy){
         curl_setopt($ch, CURLOPT_PROXY, $proxy);
         curl_setopt($ch, CURLOPT_PROXYPORT, $port);
-        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+        if(isset($data['username']) && isset($data['password'])){
+             curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+        }
         curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 0);
         curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
@@ -73,7 +74,8 @@ function getCurlData($url,$data=[],$is_proxy =false){
 
 $i = 0;
 echo "link-url：".$target_url."\r\n";
-$url =Env::get('PROXY_GET_URL');
+// $url =Env::get('PROXY_GET_URL');
+$url = Env::get('ZHIMAURL');//轮训这个芝麻的url信息
 do{
     /*
     * 整体思路：
