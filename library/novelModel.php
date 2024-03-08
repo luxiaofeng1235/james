@@ -172,6 +172,7 @@ class NovelModel{
            }
       }else{
         //如果上面的没有匹配出来直接从dd里获取对应的连接
+        //直接暴力一点
         //直接从链接里开始遍历得了
           preg_match_all('/<dd.*?>.*?<\/dd>/ism',$html,$urls);
           $chapter_list = [];

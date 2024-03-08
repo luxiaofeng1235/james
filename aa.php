@@ -7,32 +7,32 @@ require_once($dirname.'/library/file_factory.php');
 
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
-$redis_data->set_redis('trest',111);
-$content= MultiHttp::curlGet(['http://www.baidu.com'],null,true);
-echo '<pre>';
-print_R($content);
-echo '</pre>';
-exit;
+// $redis_data->set_redis('trest',111);
+// $content= MultiHttp::curlGet(['http://www.baidu.com'],null,true);
+// echo '<pre>';
+// print_R($content);
+// echo '</pre>';
+// exit;
 
-// $list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="106_106595"   order by rand()  limit 2','db_slave');
-// $t =array_chunk($list, $limit);
-// $i = 0;
-// foreach($t as $key =>$val){
-//      $urls = array_column($val,'link_url');
-//      $content= MultiHttp::curlGet($urls,null,true);
-//      echo 'index-num：'.count($val)."\r\n";
-//      echo 'curl-num：'.count($content)."====\r\n";
-//      foreach($content as $k =>$v){
-//         $i++;
-//         $filename = './txt/'.($key+1).'---'.$k.'.txt';
-//         //file_put_contents($filename,$v);
-//      }
-//      sleep(1);
-//      unset($t[$key]);
-// }
-// $exec_end_time = microtime(true);
-// $executionTime = $exec_end_time - $exec_start_time;
-// $proxyInfo = getZhimaProxy();
+$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="106_106595"   order by rand()  limit 2','db_slave');
+$t =array_chunk($list, $limit);
+$i = 0;
+foreach($t as $key =>$val){
+     $urls = array_column($val,'link_url');
+     $content= MultiHttp::curlGet($urls,null,true);
+     echo 'index-num：'.count($val)."\r\n";
+     echo 'curl-num：'.count($content)."====\r\n";
+     foreach($content as $k =>$v){
+        $i++;
+        $filename = './txt/'.($key+1).'---'.$k.'.txt';
+        //file_put_contents($filename,$v);
+     }
+     sleep(1);
+     unset($t[$key]);
+}
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time;
+$proxyInfo = getZhimaProxy();
 echo '<pre>';
 print_R($proxyInfo);
 echo '</pre>';
