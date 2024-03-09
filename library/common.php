@@ -561,6 +561,24 @@ function getZhimaProxy(){
 }
 
 /**
+ * 获取芝麻代理IP的周体验套餐-一周使用权限
+ * @param $str 需要处理的路径
+ * @return mixed
+ */
+function getZhimaWeek(){
+    /*
+    117.88.43.186:14192|zausaatg01|oegdmeqs01|2024-03-16 09:15:56|江苏省南京市
+     */
+    $proxy = [
+        'ip'        =>  Env::get('ZHIMA_PROXY.URL_HOST'), //代理的IP
+        'port'      =>  Env::get('ZHIMA_PROXY.PORT'), //代理的端口号
+        'username'  =>  Env::get('ZHIMA_PROXY.username'), //用户名
+        'password'  =>  Env::get('ZHIMA_PROXY.password'), //密码
+    ];
+    return $proxy;
+}
+
+/**
  * 获取代理的配置
  * @param $str 需要处理的路径
  * @return mixed
@@ -812,6 +830,35 @@ function handleArrayKey($key_data){
         $new_data[$tkey] = $val;
     }
     return $new_data;
+}
+/**
+* @note 检测URL是否为404
+* @param $url str  url地址
+* @return bool
+*/
+function check_url($url = ''){
+    stream_context_set_default(
+        array(
+            'http' => array(
+                'timeout' => 5,
+            )
+        )
+    );
+    $header = get_headers($url,1);
+    if(strpos($header[0],'200')){
+        return true;
+    }
+    if(strpos($header[0],'404')){
+        return false;
+    }
+    if (strpos($header[0],'301') || strpos($header[0],'302')) {
+        if(is_array($header['Location'])) {
+            $redirectUrl = $header['Location'][count($header['Location'])-1];
+        }else{
+            $redirectUrl = $header['Location'];
+        }
+        return check_url($redirectUrl);
+    }
 }
 
 
