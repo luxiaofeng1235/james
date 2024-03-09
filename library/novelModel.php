@@ -374,7 +374,7 @@ class NovelModel{
       }
       $info['serialize'] = $serialize;
       //根据书籍名称和坐着来进行匹配
-      $where_data = "book_name ='".trim($info['book_name'])."' and author ='".trim($info['author'])."' limit 1";
+      $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
       if(empty($novelInfo)){
           //插入入库

@@ -103,9 +103,14 @@ if($info){
         $third_update_time = strtotime($third_update_time);
         $store_data['third_update_time'] = $third_update_time;
         $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
-        //处理作者
+
+        //转义标题
+        $store_data['title'] = addslashes(trim($store_data['title']));
+        //处理作者并转义
         $author_data = explode('：',$store_data['author']);
-        $store_data['author']  = $author_data[1] ?? '';
+        $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
+        $store_data['author']  = $author;
+
         $store_data['updatetime'] = time();
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
