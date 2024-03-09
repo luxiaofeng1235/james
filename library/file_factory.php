@@ -114,6 +114,10 @@ class FileFactory{
         foreach($data as $key =>$val){
             if( !$val ) continue;
             $content = $val['content'] ?? '';//提交的内容
+            //这样子保证每个里面都有内容
+            if(!$content || empty($content)){
+                $content ='从远端拉取内容失败，有可能是对方响应失败，后续待更新';
+            }
             //用md5加密的方式去更新
             $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
             file_put_contents($filename,$content); //防止文件名出错
