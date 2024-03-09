@@ -5,6 +5,7 @@
  * 主要同步的数据有以下几个流程：
  *
  */
+#1111
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
