@@ -6,13 +6,6 @@ require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
 use Overtrue\Pinyin\Pinyin;
 use QL\QueryList;
-
-$t = new Pinyin();
-$dd = $t->name('第七重奏01',PINYIN_KEEP_NUMBER );
-echo '<pre>';
-var_dump($dd);
-echo '</pre>';
-exit;
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
 $list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="9_9868"   order by rand()  limit 30','db_slave');
