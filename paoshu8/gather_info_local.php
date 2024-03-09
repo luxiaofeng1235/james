@@ -107,6 +107,8 @@ if($info){
         $author_data = explode('：',$store_data['author']);
         $store_data['author']  = $author_data[1] ?? '';
         $store_data['updatetime'] = time();
+        //章节也需要处理特殊的转义字符
+        $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
         $intro = addslashes($store_data['intro']);//转义 特殊字符
         $intro = cut_str($intro,200); //切割字符串
         $store_data['intro'] = $intro;
