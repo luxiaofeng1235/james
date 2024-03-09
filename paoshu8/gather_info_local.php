@@ -72,15 +72,17 @@ if($info){
 
     //定义小说信息的抓取规则
     $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
-
     $files = Env::get('SAVE_HTML_PATH').DS.'detail_'.$info[0]['story_id'].'.'.NovelModel::$file_type;
+
     if(!$files){
         echo "no this story ---".$story_link."\r\n";
         exit();
     }
     $html = readFileData($files);
     if(!$html){
-        echo "no this story files\r\n";
+         //记录是否有相关的HTML的数据信息
+        printlog('this novel：'.$story_link.' is no local html data');
+        echo "no this story files： {$story_link}\r\n";
         exit();
     }
     //爬取相关规则下的类
