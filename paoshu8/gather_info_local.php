@@ -107,7 +107,9 @@ if($info){
         $author_data = explode('：',$store_data['author']);
         $store_data['author']  = $author_data[1] ?? '';
         $store_data['updatetime'] = time();
-        $store_data['intro'] = addslashes($store_data['intro']);//转义 特殊字符
+        $intro = addslashes($store_data['intro']);//转义 特殊字符
+        $intro = cut_str($intro,200); //切割字符串
+        $store_data['intro'] = $intro;
         $store_data['tag'] = str_replace('小说','',$store_data['tag']);
         //执行更新操作
         if($info[0]['createtime'] == 0){
@@ -186,7 +188,7 @@ if($info){
             $store_data);
         //同步当前的章节的基础信息
         $factory->synChapterInfo($story_id,$another_data);//同步章节内容
-        echo "insert_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+        echo "now_time：".date('Y-m-d H:i:s')."\tinsert_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
         }else{
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
