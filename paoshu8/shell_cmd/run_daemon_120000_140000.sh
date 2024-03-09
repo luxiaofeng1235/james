@@ -16,7 +16,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "$result"
+#echo "$result"
 if [ ! -n "$result" ]; then
     echo "DATA IS NULL"
 else
