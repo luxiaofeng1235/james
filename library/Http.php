@@ -41,12 +41,13 @@ class MultiHttp
         );
         if($is_proxy){
             //获取代理的配置方式
-            $proxy_data = getZhimaProxy();
+            $proxy_data = getZhimaWeek();//获取芝麻的周套餐
             // $proxy_data = getProxyInfo();
             if($proxy_data){
                 //是否开启代理
                 $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
                 $std_options[CURLOPT_PROXYPORT] = $proxy_data['port'];
+                //判断有密码的话加载密码配置
                 if(isset($proxy_data['username']) && isset($proxy_data['password'])){
                     $std_options[CURLOPT_PROXYUSERPWD] = $proxy_data['username'].':'.$proxy_data['password'];
                 }
