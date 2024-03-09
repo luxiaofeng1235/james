@@ -4,15 +4,20 @@ return [
     'paoshu8'    =>  [
         //小说列表的轮训取值范围
         'range' =>  '.novellist',
+        'range_home' =>  '#newscontent li',//最近更新
         //小说列表数据
         'list'  =>  [
-                'story_link'       => ['a','href'],
-                'title'     =>  ['a','text'],
+            'story_link'       => ['a','href'],
+            'title'     =>  ['a','text'],
+        ],
+        'list_home'  =>  [
+            'story_link'       => ['span:eq(1) a','href'],
+            'title'     =>  ['span:eq(1) a','text'],
         ],
         //章节列表数据
         'chapter_list'  =>  [
-                'link_url'       => ['a','href'],
-                'link_name'     =>  ['a','text'],
+            'link_url'       => ['a','href'],
+            'link_name'     =>  ['a','text'],
         ],
         //小说详情
         'info'  =>[

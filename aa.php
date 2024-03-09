@@ -6,17 +6,9 @@ require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
 use Overtrue\Pinyin\Pinyin;
 use QL\QueryList;
-
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
-// $redis_data->set_redis('trest',111);
-// $content= MultiHttp::curlGet(['http://www.baidu.com'],null,true);
-// echo '<pre>';
-// print_R($content);
-// echo '</pre>';
-// exit;
-
-$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="106_106595"   order by rand()  limit 2','db_slave');
+$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="9_9868"   order by rand()  limit 3','db_slave');
 $t =array_chunk($list, $limit);
 $i = 0;
 foreach($t as $key =>$val){
@@ -34,7 +26,7 @@ foreach($t as $key =>$val){
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
-$proxyInfo = getZhimaProxy();
+$proxyInfo = getZhimaWeek();
 echo '<pre>';
 print_R($proxyInfo);
 echo '</pre>';
