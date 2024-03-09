@@ -303,11 +303,18 @@ class NovelModel{
        //构造函数
       $trimBlank = function ($arr) {
           $pinyin = new Pinyin();
-          $ext_data =$pinyin->name($arr);//利用多音字来进行转换标题
+          //保留数字的转换方式
+          $ext_data =$pinyin->name($arr , PINYIN_KEEP_NUMBER);//利用多音字来进行转换标题
           $str ='';
+          //利用空数据来进行转换
           if(!empty($ext_data)){
               foreach($ext_data as $val){
-                  $str .= $val[0];
+                //如果匹配到了数字就直接用数字返回，不需要做处理
+                if(preg_match('/[0-9]/',$val)){
+                    $str .=$val;
+                }else{
+                    $str .= $val[0];
+                }
               }
           }
             return $str;
