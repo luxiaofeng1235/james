@@ -26,7 +26,7 @@ while IFS=$'\t' read -r column1 column2 column3 column4; do
     #   # 例如打印每一行的数据
     echo "store_id: $column1"
     shell_cmd="cd /www/wwwroot/work_project/novelProject/paoshu8/ && nohup /www/server/php/72/bin/php gather_info_local.php $column1 >> run_store.out 2>&1 &"
-    echo $shell_cmd
+    echo $shell_cmd | bash;
     #echo "nohup php aa.php  $column1  >>tst.out  2>&1" | bash;
 done <<< "$result"
 
