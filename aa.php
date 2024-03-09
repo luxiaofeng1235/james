@@ -26,7 +26,7 @@ foreach($t as $key =>$val){
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
-$proxyInfo = getZhimaProxy();
+$proxyInfo = getZhimaWeek();
 echo '<pre>';
 print_R($proxyInfo);
 echo '</pre>';
