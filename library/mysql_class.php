@@ -333,7 +333,7 @@ class  Mysql_class{
 	    }
 
 	    $data = array_filter($data);
-	    $data = array_unique($data);
+	    // $data = array_unique($data);
 
 	    //拼装需要更新的语句
 	    $sql ="UPDATE `{$table_name}` SET ";
