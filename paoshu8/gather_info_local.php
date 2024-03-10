@@ -94,6 +94,7 @@ if($info){
 
         $store_data['story_link'] = $story_link;
         $story_id = trim($info[0]['story_id']); //小说的id
+        echo "url:".$story_link."||| story_id：".$story_id .PHP_EOL;
         //处理空字符串
         $location = str_replace("\r\n",'',$store_data['location']);
         $location =trim($location);
@@ -134,8 +135,13 @@ if($info){
             exit();
         }
 
-        //获取相关的列表数据
+        //更新小说表的is_async为1，表示已经更新过了不需要重复更新
+        $store_data['is_async'] = 1;
+        //对比新旧数据返回最新的更新
+        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
+        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
 
+        //获取相关的列表数据
         $rt = NovelModel::getCharaList($html);
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
@@ -170,14 +176,9 @@ if($info){
 
         $update_id = $info[0]['store_id'] ?? 0;
         //$update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
-        //更新小说表的is_async为1，表示已经更新过了不需要重复更新
-        $store_data['is_async'] = 1;
 
-        //对比新旧数据返回最新的更新
-        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
         //拼接章节目录信息
         $novel_list_path = Env::get('SAVE_NOVEL_PATH').DS.$sync_pro_id;
-        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
 
         //执行相关的章节批处理程序
         // $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
@@ -210,6 +211,7 @@ $memoryUsage = $endMemory - $startMemory;//内存占用情况
 $executionTime = $exec_end_time - $exec_start_time; //执行时间
 echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "peak memory usage:" . $memoryUsage ." bytes \r\n";
+echo "---------------------------------------------------------------------------------\r\n";
 
 //处理抓取中按照章节名称返回
 //将章节中的全角符号转换成英文
