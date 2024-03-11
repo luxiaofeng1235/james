@@ -373,6 +373,7 @@ class NovelModel{
           $serialize =3;//太监
       }
       $info['serialize'] = $serialize;
+      $info['score'] = getScoreRandom();//随机小数评分
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
