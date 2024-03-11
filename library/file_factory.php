@@ -74,8 +74,8 @@ class FileFactory{
             $base_dir =Env::get('SAVE_NOVEL_PATH') .DS .$pro_book_id;
             $q  = (count(glob("$base_dir/*")) === 0) ?  0 : 1;
             if($q){
-                $delte_file = $base_dir.'/*';
-                exec('rm -rf '.$delte_file,$output,$status);
+                $delete_file = $base_dir.'/*';
+                exec('rm -rf '.$delete_file,$output,$status);
             }
 
 
