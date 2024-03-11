@@ -391,7 +391,8 @@ class NovelModel{
       }else {
           $serialize =3;//太监
       }
-      // $info['text_num'] = 2000;
+
+      $info['text_num'] = self::getTextNum($info['book_name'],$info['author']);//小说字数
       $info['serialize'] = $serialize;
       $info['score'] = getScoreRandom();//随机小数评分
       $info['read_count'] = rand(100,100000);//最新阅读数
@@ -410,10 +411,34 @@ class NovelModel{
         if(strpos($info['pic'],'\\')){
             $info['pic'] = str_replace('\\','\\\\' ,$info['pic']);
         }
-        $mysql_obj->update_data($info,$update_where,self::$table_name,false,0,self::$db_conn);
+        $a= $mysql_obj->update_data($info,$update_where,self::$table_name,false,0,self::$db_conn);
         $id = intval($novelInfo[0]['id']);
       }
       return $id;
+  }
+
+
+    /**
+    * @note 获取小说的标题
+    *
+    * @param $data 预处理的数据
+    * @param $mysql_obj string 连接句柄
+    * @return string
+    */
+  public static function getTextNum($title,$author){
+     if(!$title || !$author){
+        return 0;
+     }
+      $md5_str= self::getAuthorFoleder($title,$author);
+      $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.self::$json_file_type;
+      $info = readFileData($json_path);
+      $num = 0;
+      if($info){
+        $t = json_decode($info,true);
+        $num  =self::$text_num * count($t);
+      }
+      return $num;
+
   }
 
 

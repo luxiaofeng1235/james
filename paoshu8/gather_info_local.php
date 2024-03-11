@@ -73,7 +73,7 @@ if($info){
     //定义小说信息的抓取规则
     $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
     $files = Env::get('SAVE_HTML_PATH').DS.'detail_'.$info[0]['story_id'].'.'.NovelModel::$file_type;
-
+    $item_list  = [];
     if(!$files){
         echo "no this story ---".$story_link."\r\n";
         exit();
@@ -125,25 +125,6 @@ if($info){
         }
         //保存图片到本地
         NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
-
-
-        //更新的条件
-        $where_data = "story_id = '".$story_id."'";
-        //同步小说的基础信息到线上mc_book表信息
-        $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
-        $store_data['pro_book_id'] = $sync_pro_id;
-        if(!$sync_pro_id){
-            printlog('未发现线上数据信息');
-            exit();
-        }
-
-        //更新小说表的is_async为1，表示已经更新过了不需要重复更新
-        $store_data['is_async'] = 1;
-
-        //对比新旧数据返回最新的更新
-        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
-        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
-
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html);
         $item_list = $chapter_ids = $items= [];
@@ -169,27 +150,11 @@ if($info){
             $sort_ids= array_keys($chapter_ids);
             //取出来章节
             $item_list = array_values($items);
-
-        array_multisort($sort_ids , SORT_ASC , $item_list);
-        //清洗掉不需要的字段
-        $item_list = cleanData($item_list,['chapter_id']);
-        //创建生成json目录结构
-        NovelModel::createJsonFile($store_data,$item_list,0);
-        //拼接章节目录信息
-        $novel_list_path = Env::get('SAVE_NOVEL_PATH').DS.$sync_pro_id;
-        //执行相关的章节批处理程序
-         $update_id = $info[0]['store_id'] ?? 0;
-        printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
-        $another_data = array_merge(
-            [
-                'pro_book_id'=>$sync_pro_id,//线上书籍ID
-                'story_id'=>$story_id,//小说ID
-                'syn_chapter_status'    =>$info[0]['syn_chapter_status'] ?? 0,//章节状态
-            ],
-            $store_data);
-        //同步当前的章节的基础信息
-        $factory->synChapterInfo($story_id,$another_data);//同步章节内容
-        echo "now_time：".date('Y-m-d H:i:s')."\tself_store_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+            array_multisort($sort_ids , SORT_ASC , $item_list);
+            //清洗掉不需要的字段
+            $item_list = cleanData($item_list,['chapter_id']);
+            //创建生成json目录结构
+            NovelModel::createJsonFile($store_data,$item_list,0);
         }else{
             //如果没有章节，把对应的章节也改成已处理
             $where_condition = "story_id = '".$story_id."'";
@@ -199,6 +164,41 @@ if($info){
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
         }
+
+         //执行相关的章节批处理程序
+        $update_id = $info[0]['store_id'] ?? 0;
+        //更新的条件
+        $where_data = "story_id = '".$story_id."'";
+        //同步小说的基础信息到线上mc_book表信息
+        $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
+        $store_data['pro_book_id'] = $sync_pro_id;
+        if(!$sync_pro_id){
+            printlog('未发现线上数据信息');
+            exit();
+        }
+        //更新小说表的is_async为1，表示已经更新过了不需要重复更新
+        $store_data['is_async'] = 1;
+        //对比新旧数据返回最新的更新
+        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
+        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
+
+
+        //只有获取到章节才去处理小说
+        if($item_list){
+            $another_data = array_merge(
+            [
+                'pro_book_id'=>$sync_pro_id,//线上书籍ID
+                'story_id'=>$story_id,//小说ID
+                'syn_chapter_status'    =>$info[0]['syn_chapter_status'] ?? 0,//章节状态
+            ],
+            $store_data);
+            //同步当前的章节的基础信息
+            $factory->synChapterInfo($story_id,$another_data);//同步章节内容
+        }
+        //获取小说的章节路径
+        $novel_list_path = Env::get('SAVE_NOVEL_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']);
+        printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
+        echo "now_time：".date('Y-m-d H:i:s')."\tself_store_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
     }
 }else{
     echo "no data";
