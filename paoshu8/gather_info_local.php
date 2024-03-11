@@ -172,7 +172,7 @@ if($info){
         $update_id = $info[0]['store_id'] ?? 0;
         //更新的条件
         $where_data = "story_id = '".$story_id."'";
-        //只有获取到章节才去处理小说
+        //只有获取到章节才去处理小说并且同步到mc_book表操作
         if($item_list){
             //同步小说的基础信息到线上mc_book表信息
             $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
