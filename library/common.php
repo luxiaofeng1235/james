@@ -540,10 +540,11 @@ function getZhimaProxy(){
 				$proxy_data  =$data;//用这个存储所有的信息
 				$expire_time = $data['expire_time'] ?? '';
 				//用过期时间减去当前的时间为缓存cache时间
-				$diff_time = strtotime($expire_time) - time() -25*60;//提前25分钟结束释放资源
-				if($diff_time <= 0){
-					$diff_time = $time_out;
-				}
+				// $diff_time = strtotime($expire_time) - time() -25*60;//提前25分钟结束释放资源
+				// if($diff_time <= 0){
+				// 	$diff_time = $time_out;
+				// }
+				$diff_time = 3600;//默认先控制一个小时的缓存，防止提前过期
 				//以代理拨号返回的过期时间为准进行计算
 				$redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$diff_time);
 				return $proxy_data;
