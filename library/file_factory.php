@@ -84,7 +84,7 @@ class FileFactory{
                 $html_data= getContenetNew($v);
                 //保存本地存储数据
                 $this->synLocalFile($download_path,$html_data);
-                sleep(1);
+                sleep(3);//休息三秒不要立马去请求，防止空数据的发生
             }
             //强制清除内存垃圾
             gc_collect_cycles();
