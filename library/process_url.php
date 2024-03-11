@@ -53,7 +53,7 @@ class ProcessUrl{
                     break;
                 }
                 echo "zong-num：".$run_times.PHP_EOL;
-                $arr =array_chunk($run_list,5);
+                $arr =array_chunk($run_list,200);
                 foreach($arr as $key =>$val){
                     //获取最新的数据信息
                      $content = getContenetNew($val);
