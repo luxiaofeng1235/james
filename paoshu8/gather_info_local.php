@@ -16,6 +16,8 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 require_once dirname(__DIR__).'/library/file_factory.php';
+require_once dirname(__DIR__).'/library/process_url.php';
+
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
 $exec_start_time = microtime(true);
