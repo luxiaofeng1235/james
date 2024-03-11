@@ -889,6 +889,20 @@ function check_url($url = ''){
 	}
 }
 
+/**
+ * @note 获取评分随机小数
+ *
+ * @return str
+ */
+function getScoreRandom(){
+	$min = 5; // 最小值
+	$max = 10; // 最大值
+	$precision = 1; // 小数位数
+	$randomInt = mt_rand($min * pow(10, $precision), $max * pow(10, $precision));
+	$randomFloat = $randomInt / pow(10, $precision);
+	return $randomFloat;
+}
+
 
 /**
  * @note 获取外网IP

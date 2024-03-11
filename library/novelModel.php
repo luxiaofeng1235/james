@@ -29,6 +29,8 @@ class NovelModel{
 
    protected static $run_status = 1;//已经运行完毕的
 
+   protected static $text_num =2000;//默认的的字数
+
    public static $is_no_async = 0;//未同步的
 
 
@@ -331,6 +333,23 @@ class NovelModel{
        return $cover_logo;
     }
 
+
+     /**
+    * @note 获取加密的md5串
+    *
+    * @param $title 小说标题
+    * @param $author string 作者名称
+    * @return string
+    */
+    public static function getAuthorFoleder($title='',$author=''){
+        if(!$title || !$author){
+            return false;
+        }
+        $title =trim($title);
+        $author = trim($author);
+        return md5($title.$author);
+    }
+
      /**
     * @note 转换对应的字段信息并同步数据到mc_book表
     *
@@ -372,8 +391,10 @@ class NovelModel{
       }else {
           $serialize =3;//太监
       }
+      // $info['text_num'] = 2000;
       $info['serialize'] = $serialize;
       $info['score'] = getScoreRandom();//随机小数评分
+      $info['read_count'] = rand(100,100000);//最新阅读数
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
@@ -407,6 +428,10 @@ class NovelModel{
     if(!$data || !$info){
       return false;
     }
+
+
+    //获取标题+文字的md5串
+    $md5_str= self::getAuthorFoleder($info['title'],$info['author']);
     /*
     $data[] = [
                 'id'    =>$key+1 ,
@@ -442,7 +467,7 @@ class NovelModel{
       if(!is_dir($save_path)){
           createFolders($save_path);
       }
-      $filename = $save_path . DS . $pro_book_id.'.'.self::$json_file_type;
+      $filename = $save_path . DS . $md5_str.'.'.self::$json_file_type;
       //保存对应的数据到文件中方便后期读取
       $json_data = json_encode($json_list ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
       file_put_contents($filename,$json_data);//把json信息存储为对应的目录中去

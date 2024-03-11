@@ -125,6 +125,8 @@ if($info){
         }
         //保存图片到本地
         NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+
+
         //更新的条件
         $where_data = "story_id = '".$story_id."'";
         //同步小说的基础信息到线上mc_book表信息
@@ -137,6 +139,7 @@ if($info){
 
         //更新小说表的is_async为1，表示已经更新过了不需要重复更新
         $store_data['is_async'] = 1;
+
         //对比新旧数据返回最新的更新
         $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
         $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
@@ -170,22 +173,12 @@ if($info){
         array_multisort($sort_ids , SORT_ASC , $item_list);
         //清洗掉不需要的字段
         $item_list = cleanData($item_list,['chapter_id']);
-
         //创建生成json目录结构
-        NovelModel::createJsonFile($store_data,$item_list,$sync_pro_id);
-
-        $update_id = $info[0]['store_id'] ?? 0;
-        //$update_ret = $mysql_obj->update_data($store_data,$where_data,$table_novel_name);
-
+        NovelModel::createJsonFile($store_data,$item_list,0);
         //拼接章节目录信息
         $novel_list_path = Env::get('SAVE_NOVEL_PATH').DS.$sync_pro_id;
-
         //执行相关的章节批处理程序
-        // $shell_cmd = 'cd '.NovelModel::cmdRunPath().' && '.Env::get('PHP_BIN_PATH').' local_file.php '.$story_id;
-        // exec($shell_cmd,$output , $status);
-        // echo $shell_cmd."\r\n";
-        //打印日志信息
-
+         $update_id = $info[0]['store_id'] ?? 0;
         printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
         $another_data = array_merge(
             [

@@ -56,11 +56,14 @@ class FileFactory{
         }
 
 
-
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']);
-            $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $pro_book_id;//下载路径;
+
+            //获取对应的加密串作为文件名：书名+作者
+            $md5_str= NovelModel::getAuthorFoleder($info['title'] ,$info['author']);
+
+            $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $md5_str;//下载路径;
             if(!$pro_book_id){
                 printlog('暂未同步线上pro_bok_id');
                 return false;
@@ -69,18 +72,16 @@ class FileFactory{
                 createFolders($download_path);
             }
 
-
             //删除已经存在的文件，保证都是最新的
-            $base_dir =Env::get('SAVE_NOVEL_PATH') .DS .$pro_book_id;
+            $base_dir =Env::get('SAVE_NOVEL_PATH') .DS .$md5_str;
             $q  = (count(glob("$base_dir/*")) === 0) ?  0 : 1;
             if($q){
                 $delete_file = $base_dir.'/*';
                 exec('rm -rf '.$delete_file,$output,$status);
             }
 
-
             //记录文件的格式
-            $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$json_file_type;
+            $file_name =Env::get('SAVE_JSON_PATH') .DS .$md5_str.'.' .NovelModel::$json_file_type;
             $json_data = readFileData($file_name);
             if(!$json_data) {
                 printlog('当前ID:'.$pro_book_id.'暂未生成json文件');
@@ -100,6 +101,7 @@ class FileFactory{
                 $this->synLocalFile($download_path,$html_data);
                 sleep(3);//休息三秒不要立马去请求，防止空数据的发生
             }
+            unset($items);
             //强制清除内存垃圾
             gc_collect_cycles();
             unset($items);
