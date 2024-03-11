@@ -7,7 +7,6 @@ require_once($dirname.'/library/file_factory.php');
 use Overtrue\Pinyin\Pinyin;
 use QL\QueryList;
 
-
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
 $list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="92_92763"   order by rand()  limit 50','db_slave');
@@ -29,7 +28,7 @@ foreach($t as $key =>$val){
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
-$proxyInfo = getSiyuetian();
+$proxyInfo = getZhimaProxy();
 echo '<pre>';
 print_R($proxyInfo);
 echo '</pre>';
