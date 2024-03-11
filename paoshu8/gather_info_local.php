@@ -159,32 +159,34 @@ if($info){
             //如果没有章节，把对应的章节也改成已处理
             $where_condition = "story_id = '".$story_id."'";
             $no_chapter_data['syn_chapter_status'] = 1;
+            $no_chapter_data['is_async'] = 1;
             //对比新旧数据返回最新的更新
             $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
         }
 
+
+        $sync_pro_id = 0;//给一个默认值
          //执行相关的章节批处理程序
         $update_id = $info[0]['store_id'] ?? 0;
         //更新的条件
         $where_data = "story_id = '".$story_id."'";
-        //同步小说的基础信息到线上mc_book表信息
-        $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
-        $store_data['pro_book_id'] = $sync_pro_id;
-        if(!$sync_pro_id){
-            printlog('未发现线上数据信息');
-            exit();
-        }
-        //更新小说表的is_async为1，表示已经更新过了不需要重复更新
-        $store_data['is_async'] = 1;
-        //对比新旧数据返回最新的更新
-        $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
-        $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
-
-
         //只有获取到章节才去处理小说
         if($item_list){
+            //同步小说的基础信息到线上mc_book表信息
+            $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
+            $store_data['pro_book_id'] = $sync_pro_id;
+            if(!$sync_pro_id){
+                printlog('未发现线上数据信息');
+                exit();
+            }
+            //更新小说表的is_async为1，表示已经更新过了不需要重复更新
+            $store_data['is_async'] = 1;
+            //对比新旧数据返回最新的更新
+            $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
+            $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
+
             $another_data = array_merge(
             [
                 'pro_book_id'=>$sync_pro_id,//线上书籍ID
