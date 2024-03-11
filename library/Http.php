@@ -41,8 +41,8 @@ class MultiHttp
         );
         if($is_proxy){
             //获取代理的配置方式
-            $proxy_data = getZhimaWeek();//获取芝麻的周套餐
-            // $proxy_data = getProxyInfo();
+            $proxy_data = getZhimaProxy();//获取芝麻的周套餐
+            //$proxy_data = getProxyInfo();
             if($proxy_data){
                 //是否开启代理
                 $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
