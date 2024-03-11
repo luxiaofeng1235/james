@@ -5,14 +5,18 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
 
+$title ='腹黑男神：迷糊小财女';
+$author ='月溪沙';
+$md5_str= NovelModel::getAuthorFoleder($title,$author);
+echo 'md5：'.$md5_str.PHP_EOL;
 
-$pro_book_id = '132247';
-$json_path = Env::get('SAVE_JSON_PATH').DS.$pro_book_id.'.'.NovelModel::$json_file_type;
+
+$json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
 
 $urls = $run_list=[];
 $list = readFileData($json_path);
 if($list){
-    $log_path  = Env::get('SAVE_NOVEL_PATH').DS.$pro_book_id;
+    $log_path  = Env::get('SAVE_NOVEL_PATH').DS.$md5_str;
     $arr = json_decode($list,true);
     foreach($arr as $val){
         $filename =$log_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
@@ -26,7 +30,6 @@ if($list){
         }
     }
 }
-
 $success_num=0;
 $insert_data = [];
 $len = count($run_list); //需要跑的总数
@@ -39,8 +42,8 @@ if($len>0){
             break;
         }
         echo "zong-num：".$run_times.PHP_EOL;
-         $arr =array_chunk($run_list,5);
-         foreach($arr as $key =>$val){
+        $arr =array_chunk($run_list,5);
+        foreach($arr as $key =>$val){
              $content = getContenetNew($val);
              if($content && is_array($content)){
                 foreach($content as $k =>$v){
