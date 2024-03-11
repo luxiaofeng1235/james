@@ -54,6 +54,9 @@ class FileFactory{
             $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
             $info = $this->mysql_conf->fetch($sql,'db_slave');
         }
+
+
+
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']);
@@ -65,6 +68,17 @@ class FileFactory{
             if(!is_dir($download_path)){
                 createFolders($download_path);
             }
+
+
+            //删除已经存在的文件，保证都是最新的
+            $base_dir =Env::get('SAVE_NOVEL_PATH') .DS .$pro_book_id;
+            $q  = (count(glob("$base_dir/*")) === 0) ?  0 : 1;
+            if($q){
+                $delte_file = $base_dir.'/*';
+                exec('rm -rf '.$delte_file,$output,$status);
+            }
+
+
             //记录文件的格式
             $file_name =Env::get('SAVE_JSON_PATH') .DS .$pro_book_id.'.' .NovelModel::$json_file_type;
             $json_data = readFileData($file_name);
