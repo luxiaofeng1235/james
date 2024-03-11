@@ -8,12 +8,8 @@ require_once($dirname.'/library/process_url.php');
 
 $sql = "select title,author from ims_novel_info where pro_book_id = 2226";
 $info = $mysql_obj->fetch($sql,'db_slave');
-
+//自动扫描再拉取一遍取读取
 $aa =ProcessUrl::selfRunUrls($info);
-
-$title ='腹黑男神：迷糊小财女';
-$author ='月溪沙';
-
 echo "over\r\n";
 
 
