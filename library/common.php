@@ -896,7 +896,7 @@ function check_url($url = ''){
  */
 function getScoreRandom(){
 	$min = 5; // 最小值
-	$max = 10; // 最大值
+	$max = 9.9; // 最大值
 	$precision = 1; // 小数位数
 	$randomInt = mt_rand($min * pow(10, $precision), $max * pow(10, $precision));
 	$randomFloat = $randomInt / pow(10, $precision);
