@@ -44,6 +44,7 @@ if($len>0){
         echo "zong-num：".$run_times.PHP_EOL;
         $arr =array_chunk($run_list,5);
         foreach($arr as $key =>$val){
+            //获取最新的数据信息
              $content = getContenetNew($val);
              if($content && is_array($content)){
                 foreach($content as $k =>$v){
