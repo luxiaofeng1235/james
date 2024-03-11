@@ -198,6 +198,9 @@ if($info){
             $store_data);
             //同步当前的章节的基础信息
             $factory->synChapterInfo($story_id,$another_data);//同步章节内容
+
+            //这里需要同步处理未同步下来的章节信息
+            // ProcessUrl::selfRunUrls($store_data);
         }
         //获取小说的章节路径
         $novel_list_path = Env::get('SAVE_NOVEL_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']);

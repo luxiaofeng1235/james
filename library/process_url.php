@@ -22,7 +22,7 @@ class ProcessUrl{
         $author = $info['author'];
 
         $md5_str= NovelModel::getAuthorFoleder($title,$author);
-        echo 'md5：'.$md5_str.PHP_EOL;
+        //echo 'md5：'.$md5_str.PHP_EOL;
         $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
         $urls = $run_list=[];
         $list = readFileData($json_path);
