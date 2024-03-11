@@ -52,7 +52,7 @@ class ProcessUrl{
                 if($run_times>5){
                     break;
                 }
-                echo "zong-num：".$run_times.PHP_EOL;
+                echo "repeat-zong-num：".$run_times.PHP_EOL;
                 $arr =array_chunk($run_list,200);
                 foreach($arr as $key =>$val){
                     //获取最新的数据信息
