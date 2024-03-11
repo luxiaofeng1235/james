@@ -8,11 +8,12 @@ use Overtrue\Pinyin\Pinyin;
 use QL\QueryList;
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
-$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="9_9868"   order by rand()  limit 3','db_slave');
+$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="92_92763"   order by rand()  limit 5','db_slave');
 $t =array_chunk($list, $limit);
 $i = 0;
 foreach($t as $key =>$val){
      $urls = array_column($val,'link_url');
+     echo "urls:".implode(',',$urls)."\r\n";
      $content= MultiHttp::curlGet($urls,null,true);
      echo 'index-num：'.count($val)."\r\n";
      echo 'curl-num：'.count($content)."====\r\n";

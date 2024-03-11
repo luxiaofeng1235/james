@@ -540,7 +540,7 @@ function getZhimaProxy(){
 				$proxy_data  =$data;//用这个存储所有的信息
 				$expire_time = $data['expire_time'] ?? '';
 				//用过期时间减去当前的时间为缓存cache时间
-				$diff_time = strtotime($expire_time) - time();
+				$diff_time = strtotime($expire_time) - time() -25*60;//提前25分钟结束释放资源
 				if($diff_time <= 0){
 					$diff_time = $time_out;
 				}
