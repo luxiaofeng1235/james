@@ -518,6 +518,33 @@ function is_json($string)
 }
 
 /**
+ * 获取四月天的dialingIP
+ * @return mixed
+ */
+function getSiyuetian(){
+	global $redis_data;
+	$redis_cache_key = 'siyuetian:';
+	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
+	if(!$api_proxy_data){
+		$url = 'http://proxy.siyetian.com/apis_get.html?token=gHbi1yTU1EMPRUV65EVJl3TR1STqFUeORUQ61ERZhnTqlENPRVS00EVrJTTqFVN.AOyEDOzEDMxcTM&limit=1&type=1&time=&data_format=json&showTimeEnd=true';
+		$info = webRequest($url,'GET');
+		$proxy_info  =    json_decode($info , true);
+		if( $proxy_info['code'] == 1){
+			$data = $proxy_info['data'][0] ?? [];
+			//一个IP缓存五分钟
+			$redis_data->set_redis($redis_cache_key,json_encode($data),300);
+			return $data;
+		}else{
+			return [];
+		}
+	}else{
+		$proxy_conf = json_decode($api_proxy_data , true);
+		return $proxy_conf ?? [];
+	}
+
+}
+
+/**
  * 获取芝麻的代理IP
  * @return mixed
  */
