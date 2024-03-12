@@ -735,7 +735,7 @@ function getContenetNew($data){
 			//替换文本中的P标签
 			$store_content = str_replace("<p>",'',$store_content);
 			$store_content = str_replace("</p>","\n\n",$store_content);
-			//替换try{.....}cache的一段话这个不需要了
+			//替换try{.....}cache的一段话JS这个不需要了
 			$store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
 			$store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
 		}
