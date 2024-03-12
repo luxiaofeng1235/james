@@ -224,6 +224,7 @@ if($info){
             //这里需要同步处理未同步下来的章节信息
             ProcessUrl::selfRunUrls($store_data);
         }
+        if(!$item_list) $itemlist = [];
         //获取小说的章节路径
         $novel_list_path = Env::get('SAVE_NOVEL_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']);
         printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
