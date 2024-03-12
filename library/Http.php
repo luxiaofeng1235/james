@@ -41,8 +41,17 @@ class MultiHttp
         );
         if($is_proxy){
             //获取代理的配置方式
-            $proxy_data = getZhimaProxy();//获取芝麻的周套餐
-            //$proxy_data = getProxyInfo();
+            // echo strtotime('2024-03-12 05:34:46');
+            // die;
+            $timestamp = time();
+            $hour = date('H', $timestamp);
+            //如果在每天的19点后或者早上九点之前启用系统的代理，节省成本
+            if($hour>=17 || $hour<=9){
+                $proxy_data = getProxyInfo();
+            }else{
+               $proxy_data = getZhimaProxy();//获取芝麻的周套餐
+            }
+
             if($proxy_data){
                 //是否开启代理
                 $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
