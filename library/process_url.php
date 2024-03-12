@@ -12,7 +12,13 @@
 
 class ProcessUrl{
 
-    //自动计算有问题的url从远端进行抓取
+
+  /**
+  * @note 自动计算有问题的url从远端进行抓取
+  *
+  * @param  $info string 小说基本信息
+  * @return unknow
+  */
     public static function selfRunUrls($info){
         if(!$info)
             return false;
