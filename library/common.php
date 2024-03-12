@@ -555,7 +555,7 @@ function getZhimaProxy(){
 	// $redis_data->del_redis($redis_cache_key);
 	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
 	if(!$api_proxy_data){
-		$time_out = 3600*2.5;//设置3个小时的访问
+		$time_out = 3600*1;//设置3个小时的访问
 		//默认用三个小时的代理IP
 		$url = Env::get('ZHIMAURL');
 		$info = webRequest($url,'GET');
@@ -859,6 +859,45 @@ function handleArrayKey($key_data){
 	}
 	return $new_data;
 }
+
+/**
+ * @note 检测获取含有代理的状态
+ * @param $url str  url地址
+ * @return bool
+ */
+function curlProxyState($url,$data=[]){
+    if(!$url )
+        return false;
+	$proxy = $data['ip'] ?? ''; //代理IP
+    $port = $data['port'] ?? ''; //端口
+    $proxyauth ='';
+    if(isset($data['username']) && isset($data['password'])){
+        $proxyauth = $data['username'].':'.$data['password']; //用户名密码
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_PROXY, $proxy);
+    curl_setopt($ch, CURLOPT_PROXYPORT, $port);
+    if(isset($data['username']) && isset($data['password'])){
+        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+    }
+    curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 0);
+    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    $curl_scraped_page = curl_exec($ch);
+    $httpcode = curl_getinfo($ch);
+    curl_close($ch);//关闭cURL会话
+    return $httpcode;
+}
+
 /**
  * @note 检测URL是否为404
  * @param $url str  url地址
