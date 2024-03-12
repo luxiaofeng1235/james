@@ -6,7 +6,7 @@ user="root"
 password="HM9GO3JH3XrLoouh"
 database="book_center"
 
-query="SELECT store_id,story_id,pro_book_id,title FROM ims_novel_info where is_async = 0 and store_id>0 and store_id<20000  limit 30"
+query="SELECT store_id,story_id,pro_book_id,title FROM ims_novel_info where is_async = 0 and store_id>0 and store_id<20000  limit 50"
 #echo "$query"
 result=$(mysql -h $host -u $user -p$password $database -s -e "$query")
 
