@@ -12,7 +12,7 @@ set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
 $db_name = 'db_novel_pro';
-$sql ="select pic ,id as pro_book_id,book_name as title,author,source_url  from ".Env::get('TABLE_MC_BOOK')." where id<100000 and source_url regexp 'paoshu8' and pic regexp 'image' limit 20000";
+$sql ="select pic ,id as pro_book_id,book_name as title,author,source_url  from ".Env::get('TABLE_MC_BOOK')." where id<100000 and source_url regexp 'paoshu8' and pic regexp 'image' limit 4000";
 $info = $mysql_obj->fetchAll($sql,$db_name);
 if(!$info) $info = array();
 if(!empty($info)){
@@ -35,7 +35,6 @@ if(!empty($info)){
                 $update_sql = "update ".Env::get('TABLE_MC_BOOK')." set pic = '".$img_path."' where id = ".$pro_book_id;
                 $mysql_obj->query($update_sql,$db_name);
                 echo "update id：".$pro_book_id."\tpic：".$img_path.PHP_EOL;
-                die;
             }
         }
     }
