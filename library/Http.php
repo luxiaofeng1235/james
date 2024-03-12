@@ -43,8 +43,8 @@ class MultiHttp
             //获取代理的配置方式
             $timestamp = time();
             $hour = date('H', $timestamp);
-            //如果在每天的19点后或者早上九点之前启用系统的代理，节省成本
-            if($hour>=19 || $hour<=9){
+            //如果在每天的19点后或者早上八点之前启用系统的代理，节省成本
+            if($hour>=19 || $hour<=8){
                 $proxy_data = getProxyInfo();
             }else{
                $proxy_data = getZhimaProxy();//获取芝麻的周套餐
