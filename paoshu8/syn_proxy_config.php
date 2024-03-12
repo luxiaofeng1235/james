@@ -68,6 +68,12 @@ function getCurlData($url,$data=[],$is_proxy =false){
     }else{
         //非代理模式请求下
         $proxy_api  = json_decode($curl_scraped_page,true);
+        //返回对应的余额信息字段
+        if($proxy_api['code'] !=0 ){
+            echo "now-time：".date('Y-m-d H:i:s');
+            echo "error-msg-proxy：" . $proxy_api['msg'].PHP_EOL;
+            die;
+        }
         $proxy_data = $proxy_api['data'][0] ?? [];
         return $proxy_data;
     }
