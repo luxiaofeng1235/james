@@ -99,10 +99,14 @@ if($info){
          //每次进来前先进行心跳检测，如果代理已经过期，就删掉redis的缓存信息让接口自动重新获取最新的
         $redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
         $proxy_data  = $redis_data->get_redis($redis_cache_key);
+
         if(!empty($proxy_data)){
             $proxy_conf = json_decode($proxy_data,true);
-            $checkProxy = curlProxyState($story_link,$proxy_conf);
+            $proxy_info_arr = $proxy_conf ?? [];
+            $checkProxy = curlProxyState($story_link,$proxy_info_arr);
             if($checkProxy && $checkProxy['http_code'] != 200){
+                //这里会直接删掉不可用的redis的配置
+                echo "删除了过期的代理配置IP,在采集会重新抓取计算：\r\n";
                 $redis_data->del_redis($redis_cache_key);
             }
         }
