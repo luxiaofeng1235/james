@@ -49,10 +49,10 @@ class ProcessUrl{
              do{
                 $run_times++;
                 //整体轮询五次
-                if($run_times>5){
+                if($run_times>10){
                     break;
                 }
-                echo "repeat-zong-num：".$run_times.PHP_EOL;
+                echo "repeat-next-num：".$run_times.PHP_EOL;
                 $arr =array_chunk($run_list,200);
                 foreach($arr as $key =>$val){
                     //获取最新的数据信息

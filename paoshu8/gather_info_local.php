@@ -106,7 +106,7 @@ if($info){
             $checkProxy = curlProxyState($story_link,$proxy_info_arr);
             if($checkProxy && $checkProxy['http_code'] != 200){
                 //这里会直接删掉不可用的redis的配置
-                echo "删除了过期的代理配置IP,在采集会重新抓取计算：\r\n";
+                echo "删除了过期的代理配置IP,在采集章节会重新获取新的IP.......：\r\n";
                 $redis_data->del_redis($redis_cache_key);
             }
         }
