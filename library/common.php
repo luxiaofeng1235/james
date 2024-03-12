@@ -612,29 +612,31 @@ function getZhimaWeek(){
  */
 function getProxyInfo(){
 
-	$proxy = [
-		'ip'        =>  Env::get('PROXY.URL_HOST'), //代理的IP
-		'port'      =>  Env::get('PROXY.PORT'), //代理的端口号
-		'username'  =>  Env::get('PROXY.username'), //用户名
-		'password'  =>  Env::get('PROXY.password'), //密码
-	];
-	return $proxy;
+	// $proxy = [
+	// 	'ip'        =>  Env::get('PROXY.URL_HOST'), //代理的IP
+	// 	'port'      =>  Env::get('PROXY.PORT'), //代理的端口号
+	// 	'username'  =>  Env::get('PROXY.username'), //用户名
+	// 	'password'  =>  Env::get('PROXY.password'), //密码
+	// ];
+	// return $proxy;
 	//取代理的配置信息
 	// global $redis_data;
 	// $redis_cache_key = getRedisProyKey();
 	// //默认先从配置去取
 	// $api_proxy_data = $redis_data->get_redis($redis_cache_key);
 	// $proxy_data = json_decode($api_proxy_data,true);
-	return $proxy_data ?? [];
+	// return $proxy_data ?? [];
 	// if($api_proxy_data){
 	//      $proxy_data = json_decode($api_proxy_data,true);
 	//      return $proxy_data;
 	// }else{
-	//     $url =Env::get('PROXY_GET_URL');
-	//     $item = webRequest($url,'GET');
-	//     $tscode  = json_decode($item,true);
-	//     $proxy_data = $tscode['data']['list'][0] ?? [];
-	//     $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),NovelModel::$redis_expire_time);
+	    $url =Env::get('PROXY_GET_URL');
+	    $item = webRequest($url,'GET');
+	    $tscode  = json_decode($item,true);
+	    $proxy_data = $tscode['data']['list'][0] ?? [];
+	    return $proxy_data;
+	    // $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),NovelModel::$redis_expire_time);
+
 	//     return $redis_data;
 	// }
 }
