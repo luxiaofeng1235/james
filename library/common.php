@@ -555,8 +555,7 @@ function getZhimaProxy(){
 	// $redis_data->del_redis($redis_cache_key);
 	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
 	if(!$api_proxy_data){
-		$time_out = 3600*1;//设置3个小时的访问
-		//默认用三个小时的代理IP
+		$time_out = 3600*1;//设置1个小时的缓存访问时间
 		$url = Env::get('ZHIMAURL');
 		$info = webRequest($url,'GET');
 		//如果是JSON返回说明当前的接口有问题
