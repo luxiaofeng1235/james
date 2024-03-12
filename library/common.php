@@ -545,7 +545,7 @@ function getSiyuetian(){
 }
 
 /**
- * 获取芝麻的代理IP
+ * 获取芝麻的代理IP-【一般是请求静态IP】
  * @return mixed
  */
 function getZhimaProxy(){
@@ -571,7 +571,7 @@ function getZhimaProxy(){
 				// if($diff_time <= 0){
 				// 	$diff_time = $time_out;
 				// }
-				$diff_time = 3600 * 1;//默认先控制两个小时的缓存，防止提前过期
+				$diff_time = 3600 * 1;//默认先控制1小时的缓存，防止提前过期
 				//以代理拨号返回的过期时间为准进行计算
 				$redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$diff_time);
 				return $proxy_data;
