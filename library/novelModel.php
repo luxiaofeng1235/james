@@ -33,6 +33,8 @@ class NovelModel{
 
    public static $is_no_async = 0;//未同步的
 
+   private static $default_pic = '/mnt/book/pic/default_cover.jpg';//默认的图片
+
 
    public static $file_type = 'txt'; //存储为txt的格式文件
 
@@ -381,6 +383,9 @@ class NovelModel{
       if($info['book_name'] || $info['author']){
          //处理图片的存储路径问题，直接保存对应的按照：中文转换成英文，取英文的首字母，书名+作者的首字母计算返回
           $image_str = Env::get('SAVE_IMG_PATH') . DS. self::getFirstImgePath($info['book_name'],$info['author'],$info['pic']);
+          if(!$image_str){
+            $image_str =  self::$default_pic;
+          }
           $info['pic'] = $image_str;
       }
       //处理小说是否完本状态
