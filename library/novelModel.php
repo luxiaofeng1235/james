@@ -278,16 +278,14 @@ class NovelModel{
       header("Content-Disposition: attachment; filename=".$imgFileName);
       $filename = $save_img_path . DS . $imgFileName;
       //判断文件是否存在，如果不存在就直接保存到本地
-      if(!file_exists($filename)){
-        $save_img_path =Env::get('SAVE_IMG_PATH');
-        if(!is_dir($save_img_path)){
-            createFolders($save_img_path);
-        }
-        //开启使用代理IP去请求,由于服务器在海外要用代理去请求
-        $res = MultiHttp::curlGet([$url],null,true);
-        $img_con = $res[0] ?? '';
-        @file_put_contents($filename, $img_con);
+      $save_img_path =Env::get('SAVE_IMG_PATH');
+      if(!is_dir($save_img_path)){
+          createFolders($save_img_path);
       }
+      //开启使用代理IP去请求,由于服务器在海外要用代理去请求
+      $res = MultiHttp::curlGet([$url],null,true);
+      $img_con = $res[0] ?? '';
+      @file_put_contents($filename, $img_con);
     }
 
      /**
