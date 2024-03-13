@@ -612,13 +612,13 @@ function getZhimaWeek(){
  */
 function getProxyInfo(){
 
-	// $proxy = [
-	// 	'ip'        =>  Env::get('PROXY.URL_HOST'), //代理的IP
-	// 	'port'      =>  Env::get('PROXY.PORT'), //代理的端口号
-	// 	'username'  =>  Env::get('PROXY.username'), //用户名
-	// 	'password'  =>  Env::get('PROXY.password'), //密码
-	// ];
-	// return $proxy;
+	$proxy = [
+		'ip'        =>  Env::get('PROXY.URL_HOST'), //代理的IP
+		'port'      =>  Env::get('PROXY.PORT'), //代理的端口号
+		'username'  =>  Env::get('PROXY.username'), //用户名
+		'password'  =>  Env::get('PROXY.password'), //密码
+	];
+	return $proxy;
 	//取代理的配置信息
 	// global $redis_data;
 	// $redis_cache_key = getRedisProyKey();
