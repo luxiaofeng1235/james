@@ -555,7 +555,6 @@ function getZhimaProxy(){
 	// $redis_data->del_redis($redis_cache_key);
 	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
 	if(!$api_proxy_data){
-		$time_out = 3600*1;//设置1个小时的缓存访问时间
 		$url = Env::get('ZHIMAURL');
 		$info = webRequest($url,'GET');
 		//如果是JSON返回说明当前的接口有问题
@@ -570,7 +569,7 @@ function getZhimaProxy(){
 				// if($diff_time <= 0){
 				// 	$diff_time = $time_out;
 				// }
-				$diff_time = 3600 * 1;//默认先控制1小时的缓存，防止提前过期
+				$diff_time = 30 * 60;//默认先控制半个小时的缓存，防止提前过期
 				//以代理拨号返回的过期时间为准进行计算
 				$redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$diff_time);
 				return $proxy_data;
