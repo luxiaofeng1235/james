@@ -188,8 +188,6 @@ if($info){
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
         }
-
-
         $sync_pro_id = 0;//给一个默认值
          //执行相关的章节批处理程序
         $update_id = $info[0]['store_id'] ?? 0;
