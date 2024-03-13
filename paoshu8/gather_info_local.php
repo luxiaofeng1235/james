@@ -94,24 +94,23 @@ if($info){
     $store_data = $info_data->all();
     if(!empty($store_data)){
 
-
         /********************start**********************************/
          //每次进来前先进行心跳检测，如果代理已经过期，就删掉redis的缓存信息让接口自动重新获取最新的
-        $redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
-        $proxy_data  = $redis_data->get_redis($redis_cache_key);
+        // $redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
+        // $proxy_data  = $redis_data->get_redis($redis_cache_key);
 
-        if(!empty($proxy_data)){
-            $proxy_conf = json_decode($proxy_data,true);
-            $proxy_info_arr = $proxy_conf ?? [];
-            $checkProxy = curlProxyState($story_link,$proxy_info_arr);
-            if($checkProxy && $checkProxy['http_code'] != 200){
-                //这里会直接删掉不可用的redis的配置
-                $ip = $proxy_info_arr['ip']?? '';
-                $port = $proxy_info_arr['port'] ?? 0 ;
-                echo "删除了过期的代理配置IP：{".$ip.":".$port."} ,在采集章节会重新获取新的IP.......：\r\n";
-                $redis_data->del_redis($redis_cache_key);
-            }
-        }
+        // if(!empty($proxy_data)){
+        //     $proxy_conf = json_decode($proxy_data,true);
+        //     $proxy_info_arr = $proxy_conf ?? [];
+        //     $checkProxy = curlProxyState($story_link,$proxy_info_arr);
+        //     if($checkProxy && $checkProxy['http_code'] != 200){
+        //         //这里会直接删掉不可用的redis的配置
+        //         $ip = $proxy_info_arr['ip']?? '';
+        //         $port = $proxy_info_arr['port'] ?? 0 ;
+        //         echo "删除了过期的代理配置IP：{".$ip.":".$port."} ,在采集章节会重新获取新的IP.......：\r\n";
+        //         $redis_data->del_redis($redis_cache_key);
+        //     }
+        // }
         /********************end**********************************/
 
 

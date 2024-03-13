@@ -401,6 +401,11 @@ class NovelModel{
       $score = round($score,1);
       $info['score'] = $score;//随机小数评分
       $info['read_count'] = rand(10,100000);//最新阅读数
+      $info['hits'] = rand(1000,10000);//浏览数量
+      $info['hits_month'] = rand(10000,20000);//月点击
+      $info['hits_week'] = rand(5000,10000);//周点击
+      $info['hits_day'] = rand(100,5000);//日点击
+      $info['shits'] = rand(100,300);//收藏人气
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
