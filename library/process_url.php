@@ -76,7 +76,7 @@ class ProcessUrl{
                  if($len>0 && $len == $success_num){
                       foreach($insert_data as $gval){
                           file_put_contents($gval['file_path'],$gval['content']);
-                          echo '重新抓取的path：'. $gval['file_path'].PHP_EOL;
+                          echo '重新抓取的小说章节的path：'. $gval['file_path'].PHP_EOL;
                       }
                       break;
                  }
