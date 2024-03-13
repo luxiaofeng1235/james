@@ -79,13 +79,41 @@ if(!empty($store_data)){
     $intro = cut_str($intro,200); //切割字符串
     $store_data['intro'] = $intro;
     $store_data['tag'] = str_replace('小说','',$store_data['tag']);
+    $store_data['story_id'] = $id;//按照story_id存储
     //执行更新操作
-    $store_data['updatetime'] = time();
-    $store_data['createtime']  = time();
+    // $store_data['updatetime'] = time();
+    // $store_data['createtime']  = time();
+
+    $novel_id = syncNovelData($store_data);
     echo '<pre>';
-    print_R($store_data);
+    print_R($novel_id);
     echo '</pre>';
     exit;
+}
+
+//同步novel_info表的信息
+function syncNovelData($store_data){
+    if(!$store_data){
+        return false;
+    }
+    if(!isset($store_data['title']) || !isset($store_data['author']))
+        return false;
+    global $mysql_obj,$novel_table_name;
+    $where_condition =  "title = '".$store_data['title']."' and author ='".$store_data['author']."' limit 1";
+    $sql = "select store_id from ".$novel_table_name." where ".$where_condition;
+    $info = $mysql_obj->fetch($sql , 'db_slave');
+    if(!$info){
+        $store_data['createtime'] = time();
+        $novel_id  = $mysql_obj->add_data($store_data,$novel_table_name,'db_master');
+        if(!$novel_id)
+            return false;
+    }else{
+        $store_data['updatetime'] = time();
+        $where_conf = "store_id = '".$info['store_id']."' limit 1";
+        $novel_id = $mysql_obj->update_data($store_data,$where_conf,$novel_table_name);
+    }
+    return $novel_id;
+
 }
 
 ?>
