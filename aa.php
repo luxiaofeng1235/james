@@ -4,21 +4,22 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
+require_once($dirname.'/library/proxy_network.php');//代理IP使用
 use Overtrue\Pinyin\Pinyin;
 use QL\QueryList;
-
 $exec_start_time = microtime(true);
 $limit =Env::get('LIMIT_SIZE');
-$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="92_92763"  limit 10','db_slave');
+$list = $mysql_obj->fetchAll('select chapter_id,CONCAT(\''.Env::get('APICONFIG.PAOSHU_HOST').'\',link_url) as link_url from ims_chapter where story_id="92_92763"   limit 3','db_slave');
 $t =array_chunk($list, $limit);
-$i = 0;
+
+$all_num = 0;
 foreach($t as $key =>$val){
      $urls = array_column($val,'link_url');
      $content= MultiHttp::curlGet($urls,null,true);
+     $all_num+=count($content);
      echo 'index-num：'.count($val)."\r\n";
      echo 'curl-num：'.count($content)."====\r\n";
      sleep(1);
-     unset($t[$key]);
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
@@ -26,7 +27,7 @@ $proxyInfo = getProxyInfo();
 echo '<pre>';
 print_R($proxyInfo);
 echo '</pre>';
-echo "请求完成，一次配置爬取".count($list)."个url,数据爬取过来的有".$i."个页面\r\n";
+echo "请求完成，一次配置爬取".count($list)."个url,数据爬取过来的有".$all_num."个页面\r\n";
 echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 exit;
 
