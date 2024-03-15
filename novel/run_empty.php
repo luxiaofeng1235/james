@@ -115,7 +115,7 @@ function saveLocalFile($data){
          if(!$val)
             continue;
         if($val['content']){
-            echo "file to loal path：{$val['file_path']} |name={$val['link_name']}\r\n";
+            echo ($key+1) . "：file to loal path：{$val['file_path']} |name={$val['link_name']}\r\n";
             file_put_contents($val['file_path'] ,$val['content']);
         }
     }
