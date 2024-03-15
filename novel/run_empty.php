@@ -81,8 +81,9 @@ if(!empty($info)){
     }
     //统计下当前的跑出来的数据情况
     echo "default-num：".count($chapter_list)."\tis_have_num：".$i."\tall-empty-num：".count($dataList).PHP_EOL;
-    $items = array_slice($dataList , 0, 10); //测试后期删掉
-    echo "共需要处理的空章节总数--步长按照10来算的:".count($items).PHP_EOL;
+    $tmp_size = 20;
+    $items = array_slice($dataList , 0, $tmp_size); //测试后期删掉
+    echo "共需要处理的空章节总数--步长按照{$tmp_size}来算的:".count($items).PHP_EOL;
     echo "-----------------------------\r\n";
     $limit_num = Env::get('LIMIT_EMPTY_SIZE');
     $items = array_chunk($items, $limit_num);
