@@ -14,10 +14,7 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 $pinyin = new  Pinyin(); //初始化拼音类
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
-
-
-
-
+$exec_start_time = microtime(true);
 
 //检测代理
 if(!NovelModel::checkProxyExpire()){
@@ -29,7 +26,7 @@ $redis_key = 'img_pic_id';//redis的对应可以设置
 // $redis_data->set_redis($redis_key,452);
 $id = $redis_data->get_redis($redis_key);
 $where_data = '  is_async = 1';
-$limit= 500; //控制列表的步长
+$limit= 30; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
 if($id){
@@ -74,12 +71,8 @@ if(!empty($info)){
     exit();
 }
 
-$ids = array_column($info,'pro_book_id');
-$max_id = max($ids);
-$redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
-echo "下次轮训的最大id起止位置 pro_book_id：".$max_id.PHP_EOL;
-
 echo "ts_count exists img::".count($diff_data)."\r\n";
+$o_data  = [];
 if(!empty($diff_data)){
     $num = 0;
     foreach($diff_data as $k => $v){
@@ -92,14 +85,46 @@ if(!empty($diff_data)){
         if(!$cover_logo) continue;
         //校验是否失败
         if (!@getimagesize($save_img_path)) {
-            $t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
-            echo "index:{$num} 【本地图片】 pro_book_id : {$book_id} 损坏图片已修复 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
+            $o_data[] = $v;
+            //$t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
+            // echo "index:{$num} 【本地图片】 pro_book_id : {$book_id} 损坏图片已修复 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
         }else{
-            echo "index:{$num} 【本地图片】 pro_book_id: {$book_id} 图片正常  title：{$title}  author:{$author}  path:{$save_img_path} \r\n";
+             echo "index:{$num} 【本地图片】 pro_book_id: {$book_id} 图片正常  title：{$title}  author:{$author}  path:{$save_img_path} \r\n";
+        }
+    }
+    if(!empty($o_data)){
+        //下面是处理对应的为空的数据请求
+        echo 'now is empty url init to async ...................'.PHP_EOL;
+        //启用多线程去保存处理先关的数据
+        $curl_multi = new curl_pic_multi();
+        $img_list = array_column($o_data,'cover_logo');
+        $data= $curl_multi->Curl_http($img_list);
+        $t_num = 0;
+        foreach($data as $gkey=> $img_con){
+            $t_num++;
+            $filename = $o_data[$gkey]['save_img_path'] ?? '';//保存的路径
+            $img_link = $o_data[$gkey]['cover_logo'] ?? '';//小说封面
+            $pro_book_id = $o_data[$gkey]['pro_book_id'] ?? 0;//第三方ID
+            $title = $o_data[$gkey]['title'] ?? '';//小说标题
+            $author = $o_data[$gkey]['author'] ?? ''; //小说作者
+            $cover_logo = $o_data[$gkey]['cover_logo'] ?? ''; //小说封面
+            //写入文件信息
+            $rk = file_put_contents($filename , $img_con);
+            echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author}  url: {$cover_logo} path:{$filename}  \r\n";
+
         }
     }
 }
-echo "count-num:".count($info)."\r\n";
+
+$ids = array_column($info,'pro_book_id');
+$max_id = max($ids);
+$redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
+echo "下次轮训的最大id起止位置 pro_book_id：".$max_id.PHP_EOL;
+
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time;
+echo "原始数据长度:".count($info)."\r\n";
 echo "finish_time：".date('Y-m-d H:i:s') .PHP_EOL;
+echo "script execution time: ".sprintf('%.2f',($executionTime/60)) ." minutes \r\n";
 echo "over\r\n";
 ?>

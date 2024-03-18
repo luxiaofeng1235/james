@@ -25,7 +25,7 @@ $redis_key = 'img_pic_empty_id';//redis的对应可以设置
 // $redis_data->set_redis($redis_key,3000);
 $id = $redis_data->get_redis($redis_key);
 $where_data = '  is_async = 1';
-$limit= 500; //控制列表的步长
+$limit= 3000; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
 if($id){
