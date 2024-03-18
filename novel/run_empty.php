@@ -20,16 +20,19 @@ if(!NovelModel::checkProxyExpire()){
     exit("代理IP已过期，请重新拉取最新的ip\r\n");
 }
 
-
-$id = isset($argv[1])  ? intval($argv[1]) : 0;
-if(!$id){
-    exit("please input your id \r\n");
+//同步的书籍ID信息
+$store_id = isset($argv[1])  ? intval($argv[1]) : 0;
+if(!$store_id){
+    exit("please input your store_id.... \r\n");
 }
-
-$sql = "select title,author,pro_book_id,store_id from ims_novel_info where store_id = ".$id;
+$where_data = 'is_async = 1'; //只对已经同步得来进行计算
+//查询小说的基本信息
+$sql = "select title,cover_logo,author,pro_book_id,store_id from ims_novel_info where store_id = ".$store_id;
 $info =$mysql_obj->fetch($sql , 'db_slave');
 if(!empty($info)){
     extract($info);
+    //同步一下图片，直接取
+    $t= NovelModel::saveImgToLocal($cover_logo , $title , $author);
     $md5_str= NovelModel::getAuthorFoleder($title,$author);
     echo "book_md5：".$md5_str."\r\n";
     $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
@@ -57,7 +60,7 @@ if(!empty($info)){
         $list = NovelModel::removeAdInfo($arr);
         return $list;
     };
-    //处理广告
+    //处理广告并移除关联章节
     $chapter_list = $removeAdInfo($chapter_list);
     foreach($chapter_list as $val){
         //当前的章节路径的名称
@@ -76,12 +79,12 @@ if(!empty($info)){
         }
     }
     if(!$dataList){
-          echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
-          exit();
+        echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
+        exit();
     }
     //统计下当前的跑出来的数据情况
-    echo "default-num：".count($chapter_list)."\tis_have_num：".$i."\tall-empty-num：".count($dataList).PHP_EOL;
-    $tmp_size = 20;
+    echo "json-list-num：".count($chapter_list)."\tis_have_num：".$i."\tall-empty-num：".count($dataList).PHP_EOL;
+    $tmp_size = 1; //每次定义20个步长去处理
     $items = array_slice($dataList , 0, $tmp_size); //测试后期删掉
     echo "共需要处理的空章节总数--步长按照{$tmp_size}来算的:".count($items).PHP_EOL;
     echo "-----------------------------\r\n";
@@ -90,90 +93,21 @@ if(!empty($info)){
     $goodsList = [];
     foreach($items as $k =>$v){
         //抓取远端地址并进行处理
-        $curl_contents= getHtmlData($v);
+        $curl_contents= NovelModel::getHtmlData($v);
+        if(!$curl_contents)
+            continue;
         //保存本地文件变更
-        saveLocalFile($curl_contents);
+        NovelModel::saveLocalContent($curl_contents);
         sleep(1);
     }
+    echo "store_id = ".$info['store_id']." | pro_book_id = ".$info['pro_book_id'].PHP_EOL;
     echo "over\r\n";
+}else{
+    echo "no this chapter\r\n";
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
 echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 
 
-/**
-* @note 保存本地文件信息
-*
-* @param $data str 待保存的数据
-* @return 返回抓取后的curl请求连接
-*/
-function saveLocalFile($data){
-    if(!$data)
-        return false;
-    foreach($data as $key =>$val){
-         if(!$val)
-            continue;
-        if($val['content']){
-            echo ($key+1) . "：file to loal path：{$val['file_path']} |name={$val['link_name']}\r\n";
-            file_put_contents($val['file_path'] ,$val['content']);
-        }
-    }
-}
 
-/**
-* @note curl抓取远程章节类目并组装数据
-*
-* @param $data str array处理的数据
-* @return 返回抓取后的curl请求连接
-*/
-
-function getHtmlData($data){
-    global $urlRules;
-    if(!$data)
-        return false;
-    foreach($data as $key =>$val){
-        $item[$val['link_str']] = $val;
-        $link_name = $val['link_name'];
-        $item[$val['link_str']]['link_name'] = $link_name;
-        $urls[$val['link_str']]=  $val['link_url'];
-        $t_url[]= $val['link_url'];
-    }
-    //获取对应的curl的信息
-    $shell_cmd = NovelModel::getCommandInfo($item);
-    //执行对应的shell命令获取对应的curl请求
-    $string = shell_exec($shell_cmd);
-    //防止返回空数据的情况，做特殊判断
-    if(!$string){
-        return [];
-    }
-    $s_content=preg_split('/<\/html>/', $string);
-    $s_content =array_map('trim', $s_content);
-    //处理过滤账号信息
-    $list = array_filter($s_content);
-    //获取采集的标识
-    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content'];
-    foreach($list as $key =>$val){
-        $data = QueryList::html($val)->rules($rules)->query()->getData();
-        $html = $data->all();
-        $store_content = $html['content'] ?? '';
-        $meta_data = $html['meta_data']??'';
-        $href = $html['href'];
-        $html_path = getHtmlUrl($meta_data,$href);
-        if($store_content){
-            $store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
-            //替换文本中的P标签
-            $store_content = str_replace("<p>",'',$store_content);
-            $store_content = str_replace("</p>","\n\n",$store_content);
-            //替换try{.....}cache的一段话JS这个不需要了
-            $store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
-            $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
-        }
-        $store_c[$html_path] = $store_content;
-    }
-    foreach($item as $k =>$v){
-        $item[$k]['content'] = isset($store_c[$k])  ? $store_c[$k] : '';
-    }
-    $arr_list= array_values($item);
-    return $arr_list;
-}
