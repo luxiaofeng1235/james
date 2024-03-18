@@ -1,6 +1,6 @@
 <?php
 /*
- * 同步小说里的封面图到服务器上的图片信息
+ * 同步小说里的已存在的图片信息
  *
  * Copyright (c) 2017 - Linktone
  * @author xiaofeng.lu <xiaofeng.200@163.com>
@@ -14,17 +14,22 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 $pinyin = new  Pinyin(); //初始化拼音类
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
+
+
+
+
+
 //检测代理
 if(!NovelModel::checkProxyExpire()){
     exit("代理IP已过期，请重新拉取最新的ip\r\n");
 }
+
 $db_name = 'db_novel_pro';
 $redis_key = 'img_pic_id';//redis的对应可以设置
 // $redis_data->set_redis($redis_key,452);
 $id = $redis_data->get_redis($redis_key);
-
 $where_data = '  is_async = 1';
-$limit= 50; //控制步长
+$limit= 500; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
 if($id){
@@ -90,7 +95,7 @@ if(!empty($diff_data)){
             $t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
             echo "index:{$num} 【本地图片】 pro_book_id : {$book_id} 损坏图片已修复 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
         }else{
-            echo "index:{$num} 【本地图片】 pro_book_id: {$book_id} title：{$title}  author:{$author}  path:{$save_img_path} 图片正常\r\n";
+            echo "index:{$num} 【本地图片】 pro_book_id: {$book_id} 图片正常  title：{$title}  author:{$author}  path:{$save_img_path} \r\n";
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * 同步小说里的封面图到服务器上的图片信息
+ * 同步小说里的为空的的图片信息
  *
  * Copyright (c) 2017 - Linktone
  * @author xiaofeng.lu <xiaofeng.200@163.com>
@@ -11,37 +11,92 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
+use Overtrue\Pinyin\Pinyin;
+$pinyin = new  Pinyin(); //初始化拼音类
+echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
+
+//检测代理
+if(!NovelModel::checkProxyExpire()){
+    exit("代理IP已过期，请重新拉取最新的ip\r\n");
+}
+
 $db_name = 'db_novel_pro';
-$sql ="select pic ,id as pro_book_id,book_name as title,author,source_url  from ".Env::get('TABLE_MC_BOOK')." where id<100000 and source_url regexp 'paoshu8' and pic regexp 'image' limit 200000";
-$info = $mysql_obj->fetchAll($sql,$db_name);
+$redis_key = 'img_pic_empty_id';//redis的对应可以设置
+// $redis_data->set_redis($redis_key,3000);
+$id = $redis_data->get_redis($redis_key);
+$where_data = '  is_async = 1';
+$limit= 500; //控制列表的步长
+$order_by =' order by pro_book_id asc';
+
+if($id){
+    $where_data .=" and pro_book_id > ".$id;
+}
+$sql = "select pro_book_id,title,author,cover_logo,story_link from ims_novel_info where ".$where_data;
+$sql .= $order_by;
+$sql .= " limit ".$limit;
+echo "sql : " .$sql ."\r\n";
+
+$info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
+$diff_data = array();
+
 if(!empty($info)){
-    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];//抓取的规则
+    //获取图片
     foreach($info as $value){
-        $image_path = $value['pic'] ?? '';
+
+        $cover_logo = $value['cover_logo'] ?? '';
+        $title = $value['title'] ?? '';
+        $author = $value['author'] ?? '';
         $pro_book_id = intval($value['pro_book_id']);
-        if(!$image_path) continue;
-        if(!file_exists($image_path)){
-            $url  = parse_url($value['source_url']);
-            $files = Env::get('SAVE_HTML_PATH').DS.'detail_'.str_replace('/','',$url['path']).'.'.NovelModel::$file_type;
-            $html = readFileData($files);
-            if($html){
-                $info_data=QueryList::html($html)
-                    ->rules($rules)
-                    ->query()->getData()->all();
-                $cover_logo = $info_data['cover_logo'];
-                //同步图片信息
-                $img_path = NovelModel::saveImgToLocal($cover_logo,$value['title'],$value['author']);
-                $update_sql = "update ".Env::get('TABLE_MC_BOOK')." set pic = '".$img_path."' where id = ".$pro_book_id;
-                $mysql_obj->query($update_sql,$db_name);
-                echo "update id：".$pro_book_id."\tpic：".$img_path.PHP_EOL;
-            }
+        if(!$cover_logo || !$title || !$author) continue;
+
+        //获取对应的名称信息,作为对象插入进去
+        $img_name = NovelModel::getFirstImgePath($title,$author,$cover_logo ,$pinyin);
+        //保存的图片路径信息
+        $save_img_path  =  Env::get('SAVE_IMG_PATH') . DS. $img_name;
+        //如果为空或者不存在的话就去抓取
+        if(!file_exists($save_img_path)){
+            $diff_data[] =[
+                'title' => $title,
+                'author'    =>$author,
+                'link'      =>  $value['story_link'],
+                'save_img_path'   =>  $save_img_path,
+                'pro_book_id'    =>  $pro_book_id,
+                'cover_logo'    =>  $cover_logo,
+            ];
+        }else{
         }
     }
 }else{
     echo "no data\r\n";
+    exit();
+}
 
+$ids = array_column($info,'pro_book_id');
+$max_id = max($ids);
+$redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
+echo "下次轮训的最大id起止位置 pro_book_id：".$max_id.PHP_EOL;
+
+echo "ts_count empty img::".count($diff_data)."\r\n";
+if(!empty($diff_data)){
+    $num = 0;
+    foreach($diff_data as $k => $v){
+        $num++;
+        $book_id = (int) $v['pro_book_id'];//图片ID
+        $cover_logo =$v['cover_logo'] ??'';//图片的远程封面URL
+        $save_img_path  = $v['save_img_path'] ?? '';//已经储存的图片路径
+        $title = $v['title'] ??'';//标题
+        $author = $v['author'] ??'';
+        if(!$cover_logo) continue;
+        //保存本地图片
+        $t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
+        echo "index:{$num}  pro_book_id : {$book_id} 【不存在的图片】 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
+        //更新对应的图片信息
+        $up_sql = "update mc_book set pic ='$save_img_path' where id ='$book_id' limit 1";
+        $mysql_obj->query($up_sql,$db_name);
+    }
 }
 echo "count-num:".count($info)."\r\n";
+echo "finish_time：".date('Y-m-d H:i:s') .PHP_EOL;
 echo "over\r\n";
 ?>
