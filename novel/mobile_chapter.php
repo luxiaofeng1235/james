@@ -47,7 +47,7 @@ if(!empty($items)){
         $t_num++;
         extract($info);
         $t= ayncCountItem($info,$redis_data); //同步生成统计的总数
-        echo "index:{$t_num} 【生成移动端章节统计】 store_id : {$store_id} complete title：{$title}  author:{$author} results：{$t}  \r\n";
+        echo "num:{$t_num} 【生成移动端章节统计】 store_id : {$store_id} complete title：{$title}  author:{$author} results：{$t}  \r\n";
         // sleep(3);
     }
 }
@@ -98,6 +98,21 @@ function ayncCountItem($info,$redis_data){
     if(!$chapter_list){
         return '无此章节记录';
     }
+
+    //构造函数处理广告
+    $removeAdInfo = function($arr){
+        foreach($arr as &$val){
+            $val['link_name'] = $val['chapter_name'];
+        }
+        //移除广告章节
+        $list = NovelModel::removeAdInfo($arr);
+        return $list;
+    };
+    //处理广告并移除关联章节
+    $chapter_list = $removeAdInfo($chapter_list);
+
+
+
     $dataList = [];
     //只计算没有目录的章节
     foreach($chapter_list as &$val){
@@ -109,16 +124,19 @@ function ayncCountItem($info,$redis_data){
         }
     }
 
+
     if(!$dataList){
          return "当前无可写的章节信息\r\n";
     }
+
 
     //转换移动端的请求数据
 
     $dataList = NovelModel::exchange_urls($dataList, 1);
 
     $goods_list = dealMobileData($dataList);
-    $len_num = Env::get('LIMIT_SIZE');
+    // $len_num = Env::get('LIMIT_SIZE');
+    $len_num = 200;
     $tlist = array_chunk($goods_list , $len_num); //每次200个请求去处理
     //处理抓取的对象信息
     $buidItem = [];
@@ -146,6 +164,7 @@ function ayncCountItem($info,$redis_data){
     }else{
         echo '2222222222222222';
     }
+    die;
     return  "finish over\r\n";
 
 }
@@ -169,7 +188,15 @@ function getContents($goods_list =[]){
     $i = 0;
     $urls = array_column($goods_list, 'mobile_url');
     @$curl_contents = guzzleHttp::multi_req($urls);
-    // $curl_contents = curl_pic_multi::Curl_http($urls);
+    // echo '<pre>';
+    // print_R($curl_contents);
+    // echo '</pre>';
+    // exit;
+    // $data = curl_pic_multi::Curl_http($urls,2);
+    // echo '<pre>';
+    // print_R($data);
+    // echo '</pre>';
+    // exit;
     //$res = guzzleHttp::multi_req($url);
     $contents_arr = $curl_contents;
     if(!$contents_arr) return [];
@@ -271,19 +298,20 @@ function dealMobileData($data=[]){
         'mobile_path'
     ];
     $lists = [];
+    //配置可用的代理配置IP
     foreach($data as $key =>$val){
         $mobiePath = parse_url($val['mobile_url']);
         $val['mobile_path'] = $mobiePath['path'] ?? '';
         $info = [];
         foreach($val as $k =>$v){
              if(in_array($k , $allow_filed)){
-                  $info[$k] = $v;
+                $info[$k] = $v;
              }
         }
         $lists[]= $info;
     }
     //转换对象处理
-    $list_arr = double_array_exchange_by_field($lists,'mobile_path');
-    return $list_arr;
+    // $list_arr = double_array_exchange_by_field($lists,'mobile_path');
+    return $lists;
 }
 ?>
