@@ -141,11 +141,11 @@ function ayncCountItem($info,$redis_data){
     $ret = writeFileCombine($save_path , $json_data);
     $aa = $redis_data->set_redis($redis_store_key, 1);//标记已经处理过了
     echo "store_id：".$store_id . PHP_EOL;
-    // if($aa){
-    //     echo '11111111111111111';
-    // }else{
-    //     echo '2222222222222222';
-    // }
+    if($aa){
+        echo '11111111111111111';
+    }else{
+        echo '2222222222222222';
+    }
     return  "finish over\r\n";
 
 }
