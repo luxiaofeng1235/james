@@ -133,10 +133,10 @@ function ayncCountItem($info,$redis_data){
     //转换移动端的请求数据
 
     $dataList = NovelModel::exchange_urls($dataList, 1);
-
+    //处理返回的数据
     $goods_list = dealMobileData($dataList);
     // $len_num = Env::get('LIMIT_SIZE');
-    $len_num = 200;
+    $len_num = 300;
     $tlist = array_chunk($goods_list , $len_num); //每次200个请求去处理
     //处理抓取的对象信息
     $buidItem = [];
