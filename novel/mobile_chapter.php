@@ -19,12 +19,13 @@ use QL\QueryList;
 if(!NovelModel::checkMobileKey()){
     exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_MOBILE_KEY')." 请重新拉取最新的ip\r\n");
 }
+$table_novel_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 
 
 $exec_start_time = microtime(true);
 
 $where_data = 'is_async =1 and '; //固定条件
-$limit= 30;
+$limit= 10; //轮训的补偿设置
 $order_by =' order by store_id asc';
 $redis_key ='chapter_list_count'; //保存列表的最大值
 $id = $redis_data->get_redis($redis_key);
@@ -35,19 +36,18 @@ if($id){
     $where_data .=" store_id>3100";
 }
 
-$sql = "select store_id ,title,author from ims_novel_info where ".$where_data;
+$sql = "select store_id ,title,author,count_status from {$table_novel_name} where ".$where_data;
 $sql .=" order by store_id asc";
 $sql .= " limit ".$limit;
 echo "sql = $sql \r\n";
 $items = $mysql_obj->fetchAll($sql , 'db_slave');
-
 if(!empty($items)){
     $t_num = 0;
     foreach($items as $key =>$info){
         $t_num++;
         extract($info);
         $t= ayncCountItem($info,$redis_data); //同步生成统计的总数
-        echo "num:{$t_num} 【生成移动端章节统计】 store_id : {$store_id} complete title：{$title}  author:{$author} results：{$t}  \r\n";
+        echo "num:{$t_num} 【生成移动端章节统计】 store_id : {$store_id}  title：{$title}  author:{$author} results：{$t}  \r\n";
         // sleep(3);
     }
 }
@@ -77,25 +77,31 @@ function ayncCountItem($info,$redis_data){
     if(!$info){
         return 'no record'.PHP_EOL;
     }
+
+    extract($info);
     $redis_store_key ='count_store_'.$info['store_id'];
     $check_status = $redis_data->get_redis($redis_store_key);
+
     if($check_status){
+        $count_status!=1 &&  updateCountStatus($store_id);
         return '已经处理过了，无需重复执行' .PHP_EOL;
     }
-    extract($info);
     $md5_str= NovelModel::getAuthorFoleder($title,$author);
     $txt_path  = Env::get('SAVE_NOVEL_PATH').DS.$md5_str;
     $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
     if(!file_exists($json_path)){
+        $count_status!=1 &&   updateCountStatus($store_id);
         return '暂无json文件，不需要去处理'.PHP_EOL;
     }
     @$list = file_get_contents($json_path);
     if(!$list){
+        $count_status!=1 &&   updateCountStatus($store_id);
         return "当前读取章节目录为空";
     }
     //获取当前的章节名称
     $chapter_list = json_decode($list,true);
     if(!$chapter_list){
+        $count_status!=1 &&   updateCountStatus($store_id);
         return '无此章节记录';
     }
 
@@ -110,8 +116,10 @@ function ayncCountItem($info,$redis_data){
     };
     //处理广告并移除关联章节
     $chapter_list = $removeAdInfo($chapter_list);
-
-
+    if(!$chapter_list){
+        $count_status!=1 &&  updateCountStatus($store_id);
+        return "去除广告后就没有章节了 \r\n";
+    }
 
     $dataList = [];
     //只计算没有目录的章节
@@ -126,7 +134,8 @@ function ayncCountItem($info,$redis_data){
 
 
     if(!$dataList){
-         return "当前无可写的章节信息\r\n";
+        $count_status!=1 &&   updateCountStatus($store_id);
+        return "当前无可写的章节信息\r\n";
     }
 
 
@@ -136,16 +145,17 @@ function ayncCountItem($info,$redis_data){
     //处理返回的数据
     $goods_list = dealMobileData($dataList);
     // $len_num = Env::get('LIMIT_SIZE');
-    $len_num = 300;
+    $len_num = 200;
     $tlist = array_chunk($goods_list , $len_num); //每次200个请求去处理
     //处理抓取的对象信息
     $buidItem = [];
     foreach($tlist as $k =>$v){
-        $curl_contents = getContents($v);
+        //获取数据
+        $curl_contents = getCurlContents($v);
         if(!$curl_contents) $curl_contents = [];
         //合并结果并缓存到数据中去
         $buidItem = array_merge($buidItem,$curl_contents);
-        sleep(1);
+        // sleep(1);
     }
 
     //保存的路径信息
@@ -158,15 +168,56 @@ function ayncCountItem($info,$redis_data){
     //写入文件信息
     $ret = writeFileCombine($save_path , $json_data);
     $aa = $redis_data->set_redis($redis_store_key, 1);//标记已经处理过了
-    echo "store_id：".$store_id . PHP_EOL;
+    echo "store_id complete：".$store_id . PHP_EOL;
     if($aa){
-        echo '11111111111111111';
+        echo 'redis success ----11111111111111111' . PHP_EOL;
     }else{
-        echo '2222222222222222';
+        echo 'redis success ----2222222222222222'.PHP_EOL;
     }
-    die;
+    $count_status!=1 &&  updateCountStatus($store_id); //更新统计章节的状态
     return  "finish over\r\n";
 
+}
+
+/**
+* @note 更新统计章节的状态
+*
+* @param  $info array 关联章节信息
+* @return array
+*/
+function updateCountStatus($store_id){
+    global $mysql_obj , $table_novel_name;
+    $store_id = intval($store_id);
+    if(!$store_id)
+        return false;
+    $where_condition = "store_id = '". $store_id."'";
+    $chapter_data['count_status'] = 1;
+    //对比新旧数据返回最新的更新
+    $mysql_obj->update_data($chapter_data,$where_condition,$table_novel_name);
+}
+
+
+/**
+* @note 获取成功和失败的数据信息
+*
+* @param  $goods_list array 章节信息
+* @param  $data array 关联章节数组
+* @return array
+*/
+function getErrSucData($content,$data){
+    if(!$content)
+        return [];
+    $sucData = $errData= [];
+    foreach($content as $key => $val){
+        if(!$val){
+            $errData[] =$data[$key] ?? [];//记录失败的
+        }else{
+            $sucData[] = $val;//记录成功的
+        }
+    }
+    $info['sucData'] = $sucData;
+    $info['errData'] = $errData;
+    return $info;
 }
 
 /**
@@ -176,7 +227,7 @@ function ayncCountItem($info,$redis_data){
 * @return array
 */
 
-function getContents($goods_list =[]){
+function getCurlContents($goods_list =[]){
     if(!$goods_list)
         return false;
      //抓取获取相关的内容信息
@@ -185,47 +236,54 @@ function getContents($goods_list =[]){
     if(!$o_num){
         return "暂无需要去抓取\r\n";
     }
-    $i = 0;
     $urls = array_column($goods_list, 'mobile_url');
-    @$curl_contents = guzzleHttp::multi_req($urls);
-    // echo '<pre>';
-    // print_R($curl_contents);
-    // echo '</pre>';
-    // exit;
-    // $data = curl_pic_multi::Curl_http($urls,2);
-    // echo '<pre>';
-    // print_R($data);
-    // echo '</pre>';
-    // exit;
-    //$res = guzzleHttp::multi_req($url);
+
+    // $curl_contents = guzzleHttp::multi_req($urls ,'count');
+    $curl_contents = curl_pic_multi::Curl_http($urls,2);
+
     $contents_arr = $curl_contents;
+
     if(!$contents_arr) return [];
 
-    // $contents_arr= [];
-    // while(true){
-    //     $urls = array_column($goods_list, 'mobile_url');
-    //     $curl_contents = curl_pic_multi::Curl_http($urls);
-    //     $curl_contents = array_filter($curl_contents);
-    //     foreach($curl_contents as $tval){
-    //         //防止有空数据跳不出去
-    //         if(!strstr($tval, '503 Service')  && empty($tval)){
-    //             $tval ='此章节作者很懒，什么也没写';
-    //         }
-    //         if(!empty($tval)){
-    //             $contents_arr[] = $tval;
-    //             $i++;
-    //         }
-    //     }
-    //     //如果已经满足所有都取出来就跳出来
-    //     if($o_num == $i){
-    //         break;
-    //     }
-    // }
+    //获取出来成功和失败的数据
+    $returnList=  getErrSucData($contents_arr,$goods_list);
+    $sucData = $returnList['sucData'] ?? []; //成功的数据
+    $errData = $returnList['errData'] ?? []; //失败的数据
+    $repeat_data = [];
+    if(!empty($errData)){
+        $i = 0;
+        while(true){
+            $old_num = count($errData);
+            $urls = array_column($errData, 'mobile_url');
+            //重新请求新的计算信息
+            $curl_contents1 = curl_pic_multi::Curl_http($urls);
+            $curl_contents1 = array_filter($curl_contents1);
+            foreach($curl_contents1 as $tkey=> $tval){
+                //防止有空数据跳不出去
+                if(!strstr($tval, '503 Service')  && empty($tval)){
+                    $tval ='此章节作者很懒，什么也没写';
+                }
+                if(!empty($tval)){
+                    $repeat_data[] = $tval;
+                    unset($curl_contents1[$tkey]); //已经存在就踢出去，下次就不用重复计算了
+                    $i++;
+                }
+            }
+            $curl_contents1 =array_values($curl_contents1);//获取最新的数组
+            //如果已经满足所有都取出来就跳出来
+            if($old_num == $i){
+                break;
+            }
+        }
+    }
+
+    //合并最终的需要处理的数据
+    $finalData = array_merge($sucData , $repeat_data);
     global $urlRules;
     $count_arr = [];
     //获取移动端的关联数据信息
     $rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
-    foreach($contents_arr as $gval){
+    foreach($finalData as $gval){
         $data = QueryList::html($gval)->rules($rules)->query()->getData();
         $html = $data->all();
         $store_content = $html['content'] ?? '';
@@ -310,8 +368,6 @@ function dealMobileData($data=[]){
         }
         $lists[]= $info;
     }
-    //转换对象处理
-    // $list_arr = double_array_exchange_by_field($lists,'mobile_path');
     return $lists;
 }
 ?>
