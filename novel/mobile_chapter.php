@@ -117,7 +117,8 @@ function ayncCountItem($info,$redis_data){
     $dataList = NovelModel::exchange_urls($dataList, 1);
 
     $goods_list = dealMobileData($dataList);
-    $tlist = array_chunk($goods_list , 200); //每次200个请求去处理
+    $len_num = Env::get('LIMIT_SIZE');
+    $tlist = array_chunk($goods_list , $len_num); //每次200个请求去处理
     //处理抓取的对象信息
     $buidItem = [];
     foreach($tlist as $k =>$v){
