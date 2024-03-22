@@ -33,6 +33,14 @@ echo "sql={$sql} \r\n";
 $info =$mysql_obj->fetch($sql , 'db_slave');
 if(!empty($info)){
     extract($info);
+
+    //判断是否有关联的书本ID
+    if(!$pro_book_id){
+        $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
+        echo  '并无关联的小说ID'.PHP_EOL;
+        exit;
+    }
+
     //同步一下图片，直接取
     $md5_str= NovelModel::getAuthorFoleder($title,$author);
     echo "book_md5：".$md5_str."\r\n";
@@ -89,31 +97,32 @@ if(!empty($info)){
         echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
         exit();
     }
-
     $default_num = count($dataList); //剩余执行的总数
-
 
 
     // $tmp_size = 10; //每次定义20个步长去处理
     // $items = array_slice($dataList , 0, $tmp_size); //测试后期删掉
     // echo "共需要处理的空章节总数--步长按照{$tmp_size}来算的:".count($items).PHP_EOL;
     //测试
-    $dataList = array_slice($dataList, 0 ,3);
-    //转换成移动端的连接地址
+    $dataList = array_slice($dataList, 0 ,100);
+
+    //转换成移动端的连接地址:默认的转换地址为：M*N  移动端至少3页，也就是一个URL需要请求N*3 至多三个链接，最多一个链接，需要控制好长度
     $dataList = NovelModel::exchange_urls($dataList,$store_id,'empty');
+    // echo '<pre>';
+    // print_R($dataList);
+    // echo '</pre>';
+    // exit;
     //统计下当前的跑出来的数据情况
     echo "-----------------------------\r\n";
     // $curlMulti = new curl_pic_multi();
-    // $limit_num = Env::get('LIMIT_EMPTY_SIZE');
-    $limit_num = 50;
+    $limit_num = Env::get('LIMIT_EMPTY_SIZE'); //默认配置的200个一次请求
+    //$limit_num = 200;
     $items = array_chunk($dataList, $limit_num);
     $all_count = count($dataList);
     $save_list = [];
     //轮训处理获取关联的数据信息
     $success_num= 0;
     $insert_data = [];
-
-
     $o_success_num = 0;
     foreach($items as $k =>$v){
         //抓取远端地址并进行处理
@@ -136,7 +145,7 @@ if(!empty($info)){
     $exists_count = $i+$o_success_num;//已存在的统计 ：之前存在的+执行成功的
     if($sy_empty_count<0) $sy_empty_count = 0;
 
-
+    echo "共需要执行的分页总数：".count($items).PHP_EOL;
     //更新执行补数据的同步的状态：
     $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
     echo "all-json-list-num：".count($chapter_list)."\tis_exists_num：".$exists_count."\tall-shengyu-num：".$sy_empty_count.PHP_EOL;
