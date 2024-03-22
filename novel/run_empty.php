@@ -16,7 +16,7 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
 $exec_start_time = microtime(true);
 //校验代理IP是否过期
-if(!NovelModel::checkProxyExpire()){
+if(!NovelModel::checkMobileEmptyKey()){
     exit("代理IP已过期，请重新拉取最新的ip\r\n");
 }
 
@@ -25,9 +25,11 @@ $store_id = isset($argv[1])  ? intval($argv[1]) : 0;
 if(!$store_id){
     exit("please input your store_id.... \r\n");
 }
+$table_novel_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 $where_data = 'is_async = 1'; //只对已经同步得来进行计算
 //查询小说的基本信息
-$sql = "select title,cover_logo,author,pro_book_id,store_id from ims_novel_info where store_id = ".$store_id;
+$sql = "select title,cover_logo,author,pro_book_id,store_id,empty_status from ".$table_novel_name." where store_id = ".$store_id;
+echo "sql={$sql} \r\n";
 $info =$mysql_obj->fetch($sql , 'db_slave');
 if(!empty($info)){
     extract($info);
@@ -37,6 +39,7 @@ if(!empty($info)){
     $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
     $list = readFileData($json_path);
     if(!$list){
+        $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
         echo "当前读取章节目录为空\r\n";
         exit;
     }
@@ -46,9 +49,9 @@ if(!empty($info)){
     $txt_path  = Env::get('SAVE_NOVEL_PATH').DS.$md5_str;
     $dataList= [];
     if(!$chapter_list){
+        $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
         exit("暂无关联章节json \r\n");
     }
-
     $i = 0;
     //构造函数处理广告
     $removeAdInfo = function($arr){
@@ -63,6 +66,7 @@ if(!empty($info)){
 
     //处理广告并移除关联章节
     $chapter_list = $removeAdInfo($chapter_list);
+
     foreach($chapter_list as $val){
         //当前的章节路径的名称
         $filename =$txt_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
@@ -71,6 +75,7 @@ if(!empty($info)){
             //替换调首字母首字母信息
             $link  =str_replace(Env::get('APICONFIG.PAOSHU_HOST'),'',$val['chapter_link']);
             $chapterInfo['file_path'] = $filename;
+            //$chapterInfo['mobile_url'] = $val['mobile_url'];
             $chapterInfo['link_url'] = $val['chapter_link'];
             $chapterInfo['link_str'] = $link;
             $chapterInfo['link_name'] = $val['chapter_name'];
@@ -80,47 +85,65 @@ if(!empty($info)){
         }
     }
     if(!$dataList){
+        $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
         echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
         exit();
     }
-    //统计下当前的跑出来的数据情况
-    echo "json-list-num：".count($chapter_list)."\tis_have_num：".$i."\tall-empty-num：".count($dataList).PHP_EOL;
+
+    $default_num = count($dataList); //剩余执行的总数
+
+
+
     // $tmp_size = 10; //每次定义20个步长去处理
     // $items = array_slice($dataList , 0, $tmp_size); //测试后期删掉
     // echo "共需要处理的空章节总数--步长按照{$tmp_size}来算的:".count($items).PHP_EOL;
+
+    //测试
+    $dataList = array_slice($dataList, 0 ,2);
+
+    //转换成移动端的连接地址
+    $dataList = NovelModel::exchange_urls($dataList,$store_id);
+    //统计下当前的跑出来的数据情况
     echo "-----------------------------\r\n";
-    $curlMulti = new curl_pic_multi();
-    $limit_num = Env::get('LIMIT_EMPTY_SIZE');
+    // $curlMulti = new curl_pic_multi();
+    // $limit_num = Env::get('LIMIT_EMPTY_SIZE');
+    $limit_num = 50;
     $items = array_chunk($dataList, $limit_num);
     $all_count = count($dataList);
     $save_list = [];
     //轮训处理获取关联的数据信息
-    do{
-        $success_num= 0;
-        $insert_data = [];
-        foreach($items as $k =>$v){
-            //抓取远端地址并进行处理
-            $curl_contents= NovelModel::getHtmlData($v);
-            if(!$curl_contents)
-                continue;
-             if($curl_contents && is_array($curl_contents)){
-                foreach($curl_contents as $gval){
-                    if(!empty($gval['content'])){
-                        $success_num++;
-                        $insert_data[]=$gval;
-                    }
-                }
-            }
-        }
-        //判断如果是当前请求和连接一直就退出
-        if($all_count == $success_num){
-            $save_list = $insert_data;
-            break;
-        }
-    }while(true);
-    //保存对应的文章信息
-    NovelModel::saveLocalContent($save_list);
-    echo "store_id = ".$info['store_id']." | pro_book_id = ".$info['pro_book_id'].PHP_EOL;
+    $success_num= 0;
+    $insert_data = [];
+
+
+    $o_success_num = 0;
+    foreach($items as $k =>$v){
+        //抓取远端地址并进行处理
+        $curl_contents= NovelModel::getHtmlData($v);
+        if(!$curl_contents)
+            continue;
+        $success_num = getSuccessTimes($curl_contents);
+        $o_success_num+=$success_num;
+        // echo '<pre>';
+        // print_R($curl_contents);
+        // echo '</pre>';
+        // exit;
+        // dd($curl_contents);
+        //保存对应的章节处理信息
+        NovelModel::saveLocalContent($curl_contents);
+        sleep(1);
+    }
+
+    $sy_empty_count = $default_num - $o_success_num; //剩余的总数统计
+    $exists_count = $i+$o_success_num;//已存在的统计 ：之前存在的+执行成功的
+    if($sy_empty_count<0) $sy_empty_count = 0;
+
+
+    //更新执行补数据的同步的状态：
+    $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
+    echo "json-list-num：".count($chapter_list)."\tis_exists_num：".$exists_count."\tall-shengyu-num：".$sy_empty_count.PHP_EOL;
+
+    echo "store_id = ".$store_id." | pro_book_id = ".$info['pro_book_id'].PHP_EOL;
     echo "over\r\n";
 }else{
     echo "no this chapter\r\n";
@@ -128,6 +151,24 @@ if(!empty($info)){
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
 echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
+
+/**
+* @note 更新为空的状态同步统计
+*
+* @param  $store_id int 小说ID
+* @return array
+*/
+function updateEmptyStatus($store_id){
+    global $mysql_obj , $table_novel_name;
+    $store_id = intval($store_id);
+    if(!$store_id)
+        return false;
+    $where_condition = "store_id = '". $store_id."'";
+    $chapter_data['empty_status'] = 1;
+    //对比新旧数据返回最新的更新
+    $mysql_obj->update_data($chapter_data,$where_condition,$table_novel_name);
+}
+
 
 //获取成功抓取的总次数
 function getSuccessTimes($data){
