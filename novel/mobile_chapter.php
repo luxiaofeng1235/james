@@ -24,45 +24,52 @@ $table_novel_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 
 $exec_start_time = microtime(true);
 
-$where_data = 'is_async =1 and '; //固定条件
-$limit= 10; //轮训的补偿设置
+
+$limit= 1; //轮训的补偿设置
 $order_by =' order by store_id asc';
 $redis_key ='chapter_list_count'; //保存列表的最大值
-$id = $redis_data->get_redis($redis_key);
-if($id){
-    echo "当前的增量最大ID：".$id.PHP_EOL;
-    $where_data .=" store_id > ".$id;
-}else{
-    $where_data .=" store_id>3100";
+
+$store_id = isset($argv[1])  ? intval($argv[1]) : 0;
+if(!$store_id){
+    exit("请输入要执行的store_id");
 }
 
-$sql = "select store_id ,title,author,count_status from {$table_novel_name} where ".$where_data;
-$sql .=" order by store_id asc";
+$where_data = 'is_async =1 and store_id = '.$store_id; //固定条件
+// $id = $redis_data->get_redis($redis_key);
+// if($id){
+//     echo "当前的增量最大ID：".$id.PHP_EOL;
+//     $where_data .=" store_id > ".$id;
+// }else{
+//     $where_data .=" store_id>3100";
+// }
+
+$sql = "select store_id ,title,author,count_status,pro_book_id from {$table_novel_name} where ".$where_data;
+// $sql .=" order by store_id asc";
 $sql .= " limit ".$limit;
 echo "sql = $sql \r\n";
-$items = $mysql_obj->fetchAll($sql , 'db_slave');
+
+$items = $mysql_obj->fetch($sql , 'db_slave');
 if(!empty($items)){
     $t_num = 0;
-    foreach($items as $key =>$info){
-        $t_num++;
-        extract($info);
-        $t= ayncCountItem($info,$redis_data); //同步生成统计的总数
-        echo "num:{$t_num} 【生成移动端章节统计】 store_id : {$store_id}  title：{$title}  author:{$author} results：{$t}  \r\n";
-        // sleep(3);
-    }
+    extract($items);
+    $t= ayncCountItem($items,$redis_data); //同步生成统计的总数
+    echo "【生成移动端章节统计】 store_id : {$store_id}  pro_book_id：{$pro_book_id} title：{$title}  author:{$author} results：{$t}  \r\n";
+    $exec_end_time = microtime(true);
+    $executionTime = $exec_end_time - $exec_start_time;
+    // echo "原始数据长度:".count($items)."\r\n";
+    echo "finish_time：".date('Y-m-d H:i:s') .PHP_EOL;
+    echo "script execution time: ".sprintf('%.2f',($executionTime/60)) ." minutes \r\n";
+    echo "over\r\n";
+}else{
+    echo "no data \r\n";
 }
 //设置缓存方便下次存取
-$ids = array_column($items,'store_id');
-$max_store_id = max($ids);
-$redis_data->set_redis($redis_key,$max_store_id);//设置增量ID下一次轮训的次数
+// $ids = array_column($items,'store_id');
+// $max_store_id = max($ids);
+// $redis_data->set_redis($redis_key,$max_store_id);//设置增量ID下一次轮训的次数
 
-echo "下次轮训的最大id起止位置 pro_book_id：".$max_store_id.PHP_EOL;
-$exec_end_time = microtime(true);
-$executionTime = $exec_end_time - $exec_start_time;
-echo "原始数据长度:".count($items)."\r\n";
-echo "finish_time：".date('Y-m-d H:i:s') .PHP_EOL;
-echo "script execution time: ".sprintf('%.2f',($executionTime/60)) ." minutes \r\n";
-echo "over\r\n";
+// echo "下次轮训的最大id起止位置 store_id：".$max_store_id.PHP_EOL;
+
 
 
 
@@ -77,15 +84,20 @@ function ayncCountItem($info,$redis_data){
     if(!$info){
         return 'no record'.PHP_EOL;
     }
-
     extract($info);
     $redis_store_key ='count_store_'.$info['store_id'];
     $check_status = $redis_data->get_redis($redis_store_key);
-
+    $redis_data->del_redis($redis_store_key);
     if($check_status){
         $count_status!=1 &&  updateCountStatus($store_id);
         return '已经处理过了，无需重复执行' .PHP_EOL;
     }
+    //判断是否有关联的书本ID
+    if(!$pro_book_id){
+        $count_status!=1 &&  updateCountStatus($store_id);
+        return '并无关联的小说ID'.PHP_EOL;
+    }
+
     $md5_str= NovelModel::getAuthorFoleder($title,$author);
     $txt_path  = Env::get('SAVE_NOVEL_PATH').DS.$md5_str;
     $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
@@ -93,7 +105,7 @@ function ayncCountItem($info,$redis_data){
         $count_status!=1 &&   updateCountStatus($store_id);
         return '暂无json文件，不需要去处理'.PHP_EOL;
     }
-    @$list = file_get_contents($json_path);
+    @$list = readFileData($json_path);
     if(!$list){
         $count_status!=1 &&   updateCountStatus($store_id);
         return "当前读取章节目录为空";
@@ -132,16 +144,17 @@ function ayncCountItem($info,$redis_data){
         }
     }
 
-
     if(!$dataList){
         $count_status!=1 &&   updateCountStatus($store_id);
         return "当前无可写的章节信息\r\n";
     }
 
+    echo "------------------------------------------待处理的统计章节总数：".count($dataList).PHP_EOL;
+
 
     //转换移动端的请求数据
 
-    $dataList = NovelModel::exchange_urls($dataList, 1);
+    $dataList = NovelModel::exchange_urls($dataList, $store_id,'count');
     //处理返回的数据
     $goods_list = dealMobileData($dataList);
     // $len_num = Env::get('LIMIT_SIZE');
@@ -157,7 +170,6 @@ function ayncCountItem($info,$redis_data){
         $buidItem = array_merge($buidItem,$curl_contents);
         // sleep(1);
     }
-
     //保存的路径信息
     $save_path = Env::get('SAVE_MOBILE_NUM_PATH').DS.$store_id.'.'.NovelModel::$json_file_type;
     if(!is_dir(dirname($save_path))){
@@ -169,13 +181,14 @@ function ayncCountItem($info,$redis_data){
     $ret = writeFileCombine($save_path , $json_data);
     $aa = $redis_data->set_redis($redis_store_key, 1);//标记已经处理过了
     echo "store_id complete：".$store_id . PHP_EOL;
-    if($aa){
-        echo 'redis success ----11111111111111111' . PHP_EOL;
-    }else{
-        echo 'redis success ----2222222222222222'.PHP_EOL;
-    }
+    // if($aa){
+    //     echo 'redis success ----11111111111111111' . PHP_EOL;
+    // }else{
+    //     echo 'redis success ----2222222222222222'.PHP_EOL;
+    // }
+    echo "json_file：{$save_path} \r\n";
     $count_status!=1 &&  updateCountStatus($store_id); //更新统计章节的状态
-    return  "finish over\r\n";
+    return  "complete over\r\n";
 
 }
 
@@ -237,9 +250,9 @@ function getCurlContents($goods_list =[]){
         return "暂无需要去抓取\r\n";
     }
     $urls = array_column($goods_list, 'mobile_url');
-
-    // $curl_contents = guzzleHttp::multi_req($urls ,'count');
-    $curl_contents = curl_pic_multi::Curl_http($urls,2);
+    //请求curl操作
+    $curl_contents = guzzleHttp::multi_req($urls ,'count');
+    // $curl_contents = curl_pic_multi::Curl_http($urls,2);
 
     $contents_arr = $curl_contents;
 
@@ -259,8 +272,8 @@ function getCurlContents($goods_list =[]){
             $curl_contents1 = curl_pic_multi::Curl_http($urls);
             $curl_contents1 = array_filter($curl_contents1);
             foreach($curl_contents1 as $tkey=> $tval){
-                //防止有空数据跳不出去
-                if(!strstr($tval, '503 Service')  && empty($tval)){
+                //防止有空数据跳不出去,如果非请求失败确实是空，给一个默认值
+                if(!strstr($tval, '请求失败')  && empty($tval)){
                     $tval ='此章节作者很懒，什么也没写';
                 }
                 if(!empty($tval)){
@@ -283,12 +296,14 @@ function getCurlContents($goods_list =[]){
     $count_arr = [];
     //获取移动端的关联数据信息
     $rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
-    foreach($finalData as $gval){
+    foreach($finalData as $gkey => $gval){
         $data = QueryList::html($gval)->rules($rules)->query()->getData();
         $html = $data->all();
         $store_content = $html['content'] ?? '';
-        $meta_data = $html['meta_data']??'';
-        $html_path = getCurrentNum($meta_data,$store_content);
+        $meta_data = $html['meta_data']??''; //meta表亲爱
+        $first_line = $html['first_line'] ?? '';//第一行的内容
+        $html_path = getCurrentNum($meta_data,$first_line);
+        // echo $gkey.'--'.$html_path.PHP_EOL;
         if($html_path){
             $count_arr =  array_merge($count_arr ,$html_path);
         }
@@ -315,23 +330,25 @@ function getCurlContents($goods_list =[]){
 *
 * @param $meta_data array meta信息
 * @param $html string 当前抓取到的url
+* @param $num 当前页码，默认只计算第一页
 * @return
 */
-function getCurrentNum($meta_data , $html){
-    if(!$meta_data ||!$html)
+function getCurrentNum($meta_data='' , $first_line='',$num = 1){
+    if(!$meta_data ||!$first_line)
         return false;
-    $path =substr($meta_data, 0 , -1);
 
-    $page_num = 0;
-    $con_str = preg_split('/<\/p>/',$html); //按照P标签切割函数
-    $pages =str_replace("\r\n",'', $con_str[0]); //替换里面的空行
-    $content = filterHtml($pages);//过滤特殊字符
-    $t = explode('/',$content);// (第1/3页) 替换
-    if(!$t)
+    $path =substr($meta_data, 0 , -1);
+    // $page_num = 0;
+    // $con_str = preg_split('/<\/p>/',$html); //按照P标签切割函数
+    // $pages =str_replace("\r\n",'', $con_str[0]); //替换里面的空行
+    // $content = filterHtml($pages);//过滤特殊字符
+    $showData = explode('/',$first_line);// (第1/3页) 替换
+    if(!$showData)
         return [];
-    preg_match('/\d/',$t[1],$allPage);
-    $all_num = intval($allPage[0]); //总的页码数量，需要判断是否有1页以上
-    $path_info =  $path . '-1';
+    preg_match('/\d/',$showData[1],$allPage);
+    $everyPages  = $allPage[0] ?? 1;
+    $all_num = intval($everyPages); //总的页码数量，需要判断是否有1页以上
+    $path_info =  $path . '-'.$num;
     $info[$path_info] = $all_num; // 按个格式进行拼装
     return $info;
 }
