@@ -17,7 +17,7 @@ use QL\QueryList;
 $exec_start_time = microtime(true);
 //校验代理IP是否过期
 if(!NovelModel::checkMobileEmptyKey()){
-    exit("代理IP已过期，请重新拉取最新的ip\r\n");
+   exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新拉取最新的ip\r\n");
 }
 
 //同步的书籍ID信息
@@ -63,7 +63,6 @@ if(!empty($info)){
         return $list;
     };
 
-
     //处理广告并移除关联章节
     $chapter_list = $removeAdInfo($chapter_list);
 
@@ -84,6 +83,7 @@ if(!empty($info)){
             $i++;
         }
     }
+    //这里没有说明已经全部抓取下来了
     if(!$dataList){
         $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
         echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
@@ -97,12 +97,10 @@ if(!empty($info)){
     // $tmp_size = 10; //每次定义20个步长去处理
     // $items = array_slice($dataList , 0, $tmp_size); //测试后期删掉
     // echo "共需要处理的空章节总数--步长按照{$tmp_size}来算的:".count($items).PHP_EOL;
-
     //测试
-    $dataList = array_slice($dataList, 0 ,2);
-
+    $dataList = array_slice($dataList, 0 ,3);
     //转换成移动端的连接地址
-    $dataList = NovelModel::exchange_urls($dataList,$store_id);
+    $dataList = NovelModel::exchange_urls($dataList,$store_id,'empty');
     //统计下当前的跑出来的数据情况
     echo "-----------------------------\r\n";
     // $curlMulti = new curl_pic_multi();
@@ -141,7 +139,7 @@ if(!empty($info)){
 
     //更新执行补数据的同步的状态：
     $empty_status!=1 &&  updateEmptyStatus($store_id); //更新状态
-    echo "json-list-num：".count($chapter_list)."\tis_exists_num：".$exists_count."\tall-shengyu-num：".$sy_empty_count.PHP_EOL;
+    echo "all-json-list-num：".count($chapter_list)."\tis_exists_num：".$exists_count."\tall-shengyu-num：".$sy_empty_count.PHP_EOL;
 
     echo "store_id = ".$store_id." | pro_book_id = ".$info['pro_book_id'].PHP_EOL;
     echo "over\r\n";
