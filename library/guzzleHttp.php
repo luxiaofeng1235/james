@@ -78,14 +78,20 @@ class guzzleHttp{
         }
         // try{
         switch ($pro_type) {
+            case 'story':
+                $proxy_conf= getZhimaProxy();//获取同步小说的基础章节
+                break;
             case 'count':
                 $proxy_conf = getMobileProxy();//获取移动端的统计章节的新的代理
                 break;
             case 'empty':
-                $proxy_conf = getMobileProxy();//获取移动端的数据为空爬取新的代理
+                $proxy_conf = getMobileEmptyProxy();//获取移动端的数据为空爬取新的代理
                 break;
         }
-
+        if(!$proxy_conf){
+            echo '当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
+            exit();
+        }
         extract($proxy_conf);
         $proxy_server =$ip .':'.$port;
         if(!$proxy_server)
@@ -107,9 +113,8 @@ class guzzleHttp{
         ]);
         //采用多线程的getAsync去并发请求
         foreach($reqs as $val){
-             $promises[] = $client->getAsync($val);
+            $promises[] = $client->getAsync($val);
         }
-
         $items = [];
 
         // 等待请求完成，即使其中一些请求已经失败
@@ -118,10 +123,9 @@ class guzzleHttp{
         $responses = Utils::settle($promises)->wait();
         foreach ($responses as $key => $value) {
             if ($value['state'] === 'fulfilled') {
-                $contents = (string) $value['value']->getBody()->getContents();
-
+                    $contents = (string) $value['value']->getBody()->getContents();
             } elseif ($value['state'] === 'rejected') {
-                $contents = "key:" . $key . "请求失败=====";
+                $contents = "key:" . $key . "请求失败或code不是200=====";
             }
             $items[] = $contents;
         }
