@@ -56,23 +56,32 @@ class FileFactory{
         if(!$story_id){
             return false;
         }
+
+        $proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
+        $proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
+        $proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROXY
+
         //校验代理IP是否过期
-        if(!NovelModel::checkProxyExpire()){
-            exit("代理IP已过期，请重新拉取最新的ip\r\n");
+       //校验代理IP是否过期
+        if(!$proxy_detail || !$proxy_count || !$proxy_empty){
+           exit("代理IP已过期三个里面可能有一个过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新获取新的\r\n");
         }
         //判断数据是否为空
         if(!empty($info_data)){
             $info = $info_data;
             //判断当前小说是否已经同步
             if( isset($info['syn_chapter_status']) &&  $info['syn_chapter_status'] == $this->syn_success_status ){
-                printlog('小说（'.$info['title'].'）章节已经同步无需要重复同步');
-                return false;
+                $str = '小说（'.$info['title'].'）章节已经同步无需要重复同步';
+                printlog($str);
+                echo $str.PHP_EOL;
+                exit();
             }
         }else{
             $where = $this->where_data . ' and story_id =\''.$story_id.'\'';
             $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
             $info = $this->mysql_conf->fetch($sql,'db_slave');
         }
+
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']); //小说网站id
@@ -119,7 +128,6 @@ class FileFactory{
                 echo  "去除广告暂无发现需同步的章节了 \r\n";
                 die;
             }
-
             echo "总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
             foreach($chapter_item as &$val){
@@ -130,7 +138,10 @@ class FileFactory{
                     $dataList[] =   $val;
                 }
              }
-
+             // echo '<pre>';
+             // print_R($dataList);
+             // echo '</pre>';
+             // exit;
 
              if(!$dataList){
                 $this->updateStatusInfo($store_id);
@@ -210,7 +221,7 @@ class FileFactory{
             $content = $val['content'] ?? '';//提交的内容
             $save_path = $val['save_path'] ?? '';
             if(!$save_path || !$content) continue;
-            writeFileCombine($save_path, $content);
+            writeFileCombine($save_path, $content); //写入文件，以追加的方式，由于移动端带有分页，有可能是某个章节在第二页所以要处理下。
              //用md5加密的方式去更新
             // $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
             // file_put_contents($filename,$content); //防止文件名出错
