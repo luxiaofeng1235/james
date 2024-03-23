@@ -32,6 +32,19 @@ if(!$store_id){
     exit();
 }
 
+///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
+$proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
+$proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
+$proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROXY
+
+//exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_MOBILE_KEY')." 请重新拉取最新的ip\r\n");
+
+//校验代理IP是否过期
+if(!$proxy_detail || !$proxy_count || !$proxy_empty){
+   exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新拉取最新的ip\r\n");
+}
+
+
 //实例化文件存储工厂类
 $factory = new FileFactory($mysql_obj,$redis_data);
 
@@ -50,7 +63,7 @@ function delete_chapter_data($store_id,$story_id,$table_name){
 
 //清洗掉不需要的字段
 function cleanData($items = [],$filter_key=[]){
-    if(!$items ||!$filter_key) return false;
+    if(!$items ||!$filter_key) return [];
     $list = [];
     foreach($items as $key => $val){
         $info = [];
@@ -85,6 +98,12 @@ if($info){
          //记录是否有相关的HTML的数据信息
         printlog('this novel：'.$story_link.' is no local html data');
         echo "no this story files： {$story_link}\r\n";
+        //更新为已同步防止重复同步
+        $where_condition = "story_id = '". $info[0]['story_id']."'";
+        $no_chapter_data['syn_chapter_status'] = 1;
+        $no_chapter_data['is_async'] = 1;
+        //对比新旧数据返回最新的更新
+        $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
         exit();
     }
     //爬取相关规则下的类
@@ -93,27 +112,6 @@ if($info){
                 ->query()->getData();
     $store_data = $info_data->all();
     if(!empty($store_data)){
-
-        /********************start**********************************/
-         //每次进来前先进行心跳检测，如果代理已经过期，就删掉redis的缓存信息让接口自动重新获取最新的
-        // $redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
-        // $proxy_data  = $redis_data->get_redis($redis_cache_key);
-
-        // if(!empty($proxy_data)){
-        //     $proxy_conf = json_decode($proxy_data,true);
-        //     $proxy_info_arr = $proxy_conf ?? [];
-        //     $checkProxy = curlProxyState($story_link,$proxy_info_arr);
-        //     if($checkProxy && $checkProxy['http_code'] != 200){
-        //         //这里会直接删掉不可用的redis的配置
-        //         $ip = $proxy_info_arr['ip']?? '';
-        //         $port = $proxy_info_arr['port'] ?? 0 ;
-        //         echo "删除了过期的代理配置IP：{".$ip.":".$port."} ,在采集章节会重新获取新的IP.......：\r\n";
-        //         $redis_data->del_redis($redis_cache_key);
-        //     }
-        // }
-        /********************end**********************************/
-
-
 
         $store_data['story_link'] = $story_link;
         $story_id = trim($info[0]['story_id']); //小说的id
@@ -135,7 +133,7 @@ if($info){
         $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
         $store_data['author']  = $author;
 
-        $store_data['updatetime'] = time();
+        // $store_data['updatetime'] = time();
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
         $intro = addslashes($store_data['intro']);//转义 特殊字符
@@ -146,8 +144,8 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
-        //保存图片到本地
-        NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+        // //保存图片到本地==暂时屏蔽不需要
+        // $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html);
         $item_list = $chapter_ids = $items= [];
@@ -167,6 +165,7 @@ if($info){
                 $val['story_id'] = $story_id;//小说的id
                 $val['createtime'] = time();
                 $val['novelid'] = $chapter_id;
+                $val['link_str'] = $link_url;//兼容下面的定时处理
                 $items[$val['link_url']] = $val;
                 $chapter_ids[$val['chapter_id']] = 1;
             }
@@ -199,19 +198,27 @@ if($info){
             $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
             $store_data['pro_book_id'] = $sync_pro_id;
             if(!$sync_pro_id){
+                echo "未关联线上小说ID\r\n";
                 printlog('未发现线上数据信息');
                 exit();
             }
+
             //更新小说表的is_async为1，表示已经更新过了不需要重复更新
-            $store_data['is_async'] = 1;
+            //$store_data['is_async'] = 1;
             //对比新旧数据返回最新的更新
+            //只有有数据才进行对比
             $diff_data = NovelModel::arrayDiffFiled($info[0]??[],$store_data);
-            $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
+            if(!empty($diff_data)){
+                $diff_data['updatetime'] = time();
+                $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
+            }
+
 
             $another_data = array_merge(
             [
                 'pro_book_id'=>$sync_pro_id,//线上书籍ID
                 'story_id'=>$story_id,//小说ID
+                'store_id'  => $info[0]['store_id'],
                 'syn_chapter_status'    =>$info[0]['syn_chapter_status'] ?? 0,//章节状态
             ],
             $store_data);
@@ -219,13 +226,22 @@ if($info){
             $factory->synChapterInfo($story_id,$another_data);//同步章节内容
 
             //这里需要同步处理未同步下来的章节信息
-            ProcessUrl::selfRunUrls($store_data);
+            // ProcessUrl::selfRunUrls($store_data);
+        }else{
+            //这里面防止解析为空去更新对应的状态
+            $where_condition = "story_id = '".$story_id."'";
+            $no_chapter_data['syn_chapter_status'] = 1;
+            $no_chapter_data['is_async'] = 1;
+            //对比新旧数据返回最新的更新
+            $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
         }
-        if(!$item_list) $itemlist = [];
+        if(!$item_list){
+            $itemlist = [];
+        }
         //获取小说的章节路径
         $novel_list_path = Env::get('SAVE_NOVEL_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']);
         printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
-        echo "now_time：".date('Y-m-d H:i:s')."\tself_store_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共更新章节目录：".count($item_list)."个\r\n";
+        echo "now_time：".date('Y-m-d H:i:s')."\tself_store_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共匹配到JOSN文件的章节数量：".count($item_list)."个\r\n";
     }
 }else{
     echo "no data";
