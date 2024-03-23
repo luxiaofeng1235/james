@@ -21,12 +21,13 @@ if(!NovelModel::checkProxyExpire()){
     exit("代理IP已过期，请重新拉取最新的ip\r\n");
 }
 
+$store_id = isset($argv[1])   ? $argv[1] : 0; //匹配对应的ID去关联
 $db_name = 'db_novel_pro';
 $redis_key = 'img_pic_id';//redis的对应可以设置
 // $redis_data->set_redis($redis_key,452);
 $id = $redis_data->get_redis($redis_key);
 $where_data = '  is_async = 1';
-$limit= 30; //控制列表的步长
+$limit= 500; //控制图片拉取的步长
 $order_by =' order by pro_book_id asc';
 
 if($id){
@@ -96,9 +97,8 @@ if(!empty($diff_data)){
         //下面是处理对应的为空的数据请求
         echo 'now is empty url init to async ...................'.PHP_EOL;
         //启用多线程去保存处理先关的数据
-        $curl_multi = new curl_pic_multi();
         $img_list = array_column($o_data,'cover_logo');
-        $data= $curl_multi->Curl_http($img_list);
+        $data= curl_pic_multi::Curl_http($img_list,1);
         $t_num = 0;
         foreach($data as $gkey=> $img_con){
             $t_num++;
@@ -111,6 +111,7 @@ if(!empty($diff_data)){
             //写入文件信息
             $rk = file_put_contents($filename , $img_con);
             echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author}  url: {$cover_logo} path:{$filename}  \r\n";
+            sleep(1);
 
         }
     }
@@ -119,7 +120,7 @@ if(!empty($diff_data)){
 $ids = array_column($info,'pro_book_id');
 $max_id = max($ids);
 $redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
-echo "下次轮训的最大id起止位置 pro_book_id：".$max_id.PHP_EOL;
+echo "下次轮训的最大id起止位置 store_id：".$max_id.PHP_EOL;
 
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
