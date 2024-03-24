@@ -17,38 +17,38 @@ $exec_start_time = microtime(true);
 
 
 
-// /**
-// * @note 获取并排除指定地区的代理IP
-// *
-// * @return array
-// */
-// function getAllowProxy(){
-//     global $url;
-//     //不适用的地区的IP
-//     $area_prxy =Env::get('NO_USE_PROXY_AREA');
-//     $no_area_proxy = explode(',',$area_prxy); //按照地区切割
-//     $no_area_proxy = array_unique($no_area_proxy);//去重
-//     $new_proxy = [];
-//     do{
-//         $flag = 0; //设置一个标记
-//         foreach($no_area_proxy as $ip_area){
-//             $info = webRequest($url,'GET');
-//             $proxy_info  =    json_decode($info , true);
-//             $proxy_data = $proxy_info['data'][0] ?? [];
-//             //判断如果不在这个地区内的，就跳出来用当前的IP
-//             if(isset($proxy_data['city']) &&  !strstr($proxy_data['city'] , $ip_area)){
-//                  $new_proxy = $proxy_info;
-//                  $flag = 1; //如果找到, 标记flag=1就跳出来
-//                  break;
-//             }
-//             sleep(1); //停止1秒
-//         }
-//         if( $flag!=0 ){
-//             break;
-//         }
-//     }while(true);
-//     $proxy_ret   = $new_proxy['data'][0] ?? []; //获取新的代理
-// }
+/**
+* @note 获取并排除指定地区的代理IP
+*
+* @return array
+*/
+function getAllowProxy(){
+    global $url;
+    //不适用的地区的IP
+    $area_prxy =Env::get('NO_USE_PROXY_AREA');
+    $no_area_proxy = explode(',',$area_prxy); //按照地区切割
+    $no_area_proxy = array_unique($no_area_proxy);//去重
+    $new_proxy = [];
+    $diff_time = 15*60; //设置代理的存活时间
+    do{
+        $info = webRequest($url,'GET');
+        $proxy_info  =    json_decode($info , true);
+        $proxy_data = $proxy_info['data'][0] ?? [];
+        if(!empty($proxy_data)){
+            $now_time = time();
+            $expire_time = $proxy_data['expire_time'] ?? '';
+            //利用过期时间-当前时间计算代理的可用时间
+            $t = strtotime($expire_time) - $now_time;
+            if($t>=$diff_time){
+                $new_proxy = $proxy_data;
+                break;
+            }
+        }
+        sleep(1); //停止1秒
+    }while(true);
+    $proxy_ret   = $new_proxy; //获取新的代理
+    return $proxy_ret;
+}
 //允许命令行接收的参数
 $allowKey = [
     'zhima_proxy_new:',
@@ -81,21 +81,26 @@ $host  =  isset($argv[2]) ? trim($argv[2]) : Env::get('APICONFIG.PAOSHU_HOST') ;
 echo "检测的url：".$host."\r\n";
 // $redis_data->del_redis($redis_cache_key);
 $proxy = $redis_data->get_redis($redis_cache_key);
+$diff_time = 15*60; //设置代理的存活时间在15分钟以上，保证小说突然被挂掉
 if(!$proxy){
     do{
-        //获取排除指定地区的IP
         $info = webRequest($url,'GET');
         $proxy_info  =    json_decode($info , true);
         $proxy_data = $proxy_info['data'][0] ?? [];
-        //检测目标网站是否可用，如果不可用就取一个可用的
-        $check_data = curlProxyState($host,$proxy_data);
-        if($check_data['http_code'] == 200){
-            //如果检测到可用的IP，就直接退出循环
-            $proxy_conf = $proxy_data;
-            break;
+        $expire_time = $proxy_data['expire_time'] ?? '';
+        //利用过期时间-当前时间计算代理的可用时间,判断是否满足15分钟以上
+        $unix_time = strtotime($expire_time) - time();
+        //先判断是否满足15分钟以上的代理如果满足了再检测代理的可用性
+        if($unix_time>=$diff_time){
+            //检测目标网站是否可用，如果不可用就取一个可用的
+            $check_data = curlProxyState($host,$proxy_data);
+            if($check_data['http_code'] == 200){
+                //如果检测到可用的IP，就直接退出循环
+                $proxy_conf = $proxy_data;
+                break;
+            }
         }
     }while(true);
-    // $diff_time = 25 * 60;//默认先控制25分钟的缓存，防止提前过期
     $diff_time = strtotime($proxy_data['expire_time']) - time(); //利用过期时间-当前时间为缓存的redis的时间
     $redis_data->set_redis($redis_cache_key,json_encode($proxy_conf),$diff_time);
     echo "获取到新的代理IP信息（芝麻代理）\r\n";
@@ -117,5 +122,5 @@ $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
 echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "over\r\n";
-echo "now-time：".date('Y-m-d H:i:s');
+echo "now-time：".date('Y-m-d H:i:s')."\r\n";
 ?>
