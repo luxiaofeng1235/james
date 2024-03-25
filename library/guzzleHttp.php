@@ -88,6 +88,9 @@ class guzzleHttp{
             case 'empty':
                 $proxy_conf = getMobileEmptyProxy();//获取移动端的数据为空爬取新的代理
                 break;
+            case 'image':
+                $proxy_conf = getImgProxy();//获取下载图片使用的代理
+                break;
         }
         if(!$proxy_conf){
             echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
