@@ -76,6 +76,7 @@ class guzzleHttp{
         if(!is_array($reqs)){
             $reqs = array($reqs);
         }
+        $proxy_conf = [];
         // try{
         switch ($pro_type) {
             case 'story':
@@ -89,7 +90,7 @@ class guzzleHttp{
                 break;
         }
         if(!$proxy_conf){
-            echo '当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
+            echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
             exit();
         }
         extract($proxy_conf);
