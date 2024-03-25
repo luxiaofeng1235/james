@@ -23,6 +23,35 @@ class redis_codes {
     }
 
     /**
+     * @note 添加一个元素到set集合中
+     * @param string $dbindex
+     */
+    public function sAdd($index, $value){
+        $ret = $this->redis->sadd($index,$value);
+        return $ret;
+    }
+
+     /**
+     * @note 返回集合中的所有元素
+     * @param string $dbindex
+     */
+    public function sMembers($index){
+        $ret = $this->redis->smembers($index);
+        return $ret;
+    }
+
+      /**
+     * @note 判断一个value是否存在集合key中
+     * @param string $key 集合名称
+     * @param $value str 集合元素
+     * @return unknow
+     */
+    public function SISMEMBER($key,$value){
+        $ret =$this->redis->sismember($key,$value);
+        return $ret;
+    }
+
+    /**
      * 封装一个切换数据库的方法
      * @param number $dbindex
      */
