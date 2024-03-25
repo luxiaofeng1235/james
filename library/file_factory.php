@@ -64,7 +64,7 @@ class FileFactory{
         //校验代理IP是否过期
        //校验代理IP是否过期
         if(!$proxy_detail || !$proxy_count || !$proxy_empty){
-           exit("代理IP已过期三个里面可能有一个过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新获取新的\r\n");
+           exit("代理IP已过期三个里面可能过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新获取新的\r\n");
         }
         //判断数据是否为空
         if(!empty($info_data)){
@@ -128,7 +128,7 @@ class FileFactory{
                 echo  "去除广告暂无发现需同步的章节了 \r\n";
                 die;
             }
-            echo "总章节总数：".count($chapter_item).PHP_EOL;
+            echo "JSON文件里的总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
             foreach($chapter_item as &$val){
                 $filename =$download_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
@@ -143,6 +143,9 @@ class FileFactory{
              // echo '</pre>';
              // exit;
 
+            // echo "<pre>";
+            // var_dump(count($dataList));
+            // die;
              if(!$dataList){
                 $this->updateStatusInfo($store_id);
                 exit("*********************************已经爬取完毕 ，不需要重复操作了\r\n");
@@ -151,13 +154,10 @@ class FileFactory{
              echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
              //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
-            ///测试--------------------------
-            $chapter_item = array_slice($chapter_item, 0,30);
-            // $curlMulti = new curl_pic_multi();
 
             //按照长度进行切割轮询处理数据
             // $items = array_chunk($chapter_item,$this->num);
-            $items = array_chunk($dataList,200);
+            $items = array_chunk($dataList,300); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             foreach($items as $k =>&$v){
                 //抓取内容信息
