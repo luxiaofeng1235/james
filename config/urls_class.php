@@ -32,7 +32,14 @@ return [
             'tag'   => array('meta[property=og:novel:category]','content'),
             'location'  =>  array('.con_top','text'),//小说的面包屑位置
         ],
-        //采集文章的内容配置
+        //手机端的采集规则
+        'mobile_content'   => [
+            'first_line'    =>['.body>.text p:eq(0)','text'], //获取第一行
+            'content'    =>['.body>.text','html'],//正文
+            'meta_data'       =>['meta[property="og:url"]','content'], //meta标签
+            // 'href'      =>['.navigator-nobutton a:eq(3)','href'],
+        ],
+        //web采集文章的内容配置
         'content'   => [
             'content'    =>['#content','html'],
             'meta_data'       =>['meta[name=mobile-agent]','content'],
