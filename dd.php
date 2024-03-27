@@ -14,6 +14,13 @@ if(!NovelModel::checkProxyExpire()){
     exit("代理已过期，请重新拉取最新的ip\r\n");
 }
 
+
+$t  = NovelModel::saveImgByCurl('http://www.paoshu8.info/files/article/image/70/70047/70047s.jpg','我的弟子全是大帝之资','别让我通宵');
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+
 $shell_cmd = NovelModel::getCommandInfo($list);
 echo '<pre>';
 print_R($shell_cmd);
