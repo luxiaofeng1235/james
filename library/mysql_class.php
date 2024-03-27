@@ -197,7 +197,6 @@ class  Mysql_class{
 			}
 		}
 		// return $sql;
-
 	    //查询所有的数据进行解析
 	    $result = $this->fetchAll($sql,$db_name);
 	    if($result && is_array($result)){
