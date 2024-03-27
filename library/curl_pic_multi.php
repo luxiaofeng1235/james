@@ -9,7 +9,7 @@ class curl_pic_multi{
       'CURLOPT_HEADER' => false,//是否需要返回HTTP头
       'CURLOPT_NOBODY' => 0,//是否需要返回的内容
       'CURLOPT_FOLLOWLOCATION' => 0,//自动跟踪
-      'CURLOPT_TIMEOUT' => 6//超时时间(s)
+      'CURLOPT_TIMEOUT' => 120//超时时间(s)
   );
 
   //设置连接的超时时间
@@ -145,11 +145,12 @@ public static function Rand_refer(){
         }
          // 设置连接超时时间，单位是秒
           curl_setopt($conn[$k], CURLOPT_CONNECTTIMEOUT, self::$connection_timeout);
-          // curl_setopt($conn[$k], CURLOPT_HTTPHEADER,array('Accept-Encoding: gzip, deflate'));//设置对应的header信息
           curl_setopt($conn[$k], CURLOPT_HTTPHEADER, $headerIp);//追踪返回302状态码，继续抓取
           curl_setopt($conn[$k], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3');//设置发送的user-agent信息
           curl_setopt($conn[$k],CURLOPT_REFERER,$referer); //启用referer伪造url,模拟来路
           curl_setopt($conn[$k],CURLOPT_ENCODING,'gzip');//启用解压缩
+          // 超过1024字节解决方法
+          curl_setopt($conn[$k],CURLOPT_HTTPHEADER, array("Expect:")); //增加配置完整接收数据配置buffer的大小
           curl_setopt($conn[$k],CURLOPT_HTTPPROXYTUNNEL,0);//启用时会设置HTTP的method为GET
           curl_setopt($conn[$k], CURLOPT_SSL_VERIFYPEER, false);//屏蔽过滤ssl的连接
           curl_setopt($conn[$k], CURLOPT_SSL_VERIFYHOST, false);//屏蔽ssl的主机
