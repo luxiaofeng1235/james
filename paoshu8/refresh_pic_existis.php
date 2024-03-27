@@ -17,21 +17,22 @@ echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
 $exec_start_time = microtime(true);
 
 //检测代理
-if(!NovelModel::checkProxyExpire()){
+if(!NovelModel::checkImgKey()){
     exit("代理IP已过期，请重新拉取最新的ip\r\n");
 }
 
 $store_id = isset($argv[1])   ? $argv[1] : 0; //匹配对应的ID去关联
 $db_name = 'db_novel_pro';
 $redis_key = 'img_pic_id';//redis的对应可以设置
-// $redis_data->set_redis($redis_key,452);
+// $redis_data->set_redis($redis_key,500);
 $id = $redis_data->get_redis($redis_key);
+
 $where_data = '  is_async = 1';
-$limit= 500; //控制图片拉取的步长
-$order_by =' order by pro_book_id asc';
+$limit= 200; //控制图片拉取的步长
+$order_by =' order by pro_book_id desc';
 
 if($id){
-    $where_data .=" and pro_book_id > ".$id;
+    $where_data .=" and pro_book_id < ".$id;
 }
 $sql = "select pro_book_id,title,author,cover_logo,story_link from ims_novel_info where ".$where_data;
 $sql .= $order_by;
@@ -85,6 +86,7 @@ if(!empty($diff_data)){
         $author = $v['author'] ??'';
         if(!$cover_logo) continue;
         //校验是否失败
+        $v['mobile_url'] = $cover_logo;
         if (!@getimagesize($save_img_path)) {
             $o_data[] = $v;
             //$t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
@@ -94,11 +96,19 @@ if(!empty($diff_data)){
         }
     }
     if(!empty($o_data)){
+
         //下面是处理对应的为空的数据请求
         echo 'now is empty url init to async ...................'.PHP_EOL;
         //启用多线程去保存处理先关的数据
         $img_list = array_column($o_data,'cover_logo');
-        $data= curl_pic_multi::Curl_http($img_list,1);
+        $img_pro_type =5;
+
+        $detail_proxy_type =4;//基础小说的代理IP
+        $count_proxy_type= 2;//列表为空的代理IP
+        $empty_proxy_type =3;//修补数据的代理IP
+        $proxy_arr= array($detail_proxy_type, $count_proxy_type,$empty_proxy_type);
+        $rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
+        $data  =guzzleHttp::multi_req($img_list,'image');
         $t_num = 0;
         foreach($data as $gkey=> $img_con){
             $t_num++;
@@ -108,9 +118,18 @@ if(!empty($diff_data)){
             $title = $o_data[$gkey]['title'] ?? '';//小说标题
             $author = $o_data[$gkey]['author'] ?? ''; //小说作者
             $cover_logo = $o_data[$gkey]['cover_logo'] ?? ''; //小说封面
-            //写入文件信息
+            //写入文件信息 ,需要判断图片是否还是存坏的
+            // if (!@getimagesize($save_img_path)) {
+
+            // }
             $rk = file_put_contents($filename , $img_con);
-            echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author}  url: {$cover_logo} path:{$filename}  \r\n";
+            //同步下来如果还是损坏的的说明网站的图已经坏了。
+            if ( !@getimagesize($filename)) {
+                  $img_default = readFileData(Env::get('NO_COVER_IMG_PATH'));
+                  writeFileCombine($filename, $img_default);
+                   echo "--下载后的图片在网站损坏,已用默认图替换\t";
+             }
+            echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author} \t url: {$cover_logo} \tpath:{$filename}  \r\n";
             sleep(1);
 
         }
@@ -118,9 +137,9 @@ if(!empty($diff_data)){
 }
 
 $ids = array_column($info,'pro_book_id');
-$max_id = max($ids);
-$redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
-echo "下次轮训的最大id起止位置 store_id：".$max_id.PHP_EOL;
+$min_id = min($ids);
+$redis_data->set_redis($redis_key,$min_id);//设置增量ID下一次轮训的次数
+echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$min_id.PHP_EOL;
 
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;
