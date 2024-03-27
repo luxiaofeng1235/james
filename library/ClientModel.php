@@ -47,9 +47,10 @@ class ClientModel{
                     'path'  =>  Env::get('SAVE_NOVEL_PATH') .DS .$txt_path.DS.md5($gr['link_name']).'.'.NovelModel::$file_type,
                     'chapter_name'  =>  $gr['chapter_name'],
                     'chapter_link'  =>  $gr['chapter_link'],
-                    'chapter_mobile_link'   =>  $gr['mobile_url'],
+                    'chapter_mobile_link'   =>  substr($gr['mobile_url'] , 0 , -2),
              ];
         }
+
 
         $valid_ghttp ='ghttp';//ghttp验证
         $urls = array_column($new_data,'mobile_url');
@@ -62,7 +63,10 @@ class ClientModel{
 
         $rand_str = self::getRandProxy();//随机获取代理
         $list  = self::callRequests1($list , $new_data,$valid_ghttp,$rand_str);
-
+        // echo '<pre>';
+        // print_R($list);
+        // echo '</pre>';
+        // exit;
         global $urlRules;//获取指定的抓取规则
         $rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
         $allNovel = [];
@@ -89,7 +93,6 @@ class ClientModel{
         $finalList = guzzleHttp::multi_req(array_column($new_list,'mobile_url'),self::$second_proxy_name);
         $rand_str_new = self::getRandProxy(); //再次生成随机的IP
         $finalList = self::callRequests1($finalList , $new_list,$valid_ghttp,$rand_str_new);
-
         //获取已经从客户端拿回来的内容
         $html_contents = self::getMobileContents($rules ,$finalList);
 
@@ -99,6 +102,7 @@ class ClientModel{
               $index  = substr($ggk, 0, -2);
               $store_data[$index][]=$ggv;
         }
+        //处理校验的抓取连接和请求
         if(!empty($store_data)){
             foreach($store_data as $gtkey=>$gtval){
                 if(!$store_data) continue;
@@ -132,7 +136,6 @@ class ClientModel{
                 $first_line = $html['first_line'] ?? '';//获取第一行的数据信息
                 //获取每页的页码位置信息
 
-
                 // echo $page_link_url."\r\n";
                 //处理为空的情况
                 //处理剔除第一行的标题显示和替换掉“本章未完，请点击下一页继续阅读”这种字样
@@ -152,8 +155,7 @@ class ClientModel{
                 //替换try{.....}cache的一段话JS这个不需要了
                 $store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
                 $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
-                //组装html内容 ,必须用页面中的返回的进行组装
-
+                //组装html内容 ,必须用页面中的返回的进行组装，否则会出现页面和文章错乱
                 $currentPage = NovelModel::getCurrentPage($first_line);
                 //存储每一页的内容
                 $page_link_url = substr($meta_data,0, -1).'-'.$currentPage;
@@ -228,9 +230,8 @@ public static function callRequests1($contents_arr=[],$goods_list=[],$type='',$p
 
         $urls = array_column($errData, 'mobile_url'); //进来先取出来
         while(true){//连接总数和请求成功数量不一致轮训
-            //重新请求对应的信息
-            $curl_contents1 = curl_pic_multi::Curl_http($urls,$proxy_type);
-            // $curl_contents1 = array_filter($curl_contents1);
+            //重新请求对应的信息 ,利用guzzlehttp来请求
+            $list = guzzleHttp::multi_req($urls,$proxy_type);
             $temp_url =[];//设置中间变量，如果是空的，就需要把对应的URL加到临时变量里
             if($curl_contents1){
                 foreach($curl_contents1 as $tkey=> $tval){
@@ -242,7 +243,7 @@ public static function callRequests1($contents_arr=[],$goods_list=[],$type='',$p
                   if($type =='ghttp'){//ghttp验证方式
                     //判断返回页面里不为空的情况，还要判断是否存在异常 如果不是200会返回guzzle自定义错误根据这个来判断
                       if(!empty($tval)
-                        && (!strstr($tval,'您当前访问的页面存在安全风险') || !strstr($tval,'请求失败'))
+                        && (!strstr($tval,'请求失败'))
                      ){
                             $repeat_data[] = $tval;
                             unset($urls[$tkey]); //已经存在就踢出去，下次就不用重复计算了
@@ -252,7 +253,7 @@ public static function callRequests1($contents_arr=[],$goods_list=[],$type='',$p
                       }
                   }else if($type =='curl'){//采用curl来验证
                       //curl验证如果不是503的报错或者为空没有获取到200或者403就会返回一个空字符串来判断
-                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde')){
+                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($val,'502 bad gateway') ){
                           $temp_url[] =$urls[$tkey];
                       }else{
                           $repeat_data[] = $tval;
@@ -269,6 +270,7 @@ public static function callRequests1($contents_arr=[],$goods_list=[],$type='',$p
             if($old_num == $i){
                 break;
             }
+            // sleep(1);
         }
     }
     //合并最终的需要处理的数据
