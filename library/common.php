@@ -552,57 +552,69 @@ function getZhimaProxy(){
 	global $redis_data;
 	//获取对应的缓存key的信息
 	$redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
-	// $redis_data->del_redis($redis_cache_key);
 	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
-	if(!$api_proxy_data){
-		$url = Env::get('ZHIMAURL');
-		$info = webRequest($url,'GET');
-		//如果是JSON返回说明当前的接口有问题
-		if(is_json($info)){
-			$proxy_info  =    json_decode($info , true);
-			if( $proxy_info['code'] == 0){
-				$data = $proxy_info['data'][0] ?? [];
-				$proxy_data  =$data;//用这个存储所有的信息
-				$expire_time = $data['expire_time'] ?? '';
-				//用过期时间减去当前的时间为缓存cache时间
-				// $diff_time = strtotime($expire_time) - time() -25*60;//提前25分钟结束释放资源
-				// if($diff_time <= 0){
-				// 	$diff_time = $time_out;
-				// }
-				$diff_time = 30 * 60;//默认先控制半个小时的缓存，防止提前过期
-				//以代理拨号返回的过期时间为准进行计算
-				$redis_data->set_redis($redis_cache_key,json_encode($proxy_data),$diff_time);
-				return $proxy_data;
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}else{//取出来缓存的数据信息
-		$proxy_conf = json_decode($api_proxy_data , true);
-		return $proxy_conf ?? [];
-	}
+	$proxy_conf = json_decode($api_proxy_data , true);
+	return $proxy_conf ?? [];
+}
 
+
+/**
+ * 获取移动端的另外一个新的IP地址
+ * @return mixed
+ */
+function getMobileProxy(){
+	global $redis_data;
+	$redis_cache_key = Env::get('ZHIMA_REDIS_MOBILE_KEY');
+	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
+	$proxy_conf = json_decode($api_proxy_data , true);
+	return $proxy_conf ?? [];
 }
 
 /**
- * 获取芝麻代理IP的周体验套餐-一周使用权限
- * @param $str 需要处理的路径
+ * 获取图片使用的代理
  * @return mixed
  */
-function getZhimaWeek(){
-    /*
-    117.88.43.186:14192|zausaatg01|oegdmeqs01|2024-03-16 09:15:56|江苏省南京市
-     */
-	$proxy = [
-		'ip'        =>  Env::get('ZHIMA_PROXY.URL_HOST'), //代理的IP
-		'port'      =>  Env::get('ZHIMA_PROXY.PORT'), //代理的端口号
-		'username'  =>  Env::get('ZHIMA_PROXY.username'), //用户名
-		'password'  =>  Env::get('ZHIMA_PROXY.password'), //密码
-	];
-	return $proxy;
+function getImgProxy(){
+	global $redis_data;
+	$redis_cache_key = Env::get('ZHIMA_REDIS_IMG');
+	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
+	$proxy_conf = json_decode($api_proxy_data , true);
+	return $proxy_conf ?? [];
 }
+
+/**
+ * 获取移动端页面为空处理获取的新的IP
+ * @return mixed
+ */
+function getMobileEmptyProxy(){
+	global $redis_data;
+	$redis_cache_key = Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA');
+	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
+	$proxy_conf = json_decode($api_proxy_data , true);
+	return $proxy_conf ?? [];
+}
+
+/**
+ * 获取wget需要下载的命令
+ * @param $urls array 下载链接
+ * @return mixed
+ */
+function getWgetCommand($urls=[] ,$type = 1){
+	if(!$urls)
+		return false;
+	$proxy_data = getZhimaProxy();
+	if(!$proxy_data)
+		return [];
+	//切割html数据信息
+	$html_url = implode(' ',$urls);
+	//获取代理的配置信息凭借wget的参数命令
+	$proxyauth = $proxy_data['ip'] . ':' .$proxy_data['port'];
+	$str = 'wget --restrict-file-names=nocontrol   -e use_proxy=yes -e http_proxy='.$proxyauth.' --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"  --header="Cookie: width=85%25; Hm_lvt_61f1afd153b0a37229eefe873fe6586a=1710121429,1710213284,1710295133,1710378533; Hm_lpvt_61f1afd153b0a37229eefe873fe6586a=1710403413"  '.$html_url.' -O '.Env::get('CHAPTER_PATH_LOG');
+	return $str;
+}
+
+
+
 
 /**
  * 获取代理的配置
@@ -701,6 +713,181 @@ function readFileData($file_path){
 		// $str = str_replace("\r\n", "<br />", $str);
 		return $str;
 	}
+}
+
+/*
+ * @note 获取小说的章节数据处理-章节列表
+ * @param array $item 章节对象信息
+ * @param  integer $store_id 小说ID
+ * @param txt_path string 存储路径
+ * @return mixed
+ */
+function getStoryCotents($item=[],$store_id=0,$txt_path=''){
+	if(!$item)
+		return false;
+
+	$valid_curl = 'curl';//curl验证
+	$valid_ghttp ='ghttp';//ghttp验证
+	//返回移动端的地址转换
+	$data_arr  = NovelModel::exchange_urls($item,$store_id,'count');
+	$chapetList = [];
+	foreach($data_arr as $m_key=> $gr){
+		 $mobileArr =parse_url($gr['mobile_url']);
+		 $new_data[$mobileArr['path']] = $gr;
+		 $mobilePath = substr($mobileArr['path'],0,-2);
+		 //存对饮的URL信息
+		 $chapetList[$mobilePath] = [
+		 		//拼装移动端的地址
+		 		'path'	=>	Env::get('SAVE_NOVEL_PATH') .DS .$txt_path.DS.md5($gr['link_name']).'.'.NovelModel::$file_type,
+		 		'chapter_name'	=>	$gr['chapter_name'],
+		 		'chapter_link'	=>	$gr['chapter_link'],
+		 		'chapter_mobile_link'	=> substr($gr['mobile_url'] , 0 , -2),
+		 ];
+	}
+	$detail_proxy_type =4;//基础小说的代理IP
+	$count_proxy_type= 2;//列表为空的代理IP
+	$empty_proxy_type =3;//修补数据的代理IP
+	$img_proxy_type =5;//处理图片的代理IP
+	$urls = array_column($new_data,'mobile_url');
+	// $list = guzzleHttp::multi_req($urls,'story');
+	$list = curl_pic_multi::Curl_http($urls,$detail_proxy_type); //默认用同步基础信息的代理取抓
+	if(!$list || empty($list)){//说明代理已经到期
+		echo "代理已经到期了，请等待下一轮\r\n";
+		NovelModel::killMasterProcess();//退出主程序
+		exit(1);
+	}
+	//重复调用，防止有空对象返回以防万一
+	//重复请求，防止数据丢失
+	//随机获取一个代理
+	$proxy_arr= array($detail_proxy_type, $count_proxy_type,$empty_proxy_type,$img_proxy_type);
+	$rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
+	//curl轮训进行请求
+	$list  = NovelModel::callRequests($list , $new_data,$valid_curl,$rand_str);
+	if(!$list) $list = [];
+
+
+
+
+	$allNovel = [];
+	if($list){
+		global $urlRules;
+		$rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
+		foreach($list as $content){
+			if(!$content) continue;
+			$data = QueryList::html($content)->rules($rules)->query()->getData();
+			$html = $data->all();
+			$store_content = $html['content'] ?? '';
+			$meta_data = $html['meta_data']??''; //meta表亲爱
+			$first_line = $html['first_line'] ?? '';//第一行的内容
+			//获取当前章节的页码数
+			$html_path = NovelModel::getChapterPages($meta_data,$first_line);
+			if(!$html_path) $html_path = array();
+			$allNovel = array_merge($allNovel,$html_path);
+		}
+	}
+	$new_list= [];
+	foreach($new_data as $gk =>$gv){
+		 $t =explode('/',$gv['mobile_url']);
+		 $anurl =explode('-',$t[3]??[]);
+		 array_pop($anurl);
+		 //拼接新的url
+		 $curr_url = Env::get('APICONFIG.PAOSHU_MOBILE_HOSt'). '/'.implode('-',$anurl);
+		 $num = isset($allNovel[$gk]) ? intval($allNovel[$gk]) : 1;
+		 for ($i=0; $i <$num ; $i++) {
+		 	 $new_list[]=[
+		 	 	'mobile_url'	=>	$curr_url.'-'.($i+1),
+		 	 ];
+		 }
+	}
+	sleep(1);
+
+	//最终需要请求的列表
+	$finalList = curl_pic_multi::Curl_http(array_column($new_list,'mobile_url'),$empty_proxy_type);
+	$temp_proxy_arr  =$proxy_arr;
+	$rand_str_new =$temp_proxy_arr[mt_rand(0,count($temp_proxy_arr)-1)]; //随机代理重新分配
+	// $finalList =  guzzleHttp::multi_req(array_column($new_list,'mobile_url'),'story');
+	// unset($new_list);
+	//重复请求，防止数据丢失
+	$finalList = NovelModel::callRequests($finalList , $new_list,$valid_curl,$rand_str_new);
+	// unset($new_data);
+	// $finalList = curl_pic_multi::Curl_http($new_list,4);
+	if($finalList){
+		foreach($finalList as $ck =>$cv){
+			if(!$cv) continue;
+			$data1 = QueryList::html($cv)->rules($rules)->query()->getData();
+			$html = $data1->all();
+			$store_content = $html['content'] ?? '';
+			$meta_data = $html['meta_data']??''; //meta表亲爱
+			$first_line = $html['first_line'] ?? '';//获取第一行的数据信息
+			//获取每页的页码位置信息
+
+
+			// echo $page_link_url."\r\n";
+			//处理为空的情况
+			//处理剔除第一行的标题显示和替换掉“本章未完，请点击下一页继续阅读”这种字样
+			$store_content= NovelModel::removeLineData($store_content);
+			//替换内容里的广告
+			$store_content = NovelModel::replaceContent($store_content);
+
+			//如果确实没有返回数据信息，先给一个默认值
+			if(!$store_content || empty($store_content)){
+				$store_content ='未完待续...';
+			}
+
+			$store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
+			//替换文本中的P标签
+			$store_content = str_replace("<p>",'',$store_content);
+			$store_content = str_replace("</p>","\n\n",$store_content);
+			//替换try{.....}cache的一段话JS这个不需要了
+			$store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
+			$store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
+            //组装html内容 ,必须用页面中的返回的进行组装
+
+			$currentPage = NovelModel::getCurrentPage($first_line);
+			//存储每一页的内容
+			$page_link_url = substr($meta_data,0, -1).'-'.$currentPage;
+			//只有不为空才进行保存
+            if(!empty($currentPage)){
+            	$html_contents[$page_link_url] = $store_content;
+            }
+            $html_contents[$page_link_url] = $store_content;
+            // if(isset($new_list[$ck])){
+            // 	$ttk = parse_url($new_list[$ck]['mobile_url']);
+            // 	$html_contents[$ttk['path']] = $store_content;
+            // }
+		}
+	}
+	// unset($finalList);
+	if(!$html_contents){
+		return [];
+	}
+
+	// echo '<pre>';
+	// print_R($html_contents);
+	// echo '</pre>';
+	// exit;
+	//对返回的数组做排序,防止数据章节错乱
+	// $html_contents = NovelModel::sortHtmlData($html_contents);
+
+	$store_data= $tdk =[];
+	foreach($html_contents as $ggk =>$ggv){
+		  $index  = substr($ggk, 0, -2);
+		  $store_data[$index][]=$ggv;
+	}
+
+	if(!empty($store_data)){
+		foreach($store_data as $gtkey=>$gtval){
+			if(!$store_data) continue;
+			$string = implode('',$gtval);//切割字符串,不能用,因为文章里含有，会错乱原因在这里
+			$tdk[$gtkey]['chapter_name'] = $chapetList[$gtkey]['chapter_name'] ?? '';//章节名称
+			$tdk[$gtkey]['chapter_mobile_link'] = $chapetList[$gtkey]['chapter_mobile_link'] ??'';
+			$tdk[$gtkey]['chapter_link'] = $chapetList[$gtkey]['chapter_link'] ?? ''; //章节链接
+			$tdk[$gtkey]['save_path'] = $chapetList[$gtkey]['path']??''; //保存的文件路径
+			$tdk[$gtkey]['content'] = $string; //获取内容信息
+		}
+	}
+	return $tdk ?? [];
+
 }
 
 
@@ -964,5 +1151,39 @@ function getRemoteIp(){
 	}
 }
 
+/**
+ * @note 写入文件操作
+ *
+ * @param $file_path str 文件路径
+ * @param $content str 文件内容
+ * @return str
+ */
+function writeFileCombine($file_path , $content){
+	if(!$file_path || !$content)
+		return false;
+	$file = fopen($file_path,'w');
+	fwrite($file, $content);
+	fclose($file);
+	return true;
+}
+
+/**
+ * @note 以追加的方式写入文件
+ *
+ * @param $file_path str 文件路径
+ * @param $content str 文件内容
+ * @return str
+ */
+function writeFileAppend($file_path , $content)
+{
+	if(!$file_path || !$content)
+		return false;
+	$fp = fopen($file_path, 'a+');
+	flock($fp, LOCK_EX) ;
+	$sdfsd=fwrite($fp ,"\n$content\n");
+	flock($fp, LOCK_UN);
+	fclose($fp);
+	return true;
+}
 
 ?>
