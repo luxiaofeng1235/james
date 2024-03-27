@@ -253,7 +253,7 @@ public static function callRequests1($contents_arr=[],$goods_list=[],$type='',$p
                       }
                   }else if($type =='curl'){//采用curl来验证
                       //curl验证如果不是503的报错或者为空没有获取到200或者403就会返回一个空字符串来判断
-                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($val,'502 bad gateway') ){
+                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($val,'502 Bad Gateway') ){
                           $temp_url[] =$urls[$tkey];
                       }else{
                           $repeat_data[] = $tval;
