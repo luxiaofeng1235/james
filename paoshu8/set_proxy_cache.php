@@ -15,10 +15,8 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 $exec_start_time = microtime(true);
 
-
-
 /**
-* @note 获取并排除指定地区的代理IP
+* @note 获取并排除20分钟以下的代理
 *
 * @return array
 */
@@ -29,7 +27,7 @@ function getAllowProxy(){
     $no_area_proxy = explode(',',$area_prxy); //按照地区切割
     $no_area_proxy = array_unique($no_area_proxy);//去重
     $new_proxy = [];
-    $diff_time = 15*60; //设置代理的存活时间
+    $diff_time = 20*60; //设置代理的存活时间
     do{
         $info = webRequest($url,'GET');
         $proxy_info  =    json_decode($info , true);
@@ -55,6 +53,7 @@ $allowKey = [
     'zhima_mobile_key:',
     'zhima_mobile_empty_key:',
     'zhima_proxy_story_info:',
+    'zhima_proxy_img:',
 ];
 
 //从客户端的cli接收参数
@@ -81,24 +80,19 @@ $host  =  isset($argv[2]) ? trim($argv[2]) : Env::get('APICONFIG.PAOSHU_HOST') ;
 echo "检测的url：".$host."\r\n";
 // $redis_data->del_redis($redis_cache_key);
 $proxy = $redis_data->get_redis($redis_cache_key);
-$diff_time = 15*60; //设置代理的存活时间在15分钟以上，保证小说突然被挂掉
+
+
 if(!$proxy){
+
     do{
-        $info = webRequest($url,'GET');
-        $proxy_info  =    json_decode($info , true);
-        $proxy_data = $proxy_info['data'][0] ?? [];
-        $expire_time = $proxy_data['expire_time'] ?? '';
-        //利用过期时间-当前时间计算代理的可用时间,判断是否满足15分钟以上
-        $unix_time = strtotime($expire_time) - time();
-        //先判断是否满足15分钟以上的代理如果满足了再检测代理的可用性
-        if($unix_time>=$diff_time){
-            //检测目标网站是否可用，如果不可用就取一个可用的
-            $check_data = curlProxyState($host,$proxy_data);
-            if($check_data['http_code'] == 200){
-                //如果检测到可用的IP，就直接退出循环
-                $proxy_conf = $proxy_data;
-                break;
-            }
+        //获取在20分钟以上的代理
+        $proxy_data = getAllowProxy();
+        //检测目标网站是否可用，如果不可用就取一个可用的
+        $check_data = curlProxyState($host,$proxy_data);
+        if($check_data['http_code'] == 200){
+            //如果检测到可用的IP，就直接退出循环
+            $proxy_conf = $proxy_data;
+            break;
         }
     }while(true);
     $diff_time = strtotime($proxy_data['expire_time']) - time(); //利用过期时间-当前时间为缓存的redis的时间
