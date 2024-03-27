@@ -27,11 +27,10 @@ $proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROX
 $proxy_img = NovelModel::checkImgKey();
 
 //exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_MOBILE_KEY')." 请重新拉取最新的ip\r\n");
-
 //校验代理IP是否过期
 if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
     NovelModel::killMasterProcess();//退出主程序
-   exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新拉取最新的ip\r\n");
+   exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新拉取最新的ip\r\n");
 }
 
 //同步的书籍ID信息
@@ -93,7 +92,7 @@ if(!empty($info)){
 
     //处理广告并移除关联章节
     $chapter_list = $removeAdInfo($chapter_list);
-
+    $i = 0;
     foreach($chapter_list as $val){
         //当前的章节路径的名称
         $filename =$txt_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
@@ -125,7 +124,10 @@ if(!empty($info)){
 
     //转换数据字典用业务里的字段，不和字典里的冲突
     $dataList = NovelModel::changeChapterInfo($dataList);
-
+    echo '<pre>';
+    print_R($dataList);
+    echo '</pre>';
+    exit;
 
     $items = array_chunk($dataList,50); //默认每一页150个请求，到详情页最多150*3=900个URL 这个是因为移动端的原因造成
     $i_num =0;
@@ -158,6 +160,10 @@ if(!empty($info)){
             echo "num：{$a_num} 未获取到数据，有可能是代理过期\r\n";
         }
      }
+    //强制清除内存垃圾
+    gc_collect_cycles();
+    unset($items);
+    unset($chapter_list);
     echo "novel_path: {$txt_path} store_id = ".$store_id." | pro_book_id = ".$info['pro_book_id'].PHP_EOL;
     echo "\r\n\r\n";
     echo "章节处理完毕\r\n";
