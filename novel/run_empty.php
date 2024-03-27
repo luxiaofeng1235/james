@@ -90,8 +90,16 @@ if(!empty($info)){
         return $list;
     };
 
+
+
     //处理广告并移除关联章节
     $chapter_list = $removeAdInfo($chapter_list);
+    if(!$removeAdInfo){
+        echo "去除广告后未 发现有需要同步的章节\r\n";
+        NovelModel::killMasterProcess();//退出主程序(
+        exit(1);
+    }
+
     $i = 0;
     foreach($chapter_list as $val){
         //当前的章节路径的名称
@@ -113,10 +121,6 @@ if(!empty($info)){
         exit(1);
     }
 
-    if(!$dataList){
-        NovelModel::killMasterProcess();//退出主程序
-        exit("*********************************已经爬取完毕 ，不需要重复操作了\r\n");
-    }
     echo "\r\n\r\n";
     echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
 
