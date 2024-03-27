@@ -759,13 +759,17 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	//重复调用，防止有空对象返回以防万一
 	//重复请求，防止数据丢失
 	//随机获取一个代理
-	$proxy_arr= array($detail_proxy_type, $count_proxy_type,$empty_proxy_type,$img_proxy_type);
+	$proxy_arr= array(
+		$detail_proxy_type,
+		$count_proxy_type,
+		$empty_proxy_type,
+		$img_proxy_type
+	);
+
 	$rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
 	//curl轮训进行请求
 	$list  = NovelModel::callRequests($list , $new_data,$valid_curl,$rand_str);
 	if(!$list) $list = [];
-
-
 
 
 	$allNovel = [];
@@ -813,14 +817,20 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	// $finalList = curl_pic_multi::Curl_http($new_list,4);
 	if($finalList){
 		foreach($finalList as $ck =>$cv){
-			if(!$cv) continue;
+			// if(!$cv) continue;
 			$data1 = QueryList::html($cv)->rules($rules)->query()->getData();
 			$html = $data1->all();
 			$store_content = $html['content'] ?? '';
 			$meta_data = $html['meta_data']??''; //meta表亲爱
 			$first_line = $html['first_line'] ?? '';//获取第一行的数据信息
 			//获取每页的页码位置信息
-
+			if(empty($meta_data) || empty($first_line)){
+				echo "meta信息为空了 {$new_list[$ck]['mobile_url']} \r\n";
+				echo '<pre>';
+				print_R($cv);
+				echo '</pre>';
+				echo "000000000000000000000000000000\r\n";
+			}
 
 			// echo $page_link_url."\r\n";
 			//处理为空的情况
@@ -847,14 +857,11 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 			//存储每一页的内容
 			$page_link_url = substr($meta_data,0, -1).'-'.$currentPage;
 			//只有不为空才进行保存
-            if(!empty($currentPage)){
-            	$html_contents[$page_link_url] = $store_content;
+            if(empty($currentPage)){
+            	echo "为空了当前分页----".$currentPage."\r\n";
+            	// $html_contents[$page_link_url] = $store_content;
             }
             $html_contents[$page_link_url] = $store_content;
-            // if(isset($new_list[$ck])){
-            // 	$ttk = parse_url($new_list[$ck]['mobile_url']);
-            // 	$html_contents[$ttk['path']] = $store_content;
-            // }
 		}
 	}
 	// unset($finalList);
