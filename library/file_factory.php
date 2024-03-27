@@ -64,6 +64,7 @@ class FileFactory{
         //校验代理IP是否过期
        //校验代理IP是否过期
         if(!$proxy_detail || !$proxy_count || !$proxy_empty){
+            NovelModel::killMasterProcess();//退出主程序
            exit("代理IP已过期三个里面可能过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新获取新的\r\n");
         }
         //判断数据是否为空
@@ -74,6 +75,7 @@ class FileFactory{
                 $str = '小说（'.$info['title'].'）章节已经同步无需要重复同步';
                 printlog($str);
                 echo $str.PHP_EOL;
+                NovelModel::killMasterProcess();//退出主程序
                 exit();
             }
         }else{
@@ -94,6 +96,7 @@ class FileFactory{
             if(!$pro_book_id){
                 $this->updateStatusInfo($store_id);
                 printlog('暂未同步线上pro_bok_id');
+                NovelModel::killMasterProcess();//退出主程序
                 return false;
             }
             if(!is_dir($download_path)){
@@ -106,6 +109,7 @@ class FileFactory{
                 $this->updateStatusInfo($store_id);
                 echo "当前小说未生成json文件\r\n";
                 printlog('当前ID:'.$pro_book_id.'暂未生成json文件');
+                NovelModel::killMasterProcess();//退出主程序
                 return false;
             }
             $chapter_item = json_decode($json_data,true);
@@ -126,7 +130,8 @@ class FileFactory{
             if(!$chapter_item){
                 $this->updateStatusInfo($store_id);
                 echo  "去除广告暂无发现需同步的章节了 \r\n";
-                die;
+                NovelModel::killMasterProcess();//退出主程序
+                exit(1);
             }
             echo "JSON文件里的总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
@@ -138,50 +143,51 @@ class FileFactory{
                     $dataList[] =   $val;
                 }
              }
-             // echo '<pre>';
-             // print_R($dataList);
-             // echo '</pre>';
-             // exit;
 
-            // echo "<pre>";
-            // var_dump(count($dataList));
-            // die;
              if(!$dataList){
                 $this->updateStatusInfo($store_id);
+                NovelModel::killMasterProcess();//退出主程序
                 exit("*********************************已经爬取完毕 ，不需要重复操作了\r\n");
              }
-             echo "\r\n\r\n";
-             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
-             //转换数据字典用业务里的字段，不和字典里的冲突
+            echo "\r\n\r\n";
+            echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
+            //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
 
             //按照长度进行切割轮询处理数据
             // $items = array_chunk($chapter_item,$this->num);
-            $items = array_chunk($dataList,300); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
+            $items = array_chunk($dataList,200); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             foreach($items as $k =>&$v){
                 //抓取内容信息
                 $html_data= getStoryCotents($v,$store_id,$md5_str);
-                // echo '<pre>';
-                // print_R($html_data);
-                // echo '</pre>';
-                // exit;
                 if($html_data){
-
                     $a_num =0;
                     foreach ($html_data as  $gvalue) {
                         $a_num++;
                         if(!empty($gvalue['content'])){
-                            echo "num：{$a_num} \t chapter_name: {$gvalue['chapter_name']}\t path：{$gvalue['save_path']} \r\n";
+                            //方便调试,遇到有的章节空的path或者name为空，需要排查下
+                            if(empty($gvalue['save_path']) || empty($gvalue['chapter_name'])){
+                                echo '<pre>';
+                                var_dump($gvalue);
+                                echo '</pre>';
+                                echo "*************************************\n";
+                                echo "\r\n";
+                            }
+
+                            echo "num：{$a_num} \t  chapter_name: {$gvalue['chapter_name']}\t url：{$gvalue['chapter_mobile_link']}\t path：{$gvalue['save_path']} \r\n";
                             $i_num++;
                         }else{
-                             echo "num：{$a_num} \t chapter_name: {$gvalue['chapter_name']} \t 小说源内容为空 url：{$gvalue['chapter_link']}\r\n";
+                             echo "num：{$a_num} \t chapter_name: {$gvalue['chapter_name']} \t 小说源内容为空 url：{$gvalue['chapter_mobile_link']}\r\n";
                         }
                     }
+                    //保存本地存储数据
+                    $this->synLocalFile($download_path,$html_data);
+                    sleep(1);//休息三秒不要立马去请求，防止空数据的发生
+                }else{
+                    echo "num：{$a_num} 未获取到数据，有可能是代理过期\r\n";
                 }
-                //保存本地存储数据
-                $this->synLocalFile($download_path,$html_data);
-                sleep(1);//休息三秒不要立马去请求，防止空数据的发生
+
             }
             echo "共抓取下来的章节总数：".$i_num.PHP_EOL;
             unset($items);
@@ -195,6 +201,7 @@ class FileFactory{
             printlog('小说（'.$info['title'].'）|pro_book_id='.$pro_book_id.'|story_id='.$story_id.'同步章节完成');
             return true;
         }else{
+            NovelModel::killMasterProcess();//退出主程序
             printlog('story_id = '.$story_id.'未匹配数据');
         }
     }
@@ -216,12 +223,15 @@ class FileFactory{
      * @param array $data 读取出来的数据
      * @return string
      */
-    protected function synLocalFile($save_path,$data){
+    public function synLocalFile($save_path,$data){
+        if(!$data){
+            return [];
+        }
         foreach($data as $key =>$val){
             $content = $val['content'] ?? '';//提交的内容
             $save_path = $val['save_path'] ?? '';
             if(!$save_path || !$content) continue;
-            writeFileCombine($save_path, $content); //写入文件，以追加的方式，由于移动端带有分页，有可能是某个章节在第二页所以要处理下。
+            writeFileAppend($save_path, $content); //写入文件，以追加的方式，由于移动端带有分页，有可能是某个章节在第二页所以要处理下。
              //用md5加密的方式去更新
             // $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
             // file_put_contents($filename,$content); //防止文件名出错
