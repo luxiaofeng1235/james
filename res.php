@@ -9,10 +9,35 @@
 // 编 码：UTF-8
 // 摘 要:测试文件，没什么用
 // ///////////////////////////////////////////////////
-ini_set("memory_limit","8000M");
-set_time_limit(200);
-$dirname =str_replace("\\",'/',dirname(__FILE__)).'/library/' ;
 
-require_once ($dirname.'/init.inc.php');
-printlog('11111111111111111111111111');
+
+//结束当前进程
+function killProcess(){
+    posix_setsid ();
+    echo "安装信号处理程序...\n";
+    pcntl_signal(SIGTERM,  function($signo) {
+        // exit(1);
+        echo "信号处理程序被调用\n";
+    });
+    $masterPid = posix_getpid();
+    if(!$masterPid){
+        echo "no this process\r\n";
+
+    }
+    posix_kill($masterPid, SIGTERM);
+    echo "killed by pid, pid = {$masterPid}\n";
+    echo "分发...\n";
+    pcntl_signal_dispatch();
+}
+
+$i = 0;
+do{
+$i++;
+sleep(3);
+    if($i>5){
+        killProcess();//杀掉当前进程
+        exit(1);
+    }
+echo "time:".date('Y-m-d H:i:s')." -- 1111111111\r\n";
+}while(true);
 
