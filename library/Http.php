@@ -38,10 +38,12 @@ class MultiHttp
             CURLOPT_HEADER  => 0,
             CURLOPT_ENCODING    =>  'gzip',
             CURLOPT_HTTPPROXYTUNNEL => 0,
+            CURLOPT_REFERER
         );
         if($is_proxy){
             //获取代理的配置方式
             $proxy_data = getZhimaProxy();//获取芝麻的代理IP
+            // $proxy_data = getProxyInfo();
             if($proxy_data){
                 //是否开启代理
                 $std_options[CURLOPT_PROXY] = $proxy_data['ip'];
