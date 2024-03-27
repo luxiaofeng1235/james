@@ -18,6 +18,9 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 require_once dirname(__DIR__).'/library/file_factory.php';
 require_once dirname(__DIR__).'/library/process_url.php';
 
+echo "\r\n";
+echo "---------------------------------------------------------------------------------\r\n";
+
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 use QL\QueryList;##引入querylist的采集器
 $exec_start_time = microtime(true);
@@ -31,7 +34,6 @@ if(!$store_id){
     echo '请选择要抓取的内容id';
     exit();
 }
-
 ///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
 $proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
 $proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
@@ -41,7 +43,8 @@ $proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROX
 
 //校验代理IP是否过期
 if(!$proxy_detail || !$proxy_count || !$proxy_empty){
-   exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新拉取最新的ip\r\n");
+    NovelModel::killMasterProcess();//退出主程序
+   exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新拉取最新的ip\r\n");
 }
 
 
@@ -82,6 +85,7 @@ if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步\r\n";
+        NovelModel::killMasterProcess();//退出主程序
         exit();
     }
 
@@ -91,6 +95,7 @@ if($info){
     $item_list  = [];
     if(!$files){
         echo "no this story ---".$story_link."\r\n";
+        NovelModel::killMasterProcess();//退出主程序
         exit();
     }
     $html = readFileData($files);
@@ -104,6 +109,7 @@ if($info){
         $no_chapter_data['is_async'] = 1;
         //对比新旧数据返回最新的更新
         $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+        NovelModel::killMasterProcess();//退出主程序
         exit();
     }
     //爬取相关规则下的类
@@ -186,6 +192,7 @@ if($info){
             $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
+            NovelModel::killMasterProcess();//退出主程序
         }
         $sync_pro_id = 0;//给一个默认值
          //执行相关的章节批处理程序
@@ -199,6 +206,7 @@ if($info){
             $store_data['pro_book_id'] = $sync_pro_id;
             if(!$sync_pro_id){
                 echo "未关联线上小说ID\r\n";
+                NovelModel::killMasterProcess();//退出主程序
                 printlog('未发现线上数据信息');
                 exit();
             }
@@ -242,9 +250,11 @@ if($info){
         $novel_list_path = Env::get('SAVE_NOVEL_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']);
         printlog('同步小说：'.$store_data['title'].'|基本信息数据完成--pro_book_id：'.$sync_pro_id.'--update_id：'.$update_id);
         echo "now_time：".date('Y-m-d H:i:s')."\tself_store_id：".$update_id."\tpro_book_id：".$sync_pro_id."\tnovel_path：".$novel_list_path."\t当前小说：".$store_data['title']."|story_id=".$story_id." ---url：".$story_link."\t拉取成功，共匹配到JOSN文件的章节数量：".count($item_list)."个\r\n";
+        NovelModel::killMasterProcess();//退出主程序
     }
 }else{
-    echo "no data";
+    NovelModel::killMasterProcess();//退出主程序
+    echo "no data \r\n";
 }
 $exec_end_time = microtime(true);
 $endMemory = memory_get_peak_usage();
