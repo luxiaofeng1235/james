@@ -13,7 +13,7 @@ $prov_arr = $mysql_obj->get_data_by_condition("upid=0",'jishigou_common_distrinc
 if(!empty($prov_arr)){
     $cdata = array_chunk($prov_arr,10);
     foreach ($cdata as $page =>$item) {
-        if(!$item) 
+        if(!$item)
             continue;
         //对数据进行重组赋值
         $goodsArr[$page+1] = $item;
