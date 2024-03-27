@@ -53,6 +53,14 @@ if(!empty($info)){
         echo  '并无关联的小说ID'.PHP_EOL;
         exit;
     }
+
+    $run_status = intval($info['empty_status']);
+    if($run_status){
+        NovelModel::killMasterProcess();//退出主程序
+        echo  'store_id = '.$store_id .' - empty_status = 1 已经跑完处理完毕，无须重复更新'.PHP_EOL;
+        exit;
+    }
+
     //同步一下图片，直接取
     $md5_str= NovelModel::getAuthorFoleder($title,$author);
     echo "book_md5：".$md5_str."\r\n";
@@ -101,6 +109,7 @@ if(!empty($info)){
     //这里没有说明已经全部抓取下来了
     if(!$dataList){
         echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
+        updateEmptyStatus($store_id); //更新状态
         NovelModel::killMasterProcess();//退出主程序
         exit(1);
     }
@@ -118,9 +127,10 @@ if(!empty($info)){
     $dataList = NovelModel::changeChapterInfo($dataList);
 
 
-    $items = array_chunk($dataList,10); //默认每一页150个请求，到详情页最多150*3=900个URL 这个是因为移动端的原因造成
+    $items = array_chunk($dataList,50); //默认每一页150个请求，到详情页最多150*3=900个URL 这个是因为移动端的原因造成
     $i_num =0;
     foreach($items as $k =>&$v){
+        //获取内容信息
         $html_data = ClientModel::getClientContents($v,$store_id,$md5_str);
         if($html_data){
             $a_num = 0;
@@ -144,7 +154,6 @@ if(!empty($info)){
             //保存本地存储数据
             $factory->synLocalFile($txt_path,$html_data);
             sleep(1);//休息三秒不要立马去请求，防止空数据的发生
-            die;
         }else{
             echo "num：{$a_num} 未获取到数据，有可能是代理过期\r\n";
         }
@@ -154,7 +163,7 @@ if(!empty($info)){
     echo "章节处理完毕\r\n";
     NovelModel::killMasterProcess();//退出主程序
 }else{
-    echo "no this chapter\r\n";
+    echo "no data\r\n";
     NovelModel::killMasterProcess();//退出主程序
 }
 $exec_end_time = microtime(true);
