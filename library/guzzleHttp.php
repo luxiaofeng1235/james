@@ -22,6 +22,12 @@ use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Promise\Utils;
+use GuzzleHttp\Event\BeforeEvent;
+
+
+use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Message\Response as Response1;
+// use GuzzleHttp\Message\Response;
 
 
 class guzzleHttp{
@@ -94,7 +100,8 @@ class guzzleHttp{
         }
         if(!$proxy_conf){
             echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
-            exit();
+            NovelModel::killMasterProcess(); //结束当前进程
+            exit(1);
         }
         extract($proxy_conf);
         $proxy_server =$ip .':'.$port;
@@ -105,6 +112,7 @@ class guzzleHttp{
             'http_errors'     => true,
             'decode_content'  => true,
             'timeout'  => 300,//设置超时时间
+            'connect_timeout' => 10,
             'proxy'=>'socks5://'.$proxy_server,//设置代理
             'headers'    =>[
                 'Content-Type'=>self::$content_type, //content-type信息
@@ -115,6 +123,7 @@ class guzzleHttp{
                 'x-requested-with' => self::$requestMehtod //x-rquest-with参数
             ]
         ]);
+
         //采用多线程的getAsync去并发请求
         foreach($reqs as $val){
             $promises[] = $client->getAsync($val);
