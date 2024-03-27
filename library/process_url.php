@@ -47,16 +47,21 @@ class ProcessUrl{
                 }
             }
         }
+        if(!$run_list){
+          echo "不需要轮询抓取了，章节已经全部抓取下来了\r\n";
+          exit();
+        }
         $success_num=0;
         $insert_data = [];
         $len = count($run_list); //需要跑的总数
+        echo "需要处理同步的章节总数：".$len.PHP_EOL;
         $run_times = 0;
         if($len>0){
              do{
                 $run_times++;
                 //整体轮询五次
-                if($run_times>10){
-                    break;
+                if($run_times>5){
+                   break;
                 }
                 echo "repeat-next-num：".$run_times.PHP_EOL;
                 $arr =array_chunk($run_list,200);
@@ -81,6 +86,9 @@ class ProcessUrl{
                       break;
                  }
             }while(true);
+        }else{
+          echo "不需要再轮训抓取了，因为都已经抓取下来了\r\n";
+          exit();
         }
     }
 }
