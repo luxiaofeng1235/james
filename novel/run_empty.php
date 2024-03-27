@@ -124,12 +124,8 @@ if(!empty($info)){
 
     //转换数据字典用业务里的字段，不和字典里的冲突
     $dataList = NovelModel::changeChapterInfo($dataList);
-    echo '<pre>';
-    print_R($dataList);
-    echo '</pre>';
-    exit;
 
-    $items = array_chunk($dataList,50); //默认每一页150个请求，到详情页最多150*3=900个URL 这个是因为移动端的原因造成
+    $items = array_chunk($dataList,100); //默认每一页100个请求，到详情页最多150*3=900个URL 这个是因为移动端的原因造成
     $i_num =0;
     foreach($items as $k =>&$v){
         //获取内容信息
@@ -164,7 +160,7 @@ if(!empty($info)){
     gc_collect_cycles();
     unset($items);
     unset($chapter_list);
-    echo "novel_path: {$txt_path} store_id = ".$store_id." | pro_book_id = ".$info['pro_book_id'].PHP_EOL;
+    echo "novel_path: {$txt_path} store_id = ".$store_id." | store_id= ".$store_id." pro_book_id = ".$info['pro_book_id'].PHP_EOL;
     echo "\r\n\r\n";
     echo "章节处理完毕\r\n";
     NovelModel::killMasterProcess();//退出主程序
