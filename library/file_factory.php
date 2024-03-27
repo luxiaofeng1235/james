@@ -65,7 +65,7 @@ class FileFactory{
        //校验代理IP是否过期
         if(!$proxy_detail || !$proxy_count || !$proxy_empty){
             NovelModel::killMasterProcess();//退出主程序
-           exit("代理IP已过期三个里面可能过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA')." 请重新获取新的\r\n");
+           exit("代理IP已过期三个里面可能过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新获取新的\r\n");
         }
         //判断数据是否为空
         if(!empty($info_data)){
@@ -151,12 +151,15 @@ class FileFactory{
              }
             echo "\r\n\r\n";
             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
+
+
+
+
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
-
             //按照长度进行切割轮询处理数据
             // $items = array_chunk($chapter_item,$this->num);
-            $items = array_chunk($dataList,200); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
+            $items = array_chunk($dataList,300); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             foreach($items as $k =>&$v){
                 //抓取内容信息
