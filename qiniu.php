@@ -16,7 +16,7 @@ set_time_limit(500);
 
 $dirname =str_replace("\\",'/',dirname(__FILE__)).'/library/' ;
 define('APPPATH',$dirname);
- 
+
 require_once(APPPATH."common.php");
 require_once(APPPATH . "autoload.php");
 // 引入鉴权类
@@ -50,7 +50,7 @@ if($mobile_data){
     echo '<pre>';
     print_R($aids);
     echo '</pre>';
- 
+
 }
 ##测试
 $img_data[] = array(
