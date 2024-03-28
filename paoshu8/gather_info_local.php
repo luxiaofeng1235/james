@@ -55,6 +55,10 @@ $factory = new FileFactory($mysql_obj,$redis_data);
 $table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
 //先从redis取，没有走数据库
 $info = NovelModel::getRedisBookDetail($store_id);
+// echo '<pre>';
+// print_R($info);
+// echo '</pre>';
+// exit;
 if(empty($info)){
     $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 }
@@ -89,6 +93,7 @@ function cleanData($items = [],$filter_key=[]){
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
+        $factory->updateIndexStatus($store_id);//更新状态
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步\r\n";
         NovelModel::killMasterProcess();//退出主程序
         exit();
