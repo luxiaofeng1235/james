@@ -1264,6 +1264,7 @@ public static function killMasterProcess(){
     posix_kill($masterPid, SIGTERM);
     echo "Worker Exit,killed by pid, PID = {$masterPid}\n";
     echo "分发处理信号程序...\n";
+    echo "time =".date('Y-m-d H:i:s')."\r\n";
     pcntl_signal_dispatch();
 }
 
