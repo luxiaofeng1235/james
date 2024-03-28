@@ -53,7 +53,11 @@ if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
 $factory = new FileFactory($mysql_obj,$redis_data);
 
 $table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
-$info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
+//先从redis取，没有走数据库
+$info = NovelModel::getRedisBookDetail($store_id);
+if(empty($info)){
+    $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
+}
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //获取配置的域名信息
 //删除旧数据，防止有新的进行抓取
 function delete_chapter_data($store_id,$story_id,$table_name){
@@ -197,13 +201,17 @@ if($info){
         }
         $sync_pro_id = 0;//给一个默认值
          //执行相关的章节批处理程序
-        $update_id = $info[0]['store_id'] ?? 0;
+        $update_id = $store_id ?? 0;
         //更新的条件
         $where_data = "story_id = '".$story_id."'";
         //只有获取到章节才去处理小说并且同步到mc_book表操作
         if($item_list){
             //同步小说的基础信息到线上mc_book表信息
-            $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
+            $sync_pro_id = NovelModel::getRedisProId($store_id);
+            //默认先查redis缓存里的
+            if(empty($sync_pro_id)){
+                $sync_pro_id = NovelModel::exchange_book_handle($store_data,$mysql_obj);
+            }
             $store_data['pro_book_id'] = $sync_pro_id;
             if(!$sync_pro_id){
                 echo "未关联线上小说ID\r\n";
@@ -221,7 +229,6 @@ if($info){
                 $diff_data['updatetime'] = time();
                 $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
             }
-
 
             $another_data = array_merge(
             [
