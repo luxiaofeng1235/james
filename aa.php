@@ -8,28 +8,61 @@ require_once($dirname.'/library/proxy_network.php');//代理IP使用
 use QL\QueryList;
 
 
+///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
+$proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
+$proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
+$proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROXY
+$proxy_img = NovelModel::checkImgKey(); //获取修复图片的PROXY
 
-$cars=array(3,1,2,0);
-sort($cars);
+
 //校验代理IP是否过期
-if(!NovelModel::checkMobileEmptyKey()){
-    exit("代理IP已过期，请重新拉取最新的ip\r\n");
+if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
+   exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新拉取最新的ip\r\n");
+}
+$file_name =Env::get('SAVE_JSON_PATH') .DS .'a1cc13dfb7f54f7df320821cbacbaae4.' .NovelModel::$json_file_type;
+$json_data = readFileData($file_name);
+if(!$json_data){
+  exit('未找到JSON内容');
 }
 
+$items = json_decode($json_data,true);
+foreach($items as &$v){
+  $v['link_url'] = $v['chapter_link'];
+}
+echo '<pre>';
+print_R($items);
+echo '</pre>';
+exit;
+$items =NovelModel::exchange_urls($items , 0 , 'count');
 
-// $dir  = Env::get('SAVE_MOBILE_NUM_PATH').DS.'3870.json';
-// $data  = readFileData($dir);
-// $items = json_decode($data,true);
-// foreach($items as &$v){
-//     $v['path'] = Env::get('APICONFIG.PAOSHU_HOST').$v['path'];
-// }
+$items = array_slice($items , 0,200);
 
-// $items = array_slice($items, 0,20);
 
-// $urls = array_column($items,'path');
-$urls = [
-  'http://www.paoshu8.info/30_30263/11861398.html',
-];
+
+///mnt/book/txt/a1cc13dfb7f54f7df320821cbacbaae4
+$urls = array_column($items , 'mobile_url');
+
+// $list = curl_pic_multi::Curl_http($urls,5);
+// echo '<pre>';
+// print_R($list);
+// echo '</pre>';
+// exit;
+$contents_arr  =guzzleHttp::multi_req($urls,'image');
+// echo '<pre>';
+// print_R($contents_arr);
+// echo '</pre>';
+// exit;
+$rand_str = ClientModel::getRandProxy();//随机获取代理
+$list  = ClientModel::callRequests1($contents_arr , $items,'ghttp',$rand_str);
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
+
+echo '<pre>';
+print_R($items);
+echo '</pre>';
+exit;
 $list = curl_pic_multi::Curl_http($urls,5);
 echo '<pre>';
 print_R($list);
