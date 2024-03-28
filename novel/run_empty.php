@@ -147,10 +147,10 @@ if(!empty($info)){
                         echo "*************************************\n";
                         echo "\r\n";
                     }
-                    echo "num：{$a_num} \t  chapter_name: {$gvalue['chapter_name']}\t url：{$gvalue['chapter_link_mobile']}\t path：{$gvalue['save_path']} \r\n";
+                    echo "num：{$a_num} \t  chapter_name: {$gvalue['chapter_name']}\t url：{$gvalue['chapter_mobile_link']}\t path：{$gvalue['save_path']} \r\n";
                     $i_num++;
                 }else{
-                     echo "num：{$a_num} \t chapter_name: {$gvalue['chapter_name']} \t 小说源内容为空 url：{$gvalue['chapter_link_mobile']}\r\n";
+                     echo "num：{$a_num} \t chapter_name: {$gvalue['chapter_name']} \t 小说源内容为空 url：{$gvalue['chapter_mobile_link']}\r\n";
                 }
             }
             //保存本地存储数据
