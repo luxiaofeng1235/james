@@ -28,12 +28,45 @@ class FileFactory{
         $this->where_data .= $this->syn_wait_status;//搜索的前置条件
     }
 
+
+    /**
+     * @note  更新mc_book的状态
+     * @param string $story_id 小说ID
+     * @return string
+     */
+    public function updateDownStatus($pro_book_id= 0){
+        if(!$pro_book_id){
+            return false;
+        }
+        global $mysql_obj;
+        $where_condition = "id = '".$pro_book_id."'";
+        $no_chapter_data['is_down'] = 1;
+        //对比新旧数据返回最新的更新
+        $mysql_obj->update_data($no_chapter_data,$where_condition,'mc_book',false,0,'db_novel_pro');
+    }
+
+      /**
+     * @note  更新首页状态
+     * @param string $story_id 小说ID
+     * @return string
+     */
+    public function updateIndexStatus($store_id= 0){
+        if(!$store_id){
+            return false;
+        }
+        global $mysql_obj;
+        $where_condition = "store_id = '".$store_id."'";
+        $no_chapter_data['is_run'] = 1;
+        //对比新旧数据返回最新的更新
+        $mysql_obj->update_data($no_chapter_data,$where_condition,'ims_index_id');
+    }
+
      /**
      * @note  更新状态
      * @param string $story_id 小说ID
      * @return string
      */
-    function updateStatusInfo($store_id= 0){
+    public function updateStatusInfo($store_id= 0){
         if(!$store_id){
             return false;
         }
@@ -49,14 +82,13 @@ class FileFactory{
      /**
      * @note  同步章节信息
      * @param string $story_id 小说ID
-     * @param $info_data 小说基础信息
+     * @param array $info_data 小说基础信息
      * @return string
      */
     public function synChapterInfo($story_id = '',$info_data= []){
         if(!$story_id){
             return false;
         }
-
         $proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
         $proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
         $proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROXY
@@ -147,21 +179,26 @@ class FileFactory{
 
              if(!$dataList){
                 $this->updateStatusInfo($store_id);
+                $this->updateIndexStatus($store_id);//更新首页是否运行的状态
                 NovelModel::killMasterProcess();//退出主程序
                 exit("*********************************已经爬取完毕 ，不需要重复操作了\r\n");
              }
             echo "\r\n\r\n";
             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
 
-
-
+            // echo '<pre>';
+            // print_R($dataList);
+            // echo '</pre>';
+            // exit;
 
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
             // $items = array_chunk($chapter_item,$this->num);
-            $items = array_chunk($dataList,300); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
+            $items = array_chunk($dataList,100); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
+            $count_page= count($items); //总分页数
+            echo "总分页总数：".$count_page.PHP_EOL;
             foreach($items as $k =>&$v){
                 //抓取内容信息
                 $html_data= getStoryCotents($v,$store_id,$md5_str);
@@ -187,6 +224,7 @@ class FileFactory{
                     }
                     //保存本地存储数据
                     $this->synLocalFile($download_path,$html_data);
+                    echo "\r\n|||||||||||||||| this current page =  (".($k+1)."/{$count_page})\t store_id = {$store_id} \tcomplate \r\n\r\n";
                     sleep(1);//休息三秒不要立马去请求，防止空数据的发生
                 }else{
                     echo "num：{$a_num} 未获取到数据，有可能是代理过期\r\n";
@@ -201,7 +239,9 @@ class FileFactory{
             unset($chapter_item);
             //更细对应的状态信息
             //更新对应的is_async和syn_success_status状态
-            $this->updateStatusInfo($store_id);
+            $this->updateStatusInfo($store_id);//更新魔板状态
+            $this->updateIndexStatus($store_id);//更新首页是否运行的状态
+            $this->updateDownStatus($pro_book_id); //更新对应的状态信息
             printlog('小说（'.$info['title'].'）|pro_book_id='.$pro_book_id.'|story_id='.$story_id.'同步章节完成');
             return true;
         }else{
