@@ -27,13 +27,13 @@ define('DS', DIRECTORY_SEPARATOR);
 #$mtime = explode(' ', microtime());
 #$starttime = $mtime[1] + $mtime[0];
 $Global = array();
-
+// ob_end_clean();
 function_exists('ob_gzhandler') ? ob_start('ob_gzhandler') : ob_start();
-session_start();
-header("Vary: Accept");
-header("Content-Type: text/html; charset=utf-8");
-header('Cache-control:Private');
-header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
+// session_start();
+// header("Vary: Accept");
+// header("Content-Type: text/html; charset=utf-8");
+// header('Cache-control:Private');
+// header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
 require_once ROOT.'library/mysql_class.php';
 require_once ROOT.'library/pinyin.func.php';
 require_once ROOT.'library/common.php'; #加载公用函数
@@ -95,3 +95,4 @@ $Global['F_host'] = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] :'';
 $Global['F_time'] = time();
 
 
+ob_end_flush();
