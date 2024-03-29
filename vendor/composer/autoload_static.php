@@ -15,9 +15,11 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'fe62ba7e10580d903cc46d808b5961a4' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/helpers.php',
         'caf31cc6ec7cf2241cb6f12c226c3846' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/alias.php',
         '8592c7b0947d8a0965a9e8c3d16f9c24' => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/autoload.php',
+        'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
         'dc1275c308c5b416beb314b6317daca2' => __DIR__ . '/..' . '/overtrue/pinyin/src/const.php',
     );
 
@@ -26,6 +28,14 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             'think\\view\\driver\\' => 18,
             'think\\' => 6,
+        ),
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
+        'Y' => 
+        array (
+            'Yurun\\Util\\' => 11,
         ),
         'T' => 
         array (
@@ -66,6 +76,12 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             'Overtrue\\Pinyin\\' => 16,
         ),
+        'M' => 
+        array (
+            'Mpdf\\PsrLogAwareTrait\\' => 22,
+            'Mpdf\\PsrHttpMessageShim\\' => 24,
+            'Mpdf\\' => 5,
+        ),
         'L' => 
         array (
             'League\\MimeTypeDetection\\' => 25,
@@ -87,6 +103,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             'Elasticsearch\\' => 14,
         ),
+        'D' => 
+        array (
+            'DeepCopy\\' => 9,
+        ),
         'C' => 
         array (
             'Clue\\React\\Buzz\\' => 16,
@@ -96,6 +116,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         'A' => 
         array (
+            'Ares333\\Curl\\' => 13,
             'Acme\\' => 5,
         ),
     );
@@ -108,6 +129,14 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'think\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-template/src',
+        ),
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'Yurun\\Util\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yurunsoft/yurun-http/src',
         ),
         'Tightenco\\Collect\\' => 
         array (
@@ -194,6 +223,18 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/overtrue/pinyin/src',
         ),
+        'Mpdf\\PsrLogAwareTrait\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
+        ),
+        'Mpdf\\PsrHttpMessageShim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
+        ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
         'League\\MimeTypeDetection\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
@@ -230,6 +271,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
         ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
         'Clue\\React\\Buzz\\' => 
         array (
             0 => __DIR__ . '/..' . '/clue/buzz-react/src',
@@ -245,6 +290,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'Cache\\Adapter\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/cache/adapter-common',
+        ),
+        'Ares333\\Curl\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ares333/php-curl/src',
         ),
         'Acme\\' => 
         array (
