@@ -196,6 +196,8 @@ if($info){
             $no_chapter_data['is_async'] = 1;
             //对比新旧数据返回最新的更新
             $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+            //更新首页的标记状态
+            $factory->updateIndexStatus($store_id);//更新状态
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
             NovelModel::killMasterProcess();//退出主程序
