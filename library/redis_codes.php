@@ -15,6 +15,7 @@ class redis_codes {
         $port   =  Env::get('REDIS.PORT'); ; //端口号
         $pass   =  Env::get('REDIS.PASSWORD');  //密码设置
         $this->redis = new Redis();//实例化redis
+        echo "我是redis实例化进来的\r\n";
         $this->redis->connect($host, $port);
         if(!empty($pass)){
             $this->redis->auth($pass);
@@ -187,6 +188,17 @@ class redis_codes {
     	$result = $this->redis->hGet($zone,$key);
     	return $result;
     }
+
+     /**
+     *删除zone下单个$key(hash)
+     * @param type $key
+     * @return type
+     */
+    public function hdel_redis($zone,$key){
+        $result = $this->redis->hdel($zone,$key);
+        return $result;
+    }
+
     /**
      *设置key和value  (hash)
      * @param type $key
