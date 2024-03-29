@@ -7,13 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
 {
     public static $files = array (
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '972fda704d680a3a53c68e34e193cb22' => __DIR__ . '/..' . '/react/promise-timer/src/functions_include.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'fe62ba7e10580d903cc46d808b5961a4' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/helpers.php',
         'caf31cc6ec7cf2241cb6f12c226c3846' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/alias.php',
         '8592c7b0947d8a0965a9e8c3d16f9c24' => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/autoload.php',
@@ -38,7 +39,15 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         'R' => 
         array (
+            'Rize\\' => 5,
+            'React\\Stream\\' => 13,
+            'React\\SocketClient\\' => 19,
+            'React\\Promise\\Timer\\' => 20,
             'React\\Promise\\' => 14,
+            'React\\HttpClient\\' => 17,
+            'React\\EventLoop\\' => 16,
+            'React\\Dns\\' => 10,
+            'React\\Cache\\' => 12,
         ),
         'Q' => 
         array (
@@ -80,6 +89,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         'C' => 
         array (
+            'Clue\\React\\Buzz\\' => 16,
             'Cache\\TagInterop\\' => 17,
             'Cache\\Adapter\\Filesystem\\' => 25,
             'Cache\\Adapter\\Common\\' => 21,
@@ -115,9 +125,41 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
+        'Rize\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rize/uri-template/src/Rize',
+        ),
+        'React\\Stream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/stream/src',
+        ),
+        'React\\SocketClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/socket-client/src',
+        ),
+        'React\\Promise\\Timer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/promise-timer/src',
+        ),
         'React\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
+        'React\\HttpClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/http-client/src',
+        ),
+        'React\\EventLoop\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/event-loop/src',
+        ),
+        'React\\Dns\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/dns/src',
+        ),
+        'React\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/cache/src',
         ),
         'QL\\Ext\\Lib\\' => 
         array (
@@ -188,6 +230,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
         ),
+        'Clue\\React\\Buzz\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/clue/buzz-react/src',
+        ),
         'Cache\\TagInterop\\' => 
         array (
             0 => __DIR__ . '/..' . '/cache/tag-interop',
@@ -213,6 +259,24 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
             array (
                 0 => __DIR__ . '/..' . '/monolog/monolog/src',
             ),
+            'ML\\IRI' => 
+            array (
+                0 => __DIR__ . '/..' . '/ml/iri',
+            ),
+        ),
+        'G' => 
+        array (
+            'Guzzle\\Parser' => 
+            array (
+                0 => __DIR__ . '/..' . '/guzzle/parser',
+            ),
+        ),
+        'E' => 
+        array (
+            'Evenement' => 
+            array (
+                0 => __DIR__ . '/..' . '/evenement/evenement/src',
+            ),
         ),
     );
 
@@ -224,6 +288,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'CallbackParameterToReference' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackReturnReference' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackReturnValue' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DOMDocumentWrapper' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/DOMDocumentWrapper.php',
         'DOMEvent' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/DOMEvent.php',
         'ICallbackNamed' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
