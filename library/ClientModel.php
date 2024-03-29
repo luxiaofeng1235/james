@@ -30,7 +30,7 @@ class ClientModel{
     * @param string $str 获取小说的章节数据处理-章节列表
     * @param  integer $store_id 小说ID
     * @param txt_path string 存储路径
-    * @return mixed
+    * @return array
     */
     public static function getClientContents($item=[],$store_id=0,$txt_path=''){
         if(!$item)
@@ -50,8 +50,6 @@ class ClientModel{
                     'chapter_mobile_link'   =>  substr($gr['mobile_url'] , 0 , -2),
              ];
         }
-
-
         $valid_ghttp ='ghttp';//ghttp验证
         $urls = array_column($new_data,'mobile_url');
         $list = guzzleHttp::multi_req($urls,self::$first_proxy_name);
@@ -63,10 +61,6 @@ class ClientModel{
 
         $rand_str = self::getRandProxy();//随机获取代理
         $list  = self::callRequests1($list , $new_data,$valid_ghttp,$rand_str);
-        // echo '<pre>';
-        // print_R($list);
-        // echo '</pre>';
-        // exit;
         global $urlRules;//获取指定的抓取规则
         $rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
         $allNovel = [];
@@ -109,7 +103,7 @@ class ClientModel{
                 $string = implode('',$gtval);//切割字符串,不能用,因为文章里含有，会错乱原因在这里
                 $returnArr[$gtkey]['chapter_name'] = $chapetList[$gtkey]['chapter_name'] ?? '';//章节名称
                 $returnArr[$gtkey]['chapter_link'] = $chapetList[$gtkey]['chapter_link'] ?? ''; //章节链接
-                $returnArr[$gtkey]['chapter_link_mobile'] = $chapetList[$gtkey]['chapter_mobile_link'] ?? '';//移动端的连接地址
+                $returnArr[$gtkey]['chapter_mobile_link'] = $chapetList[$gtkey]['chapter_mobile_link'] ?? '';//移动端的连接地址
                 $returnArr[$gtkey]['save_path'] = $chapetList[$gtkey]['path']??''; //保存的文件路径
                 $returnArr[$gtkey]['content'] = $string; //获取内容信息
             }
