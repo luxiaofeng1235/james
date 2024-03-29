@@ -7,13 +7,81 @@ require_once($dirname.'/library/file_factory.php');
 require_once($dirname.'/library/proxy_network.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
-$pinyin = new Pinyin();
-$str ='wi是谁的';
-$a = $pinyin->name($str);
+use Ares333\Curl\Toolkit;
+use Ares333\Curl\Curl;
+use \Yurun\Util\YurunHttp\Co\Batch;
+use Yurun\Util\YurunHttp;
+use Yurun\Util\HttpRequest;
+
+
+
+
+
+echo "\r\n";
+
+$curl = new Curl();
+$toolkit = new Toolkit();
+
+
+$curl->onInfo = array(
+    $toolkit,
+    'onInfo'
+);
+$curl->maxThread = 50;
+$returnList =[];
+$url = 'http://www.paoshu8.info/52_52542/139186929.html';
+for ($i = 0; $i < 300; $i ++) {
+    // echo "num ={$i} \r\n";
+    $curl->add(
+        array(
+            'opt' => array(
+                CURLOPT_URL => $url . '?wd=' . $i,
+                CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
+            ),
+            'args' => 'This is user argument',
+        ),
+     function ($r, $args) use(&$returnList){
+        $callback['status'] = "Request success for " . $r['info']['url'];
+        $callback['args'] = $args;
+        $callback['http_code'] = $r['info']['http_code'];
+        $callback['body_size'] = strlen($r['body']) . ' bytes';
+        $callback['content']  = $r['body'];
+        $returnList[] = $callback;
+        return $returnList;
+    });
+}
+$curl->start();
 echo '<pre>';
-var_dump($a);
+print_R($returnList);
 echo '</pre>';
 exit;
+echo "over\r\n";
+
+
+exit(1);
+
+$curl->onInfo = array(
+    $toolkit,
+    'onInfo'
+);
+$curl->maxThread = 10;
+$url = 'https://learnku.com/articles/30758';
+for ($i = 0; $i < 4; $i ++) {
+    $curl->add(
+        array(
+            'opt' => array(
+                CURLOPT_URL => $url . '?wd=' . $i,
+                CURLOPT_ENCODING    =>  'gzip',
+                CURLOPT_HTTPHEADER  =>  array("Expect:"),
+                CURLOPT_HTTPPROXYTUNNEL =>0,
+            ),
+        ));
+}
+$curl->start();
+exit(1);
+
+
+
 
 ///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
 $proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
