@@ -595,24 +595,6 @@ function getMobileEmptyProxy(){
 	return $proxy_conf ?? [];
 }
 
-/**
- * 获取wget需要下载的命令
- * @param $urls array 下载链接
- * @return mixed
- */
-function getWgetCommand($urls=[] ,$type = 1){
-	if(!$urls)
-		return false;
-	$proxy_data = getZhimaProxy();
-	if(!$proxy_data)
-		return [];
-	//切割html数据信息
-	$html_url = implode(' ',$urls);
-	//获取代理的配置信息凭借wget的参数命令
-	$proxyauth = $proxy_data['ip'] . ':' .$proxy_data['port'];
-	$str = 'wget --restrict-file-names=nocontrol   -e use_proxy=yes -e http_proxy='.$proxyauth.' --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"  --header="Cookie: width=85%25; Hm_lvt_61f1afd153b0a37229eefe873fe6586a=1710121429,1710213284,1710295133,1710378533; Hm_lpvt_61f1afd153b0a37229eefe873fe6586a=1710403413"  '.$html_url.' -O '.Env::get('CHAPTER_PATH_LOG');
-	return $str;
-}
 
 
 
