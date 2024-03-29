@@ -55,10 +55,6 @@ $factory = new FileFactory($mysql_obj,$redis_data);
 $table_novel_name =Env::get('APICONFIG.TABLE_NOVEL'); //小说基本信息表
 //先从redis取，没有走数据库
 $info = NovelModel::getRedisBookDetail($store_id);
-// echo '<pre>';
-// print_R($info);
-// echo '</pre>';
-// exit;
 if(empty($info)){
     $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 }
@@ -249,12 +245,21 @@ if($info){
             //这里需要同步处理未同步下来的章节信息
             // ProcessUrl::selfRunUrls($store_data);
         }else{
+
+            //主要需要更新线上的对应的ID
+            $storeInfo = $mysql_obj->fetch("select pro_book_id from ".$table_novel_name." where store_id ={$store_id}",'db_slave');
+            $pro_book_id = intval($storeInfo['pro_book_id']);
             //这里面防止解析为空去更新对应的状态
             $where_condition = "story_id = '".$story_id."'";
             $no_chapter_data['syn_chapter_status'] = 1;
             $no_chapter_data['is_async'] = 1;
+            //更新is_down的状态
+            $pro_book_id>0 && $factory->updateDownStatus($pro_book_id);
             //对比新旧数据返回最新的更新
             $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+            echo "此小说【".$store_data['title']."】 暂无没有章节信息----------\r\n";
+            NovelModel::killMasterProcess();//退出主程序
+            exit();
         }
         if(!$item_list){
             $itemlist = [];
