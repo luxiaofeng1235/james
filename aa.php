@@ -5,10 +5,10 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
 require_once($dirname.'/library/proxy_network.php');//代理IP使用
+use QL\QueryList;
+use Overtrue\Pinyin\Pinyin;
 
-
-
-
+echo 33;exit;
 
 
 

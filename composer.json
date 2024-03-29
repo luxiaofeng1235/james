@@ -9,7 +9,9 @@
 		"electrolinux/phpquery": "^0.9.7",
 		"jaeger/querylist": "^4.2",
 		"jaeger/curlmulti": "^1.0",
-		"overtrue/pinyin": "^4.1"
+		"overtrue/pinyin": "^4.1",
+		"clue/buzz-react": "^0.4.2",
+		"react/event-loop": "^0.4.3"
   },
 	"config": {
 		"secure-http": false
