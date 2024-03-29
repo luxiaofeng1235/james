@@ -339,6 +339,7 @@ function webRequest($url,$method,$params=[],$header = []){
 	if(!empty($header)){
 		curl_setopt ( $curl, CURLOPT_HTTPHEADER, $header );
 	}
+	 curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3');//
 	//请求时间
 	$timeout = 30;
 	curl_setopt ($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
@@ -1191,6 +1192,22 @@ function writeFileAppend($file_path , $content)
 	flock($fp, LOCK_UN);
 	fclose($fp);
 	return true;
+}
+
+/**
+ * @note 转码处理
+ *
+ * @param $arr str 处理转换的字符
+ * @param $in_charset str 转换字符集 默认GBK
+ * @param $out_charset str 输出字符集
+ * @return str
+ */
+function array_iconv($arr, $in_charset="gbk", $out_charset="utf-8")
+{
+ $ret = eval('return '.iconv($in_charset,$out_charset,var_export($arr,true).';'));
+ return $ret;
+ // 这里转码之后可以输出json
+ // return json_encode($ret);
 }
 
 ?>
