@@ -7,10 +7,13 @@ require_once($dirname.'/library/file_factory.php');
 require_once($dirname.'/library/proxy_network.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
-
-echo 33;exit;
-
-
+$pinyin = new Pinyin();
+$str ='wi是谁的';
+$a = $pinyin->name($str);
+echo '<pre>';
+var_dump($a);
+echo '</pre>';
+exit;
 
 ///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
 $proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
