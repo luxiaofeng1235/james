@@ -5,7 +5,11 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
 require_once($dirname.'/library/proxy_network.php');//代理IP使用
-use QL\QueryList;
+
+
+
+
+
 
 
 ///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
@@ -15,15 +19,20 @@ $proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROX
 $proxy_img = NovelModel::checkImgKey(); //获取修复图片的PROXY
 
 
+/*
 //校验代理IP是否过期
 if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
    exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新拉取最新的ip\r\n");
 }
 $file_name =Env::get('SAVE_JSON_PATH') .DS .'a1cc13dfb7f54f7df320821cbacbaae4.' .NovelModel::$json_file_type;
+echo '<pre>';
+print_r ($file_name);
+echo '</pre>';
 $json_data = readFileData($file_name);
 if(!$json_data){
   exit('未找到JSON内容');
 }
+echo 33;die;
 
 $items = json_decode($json_data,true);
 foreach($items as &$v){
@@ -42,12 +51,20 @@ $items = array_slice($items , 0,200);
 ///mnt/book/txt/a1cc13dfb7f54f7df320821cbacbaae4
 $urls = array_column($items , 'mobile_url');
 
+*/
+
 // $list = curl_pic_multi::Curl_http($urls,5);
 // echo '<pre>';
 // print_R($list);
 // echo '</pre>';
 // exit;
+$urls = [
+    'http://www.baidu.com',
+];
 $contents_arr  =guzzleHttp::multi_req($urls,'image');
+echo '<pre>';
+print_r ($contents_arr);
+echo '</pre>';
 // echo '<pre>';
 // print_R($contents_arr);
 // echo '</pre>';
