@@ -95,6 +95,43 @@ class NovelModel{
         $content = $redis_data->get_redis($tag);
     }
 
+    /**
+    * @note 获取缓存里的mc_book表对应的id
+    * @param $store_id int 小说id
+    * @return interer
+    *
+    */
+    public static function getRedisProId($store_id){
+      if(!$store_id){
+          return 0;
+      }
+      global $redis_data;
+        $redis_key =  Env::get('REDIS_STORE_KEY') . $store_id;
+        $pro_book_id = $redis_data->get_redis($redis_key);
+       return $pro_book_id ?? 0;
+    }
+
+
+  /**
+  * @note 获取redis中小说的基础详情信息
+  *
+  */
+    public static function getRedisBookDetail($store_id){
+        if(!$store_id){
+            return 0;
+        }
+        global $redis_data;
+        $redis_key =  Env::get('REDIS_STORE_DETAIL_KEY');
+        $info = $redis_data->hget_redis($redis_key , $store_id);
+        if(!$info){
+          $info = array();
+        }else{
+          $info = json_decode($info,true);
+        }
+        return $info ?? [];
+
+    }
+
      /**
   * @note 检测移动端补数据的脚本呢的key
   *
@@ -209,19 +246,6 @@ class NovelModel{
          return $list;
       }
     }
-
-   /**
-  * @note 获取上次运行的最大ID
-  *
-  */
-    public static function getMaxRunId(){
-      global $mysql_obj;
-      $sql = "select max(store_id) as last_store_id from ".Env::get('APICONFIG.TABLE_NOVEL')." where syn_chapter_status =".self::$run_status;
-      $info = $mysql_obj->fetch($sql,'db_slave');
-      $last_max_id = $info['last_store_id'] ?? 0;
-      return $last_max_id;
-    }
-
     /**
     * @note 自动加载分类配置文件
     *
@@ -791,7 +815,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       $info['read_count']  = rand(1000,5000);
       $info['search_count'] = rand(100,599);
       //根据书籍名称和坐着来进行匹配
-      $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'" limit 1';
+      $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url   not like "%biquge34%" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
       if(empty($novelInfo)){
           //插入入库
