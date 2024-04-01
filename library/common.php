@@ -1032,6 +1032,7 @@ function replaceCnWords($str){
 function replaceLRSpace($str){
 	if(!$str)
 		return false;
+	//负责去除首尾空格信息，其他的不处理
 	$string = preg_replace('/^\s*|\s*$/i','',$str);
 	if(!$string){
 		$string = '';
