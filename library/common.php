@@ -1023,6 +1023,22 @@ function replaceCnWords($str){
 	return $newStr;
 }
 
+/**
+ * @note 去除首尾字符空格
+ *
+ * @param $str 需要处理的字符
+ * @return  string
+ */
+function replaceLRSpace($str){
+	if(!$str)
+		return false;
+	$string = preg_replace('/^\s*|\s*$/i','',$str);
+	if(!$string){
+		$string = '';
+	}
+	return $string;
+}
+
 
 /**
  * @note 处理数组中的key进行添加

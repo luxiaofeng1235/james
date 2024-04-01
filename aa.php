@@ -13,74 +13,24 @@ use \Yurun\Util\YurunHttp\Co\Batch;
 use Yurun\Util\YurunHttp;
 use Yurun\Util\HttpRequest;
 
-
-
-
-
-echo "\r\n";
-
-$curl = new Curl();
-$toolkit = new Toolkit();
-
-
-$curl->onInfo = array(
-    $toolkit,
-    'onInfo'
-);
-$curl->maxThread = 50;
-$returnList =[];
-$url = 'http://www.paoshu8.info/52_52542/139186929.html';
-for ($i = 0; $i < 300; $i ++) {
-    // echo "num ={$i} \r\n";
-    $curl->add(
-        array(
-            'opt' => array(
-                CURLOPT_URL => $url . '?wd=' . $i,
-                CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
-            ),
-            'args' => 'This is user argument',
-        ),
-     function ($r, $args) use(&$returnList){
-        $callback['status'] = "Request success for " . $r['info']['url'];
-        $callback['args'] = $args;
-        $callback['http_code'] = $r['info']['http_code'];
-        $callback['body_size'] = strlen($r['body']) . ' bytes';
-        $callback['content']  = $r['body'];
-        $returnList[] = $callback;
-        return $returnList;
-    });
-}
-$curl->start();
+$str= '    1956  .第  19  56章 他一定会记仇    ';
+$t = replaceLRSpace($str);
 echo '<pre>';
-print_R($returnList);
+var_dump($t);
 echo '</pre>';
 exit;
-echo "over\r\n";
 
+$t = trim($str);
+echo '<pre>';
+var_dump($t);
+echo '</pre>';
+exit;
 
-exit(1);
-
-$curl->onInfo = array(
-    $toolkit,
-    'onInfo'
-);
-$curl->maxThread = 10;
-$url = 'https://learnku.com/articles/30758';
-for ($i = 0; $i < 4; $i ++) {
-    $curl->add(
-        array(
-            'opt' => array(
-                CURLOPT_URL => $url . '?wd=' . $i,
-                CURLOPT_ENCODING    =>  'gzip',
-                CURLOPT_HTTPHEADER  =>  array("Expect:"),
-                CURLOPT_HTTPPROXYTUNNEL =>0,
-            ),
-        ));
-}
-$curl->start();
-exit(1);
-
-
+$pattern = '/\s+/'; // 匹配一个或多个空格
+$replacement = ''; // 空替换字符串
+$result = preg_replace($pattern, $replacement, $string);
+echo $result; // 输出"HelloWorld"
+exit();
 
 
 ///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
