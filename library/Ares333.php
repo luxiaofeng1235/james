@@ -138,7 +138,14 @@ class Ares333{
             $curl->add(
                 array(
                     'opt' => array(
-                        CURLOPT_URL => $urls[$i],
+                        CURLOPT_URL => $urls[$i], //指定url
+                        CURLOPT_HEADER => false, //是否需要返回HTTP头
+                        CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
+                        CURLOPT_FOLLOWLOCATION  => true,//自动跟踪
+                        CURLOPT_TIMEOUT => 120,//超时时间(s)
+                        CURLOPT_HTTPHEADER  =>  array("Expect:"),//增加配置完整接收数据配置buffer的大小
+                        CURLOPT_HTTPGET => true, //启用时会设置HTTP的method为GET，因为GET是默认是，所以只在被修改的情况下使用。
+                        CURLOPT_ENCODING    =>  'gzip',
                     ),
                     'args'  =>  'This is user argument',
                 ),

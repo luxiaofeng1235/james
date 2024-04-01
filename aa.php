@@ -4,14 +4,30 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
-require_once($dirname.'/library/proxy_network.php');//代理IP使用
+require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
-use Ares333\Curl\Toolkit;
-use Ares333\Curl\Curl;
-use \Yurun\Util\YurunHttp\Co\Batch;
-use Yurun\Util\YurunHttp;
-use Yurun\Util\HttpRequest;
+
+$urls = [
+    'http://www.paoshu8.info/171_171867/181311631.html',
+    'http://www.paoshu8.info/171_171867/181311632.html',
+    'http://www.paoshu8.info/171_171867/181311633.html',
+    'http://www.paoshu8.info/171_171867/181311634.html',
+    'http://www.paoshu8.info/171_171867/181311635.html',
+    'http://www.paoshu8.info/171_171867/181567340.html',
+    'http://www.paoshu8.info/171_171867/182124104.html',
+    'http://www.paoshu8.info/171_171867/182187174.html',
+    'http://www.paoshu8.info/212_212181/196296344.html',
+    'http://www.paoshu8.info/213_213375/196296234.html'
+];
+$items = Ares333::curlThreadList($urls);
+echo "over\r\n";
+die;
+// echo '<pre>';
+// print_R($items);
+// echo '</pre>';
+exit;
+
 
 $str= '    1956.第1956章 他一定会记仇    ';
 $t = replaceLRSpace($str);
