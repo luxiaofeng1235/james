@@ -16,7 +16,7 @@ use QL\QueryList;
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
 $redis_key = 'json_refresh_store_id';//redis的对应可以设置
 $id = $redis_data->get_redis($redis_key);
-$where_data = '1 and pro_book_id>0 and store_id = 88107';
+$where_data = '1 and pro_book_id>0';
 $limit= 30; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
@@ -27,53 +27,62 @@ if($id){
 $sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where ".$where_data;
 $sql .= $order_by;
 $sql .= " limit ".$limit;
+echo "sql = {$sql}\n\n";
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
 $diff_data = array();
-
-$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
-foreach($info as $key => $value){
-    $story_id = trim($value['story_id']);
-    $story_link = trim($value['story_link']);
-    $store_id = intval($value['store_id']);
-    $title = trim($value['title']);
-    $pro_book_id = intval($value['pro_book_id']);
-    if(!$story_id) continue;
-
-
-    //读取相关的内容信息
-    $html = getHtmlData($story_id ,$story_link);
-    $info_data=QueryList::html($html)
-                ->rules($rules)
-                ->query()->getData();
-    $store_data = $info_data->all();
-
-     //转义标题
-    $store_data['title'] = addslashes(trim($store_data['title']));
-    //处理作者并转义
-    $author_data = explode('：',$store_data['author']);
-    $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
-    $store_data['author']  = $author;
+if($info){
+    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
+    foreach($info as $key => $value){
+        $story_id = trim($value['story_id']);
+        $story_link = trim($value['story_link']);
+        $store_id = intval($value['store_id']);
+        $title = trim($value['title']);
+        $pro_book_id = intval($value['pro_book_id']);
+        if(!$story_id) continue;
 
 
-    $novel_list_path = Env::get('SAVE_JSON_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']).'.' .NovelModel::$json_file_type;
+        //读取相关的内容信息
+        $html = getHtmlData($story_id ,$story_link);
+        $info_data=QueryList::html($html)
+                    ->rules($rules)
+                    ->query()->getData();
+        $store_data = $info_data->all();
 
-    //处理配置信息
-    $rt = NovelModel::getCharaList($html , $title);
-    if(!empty($rt)){
-        $chapter_detail = $rt;
-        //移除按照对应的信息数据
-        $chapter_detail =NovelModel::removeDataRepeatStr($chapter_detail);
-        //处理相关数据
-        $item_list = buildChapterList($chapter_detail , $value);
-        //创建生成json文件信息
-        NovelModel::createJsonFile($store_data,$item_list,0);
-        echo "num =".($key+1)." store_id = {$store_id} pro_book_id={$pro_book_id} url ={$story_link}  path = {$novel_list_path} success \r\n";
-    }else{
-        echo "num =".($key+1)." 当前store_id ={$store_id} pro_book_id={$pro_book_id} url ={$story_link} 未匹配到有效素信息，也有可能是HTML页面不存在~~ \r\n";
+         //转义标题
+        $store_data['title'] = addslashes(trim($store_data['title']));
+        //处理作者并转义
+        $author_data = explode('：',$store_data['author']);
+        $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
+        $store_data['author']  = $author;
+
+
+        $novel_list_path = Env::get('SAVE_JSON_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']).'.' .NovelModel::$json_file_type;
+
+        //处理配置信息
+        $rt = NovelModel::getCharaList($html , $title);
+        if(!empty($rt)){
+            $chapter_detail = $rt;
+            //移除按照对应的信息数据
+            $chapter_detail =NovelModel::removeDataRepeatStr($chapter_detail);
+            //处理相关数据
+            $item_list = buildChapterList($chapter_detail , $value);
+            //创建生成json文件信息
+            NovelModel::createJsonFile($store_data,$item_list,0);
+            echo "num =".($key+1)." \t title={$title} \t store_id = {$store_id}\t pro_book_id={$pro_book_id} \t url ={$story_link} \t path = {$novel_list_path} success \r\n";
+        }else{
+            echo "num =".($key+1)." \t title={$title} \t store_id ={$store_id} \t pro_book_id={$pro_book_id} \t url ={$story_link} 未匹配到有效素信息，也有可能是HTML页面不存在~~ \r\n";
+        }
     }
+}else{
+    echo "no data \r\n";
 }
-echo "count-num:".count($info)."\r\n";
+
+$ids = array_column($info,'pro_book_id');
+$max_id = max($ids);
+$redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
+echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$max_id.PHP_EOL;
+echo "count-num:".$limit."\r\n";
 echo "finish_time：".date('Y-m-d H:i:s') .PHP_EOL;
 echo "over\r\n";
 
