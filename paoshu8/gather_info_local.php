@@ -166,7 +166,7 @@ if($info){
             //重新赋值进行计算
             $chapter_detal = $rt;
             //处理过滤章节名称里的特殊字符---按照名称进行存储，部分章节可能重名
-            $chapter_detal = removeDataRepeat($chapter_detal);
+            $chapter_detal = removeDataRepeatStr($chapter_detal);
             foreach($chapter_detal as $val){
                 $link_url = trim($val['link_url']);
                 $chapter_ret= explode('/',$link_url);
@@ -288,7 +288,7 @@ echo "--------------------------------------------------------------------------
 //处理抓取中按照章节名称返回
 //将章节中的全角符号转换成英文
 //过滤调一些特殊分符号
-function removeDataRepeat($data){
+function removeDataRepeatStr($data){
     if(!$data) return false;
     foreach($data as $key=>$val){
          //$link_name = replaceCnWords($chapter_name); //处理连接中的特殊字符
@@ -304,6 +304,5 @@ function removeDataRepeat($data){
     //移除广告章节
     $list = NovelModel::removeAdInfo($t);
     return $list;
-
 }
 ?>

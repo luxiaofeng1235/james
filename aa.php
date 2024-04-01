@@ -13,7 +13,7 @@ use \Yurun\Util\YurunHttp\Co\Batch;
 use Yurun\Util\YurunHttp;
 use Yurun\Util\HttpRequest;
 
-$str= '    1956  .第  19  56章 他一定会记仇    ';
+$str= '    1956.第1956章 他一定会记仇    ';
 $t = replaceLRSpace($str);
 echo '<pre>';
 var_dump($t);
