@@ -4,7 +4,7 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 require_once($dirname.'/library/file_factory.php');
-require_once($dirname.'/library/Ares333.php');//代理IP使用
+// require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
@@ -20,17 +20,26 @@ $urls = [
     'http://www.paoshu8.info/212_212181/196296344.html',
     'http://www.paoshu8.info/213_213375/196296234.html'
 ];
-$items = Ares333::curlThreadList($urls);
-echo "over\r\n";
-die;
+// $aa = curl_pic_multi::Curl_http($urls);
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
+// $items = Ares333::curlThreadList($urls);
+// echo "over\r\n";
+// die;
 // echo '<pre>';
 // print_R($items);
 // echo '</pre>';
-exit;
+// exit;
 
 
 $str= '    1956.第1956章 他一定会记仇    ';
 $t = replaceLRSpace($str);
+echo '<pre>';
+var_dump($t);
+echo '</pre>';
+exit;
 echo '<pre>';
 var_dump($t);
 echo '</pre>';

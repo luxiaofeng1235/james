@@ -127,8 +127,8 @@ public static function Rand_refer(){
       'CLIENT-IP:'.self::Rand_IP(),
       'X-FORWARDED-FOR:'.self::Rand_IP(),
     );
-      if(!$proxy_data)
-        return [];
+      // if(!$proxy_data)
+      //   return [];
       $mh = curl_multi_init();//创建多个curl语柄
       foreach($array as $k=>$url){
           $conn[$k]=curl_init($url);//初始化
