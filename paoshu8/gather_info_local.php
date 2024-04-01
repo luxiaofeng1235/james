@@ -293,7 +293,8 @@ function removeDataRepeat($data){
     foreach($data as $key=>$val){
         $chapter_name = trim($val['link_name']);
         //处理连接中的特殊字符
-        $link_name = replaceCnWords($chapter_name);
+        // $link_name = replaceCnWords($chapter_name);
+        $link_name = trim($link_name); //只去除首尾空格，不进行其他的替换
         if(!empty($link_name)){
             $t[$link_name] = [
                 'link_name' =>$link_name,
