@@ -260,22 +260,45 @@ class NovelModel{
     }
 
 
+     /**
+    * @note 替换里面的指定空行
+    * @param $data array 处理数据
+    * @return array
+    *
+    */
+    protected static function replaceListArr($data=[]){
+      if(!$data)
+        return false;
+      foreach($data as &$val){
+         $val = str_replace("\r\n",'',$val);
+      }
+      return $data;
+    }
+
+
     /**
     * @note 从特定的url中获取对应的数据信息
     * @param $html string 文本内容
     * @return array
     *
     */
-   public static function getCharaList($html){
-      if(!$html){
+   public static function getCharaList($html,$title=''){
+      if(!$html || !$title){
         return '';
       }
       $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
+      //只取正文里的内容信息，其他的更新的简介不要
+      preg_match('/<dt>《'.$title.'》正文.*?>.*?<\/dl>/ism',$html,$list);
+      /*
       preg_match('/<\/div>.*?>.*?<\/dl>/ism',$html,$list);
+      */
       if(isset($list[0]) && !empty($list)){
-           $list_item= preg_split('/<dt>/', $list[0]);
-           $contents  = $list_item[2] ?? '';
+           // $list_item= preg_split('/<dd>/', $list[0]);
+           // array_shift($list_item);
+           $contents = $list[0] ?? [];
+           //获取相关的数据信息
+           // $contents = self::replaceListArr($list_item);
            if($contents){
               preg_match_all($link_reg,$contents,$link_list);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
@@ -293,10 +316,15 @@ class NovelModel{
         //如果上面的没有匹配出来直接从dd里获取对应的连接
         //直接暴力一点
         //直接从链接里开始遍历得了
+        /*
           preg_match_all('/<dd.*?>.*?<\/dd>/ism',$html,$urls);
+          */
+          preg_match('/<dt>《'.$title.'》正文.*?>.*?<\/dl>/ism',$html,$urls);//只匹配正文以下的
           $chapter_list = [];
           if(isset($urls[0])){
-             foreach($urls[0] as $key =>$val){
+             $item = preg_split('/<dd>/', $urls[0]);
+             $item = array_filter($item);
+             foreach($item as $key =>$val){
                  if(strpos($val,'.html')){
                       preg_match($link_reg,$val,$t1);
                       preg_match($text_reg,$val,$t2);
@@ -312,6 +340,28 @@ class NovelModel{
           return $chapter_list;
      }
    }
+
+
+  //处理抓取中按照章节名称返回
+  //将章节中的全角符号转换成英文
+  //过滤调一些特殊分符号
+  public static function removeDataRepeatStr($data){
+      if(!$data) return false;
+      foreach($data as $key=>$val){
+           //$link_name = replaceCnWords($chapter_name); //处理连接中的特殊字符
+          $link_name = replaceLRSpace($val['link_name']); //只替换首尾空格，
+          if(!empty($link_name)){
+              $t[] = [
+                  'link_name' =>$link_name,
+                  'link_url'  =>$val['link_url']
+              ];
+          }
+      }
+      $t= array_values($t);
+      //移除广告章节
+      $list = NovelModel::removeAdInfo($t);
+      return $list;
+  }
 
   /**
   * @note 获取M站的连接地址
@@ -859,6 +909,23 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
   }
 
+  //清洗掉不需要的字段
+  public static function cleanArrayData($items = [],$filter_key=[]){
+      if(!$items ||!$filter_key) return [];
+      $list = [];
+      foreach($items as $key => $val){
+          $info = [];
+          foreach($val as $k =>&$v){
+              //如果在过滤的字段里，直接切除
+              if(!in_array($k , $filter_key)){
+                  $info[$k] = $v;
+              }
+          }
+          $list[$key] = $info;
+      }
+      return $list;
+  }
+
 
     /**
     * @note 创建生成json文件
@@ -871,8 +938,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
     if(!$data || !$info){
       return false;
     }
-
-
     //获取标题+文字的md5串
     $md5_str= self::getAuthorFoleder($info['title'],$info['author']);
     /*
@@ -913,9 +978,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       $filename = $save_path . DS . $md5_str.'.'.self::$json_file_type;
       //保存对应的数据到文件中方便后期读取
       $json_data = json_encode($json_list ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-      if(!file_exists($filename)){
-          file_put_contents($filename,$json_data);//把json信息存储为对应的目录中去
-      }
+      file_put_contents($filename,$json_data);//把json信息存储为对应的目录中去
       return $json_list;
   }
 

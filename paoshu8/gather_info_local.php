@@ -69,22 +69,7 @@ function delete_chapter_data($store_id,$story_id,$table_name){
     $mysql_obj->query($sql,'db_master');
 }
 
-//清洗掉不需要的字段
-function cleanData($items = [],$filter_key=[]){
-    if(!$items ||!$filter_key) return [];
-    $list = [];
-    foreach($items as $key => $val){
-        $info = [];
-        foreach($val as $k =>&$v){
-            //如果在过滤的字段里，直接切除
-            if(!in_array($k , $filter_key)){
-                $info[$k] = $v;
-            }
-        }
-        $list[$key] = $info;
-    }
-    return $list;
-}
+
 
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
@@ -166,7 +151,7 @@ if($info){
             //重新赋值进行计算
             $chapter_detal = $rt;
             //处理过滤章节名称里的特殊字符---按照名称进行存储，部分章节可能重名
-            $chapter_detal = removeDataRepeatStr($chapter_detal);
+            $chapter_detal =NovelModel::removeDataRepeatStr($chapter_detal);
             foreach($chapter_detal as $val){
                 $link_url = trim($val['link_url']);
                 $chapter_ret= explode('/',$link_url);
@@ -186,7 +171,7 @@ if($info){
             $item_list = array_values($items);
             array_multisort($sort_ids , SORT_ASC , $item_list);
             //清洗掉不需要的字段
-            $item_list = cleanData($item_list,['chapter_id']);
+            $item_list = NovelModel::cleanArrayData($item_list,['chapter_id']);
             //创建生成json目录结构
             NovelModel::createJsonFile($store_data,$item_list,0);
         }else{
@@ -284,25 +269,4 @@ $executionTime = $exec_end_time - $exec_start_time; //执行时间
 echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "peak memory usage:" . $memoryUsage ." bytes \r\n";
 echo "---------------------------------------------------------------------------------\r\n";
-
-//处理抓取中按照章节名称返回
-//将章节中的全角符号转换成英文
-//过滤调一些特殊分符号
-function removeDataRepeatStr($data){
-    if(!$data) return false;
-    foreach($data as $key=>$val){
-         //$link_name = replaceCnWords($chapter_name); //处理连接中的特殊字符
-        $link_name = replaceLRSpace($val['link_name']); //只替换首尾空格，
-        if(!empty($link_name)){
-            $t[$link_name] = [
-                'link_name' =>$link_name,
-                'link_url'  =>$val['link_url']
-            ];
-        }
-    }
-    $t= array_values($t);
-    //移除广告章节
-    $list = NovelModel::removeAdInfo($t);
-    return $list;
-}
 ?>
