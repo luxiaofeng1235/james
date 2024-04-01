@@ -96,24 +96,24 @@ public static function Rand_refer(){
         return false;
       $res = array();
       $proxy_data = [];
-      if($type == 1){//使用原生系统的代理请求
-          $proxy_data = getProxyInfo();
-      }else if ($type == 2){//移动端的代理请求
-          $proxy_data = getMobileProxy();
-      }else if($type ==3){//处理列表为空申请的带
-          $proxy_data = getMobileEmptyProxy();
-      }else if($type ==4){//处理基础章节的基础配置类
-          $proxy_data = getZhimaProxy();
-      }else if($type ==5){
-          $proxy_data = getImgProxy();//获取下载图片使用的代理
-      }
+      // if($type == 1){//使用原生系统的代理请求
+      //     $proxy_data = getProxyInfo();
+      // }else if ($type == 2){//移动端的代理请求
+      //     $proxy_data = getMobileProxy();
+      // }else if($type ==3){//处理列表为空申请的带
+      //     $proxy_data = getMobileEmptyProxy();
+      // }else if($type ==4){//处理基础章节的基础配置类
+      //     $proxy_data = getZhimaProxy();
+      // }else if($type ==5){
+      //     $proxy_data = getImgProxy();//获取下载图片使用的代理
+      // }
 
-      //判断代理IP是否失效，防止数据异常
-      if(!$proxy_data){
-          echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
-          NovelModel::killMasterProcess(); //结束当前进程
-          exit(1);
-      }
+      // //判断代理IP是否失效，防止数据异常
+      // if(!$proxy_data){
+      //     echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
+      //     NovelModel::killMasterProcess(); //结束当前进程
+      //     exit(1);
+      // }
 
       //伪造IP请求
     // $headerIp = array(
