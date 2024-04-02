@@ -163,8 +163,6 @@ if($info){
                 $items[$val['link_url']] = $val;
                 $chapter_ids[$val['chapter_id']] = 1;
             }
-            $sort_ids= array_keys($chapter_ids);
-            //取出来章节
             $item_list = array_values($items);
             //清洗掉不需要的字段
             $item_list = NovelModel::cleanArrayData($item_list,['chapter_id']);

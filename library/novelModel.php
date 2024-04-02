@@ -290,24 +290,20 @@ class NovelModel{
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
       preg_match('/<dt>《'.$title.'》正文.*?>.*?<\/dl>/ism',$html,$list);
-      /*
-      preg_match('/<\/div>.*?>.*?<\/dl>/ism',$html,$list);
-      */
       if(isset($list[0]) && !empty($list)){
-           // $list_item= preg_split('/<dd>/', $list[0]);
-           // array_shift($list_item);
+
            $contents = $list[0] ?? [];
            //获取相关的数据信息
            // $contents = self::replaceListArr($list_item);
            if($contents){
-              preg_match_all($link_reg,$contents,$link_list);//匹配链接
+              preg_match_all($link_reg,$contents,$link_href);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
-              $len = count($link_list[1]);
+              $len = count($link_href[1]);
               $chapter_list = [];
               for ($i=0; $i <$len ; $i++) {
                  $chapter_list[] =[
                     'link_name' => $link_text[1][$i] ?? '',
-                    'link_url'  => $link_list[1][$i] ?? '',
+                    'link_url'  => $link_href[1][$i] ?? '',
                  ];
               }
               return $chapter_list;
@@ -331,7 +327,7 @@ class NovelModel{
                       if(isset($t1[1]) && !empty($t1[1])){
                           $chapter_list[] = [
                             'link_name' =>$t2[1]??'',
-                             'link_url' =>$t1[1] ?? '',
+                            'link_url' =>$t1[1] ?? '',
                           ];
                       }
                  }
@@ -342,13 +338,21 @@ class NovelModel{
    }
 
 
-  //处理抓取中按照章节名称返回
-  //将章节中的全角符号转换成英文
-  //过滤调一些特殊分符号
+
+   /**
+   * @note
+    *  //处理抓取中按照章节名称返回
+    //将章节中的全角符号转换成英文
+    //过滤调一些特殊分符号
+    *
+   * @param  $data array 处理的章节
+   * @return  array
+   */
+
   public static function removeDataRepeatStr($data){
       if(!$data) return false;
+      $t= [];
       foreach($data as $key=>$val){
-           //$link_name = replaceCnWords($chapter_name); //处理连接中的特殊字符
           $link_name = replaceLRSpace($val['link_name']); //只替换首尾空格，
           if(!empty($link_name)){
               $t[] = [
@@ -909,7 +913,13 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
   }
 
-  //清洗掉不需要的字段
+  /**
+  * @note 清洗掉不需要的字段
+  *
+  * @param $items array 章节列表
+  * @param $fileter_key interer 章节类目
+  * @return array
+  */
   public static function cleanArrayData($items = [],$filter_key=[]){
       if(!$items ||!$filter_key) return [];
       $list = [];
@@ -983,20 +993,21 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
   }
 
   /*
-     * @param $str 根据CURL获取内容信息
+     * @param $txt_path string 存储的路径
      * @param $data array 需要处理的
      * @return mixed
      */
   public  static  function getDataListItem($data,$txt_path){
         if(!$data)
           return false;
+        // dd($txt_path);
           $chapter_list=[];
           foreach($data as $key =>$val){
-             //存对饮的URL信息
-            $mobilePath = $val['link_url'];
-             $chapetList[$mobilePath] = [
+             //章节的连接
+            $mobilePath = $val['link_url'] ??'';
+            $chapetList[$mobilePath] = [
                 //拼装移动端的地址
-                'path'  =>  Env::get('SAVE_NOVEL_PATH') .DS .$txt_path.DS.md5($val['link_name']).'.'.NovelModel::$file_type,
+                'path'  =>  $txt_path.DS.md5($val['link_name']).'.'.NovelModel::$file_type,
                 'chapter_name'  =>  $val['chapter_name'],
                 'chapter_link'  =>  $val['chapter_link'],
                 'mobile_url'  => $val['chapter_link'], //兼容老数据
@@ -1021,9 +1032,14 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
             $data = QueryList::html($val)->rules($rules)->query()->getData();
             $html = $data->all();
+            echo '<pre>';
+            print_R($html);
+            echo '</pre>';
+            exit;
             $store_content = $html['content'] ?? '';
             $meta_data = $html['meta_data']??'';
             $href = $html['href'];
+            //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
             if($store_content){
               $store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
