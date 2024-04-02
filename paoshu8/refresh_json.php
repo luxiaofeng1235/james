@@ -18,7 +18,7 @@ $redis_key = 'json_refresh_store_id';//redis的对应可以设置
 // $redis_data->set_redis($redis_key,5000);
 $id = $redis_data->get_redis($redis_key);
 $where_data = '1 and pro_book_id>0';
-$limit= 2000; //控制列表的步长
+$limit= 5000; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
 if($id){
