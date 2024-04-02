@@ -72,7 +72,8 @@ if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
         $factory->updateIndexStatus($store_id);//更新状态
-        echo "url：---".$story_link."---当前数据已同步，请勿重复同步\r\n";
+        $factory->updateDownStatus($info[0]['pro_book_id']);
+        echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
         NovelModel::killMasterProcess();//退出主程序
         exit();
     }

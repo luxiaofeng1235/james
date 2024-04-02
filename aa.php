@@ -8,9 +8,9 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 $exec_start_time = microtime(true);
-$file = readFileData('/mnt/book/chapter/c207c176c93db075393236c8e42e0463.json');
+$file = readFileData('/mnt/book/chapter/3b628cc6ceae3ec44c695f47d9a511c7.json');
 $t = json_decode($file,true);
-$arr = array_chunk($t,700);
+$arr = array_chunk($t,300);
 
 $i =0;
 foreach($arr as $v){
@@ -22,6 +22,7 @@ foreach($arr as $v){
             echo  "{$val['http_code']}\t111111111111\r\n";
          }
     }
+    die;
     echo '<pre>';
     print_R($items);
     echo '</pre>';
