@@ -289,7 +289,8 @@ class NovelModel{
       $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
-      preg_match('/<dt>《'.$title.'》正文.*?>.*?<\/dl>/ism',$html,$list);
+      //匹配正文章节内容
+      preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
 
            $contents = $list[0] ?? [];
@@ -312,10 +313,7 @@ class NovelModel{
         //如果上面的没有匹配出来直接从dd里获取对应的连接
         //直接暴力一点
         //直接从链接里开始遍历得了
-        /*
-          preg_match_all('/<dd.*?>.*?<\/dd>/ism',$html,$urls);
-          */
-          preg_match('/<dt>《'.$title.'》正文.*?>.*?<\/dl>/ism',$html,$urls);//只匹配正文以下的
+          preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$urls);
           $chapter_list = [];
           if(isset($urls[0])){
              $item = preg_split('/<dd>/', $urls[0]);

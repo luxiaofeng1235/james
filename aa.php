@@ -8,6 +8,13 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
+$html = readFileData('/mnt/book/html_data/detail_8_8939.txt');
+$title = '与校花同居：高手风流';
+preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
 $urls = [
     'http://www.paoshu8.info/171_171867/181311631.html',
     'http://www.paoshu8.info/171_171867/181311632.html',

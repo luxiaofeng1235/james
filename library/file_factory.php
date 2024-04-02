@@ -197,11 +197,11 @@ class FileFactory{
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
-            // $items = array_chunk($chapter_item,$this->num);
-            $items = array_chunk($dataList,200); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
+            $limit_size = 200;
+            $items = array_chunk($dataList,$limit_size); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
-            echo "总分页总数：".$count_page.PHP_EOL;
+            echo "总分页总数：".$count_page." \t 每页步长数：$limit_size\n";
             foreach($items as $k =>&$v){
                 //抓取内容信息
                 $html_data= NovelModel::getDataListItem($v,$download_path);
@@ -227,6 +227,7 @@ class FileFactory{
                     }
                     //保存本地存储数据
                     $this->synLocalFile($download_path,$html_data);
+                    die;
                     echo "\r\n|||||||||||||||| this current page =  (".($k+1)."/{$count_page})\t store_id = {$store_id} \tcomplate \r\n\r\n";
                     sleep(1);//休息三秒不要立马去请求，防止空数据的发生
                 }else{
