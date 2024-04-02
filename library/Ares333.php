@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =100 ; //最大线程数配置
+    protected static $maxThread   =80 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**

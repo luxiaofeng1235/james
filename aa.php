@@ -10,7 +10,7 @@ use Overtrue\Pinyin\Pinyin;
 $exec_start_time = microtime(true);
 $file = readFileData('/mnt/book/chapter/c207c176c93db075393236c8e42e0463.json');
 $t = json_decode($file,true);
-$arr = array_chunk($t,300);
+$arr = array_chunk($t,700);
 
 $i =0;
 foreach($arr as $v){
@@ -22,7 +22,13 @@ foreach($arr as $v){
             echo  "{$val['http_code']}\t111111111111\r\n";
          }
     }
-    echo "current-page：{$i}\r\n";
+    echo '<pre>';
+    print_R($items);
+    echo '</pre>';
+    exit;
+
+    echo "current-page：{$i} count：".count($items)."\r\n";
+    die;
     sleep(1);
 }
 echo "over\r\n";
