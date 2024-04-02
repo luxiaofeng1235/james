@@ -119,6 +119,9 @@ class Ares333{
         if(!$urls)
             return false;
 
+        if(count($urls) == 0){
+            return false;
+        }
         $toolkit = new Toolkit();
         $toolkit->setCurl();
         $curl = $toolkit->getCurl();
