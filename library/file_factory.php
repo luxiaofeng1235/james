@@ -184,7 +184,7 @@ class FileFactory{
                 $this->updateIndexStatus($store_id);//更新首页是否运行的状态
                 $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 NovelModel::killMasterProcess();//退出主程序
-                exit("*********************************已经爬取完毕 ，不需要重复操作了\r\n");
+                exit("*********************************title = {$info['title']} \t author = {$info['author']} \tstore_id = {$store_id}\t pro_book_id ={$info['pro_book_id']} 已经爬取完毕 ，不需要重复操作了\r\n");
              }
             echo "\r\n\r\n";
             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
