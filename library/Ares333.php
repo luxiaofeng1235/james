@@ -109,7 +109,11 @@ class Ares333{
         //获取配置的代理信息
         $rand_str = ClientModel::getRandProxy();
         $proxy_data= self::getProxyData($rand_str);
-
+        if(!$proxy_data){
+            echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
+            NovelModel::killMasterProcess(); //结束当前进程
+            exit(1);
+        }
 
         if(!is_array($url)){
             $urls[] =$url;
@@ -131,17 +135,18 @@ class Ares333{
             'onInfo'
         );
         $response = []; //接收返回的参数
-        $curl->onTask = function ($curl) use(&$response,$urls){
+        $curl->onTask = function ($curl) use(&$response,$urls,$proxy_data){
             static $i = 0;
             $urlCount = count($urls);
             if ($i >= $urlCount) {
                 return;
             }
+            // echo $proxy_data['ip'].'---'.$proxy_data['port'];
+            // dd($proxy_data);
 
             // echo "\n我是属于其中的一个值 ---". $t[$i]."\r\n";
             // echo "\ncurrent tiems：{$i} \r\n";
             /** @var Curl $curl */
-
             //速度控制
             $speed = 100000;
             $curl->add(
@@ -155,13 +160,18 @@ class Ares333{
                         // CURLOPT_MAXREDIRS   =>  7,
                         //CURLOPT_TCP_KEEPALIVE =>  1, // 开启
                         //
-                        CURLOPT_MAX_RECV_SPEED_LARGE    =>  300000, //设置300K的下载速度
+                        // CURLOPT_MAX_RECV_SPEED_LARGE    =>  300000, //设置300K的下载速度
                         // CURLOPT_TCP_KEEPIDLE    => 10, // 空闲10秒问一次
                         // CURLOPT_TCP_KEEPINTVL   => 10,// 每10秒问一次
                         CURLOPT_TIMEOUT => 120,//超时时间(s)
                         CURLOPT_HTTPHEADER  =>  array("Expect:"),//增加配置完整接收数据配置buffer的大小
                         CURLOPT_HTTPGET => true, //启用时会设置HTTP的method为GET，因为GET是默认是，所以只在被修改的情况下使用。
                         CURLOPT_ENCODING    =>  'gzip',
+                        //设置代理服务器相关的
+                        CURLOPT_PROXY   =>  $proxy_data['ip'], //代理IP的服务器地址
+                        CURLOPT_PROXYPORT   =>  $proxy_data['port'],//代理IP的端口
+                        CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5, //指定代理IP的类型
+                        CURLOPT_PROXYAUTH   =>  CURLAUTH_BASIC, //代理认证模式
                     ),
                     'args'  =>  'This is user argument',
                 ),
