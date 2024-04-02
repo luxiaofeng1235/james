@@ -8,15 +8,19 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
-$url = 'http://www.paoshu8.info/185_185961/186313086.html';
-for ($i=0; $i <200 ; $i++) {
-  $urls[]=$url;
-}
-// $aa  = curl_pic_multi::Curl_http($urls);
-// echo '<pre>';
-// print_R(count($aa));
-// echo '</pre>';
-// exit;
+$file = readFileData('/mnt/book/chapter/c207c176c93db075393236c8e42e0463.json');
+$t = json_decode($file,true);
+$arr = array_chunk($t,200);
+
+$firstdata = $arr[0] ?? [];
+$urls= array_column($firstdata,'chapter_link');
+
+
+
+// $url = 'https://www.x33xs6.com/33xs/238/238133/';
+// for ($i=0; $i <3 ; $i++) {
+//   $urls[]=$url;
+// }
 $items = Ares333::curlThreadList($urls);
 foreach($items as $key =>$val){
      if($val['http_code'] != 200){
