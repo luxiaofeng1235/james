@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =60 ; //最大线程数配置
+    protected static $maxThread   =40 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -170,7 +170,7 @@ class Ares333{
                     $info['args'] = $args;
                     $info['http_code'] = $r['info']['http_code'];
                     $info['body_size'] = strlen($r['body']) . ' bytes';
-                    $info['content']  = array_iconv($r['body']);//转换utf-8
+                    $info['content']  = array_iconv($r['body']); //转换编码
                     $response[] = $info;
                     return $response;
             });

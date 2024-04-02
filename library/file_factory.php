@@ -174,12 +174,15 @@ class FileFactory{
             }
             echo "JSON文件里的总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
+            $sucNum = 0;
             foreach($chapter_item as &$val){
                 $filename =$download_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
                 $content = readFileData($filename);
                 if(!$content ||$content =='从远端拉取内容失败，有可能是对方服务器响应超时，后续待更新'  || !file_exists($filename)){
                     $val['link_url'] = $val['chapter_link'];
                     $dataList[] =   $val;
+                }else{
+                    $sucNum++;
                 }
              }
              if(!$dataList){
@@ -214,7 +217,7 @@ class FileFactory{
                 // exit;
                 $html_data= NovelModel::getDataListItem($v,$download_path);
                 // echo '<pre>';
-                // print_R(count($html_data));
+                // print_R($html_data);
                 // echo '</pre>';
                 // exit;
                 if($html_data){

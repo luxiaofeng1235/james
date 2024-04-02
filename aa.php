@@ -8,8 +8,8 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
-$url = 'https://jd.zol.com.cn/863/8636399.html';
-for ($i=0; $i <3 ; $i++) {
+$url = 'http://www.baidu.com';
+for ($i=0; $i <300 ; $i++) {
   $urls[]=$url;
 }
 // $aa  = curl_pic_multi::Curl_http($urls);
@@ -18,11 +18,11 @@ for ($i=0; $i <3 ; $i++) {
 // echo '</pre>';
 // exit;
 $items = Ares333::curlThreadList($urls);
-echo "\r\n";
-echo '<pre>';
-print_R($items);
-echo '</pre>';
-exit;
+// echo "\r\n";
+// echo '<pre>';
+// print_R($items);
+// echo '</pre>';
+// exit;
 echo '<pre>';
 print_R(count($items));
 echo '</pre>';
