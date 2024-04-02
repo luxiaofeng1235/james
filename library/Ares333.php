@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =40 ; //最大线程数配置
+    protected static $maxThread   =60 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -155,7 +155,7 @@ class Ares333{
                         // CURLOPT_MAXREDIRS   =>  7,
                         //CURLOPT_TCP_KEEPALIVE =>  1, // 开启
                         //
-                        // CURLOPT_MAX_RECV_SPEED_LARGE    =>  300000, //设置300K的下载速度
+                        CURLOPT_MAX_RECV_SPEED_LARGE    =>  300000, //设置300K的下载速度
                         // CURLOPT_TCP_KEEPIDLE    => 10, // 空闲10秒问一次
                         // CURLOPT_TCP_KEEPINTVL   => 10,// 每10秒问一次
                         CURLOPT_TIMEOUT => 120,//超时时间(s)
