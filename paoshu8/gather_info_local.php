@@ -40,8 +40,6 @@ $proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
 $proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROXY
 $proxy_img = NovelModel::checkImgKey(); //获取修复图片的PROXY
 
-//exit("代理IP已过期，key =".Env::get('ZHIMA_REDIS_MOBILE_KEY')." 请重新拉取最新的ip\r\n");
-
 //校验代理IP是否过期
 if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
     NovelModel::killMasterProcess();//退出主程序
@@ -68,7 +66,6 @@ function delete_chapter_data($store_id,$story_id,$table_name){
     $sql = "delete from ".$table_name." where story_id = '".$story_id."'";
     $mysql_obj->query($sql,'db_master');
 }
-
 
 
 if($info){
@@ -144,13 +141,13 @@ if($info){
         // //保存图片到本地==暂时屏蔽不需要
         // $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
         //获取相关的列表数据
-        $rt = NovelModel::getCharaList($html);
+        $rt = NovelModel::getCharaList($html,$store_data['title']);
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
             //重新赋值进行计算
             $chapter_detal = $rt;
-            //处理过滤章节名称里的特殊字符---按照名称进行存储，部分章节可能重名
+            //处理章节里的前后空格+过滤章节含有广告的类目
             $chapter_detal =NovelModel::removeDataRepeatStr($chapter_detal);
             foreach($chapter_detal as $val){
                 $link_url = trim($val['link_url']);
@@ -169,7 +166,6 @@ if($info){
             $sort_ids= array_keys($chapter_ids);
             //取出来章节
             $item_list = array_values($items);
-            array_multisort($sort_ids , SORT_ASC , $item_list);
             //清洗掉不需要的字段
             $item_list = NovelModel::cleanArrayData($item_list,['chapter_id']);
             //创建生成json目录结构

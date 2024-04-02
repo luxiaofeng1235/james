@@ -982,6 +982,73 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       return $json_list;
   }
 
+  /*
+     * @param $str 根据CURL获取内容信息
+     * @param $data array 需要处理的
+     * @return mixed
+     */
+  public  static  function getDataListItem($data,$txt_path){
+        if(!$data)
+          return false;
+          $chapter_list=[];
+          foreach($data as $key =>$val){
+             //存对饮的URL信息
+            $mobilePath = $val['link_url'];
+             $chapetList[$mobilePath] = [
+                //拼装移动端的地址
+                'path'  =>  Env::get('SAVE_NOVEL_PATH') .DS .$txt_path.DS.md5($val['link_name']).'.'.NovelModel::$file_type,
+                'chapter_name'  =>  $val['chapter_name'],
+                'chapter_link'  =>  $val['chapter_link'],
+                'mobile_url'  => $val['chapter_link'], //兼容老数据
+                'chapter_mobile_link' => $val['chapter_link'],
+             ];
+            $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
+          }
+          global $urlRules;
+          //获取采集的标识
+          $valid_curl ='curl';
+          $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content'];
+          //开启多线程请求,使用当前代理IP去请求，牵扯到部署需要再境外服务器
+          $detail_proxy_type =4;//基础小说的代理IP
+          $list = curl_pic_multi::Curl_http($t_url,$detail_proxy_type);
+          //获取随机的代理IP
+          $rand_str = ClientModel::getCurlRandProxy();
+          //重试防止有错误的
+          $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
+          if(!$list)
+            return [];
+          foreach($list as $key =>$val){
+
+            $data = QueryList::html($val)->rules($rules)->query()->getData();
+            $html = $data->all();
+            $store_content = $html['content'] ?? '';
+            $meta_data = $html['meta_data']??'';
+            $href = $html['href'];
+            $html_path = getHtmlUrl($meta_data,$href);
+            if($store_content){
+              $store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
+              //替换文本中的P标签
+              $store_content = str_replace("<p>",'',$store_content);
+              $store_content = str_replace("</p>","\n\n",$store_content);
+              //替换try{.....}cache的一段话JS这个不需要了
+              $store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
+              $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
+            }
+            $store_c[$html_path] = $store_content;
+          }
+          $allNovelList =[];
+          if(!empty($store_c)){
+              foreach($store_c as $gtkey=>$gtval){
+                $allNovelList[$gtkey]['chapter_name'] = $chapetList[$gtkey]['chapter_name'] ?? '';//章节名称
+                $allNovelList[$gtkey]['chapter_mobile_link'] = $chapetList[$gtkey]['chapter_mobile_link'] ??'';
+                $allNovelList[$gtkey]['chapter_link'] = $chapetList[$gtkey]['chapter_link'] ?? ''; //章节链接
+                $allNovelList[$gtkey]['save_path'] = $chapetList[$gtkey]['path']??''; //保存的文件路径
+                $allNovelList[$gtkey]['content'] = $gtval; //获取内容信息
+              }
+        }
+        return $allNovelList;
+    }
+
 
    /**
     * @note 从远程获取相关内容并存储到缓存里

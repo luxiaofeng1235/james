@@ -739,6 +739,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		NovelModel::killMasterProcess();//退出主程序
 		exit(1);
 	}
+
 	//重复调用，防止有空对象返回以防万一
 	//重复请求，防止数据丢失
 	//随机获取一个代理

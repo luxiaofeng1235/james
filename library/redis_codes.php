@@ -15,7 +15,7 @@ class redis_codes {
         $port   =  Env::get('REDIS.PORT'); ; //端口号
         $pass   =  Env::get('REDIS.PASSWORD');  //密码设置
         $this->redis = new Redis();//实例化redis
-        echo "我是redis实例化进来的\r\n";
+        // echo "我是redis实例化进来的\r\n";
         $this->redis->connect($host, $port);
         if(!empty($pass)){
             $this->redis->auth($pass);

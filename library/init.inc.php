@@ -51,6 +51,7 @@ require_once ROOT.'library/proxy_network.php';//小说业务模型类
 require_once ROOT.'library/curl_pic_multi.php';//多线程下载图片类
 require_once ROOT.'library/guzzleHttp.php';//guzzlehttp的抓取实现类
 require_once ROOT.'library/ClientModel.php'; //clientModel的业务类
+require_once(ROOT.'library/Ares333.php');//高效的多线程curl类（效率很高~~）
 
 
 

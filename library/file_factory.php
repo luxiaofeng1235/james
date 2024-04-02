@@ -179,7 +179,6 @@ class FileFactory{
                     $dataList[] =   $val;
                 }
              }
-
              if(!$dataList){
                 $this->updateStatusInfo($store_id); //更新状态信息
                 $this->updateIndexStatus($store_id);//更新首页是否运行的状态
@@ -205,7 +204,11 @@ class FileFactory{
             echo "总分页总数：".$count_page.PHP_EOL;
             foreach($items as $k =>&$v){
                 //抓取内容信息
-                $html_data= getStoryCotents($v,$store_id,$md5_str);
+                $html_data= NovelModel::getDataListItem($v,$download_path);
+                echo '<pre>';
+                print_R($html_data);
+                echo '</pre>';
+                exit;
                 if($html_data){
                     $a_num =0;
                     foreach ($html_data as  $gvalue) {

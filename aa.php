@@ -20,11 +20,17 @@ $urls = [
     'http://www.paoshu8.info/212_212181/196296344.html',
     'http://www.paoshu8.info/213_213375/196296234.html'
 ];
-// $aa = curl_pic_multi::Curl_http($urls);
-// echo '<pre>';
-// print_R($aa);
-// echo '</pre>';
-// exit;
+
+$t= guzzleHttp::multi_req($urls,'image');
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+$aa = curl_pic_multi::Curl_http($urls);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 // $items = Ares333::curlThreadList($urls);
 // echo "over\r\n";
 // die;
@@ -34,10 +40,10 @@ $urls = [
 // exit;
 
 
-$str= '    1956.第1956章 他一定会记仇    ';
+$str= '    1956.第1956章 他  一定会记仇    ';
 $t = replaceLRSpace($str);
 echo '<pre>';
-var_dump($t);
+dd($t);
 echo '</pre>';
 exit;
 echo '<pre>';

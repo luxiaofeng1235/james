@@ -25,6 +25,9 @@ class ClientModel{
             'empty',
             'image',
         ];
+
+    //配置curl获取的代理IP
+    private static $proxy_curl_list =[2,3,4,5]; //获取获取代理的配置IP
     /*
     * @note 获取远端的内容
     * @param string $str 获取小说的章节数据处理-章节列表
@@ -280,6 +283,17 @@ public static function callRequests1($contents_arr=[],$goods_list=[],$type='',$p
 
     public static function getRandProxy(){
         $proxy_arr =self::$proxy_list;
+        $rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
+        return $rand_str;
+    }
+
+    /**
+    * @note 获取代理的配置IP-CURL专用
+    *
+    * @return string
+    */
+    public static function getCurlRandProxy(){
+       $proxy_arr  = self::$proxy_curl_list;
         $rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
         return $rand_str;
     }
