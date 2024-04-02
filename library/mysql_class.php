@@ -351,6 +351,7 @@ class  Mysql_class{
 	    if($limit && $limit_size){
 	        $sql .=" LIMIT ".$limit_size;
 	    }
+	    // echo $sql ."\r\n";
 	    //exec mysql
 	    if($sql){
 	    	if(!empty($db_name_conn)){
