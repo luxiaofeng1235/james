@@ -15,20 +15,23 @@ use QL\QueryList;
 
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
 $redis_key = 'json_refresh_url_id';//redis的对应可以设置
-$id = $redis_data->get_redis($redis_key);
-// $redis_data->set_redis($)
-$where_data = '1 and pro_book_id>3000';
-$limit= 500; //控制列表的步长
-$order_by =' order by pro_book_id asc';
 
-if($id){
-    $where_data .=" and pro_book_id > ".$id;
+// $redis_data->set_redis( $redis_key,3000);
+
+
+$id = $redis_data->get_redis($redis_key);
+if(!$id){
+    $where_data = '1 and pro_book_id>3000';
+}else{
+    $where_data = '1 and pro_book_id>'.$id;
 }
+
+$limit= 5000; //控制列表的步长
+$order_by =' order by pro_book_id asc';
 
 $sql = "select pro_book_id,author,store_id,title,story_id,story_link from ims_novel_info where ".$where_data;
 $sql .= $order_by;
 $sql .= " limit ".$limit;
-echo "sql = {$sql}\n\n";
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
 $diff_data = [];
@@ -69,7 +72,8 @@ if($info){
             $html = $data->all();
             $new_story_id  = substr($html['link'],1,-1);
             if(!$new_story_id) continue;
-            $save_path = Env::get('SAVE_HTML_PATH').DS.'detail_'.$new_story_id.'.'.NovelModel::$file_type;
+            //写到临时目录里
+            $save_path = Env::get('SAVE_HTML_PATH_NEW').DS.'detail_'.$new_story_id.'.'.NovelModel::$file_type;
             $items[$save_path] = $cv;
         }
         if(!empty($items)){
@@ -81,14 +85,15 @@ if($info){
              }
         }
     }
+    $ids = array_column($info,'pro_book_id');
+    $max_id = max($ids);
+    $redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
+    echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$max_id.PHP_EOL;
 }else{
     echo "no data \r\n";
 }
 
-$ids = array_column($info,'pro_book_id');
-$max_id = max($ids);
-$redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
-echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$max_id.PHP_EOL;
+
 echo "count-num:".$limit."\r\n";
 echo "finish_time：".date('Y-m-d H:i:s') .PHP_EOL;
 echo "over\r\n";
