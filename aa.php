@@ -12,21 +12,20 @@ $file = readFileData('/mnt/book/chapter/c207c176c93db075393236c8e42e0463.json');
 $t = json_decode($file,true);
 $arr = array_chunk($t,300);
 
-$firstdata = $arr[0] ?? [];
-$urls= array_column($firstdata,'chapter_link');
-
-
-
-// $url = 'https://www.x33xs6.com/33xs/238/238133/';
-// for ($i=0; $i <3 ; $i++) {
-//   $urls[]=$url;
-// }
-$items = Ares333::curlThreadList($urls);
-foreach($items as $key =>$val){
-     if($val['http_code'] != 200){
-        echo  "{$val['http_code']}\t111111111111\r\n";
-     }
+$i =0;
+foreach($arr as $v){
+  $i++;
+   $urls= array_column($v,'chapter_link');
+    $items = Ares333::curlThreadList($urls);
+    foreach($items as $key =>$val){
+         if($val['http_code'] != 200){
+            echo  "{$val['http_code']}\t111111111111\r\n";
+         }
+    }
+    echo "current-page：{$i}\r\n";
+    sleep(1);
 }
+echo "over\r\n";
 echo "over\r\n";
 echo '<pre>';
 print_R(count($items));
