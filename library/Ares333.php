@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =20 ; //最大线程数配置
+    protected static $maxThread   =60 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -106,27 +106,30 @@ class Ares333{
     public static function curlThreadList($url=[],$type= 1){
         if(!$url)
             return false;
-        // $proxy_data = Ares333::getProxyData('story');
-        // if(!$proxy_data){
-        //     return '当前未获取到有效代理';
-        // }
+        //获取配置的代理信息
+        $rand_str = ClientModel::getRandProxy();
+        $proxy_data= self::getProxyData($rand_str);
+
+
         if(!is_array($url)){
             $urls[] =$url;
         }else{
             $urls = $url;
         }
+
         $urls = array_filter($urls);
-        if(!$urls)
+        if(!$urls || count($urls) == 0)
             return false;
 
-        if(count($urls) == 0){
-            return false;
-        }
         $toolkit = new Toolkit();
         $toolkit->setCurl();
         $curl = $toolkit->getCurl();
         $curl->maxThread = self::$maxThread;//开启几个线程访问
         $curl->maxTry = self::$maxTry;//最大重试次数
+        $curl->onInfo = array(
+            $toolkit,
+            'onInfo'
+        );
         $response = []; //接收返回的参数
         $curl->onTask = function ($curl) use(&$response,$urls){
             static $i = 0;
@@ -138,6 +141,9 @@ class Ares333{
             // echo "\n我是属于其中的一个值 ---". $t[$i]."\r\n";
             // echo "\ncurrent tiems：{$i} \r\n";
             /** @var Curl $curl */
+
+            //速度控制
+            $speed = 100000;
             $curl->add(
                 array(
                     'opt' => array(
@@ -145,6 +151,13 @@ class Ares333{
                         CURLOPT_HEADER => false, //是否需要返回HTTP头
                         CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
                         CURLOPT_FOLLOWLOCATION  => true,//自动跟踪
+                        // 检查是否断联，每10秒发送一次心跳
+                        // CURLOPT_MAXREDIRS   =>  7,
+                        //CURLOPT_TCP_KEEPALIVE =>  1, // 开启
+                        //
+                        // CURLOPT_MAX_RECV_SPEED_LARGE    =>  300000, //设置300K的下载速度
+                        // CURLOPT_TCP_KEEPIDLE    => 10, // 空闲10秒问一次
+                        // CURLOPT_TCP_KEEPINTVL   => 10,// 每10秒问一次
                         CURLOPT_TIMEOUT => 120,//超时时间(s)
                         CURLOPT_HTTPHEADER  =>  array("Expect:"),//增加配置完整接收数据配置buffer的大小
                         CURLOPT_HTTPGET => true, //启用时会设置HTTP的method为GET，因为GET是默认是，所以只在被修改的情况下使用。

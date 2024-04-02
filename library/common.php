@@ -708,7 +708,6 @@ function readFileData($file_path){
 function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	if(!$item)
 		return false;
-
 	$valid_curl = 'curl';//curl验证
 	$valid_ghttp ='ghttp';//ghttp验证
 	//返回移动端的地址转换
@@ -721,7 +720,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		 //存对饮的URL信息
 		 $chapetList[$mobilePath] = [
 		 		//拼装移动端的地址
-		 		'path'	=>	Env::get('SAVE_NOVEL_PATH') .DS .$txt_path.DS.md5($gr['link_name']).'.'.NovelModel::$file_type,
+		 		'path'	=>	 $txt_path.DS.md5($gr['link_name']).'.'.NovelModel::$file_type,
 		 		'chapter_name'	=>	$gr['chapter_name'],
 		 		'chapter_link'	=>	$gr['chapter_link'],
 		 		'chapter_mobile_link'	=> substr($gr['mobile_url'] , 0 , -2),
@@ -751,10 +750,10 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	);
 
 	$rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
+
 	//curl轮训进行请求
 	$list  = NovelModel::callRequests($list , $new_data,$valid_curl,$rand_str);
 	if(!$list) $list = [];
-
 
 	$allNovel = [];
 	if($list){

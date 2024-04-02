@@ -8,39 +8,27 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
-$html = readFileData('/mnt/book/html_data/detail_8_8939.txt');
-$title = '与校花同居：高手风流';
-preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
+$url = 'https://www.jb51.net/article/38595.htm';
+for ($i=0; $i <3 ; $i++) {
+  $urls[]=$url;
+}
+// $aa  = curl_pic_multi::Curl_http($urls);
+// echo '<pre>';
+// print_R(count($aa));
+// echo '</pre>';
+// exit;
+$items = Ares333::curlThreadList($urls);
+echo "\r\n";
+// echo '<pre>';
+// print_R($items);
+// echo '</pre>';
+// exit;
 echo '<pre>';
-print_R($list);
+print_R(count($items));
 echo '</pre>';
 exit;
-$urls = [
-    'http://www.paoshu8.info/171_171867/181311631.html',
-    'http://www.paoshu8.info/171_171867/181311632.html',
-    'http://www.paoshu8.info/171_171867/181311633.html',
-    'http://www.paoshu8.info/171_171867/181311634.html',
-    'http://www.paoshu8.info/171_171867/181311635.html',
-    'http://www.paoshu8.info/171_171867/181567340.html',
-    'http://www.paoshu8.info/171_171867/182124104.html',
-    'http://www.paoshu8.info/171_171867/182187174.html',
-    'http://www.paoshu8.info/212_212181/196296344.html',
-    'http://www.paoshu8.info/213_213375/196296234.html'
-];
-
-$t= guzzleHttp::multi_req($urls,'image');
-echo '<pre>';
-print_R($t);
-echo '</pre>';
-exit;
-$aa = curl_pic_multi::Curl_http($urls);
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
-// $items = Ares333::curlThreadList($urls);
-// echo "over\r\n";
-// die;
+echo "over\r\n";
+die;
 // echo '<pre>';
 // print_R($items);
 // echo '</pre>';

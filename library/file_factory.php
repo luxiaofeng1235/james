@@ -204,7 +204,16 @@ class FileFactory{
             echo "总分页总数：".$count_page." \t 每页步长数：$limit_size\n";
             foreach($items as $k =>&$v){
                 //抓取内容信息
+                // $aa = getStoryCotents($v,0,$download_path);
+                // echo '<pre>';
+                // print_R($aa);
+                // echo '</pre>';
+                // exit;
                 $html_data= NovelModel::getDataListItem($v,$download_path);
+                // echo '<pre>';
+                // print_R(count($html_data));
+                // echo '</pre>';
+                // exit;
                 if($html_data){
                     $a_num =0;
                     foreach ($html_data as  $gvalue) {
@@ -212,11 +221,11 @@ class FileFactory{
                         if(!empty($gvalue['content'])){
                             //方便调试,遇到有的章节空的path或者name为空，需要排查下
                             if(empty($gvalue['save_path']) || empty($gvalue['chapter_name'])){
-                                echo '<pre>';
-                                var_dump($gvalue);
-                                echo '</pre>';
-                                echo "*************************************\n";
-                                echo "\r\n";
+                                // echo '<pre>';
+                                // var_dump($gvalue);
+                                // echo '</pre>';
+                                // echo "*************************************\n";
+                                // echo "\r\n";
                             }
 
                             echo "num：{$a_num} \t  chapter_name: {$gvalue['chapter_name']}\t url：{$gvalue['chapter_mobile_link']}\t path：{$gvalue['save_path']} \r\n";
@@ -227,8 +236,9 @@ class FileFactory{
                     }
                     //保存本地存储数据
                     $this->synLocalFile($download_path,$html_data);
-                    die;
+
                     echo "\r\n|||||||||||||||| this current page =  (".($k+1)."/{$count_page})\t store_id = {$store_id} \tcomplate \r\n\r\n";
+                      // die;
                     sleep(1);//休息三秒不要立马去请求，防止空数据的发生
                 }else{
                     echo "num：{$a_num} 未获取到数据，有可能是代理过期\r\n";
