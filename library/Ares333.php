@@ -157,14 +157,16 @@ class Ares333{
                         CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
                         CURLOPT_FOLLOWLOCATION  => true,//自动跟踪
                         // 检查是否断联，每10秒发送一次心跳
-                        // CURLOPT_MAXREDIRS   =>  7,
+                         CURLOPT_MAXREDIRS   =>  7,
                         //CURLOPT_TCP_KEEPALIVE =>  1, // 开启
                         //
-                        CURLOPT_MAX_RECV_SPEED_LARGE    =>  300000, //设置300K的下载速度
+                        CURLOPT_MAX_RECV_SPEED_LARGE    =>  400000, //设置300K的下载速度
                         // CURLOPT_TCP_KEEPIDLE    => 10, // 空闲10秒问一次
                         // CURLOPT_TCP_KEEPINTVL   => 10,// 每10秒问一次
                         CURLOPT_TIMEOUT => 120,//超时时间(s)
                         CURLOPT_HTTPHEADER  =>  array("Expect:"),//增加配置完整接收数据配置buffer的大小
+                        // CURLOPT_HTTPHEADER  => array('Connection: keep-alive','Keep-Alive: 300'),//设置keep-alive
+                        // CURLOPT_FORBID_REUSE    => false, //在完成交互以后强迫断开连接，不能重用
                         CURLOPT_HTTPGET => true, //启用时会设置HTTP的method为GET，因为GET是默认是，所以只在被修改的情况下使用。
                         CURLOPT_ENCODING    =>  'gzip',
                         //设置代理服务器相关的
