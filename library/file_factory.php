@@ -198,7 +198,7 @@ class FileFactory{
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
             // $items = array_chunk($chapter_item,$this->num);
-            $items = array_chunk($dataList,100); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
+            $items = array_chunk($dataList,200); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
             echo "总分页总数：".$count_page.PHP_EOL;
