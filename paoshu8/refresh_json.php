@@ -15,11 +15,10 @@ use QL\QueryList;
 
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
 $redis_key = 'json_refresh_store_id';//redis的对应可以设置
-// $redis_data->set_redis($redis_key,57609);
-// echo 33;die;
+// $redis_data->set_redis($redis_key,5000);
 $id = $redis_data->get_redis($redis_key);
 $where_data = '1 and pro_book_id>0';
-$limit= 500; //控制列表的步长
+$limit= 2000; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
 if($id){
