@@ -7,10 +7,10 @@ require_once($dirname.'/library/file_factory.php');
 // require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
-
+$exec_start_time = microtime(true);
 $file = readFileData('/mnt/book/chapter/c207c176c93db075393236c8e42e0463.json');
 $t = json_decode($file,true);
-$arr = array_chunk($t,200);
+$arr = array_chunk($t,300);
 
 $firstdata = $arr[0] ?? [];
 $urls= array_column($firstdata,'chapter_link');
@@ -24,13 +24,16 @@ $urls= array_column($firstdata,'chapter_link');
 $items = Ares333::curlThreadList($urls);
 foreach($items as $key =>$val){
      if($val['http_code'] != 200){
-        echo "111111111111\r\n";
+        echo  "{$val['http_code']}\t111111111111\r\n";
      }
 }
 echo "over\r\n";
 echo '<pre>';
 print_R(count($items));
 echo '</pre>';
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time;
+echo "\nScript execution time: ".round(($executionTime/60),2)." minutes \r\n";
 exit;
 echo "over\r\n";
 die;
