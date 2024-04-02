@@ -1032,15 +1032,19 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
             $data = QueryList::html($val)->rules($rules)->query()->getData();
             $html = $data->all();
-            echo '<pre>';
-            print_R($html);
-            echo '</pre>';
-            exit;
+
             $store_content = $html['content'] ?? '';
             $meta_data = $html['meta_data']??'';
             $href = $html['href'];
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
+
+            //替换内容里的广告
+            $store_content = NovelModel::replaceContent($store_content);
+            //如果确实没有返回数据信息，先给一个默认值
+            if(!$store_content || empty($store_content)){
+                $store_content ='未完待续...';
+            }
             if($store_content){
               $store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
               //替换文本中的P标签
