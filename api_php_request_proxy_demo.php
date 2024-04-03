@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit','9000M');
 require_once(__DIR__.'/library/init.inc.php');
-$url = 'http://www.baidu.com';
+$url = 'http://www.paoshu8.info/0_859/653516.html';
 $t =range(1,300);
 foreach($t as $val){
     $urls[]=$url;

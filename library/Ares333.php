@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =200 ; //最大线程数配置
+    protected static $maxThread   =60 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -158,19 +158,19 @@ class Ares333{
                         CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5, //指定代理IP的类型
                         CURLOPT_PROXYAUTH   =>  CURLAUTH_BASIC, //代理认证模式
 
-                        //tcp设置相关--主要设置Keep-alive心跳
-                        CURLOPT_TCP_KEEPALIVE   => 1, // 开启
-                        CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
-                        CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
-                        CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
-                        CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
+                        // //tcp设置相关--主要设置Keep-alive心跳
+                        // CURLOPT_TCP_KEEPALIVE   => 1, // 开启
+                        // CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
+                        // CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
+                        // CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
+                        // CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
 
 
                         //设置版本号和启用ipv4
                         CURLOPT_HTTP_VERSION    =>CURL_HTTP_VERSION_1_0, // 强制使用 HTTP/1.0
                         CURLOPT_FOLLOWLOCATION  => 1, // 302 redirect
-                        CURLOPT_MAXREDIRS   =>  5,  //定向的最大数量，这个选项是和CURLOPT_FOLLOWLOCATION一起用的
-                        CURLOPT_IPRESOLVE   =>  CURL_IPRESOLVE_V4, //强制使用IPv4
+                        CURLOPT_MAXREDIRS   =>  7,  //定向的最大数量，这个选项是和CURLOPT_FOLLOWLOCATION一起用的
+                         CURLOPT_IPRESOLVE   =>  CURL_IPRESOLVE_V4, //强制使用IPv4
 
                     ),
                     'args'  =>  'This is user argument',
