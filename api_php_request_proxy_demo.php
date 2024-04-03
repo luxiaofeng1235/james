@@ -1,15 +1,16 @@
 <?php
-
+ini_set('memory_limit','9000M');
 require_once(__DIR__.'/library/init.inc.php');
-
 $url = 'http://www.baidu.com';
-$t =range(1,30);
+$t =range(1,300);
 foreach($t as $val){
     $urls[]=$url;
 }
 
 
 $item = Ares333::curlThreadList($urls);
+echo "over\r\n";
+exit();
 echo '<pre>';
 print_R($item);
 echo '</pre>';

@@ -191,7 +191,7 @@ class Ares333{
                     $info['args'] = $args;
                     $info['http_code'] = $r['info']['http_code'];
                     $info['body_size'] = strlen($r['body']) . ' bytes';
-                    $info['content']  = array_iconv($r['body']); //转换编码
+                    $info['content']  = $r['body']; //转换编码
                     $response[] = $info;
                     return $response;
             });
