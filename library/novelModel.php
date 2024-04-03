@@ -1036,7 +1036,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $href = $html['href'];
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
-            if(empty($meta_data) ){
+            if(empty($meta_data) || empty($href) || empty($val)){
                 echo "meta信息为空了 {$data[$key]['chapter_link']} \r\n";
                 echo '<pre>';
                 print_R($val);
@@ -1399,7 +1399,8 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                   }else if($type =='curl'){//采用curl来验证
                       //curl验证如果不是503的报错或者为空没有获取到200或者403就会返回一个空字符串来判断
                       //502 bad gateway
-                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($tval,'502 Bad Gateway') ){
+                      //如果没有匹配到id="content"说明页面缺了，需要重新补
+                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($tval,'502 Bad Gateway') || !strstr($tval, 'id="content"') ){
                           $temp_url[] =$urls[$tkey];
                       }else{
                           $repeat_data[] = $tval;

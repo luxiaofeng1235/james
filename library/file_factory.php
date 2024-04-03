@@ -152,7 +152,6 @@ class FileFactory{
             $chapter_item = json_decode($json_data,true);
             if(!$chapter_item)
                 return false;
-
              //构造函数处理广告
             $removeAdInfo = function($arr){
                 foreach($arr as &$val){
