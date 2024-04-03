@@ -150,9 +150,24 @@ public static function Rand_refer(){
           curl_setopt($conn[$k], CURLOPT_SSL_VERIFYHOST, false);//屏蔽ssl的主机
           curl_setopt($conn[$k], CURLOPT_MAXREDIRS, 7);//HTTp定向级别 ，7最高
           curl_setopt($conn[$k], CURLOPT_HEADER, false);//这里不要header，加块效率
-          curl_setopt($conn[$k], CURLOPT_FOLLOWLOCATION, 1); // 302 redirect
           curl_setopt($conn[$k], CURLOPT_RETURNTRANSFER,1);//要求结果为字符串且输出到屏幕上
           curl_setopt($conn[$k], CURLOPT_HTTPGET, true);
+
+
+          //tcp设置相关--主要设置Keep-alive心跳
+          curl_setopt($conn[$k],CURLOPT_TCP_KEEPALIVE,1);   // 开启
+          curl_setopt($conn[$k],CURLOPT_TCP_KEEPIDLE,10);   // 空闲10秒问一次
+          curl_setopt($conn[$k],CURLOPT_TCP_KEEPINTVL,10);  // 每10秒问一次
+          curl_setopt($conn[$k], CURLOPT_TCP_NODELAY, 1);//TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
+          curl_setopt($conn[$k], CURLOPT_NOSIGNAL, 1); //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
+
+
+          //设置版本号和启用ipv4
+          curl_setopt($conn[$k], CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);    // 强制使用 HTTP/1.0
+          curl_setopt($conn[$k], CURLOPT_FOLLOWLOCATION, 1);// 302 redirect
+          curl_setopt($conn[$k],CURLOPT_MAXREDIRS, 5) ; //定向的最大数量，这个选项是和CURLOPT_FOLLOWLOCATION一起用的
+          curl_setopt($conn[$k], CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 ); //强制使用IPv4
+
           curl_multi_add_handle ($mh,$conn[$k]);
       }
        //防止死循环耗死cpu 这段是根据网上的写法

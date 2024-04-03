@@ -1,6 +1,6 @@
 <?php
 
-$url = 'https://www.x33xs6.com/33xs/469/469823/108495.html';
+$url = 'https://www.zmhttp.com/?utm-source=xcz&utm-keyword=?xcz';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -11,6 +11,8 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
 curl_setopt($ch, CURLOPT_ENCODING ,'gzip'); //加入gzip解析
 curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_NOPROGRESS, 0);//显示进度条
+
 
 //tcp设置相关--主要设置Keep-alive心跳
 curl_setopt($ch,CURLOPT_TCP_KEEPALIVE,1);   // 开启
@@ -28,10 +30,11 @@ curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 ); //强制使用IPv4
 
 $curl_scraped_page = curl_exec($ch);
 $httpcode = curl_getinfo($ch);
-curl_close($ch);
-
 echo '<pre>';
 print_R($curl_scraped_page);
 echo '</pre>';
 exit;
+curl_close($ch);
+echo "over\r\n";
+die;
 ?>
