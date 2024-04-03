@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =80 ; //最大线程数配置
+    protected static $maxThread   =430 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -157,7 +157,7 @@ class Ares333{
                         CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
                         CURLOPT_FOLLOWLOCATION  => true,//自动跟踪
                         // 检查是否断联，每10秒发送一次心跳
-                         CURLOPT_MAXREDIRS   =>  7,
+                         CURLOPT_MAXREDIRS   =>  5,
                         //CURLOPT_TCP_KEEPALIVE =>  1, // 开启
                         //
                         CURLOPT_MAX_RECV_SPEED_LARGE    =>  500000, //设置300K的下载速度
