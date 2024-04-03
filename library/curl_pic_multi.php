@@ -156,8 +156,8 @@ public static function Rand_refer(){
 
           //tcp设置相关--主要设置Keep-alive心跳
           curl_setopt($conn[$k],CURLOPT_TCP_KEEPALIVE,1);   // 开启
-          curl_setopt($conn[$k],CURLOPT_TCP_KEEPIDLE,10);   // 空闲10秒问一次
-          curl_setopt($conn[$k],CURLOPT_TCP_KEEPINTVL,10);  // 每10秒问一次
+          curl_setopt($conn[$k],CURLOPT_TCP_KEEPIDLE,3);   // 空闲10秒问一次
+          curl_setopt($conn[$k],CURLOPT_TCP_KEEPINTVL,3);  // 每10秒问一次
           curl_setopt($conn[$k], CURLOPT_TCP_NODELAY, 1);//TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
           curl_setopt($conn[$k], CURLOPT_NOSIGNAL, 1); //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
 

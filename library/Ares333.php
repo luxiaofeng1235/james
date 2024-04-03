@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =430 ; //最大线程数配置
+    protected static $maxThread   =200 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -108,7 +108,11 @@ class Ares333{
             return false;
         //获取配置的代理信息
         $rand_str = ClientModel::getRandProxy();
-        $proxy_data= self::getProxyData($rand_str);
+        // $proxy_data= self::getProxyData($rand_str);
+        $proxy_data['ip'] = 'socks5h://s449.kdltps.com';
+        $proxy_data['port'] = '20818';
+        $proxy_data['username'] = 't11211954910358';
+        $proxy_data['password'] = 'wp3zfa8z';
         if(!$proxy_data){
             echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
             NovelModel::killMasterProcess(); //结束当前进程
@@ -124,7 +128,6 @@ class Ares333{
         $urls = array_filter($urls);
         if(!$urls || count($urls) == 0)
             return false;
-
         $toolkit = new Toolkit();
         $toolkit->setCurl();
         $curl = $toolkit->getCurl();
@@ -170,6 +173,7 @@ class Ares333{
                         CURLOPT_HTTPGET => true, //启用时会设置HTTP的method为GET，因为GET是默认是，所以只在被修改的情况下使用。
                         CURLOPT_ENCODING    =>  'gzip',
                         //设置代理服务器相关的
+                        CURLOPT_PROXYUSERPWD    =>  $proxy_data['username'].':'.$proxy_data['password'],//设置账户和密码
                         CURLOPT_PROXY   =>  $proxy_data['ip'], //代理IP的服务器地址
                         CURLOPT_PROXYPORT   =>  $proxy_data['port'],//代理IP的端口
                         CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5, //指定代理IP的类型
