@@ -731,7 +731,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	$empty_proxy_type =3;//修补数据的代理IP
 	$img_proxy_type =5;//处理图片的代理IP
 	$urls = array_column($new_data,'mobile_url');
-	// $list = guzzleHttp::multi_req($urls,'story');
 	$list = curl_pic_multi::Curl_http($urls,$detail_proxy_type); //默认用同步基础信息的代理取抓
 	if(!$list || empty($list)){//说明代理已经到期
 		echo "代理已经到期了，请等待下一轮\r\n";

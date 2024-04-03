@@ -1036,6 +1036,13 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $href = $html['href'];
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
+            if(empty($meta_data) ){
+                echo "meta信息为空了 {$data[$key]['chapter_link']} \r\n";
+                echo '<pre>';
+                print_R($val);
+                echo '</pre>';
+                echo "000000000000000000000000000000\r\n";
+          }
 
             //替换内容里的广告
             $store_content = NovelModel::replaceContent($store_content);
