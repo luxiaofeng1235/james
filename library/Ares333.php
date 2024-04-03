@@ -109,10 +109,9 @@ class Ares333{
         //获取配置的代理信息
         $rand_str = ClientModel::getRandProxy();
         // $proxy_data= self::getProxyData($rand_str);
-        $proxy_data['ip'] = 'socks5h://s449.kdltps.com';
-        $proxy_data['port'] = '20818';
-        $proxy_data['username'] = 't11211954910358';
-        $proxy_data['password'] = 'wp3zfa8z';
+
+        $proxy_data['ip'] = '221.229.212.170';
+        $proxy_data['port'] = '40137';
         if(!$proxy_data){
             echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
             NovelModel::killMasterProcess(); //结束当前进程
@@ -158,26 +157,32 @@ class Ares333{
                         CURLOPT_URL => $urls[$i], //指定url
                         CURLOPT_HEADER => false, //是否需要返回HTTP头
                         CURLOPT_RETURNTRANSFER => true, //通过他来控制是否输出到屏幕上
-                        CURLOPT_FOLLOWLOCATION  => true,//自动跟踪
-                        // 检查是否断联，每10秒发送一次心跳
-                         CURLOPT_MAXREDIRS   =>  5,
-                        //CURLOPT_TCP_KEEPALIVE =>  1, // 开启
-                        //
-                        CURLOPT_MAX_RECV_SPEED_LARGE    =>  500000, //设置300K的下载速度
-                        // CURLOPT_TCP_KEEPIDLE    => 10, // 空闲10秒问一次
-                        // CURLOPT_TCP_KEEPINTVL   => 10,// 每10秒问一次
+                        // CURLOPT_MAX_RECV_SPEED_LARGE    =>  500000, //设置300K的下载速度
+
                         CURLOPT_TIMEOUT => 120,//超时时间(s)
-                        CURLOPT_HTTPHEADER  =>  array("Expect:"),//增加配置完整接收数据配置buffer的大小
-                        // CURLOPT_HTTPHEADER  => array('Connection: keep-alive','Keep-Alive: 300'),//设置keep-alive
-                        // CURLOPT_FORBID_REUSE    => false, //在完成交互以后强迫断开连接，不能重用
+                        CURLOPT_HTTPHEADER  =>  array("Expect:"),//，不能重用
                         CURLOPT_HTTPGET => true, //启用时会设置HTTP的method为GET，因为GET是默认是，所以只在被修改的情况下使用。
                         CURLOPT_ENCODING    =>  'gzip',
                         //设置代理服务器相关的
-                        CURLOPT_PROXYUSERPWD    =>  $proxy_data['username'].':'.$proxy_data['password'],//设置账户和密码
                         CURLOPT_PROXY   =>  $proxy_data['ip'], //代理IP的服务器地址
                         CURLOPT_PROXYPORT   =>  $proxy_data['port'],//代理IP的端口
                         CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5, //指定代理IP的类型
                         CURLOPT_PROXYAUTH   =>  CURLAUTH_BASIC, //代理认证模式
+
+                        //tcp设置相关--主要设置Keep-alive心跳
+                        CURLOPT_TCP_KEEPALIVE   => 1, // 开启
+                        CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
+                        CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
+                        CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
+                        CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
+
+
+                        //设置版本号和启用ipv4
+                        CURLOPT_HTTP_VERSION    =>CURL_HTTP_VERSION_1_0, // 强制使用 HTTP/1.0
+                        CURLOPT_FOLLOWLOCATION  => 1, // 302 redirect
+                        CURLOPT_MAXREDIRS   =>  5,  //定向的最大数量，这个选项是和CURLOPT_FOLLOWLOCATION一起用的
+                        CURLOPT_IPRESOLVE   =>  CURL_IPRESOLVE_V4, //强制使用IPv4
+
                     ),
                     'args'  =>  'This is user argument',
                 ),
