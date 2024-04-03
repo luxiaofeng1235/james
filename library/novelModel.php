@@ -1037,11 +1037,11 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
             if(empty($meta_data) || empty($href) || empty($val)){
-                echo "meta信息为空了 {$data[$key]['chapter_link']} \r\n";
-                echo '<pre>';
-                print_R($val);
-                echo '</pre>';
-                echo "000000000000000000000000000000\r\n";
+                // echo "meta信息为空了 {$data[$key]['chapter_link']} \r\n";
+                // echo '<pre>';
+                // print_R($val);
+                // echo '</pre>';
+                // echo "000000000000000000000000000000\r\n";
           }
 
             //替换内容里的广告
@@ -1397,10 +1397,22 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                         $temp_url[]=$urls[$tkey]; //说明请求里有空的html,把空的连接保存下来
                       }
                   }else if($type =='curl'){//采用curl来验证
+                    // dd($tval);
+                    // echo 333;die;
+                    //|| strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($tval,'502 Bad Gateway') ||
                       //curl验证如果不是503的报错或者为空没有获取到200或者403就会返回一个空字符串来判断
                       //502 bad gateway
                       //如果没有匹配到id="content"说明页面缺了，需要重新补
-                      if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($tval,'502 Bad Gateway') || !strstr($tval, 'id="content"') ){
+                    // echo 1111;
+                     if(empty($tval)){//为空的情况
+                        $temp_url[] =$urls[$tkey];
+                        //断章处理
+                     }else if(!preg_match('/id="content"/',$tval) ){
+                      echo "有断章======================{$urls[$tkey]}\r\n";
+                          // echo '<pre>';
+                          // print_R($tval);
+                          // echo '</pre>';
+                          // exit;
                           $temp_url[] =$urls[$tkey];
                       }else{
                           $repeat_data[] = $tval;

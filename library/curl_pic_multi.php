@@ -145,7 +145,7 @@ public static function Rand_refer(){
           curl_setopt($conn[$k],CURLOPT_ENCODING,'gzip');//启用解压缩
           // 超过1024字节解决方法
           curl_setopt($conn[$k],CURLOPT_HTTPHEADER, array("Expect:")); //增加配置完整接收数据配置buffer的大小
-          // curl_setopt($conn[$k],CURLOPT_BUFFERSIZE,120000);//设置调整收包大小阈值
+          curl_setopt($conn[$k],CURLOPT_BUFFERSIZE,320000);//设置调整收包大小阈值
           curl_setopt($conn[$k], CURLOPT_MAX_RECV_SPEED_LARGE, 500240); // 设置最大尺寸为10KB
           curl_setopt($conn[$k],CURLOPT_HTTPPROXYTUNNEL,0);//启用时会设置HTTP的method为GET
           curl_setopt($conn[$k], CURLOPT_SSL_VERIFYPEER, false);//屏蔽过滤ssl的连接
