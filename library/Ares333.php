@@ -108,10 +108,7 @@ class Ares333{
             return false;
         //获取配置的代理信息
         $rand_str = ClientModel::getRandProxy();
-        // $proxy_data= self::getProxyData($rand_str);
-
-        $proxy_data['ip'] = '221.229.212.170';
-        $proxy_data['port'] = '40137';
+        $proxy_data= self::getProxyData($rand_str);
         if(!$proxy_data){
             echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
             NovelModel::killMasterProcess(); //结束当前进程
@@ -143,14 +140,6 @@ class Ares333{
             if ($i >= $urlCount) {
                 return;
             }
-            // echo $proxy_data['ip'].'---'.$proxy_data['port'];
-            // dd($proxy_data);
-
-            // echo "\n我是属于其中的一个值 ---". $t[$i]."\r\n";
-            // echo "\ncurrent tiems：{$i} \r\n";
-            /** @var Curl $curl */
-            //速度控制
-            $speed = 100000;
             $curl->add(
                 array(
                     'opt' => array(
