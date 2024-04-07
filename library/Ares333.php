@@ -159,11 +159,11 @@ class Ares333{
                         CURLOPT_PROXYAUTH   =>  CURLAUTH_BASIC, //代理认证模式
 
                         // //tcp设置相关--主要设置Keep-alive心跳
-                        // CURLOPT_TCP_KEEPALIVE   => 1, // 开启
-                        // CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
-                        // CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
-                        // // CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
-                        // CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
+                        CURLOPT_TCP_KEEPALIVE   => 1, // 开启
+                        CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
+                        CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
+                        // CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
+                        CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
 
 
                         //设置版本号和启用ipv4
