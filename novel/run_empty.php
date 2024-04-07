@@ -66,6 +66,7 @@ if(!empty($info)){
     $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
     $list = readFileData($json_path);
     if(!$list){
+        updateFewStatus($pro_book_id);
         NovelModel::killMasterProcess();//退出主程序
         echo "当前读取章节目录为空\r\n";
         exit;
@@ -76,6 +77,7 @@ if(!empty($info)){
     $txt_path  = Env::get('SAVE_NOVEL_PATH').DS.$md5_str;
     $dataList= [];
     if(!$chapter_list){
+        updateFewStatus($pro_book_id);
         NovelModel::killMasterProcess();//退出主程序
         exit("暂无关联章节json \r\n");
     }
@@ -96,6 +98,7 @@ if(!empty($info)){
     $chapter_list = $removeAdInfo($chapter_list);
     if(!$removeAdInfo){
         echo "去除广告后未 发现有需要同步的章节\r\n";
+        updateFewStatus($pro_book_id);
         NovelModel::killMasterProcess();//退出主程序(
         exit(1);
     }
@@ -117,6 +120,7 @@ if(!empty($info)){
     if(!$dataList){
         echo "book_name：{$info['title']}  pro_book_id：{$info['pro_book_id']}  不需要轮询抓取了，章节已经全部抓取下来了\r\n";
         updateEmptyStatus($store_id); //更新状态
+        updateFewStatus($pro_book_id);
         NovelModel::killMasterProcess();//退出主程序
         exit(1);
     }
@@ -166,7 +170,7 @@ if(!empty($info)){
     unset($chapter_list);
     echo "novel_path: {$txt_path} store_id = ".$store_id." | store_id= ".$store_id." pro_book_id = ".$info['pro_book_id'].PHP_EOL;
     echo "\r\n\r\n";
-    echo "章节处理完毕\r\n";
+    echo "章节处理完毕,待查找\r\n";
     NovelModel::killMasterProcess();//退出主程序
 }else{
     echo "no data\r\n";
@@ -178,6 +182,25 @@ echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "*********************************************************************\r\n";
 echo "\r\n";
 echo "\r\n";
+
+
+/**
+ * @note  更新mc_book的状态
+ * @param string $story_id 小说ID
+ * @return string
+ */
+public function updateFewStatus($pro_book_id= 0){
+    if(!$pro_book_id){
+        return false;
+    }
+    global $mysql_obj;
+    $where_condition = "id = '".$pro_book_id."'";
+    $no_chapter_data['is_few'] = 2;
+    //对比新旧数据返回最新的更新
+    $mysql_obj->update_data($no_chapter_data,$where_condition,'mc_book',false,0,'db_novel_pro');
+}
+
+
 /**
 * @note 更新为空的状态同步统计
 *

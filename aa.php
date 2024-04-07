@@ -11,7 +11,7 @@ use Overtrue\Pinyin\Pinyin;
 $exec_start_time = microtime(true);
 $file = readFileData('/mnt/book/chapter/9a7819bc9a00853972f2d6a985310647.json');
 $t = json_decode($file,true);
-$arr = array_chunk($t,500);
+$arr = array_chunk($t,300);
 echo "共需要 ".count($arr)."页\r\n";
 
 // $goods_list= $arr[0] ?? [];
@@ -40,7 +40,6 @@ foreach($arr as $v){
     echo "current-page：{$i} count：".count($items)."\r\n";
     sleep(1);
 }
-die;
 echo "over\r\n";
 echo "over\r\n";
 echo '<pre>';

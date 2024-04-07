@@ -107,16 +107,15 @@ class Ares333{
         if(!$url)
             return false;
         //获取配置的代理信息
-        // $rand_str = ClientModel::getRandProxy();
-        // $proxy_data= self::getProxyData($rand_str);
-        $proxy_data['ip'] = '60.172.71.59';
-        $proxy_data['port'] ='4234';
-        // if(!$proxy_data){
-        //     echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
-        //     NovelModel::killMasterProcess(); //结束当前进程
-        //     exit(1);
-        // }
-
+        $rand_str = ClientModel::getRandProxy();
+        $proxy_data= self::getProxyData($rand_str);
+        // $proxy_data['ip'] = '123.170.119.23';
+        // $proxy_data['port'] ='4214';
+        if(!$proxy_data){
+            echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
+            NovelModel::killMasterProcess(); //结束当前进程
+            exit(1);
+        }
         if(!is_array($url)){
             $urls[] =$url;
         }else{
