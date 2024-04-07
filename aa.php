@@ -8,32 +8,14 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
-// $url = Env::get('SIYECAOURL');
-// echo '<pre>';
-// print_R($url);
-// echo '</pre>';
-// exit;
-
-$url =Env::get('YILIANURL');
-
-$res=  webRequest($url,'GET');
-$proxy_info = json_decode($res,true);
-$proxy_data = $proxy_info['data'][0] ?? [];
-$proxy_data = combineProxyParam($proxy_data);
-echo '<pre>';
-print_R($proxy_data);
-echo '</pre>';
-exit;
-
-$a = file_get_contents('https://tps.kdlapi.com/api/gettps/?secret_id=omreo9ymecyrhy2iv14w&signature=oge14f34l4by3512x278obxrb2&num=1&pt=2&format=json&sep=1');
-echo '<pre>';
-print_R($a);
-echo '</pre>';
-exit;
 $exec_start_time = microtime(true);
 $file = readFileData('/mnt/book/chapter/3b628cc6ceae3ec44c695f47d9a511c7.json');
 $t = json_decode($file,true);
-$arr = array_chunk($t,300);
+$arr = array_chunk($t,200);
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
 
 $i =0;
 foreach($arr as $v){

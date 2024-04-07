@@ -128,7 +128,6 @@ if($info){
         $author_data = explode('：',$store_data['author']);
         $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
         $store_data['author']  = $author;
-
         // $store_data['updatetime'] = time();
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
