@@ -1421,6 +1421,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                       }
                   }
               }
+              // sleep(1);
               $urls = $temp_url; //起到指针的作用，每次只存失败的连接
               $urls = array_values($urls);//重置键值，方便查找
             }

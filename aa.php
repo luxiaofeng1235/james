@@ -7,7 +7,6 @@ require_once($dirname.'/library/file_factory.php');
 // require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
-
 $a = file_get_contents('https://tps.kdlapi.com/api/gettps/?secret_id=omreo9ymecyrhy2iv14w&signature=oge14f34l4by3512x278obxrb2&num=1&pt=2&format=json&sep=1');
 echo '<pre>';
 print_R($a);

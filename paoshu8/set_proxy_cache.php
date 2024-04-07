@@ -32,6 +32,7 @@ function getAllowProxy(){
         $info = webRequest($url,'GET');
         $proxy_info  =    json_decode($info , true);
         $proxy_data = $proxy_info['data'][0] ?? [];
+
         if(!empty($proxy_data)){
             $now_time = time();
             $expire_time = $proxy_data['expire_time'] ?? '';
@@ -41,6 +42,12 @@ function getAllowProxy(){
                 $new_proxy = $proxy_data;
                 break;
             }
+        }else{
+            //处理过期的套餐处理
+            $msg = $proxy_info['msg'] ?? '';
+            echo "message = ".$msg."\r\n";
+            NovelModel::killMasterProcess();//退出主程序
+            exit();
         }
         sleep(1); //停止1秒
     }while(true);
