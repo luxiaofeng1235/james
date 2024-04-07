@@ -32,10 +32,10 @@ function getAllowProxy(){
         $info = webRequest($url,'GET');
         $proxy_info  =    json_decode($info , true);
         $proxy_data = $proxy_info['data'][0] ?? [];
-
+        //重组相关的参数防止和其他有冲突
+        $proxy_data  =combineProxyParam($proxy_data);
         if(!empty($proxy_data)){
             $now_time = time();
-            $proxy_data['expire_time'] = $proxy_data['end_time'] ?? '';//兼容其他代理返回字段end_time
             $expire_time = $proxy_data['expire_time'] ?? '';
             //利用过期时间-当前时间计算代理的可用时间
             $t = strtotime($expire_time) - $now_time;
@@ -77,11 +77,12 @@ if(!$redis_cache_key){
 $pro_type = isset($argv[3]) ? $argv[3] : 1;
 if($pro_type == 1){
     //直连IP
-    $url = Env::get('ZHIMAURL');
+    // $url = Env::get('ZHIMAURL');
 }else if($pro_type ==2){
     //隧道IP
-    $url = Env::get('ZHIMA_SUIDAO');
+    // $url = Env::get('ZHIMA_SUIDAO');
 }
+$url = Env::get('YILIANURL'); //使用一连的IP进行访问
 $proxy_conf = [];
 echo "cache_key：".$redis_cache_key."\r\n";
 $host  =  isset($argv[2]) ? trim($argv[2]) : Env::get('APICONFIG.PAOSHU_HOST') ;
