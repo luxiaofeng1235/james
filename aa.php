@@ -7,6 +7,18 @@ require_once($dirname.'/library/file_factory.php');
 // require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
+
+// $url = Env::get('SIYECAOURL');
+// echo '<pre>';
+// print_R($url);
+// echo '</pre>';
+// exit;
+
+$res=  webRequest('http://proxy.siyetian.com/apis_get.html?token=gHbi1ST6lEeNRUU61kajlXTB1STqFUeORUQ61ERZhnTqlENPRVS00EVrJTTqFVN.QM3YDM2QjMxcTM&limit=1&type=1&time=&data_format=json&showTimeEnd=true','GET');
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
 $a = file_get_contents('https://tps.kdlapi.com/api/gettps/?secret_id=omreo9ymecyrhy2iv14w&signature=oge14f34l4by3512x278obxrb2&num=1&pt=2&format=json&sep=1');
 echo '<pre>';
 print_R($a);
