@@ -14,11 +14,17 @@ use Overtrue\Pinyin\Pinyin;
 // echo '</pre>';
 // exit;
 
-$res=  webRequest('http://proxy.siyetian.com/apis_get.html?token=gHbi1ST6lEeNRUU61kajlXTB1STqFUeORUQ61ERZhnTqlENPRVS00EVrJTTqFVN.QM3YDM2QjMxcTM&limit=1&type=1&time=&data_format=json&showTimeEnd=true','GET');
+$url =Env::get('YILIANURL');
+
+$res=  webRequest($url,'GET');
+$proxy_info = json_decode($res,true);
+$proxy_data = $proxy_info['data'][0] ?? [];
+$proxy_data = combineProxyParam($proxy_data);
 echo '<pre>';
-print_R($res);
+print_R($proxy_data);
 echo '</pre>';
 exit;
+
 $a = file_get_contents('https://tps.kdlapi.com/api/gettps/?secret_id=omreo9ymecyrhy2iv14w&signature=oge14f34l4by3512x278obxrb2&num=1&pt=2&format=json&sep=1');
 echo '<pre>';
 print_R($a);

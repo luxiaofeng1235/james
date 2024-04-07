@@ -1213,4 +1213,16 @@ function array_iconv($arr, $in_charset="gbk", $out_charset="utf-8")
 	 // return json_encode($ret);
 }
 
+/**
+ * @note 重组代理参数
+ *
+ * @param $data array 代理信息
+ * @return str
+ */
+function combineProxyParam($data){
+	if(!$data)
+		return [];
+	if(!isset($data['port'])) $data['port'] = $data['proxy_port'];//端口转换
+	return $data;
+}
 ?>

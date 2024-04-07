@@ -35,7 +35,7 @@ function getAllowProxy(){
 
         if(!empty($proxy_data)){
             $now_time = time();
-            $proxy_data['expire_time'] = $proxy_data['end_time'] ?? '';//兼容其他代理
+            $proxy_data['expire_time'] = $proxy_data['end_time'] ?? '';//兼容其他代理返回字段end_time
             $expire_time = $proxy_data['expire_time'] ?? '';
             //利用过期时间-当前时间计算代理的可用时间
             $t = strtotime($expire_time) - $now_time;
