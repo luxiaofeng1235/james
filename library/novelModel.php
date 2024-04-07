@@ -1026,9 +1026,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
           if(!$list)
             return [];
-          foreach($list as $key =>$val){
+          foreach($list as $gkey =>$gval){
 
-            $data = QueryList::html($val)->rules($rules)->query()->getData();
+            $data = QueryList::html($gval)->rules($rules)->query()->getData();
             $html = $data->all();
 
             $store_content = $html['content'] ?? '';
@@ -1036,10 +1036,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $href = $html['href'];
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
-            if(empty($meta_data) || empty($href) || empty($val)){
-                // echo "meta信息为空了 {$data[$key]['chapter_link']} \r\n";
+            if(empty($meta_data) || empty($href) || empty($gval)){
+                // echo "meta信息为空了 {$data[$gkey]['chapter_link']} \r\n";
                 // echo '<pre>';
-                // print_R($val);
+                // print_R($gval);
                 // echo '</pre>';
                 // echo "000000000000000000000000000000\r\n";
           }
