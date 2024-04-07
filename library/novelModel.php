@@ -1376,7 +1376,6 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
         while(true){//连接总数和请求成功数量不一致轮训
             //重新请求对应的信息
             $curl_contents1 = curl_pic_multi::Curl_http($urls,$proxy_type);
-            // $curl_contents1 = array_filter($curl_contents1);
             $temp_url =[];//设置中间变量，如果是空的，就需要把对应的URL加到临时变量里
             if($curl_contents1){
                 foreach($curl_contents1 as $tkey=> $tval){

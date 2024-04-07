@@ -3,7 +3,7 @@ use Ares333\Curl\Toolkit;
 use Ares333\Curl\Curl;
 class Ares333{
 
-    protected static $maxThread   =60 ; //最大线程数配置
+    protected static $maxThread   =70 ; //最大线程数配置
     protected static $maxTry  = 3;//最大试错的次数
 
     /**
@@ -107,13 +107,15 @@ class Ares333{
         if(!$url)
             return false;
         //获取配置的代理信息
-        $rand_str = ClientModel::getRandProxy();
-        $proxy_data= self::getProxyData($rand_str);
-        if(!$proxy_data){
-            echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
-            NovelModel::killMasterProcess(); //结束当前进程
-            exit(1);
-        }
+        // $rand_str = ClientModel::getRandProxy();
+        // $proxy_data= self::getProxyData($rand_str);
+        $proxy_data['ip'] = '60.172.71.59';
+        $proxy_data['port'] ='4234';
+        // if(!$proxy_data){
+        //     echo '【调用位置：Ares333类】 当前代理IP已经过期了，请稍等片刻 --------！'.PHP_EOL;
+        //     NovelModel::killMasterProcess(); //结束当前进程
+        //     exit(1);
+        // }
 
         if(!is_array($url)){
             $urls[] =$url;
@@ -158,12 +160,12 @@ class Ares333{
                         CURLOPT_PROXYTYPE   =>  CURLPROXY_SOCKS5, //指定代理IP的类型
                         CURLOPT_PROXYAUTH   =>  CURLAUTH_BASIC, //代理认证模式
 
-                        // //tcp设置相关--主要设置Keep-alive心跳
-                        CURLOPT_TCP_KEEPALIVE   => 1, // 开启
-                        CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
-                        CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
-                        // CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
-                        CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
+                        // // //tcp设置相关--主要设置Keep-alive心跳
+                        // CURLOPT_TCP_KEEPALIVE   => 1, // 开启
+                        // CURLOPT_TCP_KEEPIDLE    => 3, // 空闲10秒问一次
+                        // CURLOPT_TCP_KEEPINTVL   =>3,  // 每10秒问一次
+                        // // CURLOPT_TCP_NODELAY =>1, //TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
+                        // CURLOPT_NOSIGNAL    =>1, //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
 
 
                         //设置版本号和启用ipv4

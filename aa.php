@@ -9,13 +9,22 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
 $exec_start_time = microtime(true);
-$file = readFileData('/mnt/book/chapter/3b628cc6ceae3ec44c695f47d9a511c7.json');
+$file = readFileData('/mnt/book/chapter/9a7819bc9a00853972f2d6a985310647.json');
 $t = json_decode($file,true);
-$arr = array_chunk($t,200);
-echo '<pre>';
-print_R($arr);
-echo '</pre>';
-exit;
+$arr = array_chunk($t,500);
+echo "共需要 ".count($arr)."页\r\n";
+
+// $goods_list= $arr[0] ?? [];
+// $urls= array_column($goods_list,'chapter_link');
+// $items = Ares333::curlThreadList($urls);
+//  foreach($items as $key =>$val){
+//      if($val['http_code'] != 200){
+//         echo  "{$val['http_code']}\t111111111111\r\n";
+//      }
+// }
+// echo "over\r\n";
+// die;
+
 
 $i =0;
 foreach($arr as $v){
@@ -27,16 +36,11 @@ foreach($arr as $v){
             echo  "{$val['http_code']}\t111111111111\r\n";
          }
     }
-    die;
-    echo '<pre>';
-    print_R($items);
-    echo '</pre>';
-    exit;
 
     echo "current-page：{$i} count：".count($items)."\r\n";
-    die;
     sleep(1);
 }
+die;
 echo "over\r\n";
 echo "over\r\n";
 echo '<pre>';
