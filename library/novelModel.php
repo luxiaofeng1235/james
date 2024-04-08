@@ -1399,30 +1399,22 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                         $temp_url[]=$urls[$tkey]; //说明请求里有空的html,把空的连接保存下来
                       }
                   }else if($type =='curl'){//采用curl来验证
-                    // dd($tval);
-                    // echo 333;die;
-                    //|| strstr($tval,'503 Service') || strstr($tval, '403 Forbidde') || strstr($tval,'502 Bad Gateway') ||
-                      //curl验证如果不是503的报错或者为空没有获取到200或者403就会返回一个空字符串来判断
-                      //502 bad gateway
-                      //如果没有匹配到id="content"说明页面缺了，需要重新补
-                    // echo 1111;
                      if(empty($tval)){//为空的情况
-                        echo "章节数据内容为空======================{$urls[$tkey]}\r\n";
+                        echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
                         $temp_url[] =$urls[$tkey];
                      }else if(!preg_match('/id="content"/',$tval) ){//断章处理
-                        echo "有断章======================{$urls[$tkey]}\r\n";
-                          $temp_url[] =$urls[$tkey];
+                        echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
+                        $temp_url[] =$urls[$tkey];
                       }else{
                           $repeat_data[] = $tval;
                           unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
-                          unset($curl_contents1[$tkey]);
                           $successNum++;
                       }
                   }
               }
               $urls = $temp_url; //起到指针的作用，每次只存失败的连接
               $urls = array_values($urls);//重置键值，方便查找
-              $curl_contents1 =array_values($curl_contents1);//获取最新的数组
+              // $curl_contents1 =array_values($curl_contents1);//获取最新的数组
             }
             //如果已经满足所有都取出来就跳出来
             if($old_num == $successNum){
