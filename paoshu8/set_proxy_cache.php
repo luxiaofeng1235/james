@@ -116,7 +116,8 @@ if(!$proxy){
     echo "redis里的代理暂未过期,还能用\r\n";
     $proxy_conf = json_decode($proxy , true);
     $ttl =$redis_data->ttl($redis_cache_key); //获取缓存的可用时间
-    echo "剩余可用缓存时间：".sprintf('%.2f',($ttl/60))." minutes\r\n";
+    $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数
+    echo "剩余可用缓存时间：".$minutes." minutes\r\n";
     echo '<pre>';
     var_dump($proxy_conf);
     echo '</pre>';
