@@ -1378,49 +1378,48 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
     if(!empty($errData)){
         $successNum = 0;
         $old_num = count($errData);
-
         $urls = array_column($errData, 'mobile_url'); //进来先取出来
         while(true){//连接总数和请求成功数量不一致轮训
             //重新请求对应的信息
             $curl_contents1 = curl_pic_multi::Curl_http($urls,$proxy_type);
+            echo "================11111\r\n";
             $temp_url =[];//设置中间变量，如果是空的，就需要把对应的URL加到临时变量里
-            if($curl_contents1){
-                foreach($curl_contents1 as $tkey=> $tval){
-                  //防止有空数据跳不出去,如果非请求失败确实是空，给一个默认值
-                  if($type =='ghttp'){//ghttp验证方式
-                    //判断返回页面里不为空的情况，还要判断是否存在异常 如果不是200会返回guzzle自定义错误根据这个来判断
-                      if(!empty($tval)
-                        && (!strstr($tval,'您当前访问的页面存在安全风险') || !strstr($tval,'请求失败'))
-                     ){
-                            $repeat_data[] = $tval;
-                            unset($urls[$tkey]); //已经存在就踢出去，下次就不用重复计算了
-                            $i++;
-                      }else{//为空保存urls去遍历循环
-                        $temp_url[]=$urls[$tkey]; //说明请求里有空的html,把空的连接保存下来
-                      }
-                  }else if($type =='curl'){//采用curl来验证
-                     if(empty($tval)){//为空的情况
-                        echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
-                        $temp_url[] =$urls[$tkey];
-                     }else if(!preg_match('/id="content"/',$tval) ){//断章处理
-                        echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
-                        $temp_url[] =$urls[$tkey];
-                      }else{
-                          $repeat_data[] = $tval;
-                          unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
-                          $successNum++;
-                      }
+            foreach($curl_contents1 as $tkey=> $tval){
+              //防止有空数据跳不出去,如果非请求失败确实是空，给一个默认值
+              if($type =='ghttp'){//ghttp验证方式
+                //判断返回页面里不为空的情况，还要判断是否存在异常 如果不是200会返回guzzle自定义错误根据这个来判断
+                  if(!empty($tval)
+                    && (!strstr($tval,'您当前访问的页面存在安全风险') || !strstr($tval,'请求失败'))
+                 ){
+                        $repeat_data[] = $tval;
+                        unset($urls[$tkey]); //已经存在就踢出去，下次就不用重复计算了
+                        $i++;
+                  }else{//为空保存urls去遍历循环
+                    $temp_url[]=$urls[$tkey]; //说明请求里有空的html,把空的连接保存下来
+                  }
+              }else if($type =='curl'){//采用curl来验证
+                 if(empty($tval)){//为空的情况
+                    echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
+                    $temp_url[] =$urls[$tkey];
+                 }else if(!preg_match('/id="content"/',$tval) ){//断章处理
+                    echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
+                    $temp_url[] =$urls[$tkey];
+                  }else{
+                      $repeat_data[] = $tval;
+                      unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
+                      unset($curl_contents1[$tkey]);
+                      $successNum++;
                   }
               }
-              $urls = $temp_url; //起到指针的作用，每次只存失败的连接
-              $urls = array_values($urls);//重置键值，方便查找
-              // $curl_contents1 =array_values($curl_contents1);//获取最新的数组
-            }
-            //如果已经满足所有都取出来就跳出来
-            if($old_num == $successNum){
-                echo "数据清洗完毕等待入库\r\n";
-                break;
-            }
+          }
+          $urls = $temp_url; //起到指针的作用，每次只存失败的连接
+          $urls = array_values($urls);//重置键值，方便查找
+          $curl_contents1 =array_values($curl_contents1);//获取最新的数组
+          //如果已经满足所有都取出来就跳出来
+          if($old_num == $successNum){
+              echo "数据清洗完毕等待入库\r\n";
+              break;
+          }
         }
     }
     //合并最终的需要处理的数据
@@ -1461,7 +1460,7 @@ public static function killMasterProcess(){
 * @param  $data array 关联章节数组
 * @return array
 */
-public static  function getErrSucData($content,$data,$type='ghttp'){
+public static function getErrSucData($content,$data,$type='ghttp'){
     if(!$content)
         return [];
     //该网站被大量用户举报，网站含有未经证实的信息，可能造成您的损失，建议谨慎访问
@@ -1473,13 +1472,17 @@ public static  function getErrSucData($content,$data,$type='ghttp'){
             //如果存在503或者抓取有大量被举报的返回值就需要去判断
             if(strstr($val,'您当前访问的页面存在安全风险') || strstr($val,'请求失败')){
                 $errData[] =$data[$key] ?? [];//记录失败的
+            }else if(!preg_match('/id="content"/',$val) ){//断章处理
+                $errData[] =$data[$key] ?? [];
             }else{
                 $sucData[] = $val;//记录成功的
             }
           }else if($type =='curl'){ //采用curl来进行验证
           // if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde')){
-              if(empty($val) || strstr($val,'503 Service') || strstr($val,'403 Forbidde')){//如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
-                   $errData[] =$data[$key] ?? [];
+              if(empty($val)){//如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
+                  $errData[] =$data[$key] ?? [];
+              }else if(!preg_match('/id="content"/',$val) ){//断章处理
+                  $errData[] =$data[$key] ?? [];
               }else{
                   $sucData[] = $val;
               }
