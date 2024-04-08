@@ -97,8 +97,8 @@ class FileFactory{
         //校验代理IP是否过期
        //校验代理IP是否过期
         if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
-            NovelModel::killMasterProcess();//退出主程序
-           exit("代理IP已过期三个里面可能过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新获取新的\r\n");
+           //  NovelModel::killMasterProcess();//退出主程序
+           // exit("代理IP已过期三个里面可能过期了，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新获取新的\r\n");
         }
         //判断数据是否为空
         if(!empty($info_data)){

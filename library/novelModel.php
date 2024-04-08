@@ -290,15 +290,17 @@ class NovelModel{
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
       //匹配正文章节内容
-      //转义特殊字符
+
+      //标题处理转义字符
       $title = str_replace('(','\(',$title);
       $title = str_replace(')','\)',$title);
+      $title = str_replace('.','\.',$title);
+      $title = str_replace(',','\,',$title);
+
+
       preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
-
            $contents = $list[0] ?? [];
-           //获取相关的数据信息
-           // $contents = self::replaceListArr($list_item);
            if($contents){
               preg_match_all($link_reg,$contents,$link_href);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
