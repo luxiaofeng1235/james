@@ -8,6 +8,12 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
+ // $a = webRequest('http://www.baidu.com','GET');
+ // echo '<pre>';
+ // print_R($a);
+ // echo '</pre>';
+ // exit;
+
 $exec_start_time = microtime(true);
 $file = readFileData('/mnt/book/chapter/9a7819bc9a00853972f2d6a985310647.json');
 $t = json_decode($file,true);

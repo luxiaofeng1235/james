@@ -42,8 +42,8 @@ $proxy_img = NovelModel::checkImgKey(); //获取修复图片的PROXY
 
 //校验代理IP是否过期
 if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
-    NovelModel::killMasterProcess();//退出主程序
-   exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新拉取最新的ip\r\n");
+   //  NovelModel::killMasterProcess();//退出主程序
+   // exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新拉取最新的ip\r\n");
 }
 
 

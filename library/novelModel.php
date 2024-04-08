@@ -290,6 +290,9 @@ class NovelModel{
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
       //匹配正文章节内容
+      //转义特殊字符
+      $title = str_replace('(','\(',$title);
+      $title = str_replace(')','\)',$title);
       preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
 
@@ -1374,6 +1377,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
     //取出来成功和失败的数据
     $sucData = $returnList['sucData'] ?? []; //成功的数据
     $errData = $returnList['errData'] ?? []; //失败的数据
+    echo "success_num：".count($sucData)."\terror_num：".count($errData).PHP_EOL;
     $repeat_data = $curl_contents1 =[];
     if(!empty($errData)){
         $successNum = 0;
