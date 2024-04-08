@@ -1018,7 +1018,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $valid_curl ='curl';
           $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content'];
           //开启多线程请求,使用当前代理IP去请求，牵扯到部署需要再境外服务器
-          $detail_proxy_type =4;//基础小说的代理IP
+
+
+          //////////////////处理请求的链接start
+          $detail_proxy_type =ClientModel::getCurlRandProxy();//基础小说的代理IP
           $list = curl_pic_multi::Curl_http($t_url,$detail_proxy_type);
           //获取随机的代理IP
           $rand_str = ClientModel::getCurlRandProxy();
@@ -1026,6 +1029,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
           if(!$list)
             return [];
+           //////////////////处理请求的链接end
+
+
+
           foreach($list as $gkey =>$gval){
 
             $data = QueryList::html($gval)->rules($rules)->query()->getData();

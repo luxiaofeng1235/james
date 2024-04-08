@@ -77,12 +77,12 @@ if(!$redis_cache_key){
 $pro_type = isset($argv[3]) ? $argv[3] : 1;
 if($pro_type == 1){
     //直连IP
-    // $url = Env::get('ZHIMAURL');
+    $url = Env::get('ZHIMAURL');
 }else if($pro_type ==2){
     //隧道IP
-    // $url = Env::get('ZHIMA_SUIDAO');
+    $url = Env::get('ZHIMA_SUIDAO');
 }
-$url = Env::get('YILIANURL'); //使用一连的IP进行访问
+// $url = Env::get('YILIANURL'); //使用一连的IP进行访问
 echo "proxy-url： {$url} \r\n";
 $proxy_conf = [];
 echo "cache_key：".$redis_cache_key."\r\n";
