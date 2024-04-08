@@ -291,7 +291,7 @@ class NovelModel{
       //只取正文里的内容信息，其他的更新的简介不要
       //匹配正文章节内容
 
-      //标题处理转义字符
+      //标题处理正则转义字符
       $title = str_replace('(','\(',$title);
       $title = str_replace(')','\)',$title);
       $title = str_replace('.','\.',$title);
@@ -1427,6 +1427,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                   }
               }
           }
+          echo "---------------当前有".count($temp_url)."个URL需要重新去获取\r\n";
           $urls = $temp_url; //起到指针的作用，每次只存失败的连接
           $urls = array_values($urls);//重置键值，方便查找
           $curl_contents1 =array_values($curl_contents1);//获取最新的数组
