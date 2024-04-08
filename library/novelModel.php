@@ -1376,7 +1376,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
     $errData = $returnList['errData'] ?? []; //失败的数据
     $repeat_data = $curl_contents1 =[];
     if(!empty($errData)){
-        $i = 0;
+        $successNum = 0;
         $old_num = count($errData);
 
         $urls = array_column($errData, 'mobile_url'); //进来先取出来
@@ -1411,6 +1411,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                       //如果没有匹配到id="content"说明页面缺了，需要重新补
                     // echo 1111;
                      if(empty($tval)){//为空的情况
+                       echo "章节数据内容为空======================{$urls[$tkey]}\r\n";
                         $temp_url[] =$urls[$tkey];
                         //断章处理
                      }else if(!preg_match('/id="content"/',$tval) ){
@@ -1423,7 +1424,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                       }else{
                           $repeat_data[] = $tval;
                           unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
-                          $i++;
+                          $successNum++;
                       }
                   }
               }
@@ -1433,7 +1434,8 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
             }
             // $curl_contents1 =array_values($curl_contents1);//获取最新的数组
             //如果已经满足所有都取出来就跳出来
-            if($old_num == $i){
+            if($old_num == $successNum){
+                echo "数据清洗完毕等待入库\r\n";
                 break;
             }
         }
