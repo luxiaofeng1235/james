@@ -1223,6 +1223,7 @@ function combineProxyParam($data){
 	if(!$data)
 		return [];
 	if(!isset($data['port'])) $data['port'] = $data['proxy_port'];//端口转换
+	if(!isset($data['ip'])) $data['ip'] = $data['real_ip'];
 	return $data;
 }
 ?>
