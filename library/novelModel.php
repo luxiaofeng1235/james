@@ -1426,6 +1426,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
               echo "数据清洗完毕等待入库\r\n";
               break;
           }
+          sleep(1);
         }
     }
     //合并最终的需要处理的数据
