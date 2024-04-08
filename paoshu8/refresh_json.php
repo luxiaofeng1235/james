@@ -21,14 +21,22 @@ $where_data = '1 and pro_book_id>0';
 $limit= 5000; //控制列表的步长
 $order_by =' order by pro_book_id asc';
 
-if($id){
-    $where_data .=" and pro_book_id > ".$id;
+// if($id){
+//     $where_data .=" and pro_book_id > ".$id;
+// }
+$file = file('./zhangjie.txt');
+foreach($file as &$v){
+    $v = str_replace("\r\n" , '',$v);
 }
 
-$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where ".$where_data;
+
+
+// $file[]=11431;
+
+$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where store_id in (".implode(',',$file).")";
 $sql .= $order_by;
 $sql .= " limit ".$limit;
-echo "sql = {$sql}\n\n";
+// echo "sql = {$sql}\n\n";
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
 if($info){
@@ -48,7 +56,6 @@ if($info){
                     ->rules($rules)
                     ->query()->getData();
         $store_data = $info_data->all();
-
          //转义标题
         $store_data['title'] = addslashes(trim($store_data['title']));
         //处理作者并转义
@@ -74,10 +81,10 @@ if($info){
             echo "num =".($key+1)." \t title={$title} \t store_id ={$store_id} \t pro_book_id={$pro_book_id} \t url ={$story_link} 未匹配到有效素信息，也有可能是HTML页面不存在~~ \r\n";
         }
     }
-    $ids = array_column($info,'pro_book_id');
-    $max_id = max($ids);
-    $redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
-    echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$max_id.PHP_EOL;
+    // $ids = array_column($info,'pro_book_id');
+    // $max_id = max($ids);
+    // $redis_data->set_redis($redis_key,$max_id);//设置增量ID下一次轮训的次数
+    // echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$max_id.PHP_EOL;
 }else{
     echo "no data \r\n";
 }

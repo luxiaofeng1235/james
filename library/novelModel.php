@@ -296,8 +296,13 @@ class NovelModel{
       $title = str_replace(')','\)',$title);
       $title = str_replace('.','\.',$title);
       $title = str_replace(',','\,',$title);
-
-
+      $title = str_replace('[','\[',$title);
+      $title = str_replace(']','\]',$title);
+      $title = str_replace('$','\$',$title);
+      $title = str_replace('?','\?',$title);
+      $title = str_replace('{','\{',$title);
+      $title = str_replace('}','\}',$title);
+      //{ }
       preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
@@ -1376,6 +1381,10 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
     $goods_list = array_values($goods_list);
    //获取出来成功和失败的数据
     $returnList= NovelModel::getErrSucData($contents_arr,$goods_list,$type);
+    // echo '<pre>';
+    // print_R($returnList);
+    // echo '</pre>';
+    // exit;
     //取出来成功和失败的数据
     $sucData = $returnList['sucData'] ?? []; //成功的数据
     $errData = $returnList['errData'] ?? []; //失败的数据
@@ -1407,7 +1416,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                  if(empty($tval)){//为空的情况
                     echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
                     $temp_url[] =$urls[$tkey];
-                 }else if(!preg_match('/id="content"/',$tval) ){//断章处理
+                 }else if(!preg_match('/id="content"/',$tval) ){//断章处理，包含有502的未响应都会
                     echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
                     $temp_url[] =$urls[$tkey];
                   }else{
@@ -1426,7 +1435,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
               echo "数据清洗完毕等待入库\r\n";
               break;
           }
-          sleep(1);
+          // sleep(1);
         }
     }
     //合并最终的需要处理的数据
