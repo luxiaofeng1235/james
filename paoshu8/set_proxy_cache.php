@@ -74,21 +74,23 @@ if(!$redis_cache_key){
     }
 }
 
-$pro_type = isset($argv[3]) ? $argv[3] : 1;
-if($pro_type == 1){
-    //直连IP
-    $url = Env::get('ZHIMAURL');
-}else if($pro_type ==2){
-    //隧道IP
-    $url = Env::get('ZHIMA_SUIDAO');
-}
-// $url = Env::get('YILIANURL'); //使用一连的IP进行访问
+// $pro_type = isset($argv[3]) ? $argv[3] : 1;
+// if($pro_type == 1){
+//     //直连IP
+//     $url = Env::get('ZHIMAURL');
+// }else if($pro_type ==2){
+//     //隧道IP
+//     $url = Env::get('ZHIMA_SUIDAO');
+// }
+$url = Env::get('YILIANURL'); //使用一连的IP进行访问
+
 echo "proxy-url： {$url} \r\n";
 $proxy_conf = [];
 echo "cache_key：".$redis_cache_key."\r\n";
 $host  =  isset($argv[2]) ? trim($argv[2]) : Env::get('APICONFIG.PAOSHU_HOST') ;
 echo "检测的url：".$host."\r\n";
 // $redis_data->del_redis($redis_cache_key);
+// echo 1;die;
 $proxy = $redis_data->get_redis($redis_cache_key);
 
 
@@ -119,8 +121,8 @@ if(!$proxy){
     $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数
     //判断如果小于十分钟就删掉缓存，重新 获取
     if($minutes <= 10){
-        echo "为了保证爬虫程序的可用性，提升效率，当前缓存小于{$minutes}分钟 ，需要清理掉缓存：{$redis_cache_key}，重新获取\r\n";
-        $redis_data->del_redis($redis_cache_key);
+        // echo "为了保证爬虫程序的可用性，提升效率，当前缓存小于{$minutes}分钟 ，需要清理掉缓存：{$redis_cache_key}，重新获取\r\n";
+        // $redis_data->del_redis($redis_cache_key);
     }
     echo "剩余可用缓存时间：".$minutes." minutes\r\n";
     echo '<pre>';
