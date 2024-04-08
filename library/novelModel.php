@@ -1387,10 +1387,6 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
             if($curl_contents1){
                 foreach($curl_contents1 as $tkey=> $tval){
                   //防止有空数据跳不出去,如果非请求失败确实是空，给一个默认值
-                  // if(!strstr($tval, '请求失败')  && empty($tval)){
-                  //     //$tval ='此章节作者很懒，什么也没写';
-                  // }
-
                   if($type =='ghttp'){//ghttp验证方式
                     //判断返回页面里不为空的情况，还要判断是否存在异常 如果不是200会返回guzzle自定义错误根据这个来判断
                       if(!empty($tval)
@@ -1411,28 +1407,23 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                       //如果没有匹配到id="content"说明页面缺了，需要重新补
                     // echo 1111;
                      if(empty($tval)){//为空的情况
-                       echo "章节数据内容为空======================{$urls[$tkey]}\r\n";
+                        echo "章节数据内容为空======================{$urls[$tkey]}\r\n";
                         $temp_url[] =$urls[$tkey];
-                        //断章处理
-                     }else if(!preg_match('/id="content"/',$tval) ){
-                      echo "有断章======================{$urls[$tkey]}\r\n";
-                          // echo '<pre>';
-                          // print_R($tval);
-                          // echo '</pre>';
-                          // exit;
+                     }else if(!preg_match('/id="content"/',$tval) ){//断章处理
+                        echo "有断章======================{$urls[$tkey]}\r\n";
                           $temp_url[] =$urls[$tkey];
                       }else{
                           $repeat_data[] = $tval;
                           unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
+                          unset($curl_contents1[$tkey]);
                           $successNum++;
                       }
                   }
               }
-              // sleep(1);
               $urls = $temp_url; //起到指针的作用，每次只存失败的连接
               $urls = array_values($urls);//重置键值，方便查找
+              $curl_contents1 =array_values($curl_contents1);//获取最新的数组
             }
-            // $curl_contents1 =array_values($curl_contents1);//获取最新的数组
             //如果已经满足所有都取出来就跳出来
             if($old_num == $successNum){
                 echo "数据清洗完毕等待入库\r\n";

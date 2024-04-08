@@ -117,6 +117,7 @@ if(!$proxy){
     $proxy_conf = json_decode($proxy , true);
     $ttl =$redis_data->ttl($redis_cache_key); //获取缓存的可用时间
     $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数
+    //判断如果小于十分钟就删掉缓存，重新 获取
     if($minutes <= 10){
         echo "为了保证爬虫程序的可用性，提升效率，当前缓存小于{$minutes}分钟 ，需要清理掉缓存：{$redis_cache_key}，重新获取\r\n";
         $redis_data->del_redis($redis_cache_key);
