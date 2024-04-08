@@ -992,8 +992,8 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
   /*
      * @param $txt_path string 存储的路径
-     * @param $data array 需要处理的
-     * @return mixed
+     * @param $data array 需要处理的章节列表
+     * @return array
      */
   public  static  function getDataListItem($data,$txt_path){
         if(!$data)

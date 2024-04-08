@@ -83,6 +83,7 @@ if($pro_type == 1){
     // $url = Env::get('ZHIMA_SUIDAO');
 }
 $url = Env::get('YILIANURL'); //使用一连的IP进行访问
+echo "proxy-url： {$url} \r\n";
 $proxy_conf = [];
 echo "cache_key：".$redis_cache_key."\r\n";
 $host  =  isset($argv[2]) ? trim($argv[2]) : Env::get('APICONFIG.PAOSHU_HOST') ;
