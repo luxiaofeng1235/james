@@ -117,6 +117,10 @@ if(!$proxy){
     $proxy_conf = json_decode($proxy , true);
     $ttl =$redis_data->ttl($redis_cache_key); //获取缓存的可用时间
     $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数
+    if($minutes <= 10){
+        echo "当前缓存小于{$minutes}分钟 ，需要清理掉缓存：{$redis_cache_key}，重新获取\r\n";
+        $redis_data->del_redis($redis_cache_key);
+    }
     echo "剩余可用缓存时间：".$minutes." minutes\r\n";
     echo '<pre>';
     var_dump($proxy_conf);
