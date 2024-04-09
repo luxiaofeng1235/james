@@ -8,17 +8,14 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
-
-// $t = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=100&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
-//  dd($t);
 $num = 300; //最多只能配置300个
 $limit = 100;
 $t= ceil($num/$limit);
 $items =[];
 for ($i=0; $i <$t ; $i++) {
-    $proxy  = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=100&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
+    $proxy  = webRequest('https://api.caiji.com//web_v1/ip/get?key=a07e7c2bc0fffef9ac12b081d0f66887&quantity=100&format=json&protocol=3&region=&nr=3&lb=%5Cn&ip_type=1','GET');
     $data = json_decode($proxy,true);
-    $proxy_list = $data['data'] ?? [];
+    $proxy_list = $data['data']['list'] ?? [];
     $items = array_merge($proxy_list,$items);
 }
 
@@ -30,7 +27,6 @@ if(count($items)>0){
         }
     }
 }
-
 
 
 $i = 0;
