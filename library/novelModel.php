@@ -1434,7 +1434,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
 
           $must_count = count($temp_url);
           if($must_count>0){
-              echo "---------------当前有（".count($temp_url)."）个URL需要重新去获取\r\n";
+              echo "---------------当前有（".$must_count."）个URL需要重新去获取\r\n";
           }
           $urls = $temp_url; //起到指针的作用，每次只存失败的连接
           $urls = array_values($urls);//重置键值，方便查找
