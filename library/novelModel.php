@@ -302,7 +302,11 @@ class NovelModel{
       $title = str_replace('?','\?',$title);
       $title = str_replace('{','\{',$title);
       $title = str_replace('}','\}',$title);
-      //{ }
+      $title = str_replace('*','\*',$title);
+      $title = str_replace('+','\+',$title);
+      $title = str_replace('$','\$',$title);
+      $title = str_replace('^','\^',$title);
+      $title = str_replace('|','\|',$title);
       preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
@@ -1397,7 +1401,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
         while(true){//连接总数和请求成功数量不一致轮训
             //重新请求对应的信息
             $curl_contents1 = curl_pic_multi::Curl_http($urls,$proxy_type);
-            echo "================11111\r\n";
+            // echo "================11111\r\n";
             $temp_url =[];//设置中间变量，如果是空的，就需要把对应的URL加到临时变量里
             foreach($curl_contents1 as $tkey=> $tval){
               //防止有空数据跳不出去,如果非请求失败确实是空，给一个默认值
