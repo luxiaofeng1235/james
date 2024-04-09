@@ -34,8 +34,8 @@ foreach($file as &$v){
 // $file[]=11431;
 
 $sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where store_id in (".implode(',',$file).")";
-$sql .= $order_by;
-$sql .= " limit ".$limit;
+// $sql .= $order_by;
+// $sql .= " limit ".$limit;
 // echo "sql = {$sql}\n\n";
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
@@ -62,6 +62,7 @@ if($info){
         $author_data = explode('：',$store_data['author']);
         $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
         $store_data['author']  = $author;
+
 
 
         $novel_list_path = Env::get('SAVE_JSON_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']).'.' .NovelModel::$json_file_type;
