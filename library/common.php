@@ -1226,4 +1226,19 @@ function combineProxyParam($data){
 	if(!isset($data['ip'])) $data['ip'] = $data['real_ip'];
 	return $data;
 }
+
+
+/**
+ * @param   string     $path [要读取的文件目录]
+ */
+function traverse($dir = '.') {
+	// 使用 glob() 函数获取指定目录下的所有 txt 文件
+	$file_list = glob($dir . "/*.txt");
+	$list= [];
+	// 循环遍历文件列表并输出每个文件的名称
+	foreach($file_list as $file) {
+	    $list[]=$file;
+	}
+	return $list;
+}
 ?>

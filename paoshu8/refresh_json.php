@@ -30,6 +30,13 @@ foreach($file as &$v){
 }
 
 
+$file_path = '/mnt/book/txt/9a7819bc9a00853972f2d6a985310647';
+$a = traverse($file_path);
+echo '<pre>';
+print_R($a);
+echo '</pre>';
+exit;
+
 
 // $file[]=11431;
 
@@ -77,7 +84,7 @@ if($info){
             $item_list = buildChapterList($chapter_detail , $value);
             //创建生成json文件信息
             NovelModel::createJsonFile($store_data,$item_list,0);
-            echo "num =".($key+1)." \t title={$title} \t store_id = {$store_id}\t pro_book_id={$pro_book_id} \t url ={$story_link} \t path = {$novel_list_path} success \r\n";
+            //echo "num =".($key+1)." \t title={$title} \t store_id = {$store_id}\t pro_book_id={$pro_book_id} \t url ={$story_link} \t path = {$novel_list_path} success \r\n";
         }else{
             echo "num =".($key+1)." \t title={$title} \t store_id ={$store_id} \t pro_book_id={$pro_book_id} \t url ={$story_link} 未匹配到有效素信息，也有可能是HTML页面不存在~~ \r\n";
         }
