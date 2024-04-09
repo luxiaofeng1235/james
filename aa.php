@@ -8,13 +8,33 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
-$proxy  = webRequest('http://ecs.hailiangip.com:8422/api/getIpEncrypt?dataType=0&encryptParam=hlO0aECNPaPLHh%2FQCQa9hsxrfzbHJWGb6%2FsQJ3YVrT0X%2FsVO8CHIT0v%2BNyjIbq3zpBDjWaFanY7Cf9Ne6HsyjdbFMeNl%2BQujIra%2BIuHco0jd5SSdiOM%2B8YRmU3L%2BgB9n1sjjsFInFNjvV63k3FBn6ajrxtOMzo76q83%2FR4VuBHkCI4n3zNJRvRomO6LLTrnlpPABNYNJWkHTfNKd0rPvTPUil3KO10lMkIvLEBHnQaK1wR5I2YDRY2EeNxfzC4go','GET');
-$data = json_decode($proxy,true);
+
+// $t = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=100&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
+//  dd($t);
+$num = 300; //最多只能配置300个
+$limit = 100;
+$t= ceil($num/$limit);
+$items =[];
+for ($i=0; $i <$t ; $i++) {
+    $proxy  = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=100&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
+    $data = json_decode($proxy,true);
+    $proxy_list = $data['data'] ?? [];
+    $items = array_merge($proxy_list,$items);
+}
+
+$new_proxy  =[];
+if(count($items)>0){
+    foreach($items as $key =>$val){
+        if($key<$num){
+            $new_proxy[$key] = $val;
+        }
+    }
+}
 
 
-$proxy_list = $data['data'] ?? [];
+
 $i = 0;
-foreach($proxy_list as $proxy){
+foreach($new_proxy as $proxy){
     $i++;
     $a = curlProxyState('http://www.paoshu8.info/0_859/653518.html',$proxy);
     echo "num = {$i}\r\n";
