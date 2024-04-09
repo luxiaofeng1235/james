@@ -8,20 +8,16 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 
+$proxy  = webRequest('http://ecs.hailiangip.com:8422/api/getIpEncrypt?dataType=0&encryptParam=hlO0aECNPaPLHh%2FQCQa9hsxrfzbHJWGb6%2FsQJ3YVrT0X%2FsVO8CHIT0v%2BNyjIbq3zpBDjWaFanY7Cf9Ne6HsyjdbFMeNl%2BQujIra%2BIuHco0jd5SSdiOM%2B8YRmU3L%2BgB9n1sjjsFInFNjvV63k3FBn6ajrxtOMzo76q83%2FR4VuBHkCI4n3zNJRvRomO6LLTrnlpPABNYNJWkHTfNKd0rPvTPUil3KO10lMkIvLEBHnQaK1wR5I2YDRY2EeNxfzC4go','GET');
+$data = json_decode($proxy,true);
 
 
-
-
-for ($i=0; $i <30 ; $i++) {
-    $proxy = webRequest('http://ecs.hailiangip.com:8422/api/getIpEncrypt?dataType=0&encryptParam=7BYsDsYKbGv0BaoQFxmvoiBYXf0wSdR0KIhVhoMMPHvy912xFHA3Hogn7b2rQpv2TAPxqz%2BD3F%2BiIdEhmw93k0%2BjEoS1HAyHOY8F%2Bua%2FNla9b8ToG49sDIs6jE9LaRypEp%2BbA%2FqaZsFV2Aqr4SqBNM3iLuaDofyoj6QuX2Ikm6FXwMMY2Pp7wRNtgRIJmPbHvs3ERyFHZ9FAgNS8WBDIMl7%2FeDXlL0x6IKTgy4kKtwD10%2FrggxuKwg%2Fa3uSVATqr','GET');
-
-    $data = json_decode($proxy,true);
-    echo '<pre>';
-    var_dump($data);
-    echo '</pre>';
-    $proxy_data = $data['data'][0]??[];
-    $a = curlProxyState('http://www.baidu.com',$proxy_data);
-    echo "num = ".($i+1).PHP_EOL;
+$proxy_list = $data['data'] ?? [];
+$i = 0;
+foreach($proxy_list as $proxy){
+    $i++;
+    $a = curlProxyState('http://www.paoshu8.info/0_859/653518.html',$proxy);
+    echo "num = {$i}\r\n";
 }
 echo "over\r\n";
 die;
