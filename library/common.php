@@ -748,8 +748,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		$img_proxy_type
 	);
 
-	$rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
-
+	$rand_str =ClientModel::getCurlRandProxy();//基础小说的代理IP
 	//curl轮训进行请求
 	$list  = NovelModel::callRequests($list , $new_data,$valid_curl,$rand_str);
 	if(!$list) $list = [];
@@ -789,10 +788,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 
 	//最终需要请求的列表
 	$finalList = curl_pic_multi::Curl_http(array_column($new_list,'mobile_url'),$empty_proxy_type);
-	$temp_proxy_arr  =$proxy_arr;
-	$rand_str_new =$temp_proxy_arr[mt_rand(0,count($temp_proxy_arr)-1)]; //随机代理重新分配
-	// $finalList =  guzzleHttp::multi_req(array_column($new_list,'mobile_url'),'story');
-	// unset($new_list);
+	$rand_str_new = ClientModel::getCurlRandProxy();//基础小说的代理IP
 	//重复请求，防止数据丢失
 	$finalList = NovelModel::callRequests($finalList , $new_list,$valid_curl,$rand_str_new);
 	// unset($new_data);
