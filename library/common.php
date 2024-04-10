@@ -728,6 +728,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		 ];
 	}
 	$urls = array_column($new_data,'mobile_url');
+	$detail_proxy_type  = ClientModel::getCurlRandProxy();
 	$list = curl_pic_multi::Curl_http($urls,$detail_proxy_type); //默认用同步基础信息的代理取抓
 	if(!$list || empty($list)){//说明代理已经到期
 		echo "代理已经到期了，请等待下一轮\r\n";
@@ -739,7 +740,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	//curl轮训进行请求
 	$list  = NovelModel::callRequests($list , $new_data,$valid_curl,$rand_str);
 	if(!$list) $list = [];
-
 	$allNovel = [];
 	if($list){
 		global $urlRules;
@@ -774,12 +774,11 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	sleep(1);
 
 	//最终需要请求的列表
-	$finalList = curl_pic_multi::Curl_http(array_column($new_list,'mobile_url'),$empty_proxy_type);
+	$proxy_type = ClientModel::getCurlRandProxy();
+	$finalList = curl_pic_multi::Curl_http(array_column($new_list,'mobile_url'),$proxy_type);
 	$rand_str_new = ClientModel::getCurlRandProxy();//基础小说的代理IP
 	//重复请求，防止数据丢失
 	$finalList = NovelModel::callRequests($finalList , $new_list,$valid_curl,$rand_str_new);
-	// unset($new_data);
-	// $finalList = curl_pic_multi::Curl_http($new_list,4);
 	if($finalList){
 		foreach($finalList as $ck =>$cv){
 			// if(!$cv) continue;
@@ -789,7 +788,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 			$meta_data = $html['meta_data']??''; //meta表亲爱
 			$first_line = $html['first_line'] ?? '';//获取第一行的数据信息
 			//获取每页的页码位置信息
-
 			// echo $page_link_url."\r\n";
 			//处理为空的情况
 			//处理剔除第一行的标题显示和替换掉“本章未完，请点击下一页继续阅读”这种字样
@@ -823,12 +821,9 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
             $html_contents[$page_link_url] = $store_content;
 		}
 	}
-	// unset($finalList);
 	if(!$html_contents){
 		return [];
 	}
-
-
 	$store_data= $tdk =[];
 	foreach($html_contents as $ggk =>$ggv){
 		  $index  = substr($ggk, 0, -2);

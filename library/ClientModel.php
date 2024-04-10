@@ -36,8 +36,9 @@ class ClientModel{
     * @return array
     */
     public static function getClientContents($item=[],$store_id=0,$txt_path=''){
-        if(!$item)
-        return false;
+        if(!$item){
+            return [];
+        }
         $data_arr  = NovelModel::exchange_urls($item,$store_id,'count');
         $chapetList = [];
         foreach($data_arr as $m_key=> $gr){
@@ -47,7 +48,7 @@ class ClientModel{
              //存对饮的URL信息
              $chapetList[$mobilePath] = [
                     //拼装移动端的地址
-                    'path'  =>  Env::get('SAVE_NOVEL_PATH') .DS .$txt_path.DS.md5($gr['link_name']).'.'.NovelModel::$file_type,
+                    'path'  =>  $txt_path.DS.md5($gr['link_name']).'.'.NovelModel::$file_type,
                     'chapter_name'  =>  $gr['chapter_name'],
                     'chapter_link'  =>  $gr['chapter_link'],
                     'chapter_mobile_link'   =>  substr($gr['mobile_url'] , 0 , -2),
@@ -56,6 +57,10 @@ class ClientModel{
         $valid_ghttp ='ghttp';//ghttp验证
         $urls = array_column($new_data,'mobile_url');
         $list = guzzleHttp::multi_req($urls,self::$first_proxy_name);
+        echo '<pre>';
+        print_R($list);
+        echo '</pre>';
+        exit;
         if(!$list || empty($list)){//说明代理已经到期
             echo "代理已经到期了，请等待下一轮\r\n";
             NovelModel::killMasterProcess();//退出主程序
@@ -64,6 +69,10 @@ class ClientModel{
 
         $rand_str = self::getRandProxy();//随机获取代理
         $list  = self::callRequests1($list , $new_data,$valid_ghttp,$rand_str);
+        echo '<pre>';
+        print_R($list);
+        echo '</pre>';
+        exit;
         global $urlRules;//获取指定的抓取规则
         $rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
         $allNovel = [];

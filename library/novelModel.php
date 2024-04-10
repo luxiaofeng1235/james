@@ -1408,14 +1408,17 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
               //防止有空数据跳不出去,如果非请求失败确实是空，给一个默认值
               if($type =='ghttp'){//ghttp验证方式
                 //判断返回页面里不为空的情况，还要判断是否存在异常 如果不是200会返回guzzle自定义错误根据这个来判断
-                  if(!empty($tval)
-                    && (!strstr($tval,'您当前访问的页面存在安全风险') || !strstr($tval,'请求失败'))
-                 ){
-                        $repeat_data[] = $tval;
-                        unset($urls[$tkey]); //已经存在就踢出去，下次就不用重复计算了
-                        $i++;
-                  }else{//为空保存urls去遍历循环
-                    $temp_url[]=$urls[$tkey]; //说明请求里有空的html,把空的连接保存下来
+                if(empty($tval)){//为空的情况
+                    echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
+                    $temp_url[] =$urls[$tkey];
+                 }else if(!preg_match('/id="content"/',$tval) ){//断章处理，包含有502的未响应都会
+                    echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
+                    $temp_url[] =$urls[$tkey];
+                  }else{
+                      $repeat_data[] = $tval;
+                      unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
+                      unset($curl_contents1[$tkey]);
+                      $successNum++;
                   }
               }else if($type =='curl'){//采用curl来验证
                  if(empty($tval)){//为空的情况
@@ -1484,6 +1487,7 @@ public static function killMasterProcess(){
 *
 * @param  $goods_list array 章节信息
 * @param  $data array 关联章节数组
+* @param $type staring 类型 curl :curl判断 ghttp:通过ghttp来判断
 * @return array
 */
 public static function getErrSucData($content,$data,$type='ghttp'){
@@ -1496,13 +1500,13 @@ public static function getErrSucData($content,$data,$type='ghttp'){
          if($type == 'ghttp'){
               //如果存在这个就需要去判断
             //如果存在503或者抓取有大量被举报的返回值就需要去判断
-            if(strstr($val,'您当前访问的页面存在安全风险') || strstr($val,'请求失败')){
-                $errData[] =$data[$key] ?? [];//记录失败的
-            }else if(!preg_match('/id="content"/',$val) ){//断章处理
-                $errData[] =$data[$key] ?? [];
-            }else{
-                $sucData[] = $val;//记录成功的
-            }
+              if(empty($val)){//如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
+                  $errData[] =$data[$key] ?? [];
+              }else if(!preg_match('/id="content"/',$val) ){//断章处理
+                  $errData[] =$data[$key] ?? [];
+              }else{
+                  $sucData[] = $val;
+              }
           }else if($type =='curl'){ //采用curl来进行验证
           // if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde')){
               if(empty($val)){//如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
