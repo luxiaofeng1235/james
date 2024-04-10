@@ -148,8 +148,6 @@ if($info){
             $now_time = time();
             //重新赋值进行计算
             $chapter_detal = $rt;
-            //处理章节里的前后空格+过滤章节含有广告的类目
-            $chapter_detal =NovelModel::removeDataRepeatStr($chapter_detal);
             foreach($chapter_detal as $val){
                 $link_url = trim($val['link_url']);
                 $chapter_ret= explode('/',$link_url);

@@ -152,17 +152,6 @@ class FileFactory{
             $chapter_item = json_decode($json_data,true);
             if(!$chapter_item)
                 return false;
-             //构造函数处理广告
-            $removeAdInfo = function($arr){
-                foreach($arr as &$val){
-                    $val['link_name'] = $val['chapter_name'];
-                }
-                //移除广告章节
-                $list = NovelModel::removeAdInfo($arr);
-                return $list;
-            };
-             //处理广告并移除关联章节
-            $chapter_item  = $removeAdInfo($chapter_item);
             if(!$chapter_item){
                 $this->updateStatusInfo($store_id);
                 $this->updateIndexStatus($store_id);

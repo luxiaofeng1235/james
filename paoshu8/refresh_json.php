@@ -31,7 +31,7 @@ foreach($file as &$v){
 
 // $file[]=11431;
 
-$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where store_id in (156870)";
+$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where 1 and pro_book_id>0";
 // $sql .= $order_by;
 // $sql .= " limit ".$limit;
 // echo "sql = {$sql}\n\n";
@@ -70,7 +70,6 @@ if($info){
         if(!empty($rt)){
             $chapter_detail = $rt;
             //去除章节里的首尾空格，并移除广告章节重组数据
-            $chapter_detail =NovelModel::removeDataRepeatStr($chapter_detail);
             //处理相关数据
             $item_list = buildChapterList($chapter_detail , $value);
             //创建生成json文件信息

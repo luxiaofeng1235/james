@@ -121,18 +121,6 @@ function ayncCountItem($info,$redis_data){
         $count_status!=1 &&   updateCountStatus($store_id);
         return '无此章节记录';
     }
-
-    //构造函数处理广告
-    $removeAdInfo = function($arr){
-        foreach($arr as &$val){
-            $val['link_name'] = $val['chapter_name'];
-        }
-        //移除广告章节
-        $list = NovelModel::removeAdInfo($arr);
-        return $list;
-    };
-    //处理广告并移除关联章节
-    $chapter_list = $removeAdInfo($chapter_list);
     if(!$chapter_list){
         $count_status!=1 &&  updateCountStatus($store_id);
         return "去除广告后就没有章节了 \r\n";

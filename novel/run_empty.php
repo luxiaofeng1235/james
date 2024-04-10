@@ -82,28 +82,6 @@ if(!empty($info)){
         exit("暂无关联章节json \r\n");
     }
     $i = 0;
-    //构造函数处理广告
-    $removeAdInfo = function($arr){
-        foreach($arr as &$val){
-            $val['link_name'] = $val['chapter_name'];
-        }
-        //移除广告章节
-        $list = NovelModel::removeAdInfo($arr);
-        return $list;
-    };
-
-
-
-    //处理广告并移除关联章节
-    $chapter_list = $removeAdInfo($chapter_list);
-    if(!$removeAdInfo){
-        echo "去除广告后未 发现有需要同步的章节\r\n";
-        updateFewStatus($pro_book_id);
-        NovelModel::killMasterProcess();//退出主程序(
-        exit(1);
-    }
-
-    $i = 0;
     foreach($chapter_list as $val){
         //当前的章节路径的名称
         $filename =$txt_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
