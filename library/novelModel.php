@@ -1076,9 +1076,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
               //替换文本中的P标签
               $store_content = str_replace("<p>",'',$store_content);
               $store_content = str_replace("</p>","\n\n",$store_content);
-              //替换try{.....}cache的一段话JS这个不需要了
+              //替换try{.....}cache的一段话JS这个不需要了,还有一些特殊字符
               $store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
               $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
+              $store_content = preg_replace('/content1()/','',$store_content);
             }
             $store_c[$html_path] = $store_content;
           }

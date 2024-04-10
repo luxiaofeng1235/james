@@ -9,7 +9,16 @@ tw2sp.json 繁体（台湾正体标准）到简体并转换为中国大陆常用
 
 
 用法：
-$od = opencc_open("s2twp.json"); //传入配置文件名
-$text = opencc_convert("我鼠标哪儿去了。", $od);
+//简体转台湾繁体
+$od = opencc_open("s2twp.json");
+$text = opencc_convert("我鼠标哪儿去了。,台湾小说网,===人道大圣", $od);
 echo $text;
+echo "\r\n";
+opencc_close($od);
+
+//台湾繁体转简体
+$od = opencc_open("tw2sp.json");
+$text = opencc_convert("金發金眸，膚色暗金，渾身透著金屬光澤的張元清盤坐在虛空中，眉心是一輪金漆烈陽印記，腦後懸掛著淡淡的黑色圓月，時而浮現，時而隱匿", $od);
+echo $text;
+echo "\r\n";
 opencc_close($od);

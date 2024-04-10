@@ -834,6 +834,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 			$store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
 			$store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
             //组装html内容 ,必须用页面中的返回的进行组装
+            $store_content = preg_replace('/content1()/','',$store_content);
 
 			$currentPage = NovelModel::getCurrentPage($first_line);
 			//存储每一页的内容
