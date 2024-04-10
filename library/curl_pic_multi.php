@@ -96,24 +96,35 @@ public static function Rand_refer(){
         return false;
       $res = array();
       $proxy_data = [];
-      if($type == 1){//使用原生系统的代理请求
-          $proxy_data = getProxyInfo();
-      }else if ($type == 2){//移动端的代理请求
-          $proxy_data = getMobileProxy();
-      }else if($type ==3){//处理列表为空申请的带
-          $proxy_data = getMobileEmptyProxy();
-      }else if($type ==4){//处理基础章节的基础配置类
-          $proxy_data = getZhimaProxy();
-      }else if($type ==5){
-          $proxy_data = getImgProxy();//获取下载图片使用的代理
-      }
-
+      // if($type == 1){//使用原生系统的代理请求
+      //     $proxy_data = getProxyInfo();
+      // }else if ($type == 2){//移动端的代理请求
+      //     $proxy_data = getMobileProxy();
+      // }else if($type ==3){//处理列表为空申请的带
+      //     $proxy_data = getMobileEmptyProxy();
+      // }else if($type ==4){//处理基础章节的基础配置类
+      //     $proxy_data = getZhimaProxy();
+      // }else if($type ==5){
+      //     $proxy_data = getImgProxy();//获取下载图片使用的代理
+      // }
+      $proxy_info = webRequest('http://api.yilian.top/v2/proxy/proxies?token=TnFOk8GFECExUxpkdbFrEklkAx7Ubhq4&pull_num=1&format=json&protocol=3&separator=1','GET');
+      // $proxy_info = webRequest('https://api.caiji.com//web_v1/ip/get?key=a07e7c2bc0fffef9ac12b081d0f66887&quantity=1&format=json&protocol=3&region=&nr=2&lb=%5Cn&ip_type=1','GET');
+      $tdata = json_decode($proxy_info,true);
+      $proxy_data = $tdata['data'][0] ??[];
+      //转换字段
+      $proxy_data = combineProxyParam($proxy_data);
+      // $t = var_export($proxy_data,true);
+      // echo "当前代理信息：$t\r\n";
       // //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
           NovelModel::killMasterProcess(); //结束当前进程
           exit(1);
       }
+      echo '<pre>';
+      print_R($proxy_data);
+      echo '</pre>';
+      exit;
     //伪造referer地址
     $referer = self::Rand_refer();
     //伪造客户端IP进行访问，
@@ -140,7 +151,7 @@ public static function Rand_refer(){
          // 设置连接超时时间，单位是秒
           curl_setopt($conn[$k], CURLOPT_CONNECTTIMEOUT, self::$connection_timeout);
           curl_setopt($conn[$k], CURLOPT_HTTPHEADER, $headerIp);//追踪返回302状态码，继续抓取
-          curl_setopt($conn[$k], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3');//设置发送的user-agent信息
+          curl_setopt($conn[$k], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0');//设置发送的user-agent信息
           curl_setopt($conn[$k],CURLOPT_REFERER,$referer); //启用referer伪造url,模拟来路
           curl_setopt($conn[$k],CURLOPT_ENCODING,'gzip');//启用解压缩
           // 超过1024字节解决方法
