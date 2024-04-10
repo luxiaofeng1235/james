@@ -789,13 +789,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 			$meta_data = $html['meta_data']??''; //meta表亲爱
 			$first_line = $html['first_line'] ?? '';//获取第一行的数据信息
 			//获取每页的页码位置信息
-			if(empty($meta_data) || empty($first_line)){
-				// echo "meta信息为空了 {$new_list[$ck]['mobile_url']} \r\n";
-				// echo '<pre>';
-				// print_R($cv);
-				// echo '</pre>';
-				// echo "000000000000000000000000000000\r\n";
-			}
 
 			// echo $page_link_url."\r\n";
 			//处理为空的情况
@@ -835,12 +828,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		return [];
 	}
 
-	// echo '<pre>';
-	// print_R($html_contents);
-	// echo '</pre>';
-	// exit;
-	//对返回的数组做排序,防止数据章节错乱
-	// $html_contents = NovelModel::sortHtmlData($html_contents);
 
 	$store_data= $tdk =[];
 	foreach($html_contents as $ggk =>$ggv){
