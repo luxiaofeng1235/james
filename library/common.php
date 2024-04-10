@@ -710,6 +710,7 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		return false;
 	$valid_curl = 'curl';//curl验证
 	$valid_ghttp ='ghttp';//ghttp验证
+
 	//返回移动端的地址转换
 	$data_arr  = NovelModel::exchange_urls($item,$store_id,'count');
 	$chapetList = [];
@@ -726,10 +727,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		 		'chapter_mobile_link'	=> substr($gr['mobile_url'] , 0 , -2),
 		 ];
 	}
-	$detail_proxy_type =4;//基础小说的代理IP
-	$count_proxy_type= 2;//列表为空的代理IP
-	$empty_proxy_type =3;//修补数据的代理IP
-	$img_proxy_type =5;//处理图片的代理IP
 	$urls = array_column($new_data,'mobile_url');
 	$list = curl_pic_multi::Curl_http($urls,$detail_proxy_type); //默认用同步基础信息的代理取抓
 	if(!$list || empty($list)){//说明代理已经到期
@@ -737,16 +734,6 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 		NovelModel::killMasterProcess();//退出主程序
 		exit(1);
 	}
-
-	//重复调用，防止有空对象返回以防万一
-	//重复请求，防止数据丢失
-	//随机获取一个代理
-	$proxy_arr= array(
-		$detail_proxy_type,
-		$count_proxy_type,
-		$empty_proxy_type,
-		$img_proxy_type
-	);
 
 	$rand_str =ClientModel::getCurlRandProxy();//基础小说的代理IP
 	//curl轮训进行请求
