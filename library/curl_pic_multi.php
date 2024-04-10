@@ -108,14 +108,12 @@ public static function Rand_refer(){
       //     $proxy_data = getImgProxy();//获取下载图片使用的代理
       // }
       $proxy_info = webRequest('http://api.yilian.top/v2/proxy/proxies?token=TnFOk8GFECExUxpkdbFrEklkAx7Ubhq4&pull_num=1&format=json&protocol=3&separator=1','GET');
-      // $proxy_info = webRequest('http://ecs.hailiangip.com:8422/api/getIpEncrypt?dataType=0&encryptParam=7BYsDsYKbGv0BaoQFxmvoj9pKEmWH7kDAoD1ZC4KkxpHXuvLm%2B3L9xWaasGPtq4TD4PzJ6qNtYvPDeWghng4OZle47LxCo7TpKwolHoOml8O5k5L4f6YC4g4ALrRcQfdhiKrxLJvJOibES6IZc7ZlxQDBHKlIDdGoyGNnmIvqEVYDcvC%2FeTFVDIQgCd6Bl9z0AOtabf92lu9Nd5cdhcIj9zbJ280PfgKxcbaM9RRtYCtxFCQehkdZXg2FiRfhV0V','GET');
-      // $proxy_info = webRequest('https://api.caiji.com//web_v1/ip/get?key=a07e7c2bc0fffef9ac12b081d0f66887&quantity=1&format=json&protocol=3&region=&nr=2&lb=%5Cn&ip_type=1','GET');
+
+
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
       //转换字段
       $proxy_data = combineProxyParam($proxy_data);
-      // $t = var_export($proxy_data,true);
-      // echo "当前代理信息：$t\r\n";
       // //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;

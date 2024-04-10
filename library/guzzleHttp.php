@@ -120,7 +120,7 @@ class guzzleHttp{
             exit(1);
         }
 
-       $proxy_server =$proxy_data['ip'] .':'.$proxy_data['port'];
+        $proxy_server =$proxy_data['ip'] .':'.$proxy_data['port'];
         $client = new Client([
             'verify' => false,//配置认证
             'http_errors'     => true,

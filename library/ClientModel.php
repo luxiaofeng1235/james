@@ -54,6 +54,7 @@ class ClientModel{
                     'chapter_mobile_link'   =>  substr($gr['mobile_url'] , 0 , -2),
              ];
         }
+
         $valid_ghttp ='ghttp';//ghttp验证
         $urls = array_column($new_data,'mobile_url');
         $list = guzzleHttp::multi_req($urls,self::$first_proxy_name);

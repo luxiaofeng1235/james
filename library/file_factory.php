@@ -198,8 +198,12 @@ class FileFactory{
             echo "总分页总数：".$count_page." \t 每页步长数：$limit_size\n";
             foreach($items as $k =>&$v){
                 //抓取内容信息
-                $html_data = ClientModel::getClientContents($v,$store_id,$download_path);
-                // $html_data = getStoryCotents($v,0,$download_path);
+                // $html_data = ClientModel::getClientContents($v,$store_id,$download_path);
+                $html_data = getStoryCotents($v,0,$download_path);
+                echo '<pre>';
+                print_R($html_data);
+                echo '</pre>';
+                exit;
                 // $html_data= NovelModel::getDataListItem($v,$download_path);
                 if($html_data){
                     $a_num =0;
