@@ -1,4 +1,6 @@
 <?php
+//Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0
+//Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
@@ -33,6 +35,10 @@ $i = 0;
 foreach($new_proxy as $proxy){
     $i++;
     $a = curlProxyState('http://www.paoshu8.info/0_859/653518.html',$proxy);
+    echo '<pre>';
+    print_R($a);
+    echo '</pre>';
+    exit;
     echo "num = {$i}\r\n";
 }
 echo "over\r\n";

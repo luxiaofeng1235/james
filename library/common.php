@@ -1222,8 +1222,8 @@ function array_iconv($arr, $in_charset="gbk", $out_charset="utf-8")
 function combineProxyParam($data){
 	if(!$data)
 		return [];
-	if(!isset($data['port'])) $data['port'] = $data['proxy_port'];//端口转换
-	if(!isset($data['ip'])) $data['ip'] = $data['real_ip'];
+	if(!isset($data['port'])) $data['port'] = $data['proxy_port'] ?? '';//端口转换
+	if(!isset($data['ip'])) $data['ip'] = $data['real_ip'] ?? '';
 	return $data;
 }
 
