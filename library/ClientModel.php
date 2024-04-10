@@ -57,10 +57,6 @@ class ClientModel{
         $valid_ghttp ='ghttp';//ghttp验证
         $urls = array_column($new_data,'mobile_url');
         $list = guzzleHttp::multi_req($urls,self::$first_proxy_name);
-        echo '<pre>';
-        print_R($list);
-        echo '</pre>';
-        exit;
         if(!$list || empty($list)){//说明代理已经到期
             echo "代理已经到期了，请等待下一轮\r\n";
             NovelModel::killMasterProcess();//退出主程序
@@ -69,10 +65,6 @@ class ClientModel{
 
         $rand_str = self::getRandProxy();//随机获取代理
         $list  = self::callRequests1($list , $new_data,$valid_ghttp,$rand_str);
-        echo '<pre>';
-        print_R($list);
-        echo '</pre>';
-        exit;
         global $urlRules;//获取指定的抓取规则
         $rules =$urlRules[Env::get('APICONFIG.PAOSHU_STR')]['mobile_content'];
         $allNovel = [];
@@ -161,6 +153,7 @@ class ClientModel{
                 //替换try{.....}cache的一段话JS这个不需要了
                 $store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
                 $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
+                $store_content = preg_replace('/content1()/','',$store_content);
                 //组装html内容 ,必须用页面中的返回的进行组装，否则会出现页面和文章错乱
                 $currentPage = NovelModel::getCurrentPage($first_line);
                 //存储每一页的内容
