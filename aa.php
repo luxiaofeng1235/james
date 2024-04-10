@@ -9,6 +9,14 @@ require_once($dirname.'/library/file_factory.php');
 // require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
+use sqhlib\Hanzi\HanziConvert;
+
+
+//繁体转简体
+$str = '平時已秉班揚筆,122 --臺湾';
+echo HanziConvert::convert($str);//默认是繁体转简体
+echo "\r\n";
+exit;
 
 $num = 300; //最多只能配置300个
 $limit = 100;

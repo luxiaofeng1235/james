@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'think\\view\\driver\\' => array($vendorDir . '/topthink/think-view/src'),
     'think\\' => array($vendorDir . '/topthink/think-template/src'),
+    'sqhlib\\Hanzi\\' => array($vendorDir . '/sqhlib/hanzi-convert/src'),
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'Yurun\\Util\\' => array($vendorDir . '/yurunsoft/yurun-http/src'),
     'Tightenco\\Collect\\' => array($vendorDir . '/tightenco/collect/src/Collect'),

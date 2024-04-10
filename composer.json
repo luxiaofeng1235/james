@@ -36,7 +36,8 @@
 		"react/event-loop": "^0.4.3",
          "mpdf/mpdf": "*",
 		"ares333/php-curl": "^4.6",
-        "yurunsoft/yurun-http": "~5.0"
+        "yurunsoft/yurun-http": "~5.0",
+		"sqhlib/hanzi-convert": "^1.1"
   },
 	"config": {
 		"secure-http": false

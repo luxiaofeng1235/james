@@ -787,17 +787,17 @@
                 },
                 {
                         "name": "guzzlehttp/promises",
-                        "version": "2.0.1",
-                        "version_normalized": "2.0.1.0",
+                        "version": "2.0.2",
+                        "version_normalized": "2.0.2.0",
                         "source": {
                                 "type": "git",
                                 "url": "https://github.com/guzzle/promises.git",
-                                "reference": "111166291a0f8130081195ac4556a5587d7f1b5d"
+                                "reference": "bbff78d96034045e58e13dedd6ad91b5d1253223"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/guzzle/promises/zipball/111166291a0f8130081195ac4556a5587d7f1b5d",
-                                "reference": "111166291a0f8130081195ac4556a5587d7f1b5d",
+                                "url": "https://api.github.com/repos/guzzle/promises/zipball/bbff78d96034045e58e13dedd6ad91b5d1253223",
+                                "reference": "bbff78d96034045e58e13dedd6ad91b5d1253223",
                                 "shasum": "",
                                 "mirrors": [
                                         {
@@ -810,10 +810,10 @@
                                 "php": "^7.2.5 || ^8.0"
                         },
                         "require-dev": {
-                                "bamarni/composer-bin-plugin": "^1.8.1",
-                                "phpunit/phpunit": "^8.5.29 || ^9.5.23"
+                                "bamarni/composer-bin-plugin": "^1.8.2",
+                                "phpunit/phpunit": "^8.5.36 || ^9.6.15"
                         },
-                        "time": "2023-08-03T15:11:55+00:00",
+                        "time": "2023-12-03T20:19:20+00:00",
                         "type": "library",
                         "extra": {
                                 "bamarni-bin": {
@@ -859,7 +859,7 @@
                         ],
                         "support": {
                                 "issues": "https://github.com/guzzle/promises/issues",
-                                "source": "https://github.com/guzzle/promises/tree/2.0.1"
+                                "source": "https://github.com/guzzle/promises/tree/2.0.2"
                         },
                         "funding": [
                                 {
@@ -1438,17 +1438,17 @@
                 },
                 {
                         "name": "mpdf/mpdf",
-                        "version": "v8.2.2",
-                        "version_normalized": "8.2.2.0",
+                        "version": "v8.2.3",
+                        "version_normalized": "8.2.3.0",
                         "source": {
                                 "type": "git",
                                 "url": "https://github.com/mpdf/mpdf.git",
-                                "reference": "596a87b876d7793be7be060a8ac13424de120dd5"
+                                "reference": "6f723a96becf989a831e38caf758d28364a69939"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/596a87b876d7793be7be060a8ac13424de120dd5",
-                                "reference": "596a87b876d7793be7be060a8ac13424de120dd5",
+                                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/6f723a96becf989a831e38caf758d28364a69939",
+                                "reference": "6f723a96becf989a831e38caf758d28364a69939",
                                 "shasum": "",
                                 "mirrors": [
                                         {
@@ -1481,7 +1481,7 @@
                                 "ext-xml": "Needed mainly for SVG manipulation",
                                 "ext-zlib": "Needed for compression of embedded resources, such as fonts"
                         },
-                        "time": "2023-11-07T13:52:14+00:00",
+                        "time": "2024-03-11T12:55:53+00:00",
                         "type": "library",
                         "installation-source": "dist",
                         "autoload": {
@@ -2819,6 +2819,51 @@
                                 }
                         ],
                         "install-path": "../setasign/fpdi"
+                },
+                {
+                        "name": "sqhlib/hanzi-convert",
+                        "version": "1.1",
+                        "version_normalized": "1.1.0.0",
+                        "source": {
+                                "type": "git",
+                                "url": "https://github.com/uutool/hanzi-convert.git",
+                                "reference": "ec3afe9ec3fd3af965291ec9cd3f7f1955010da1"
+                        },
+                        "dist": {
+                                "type": "zip",
+                                "url": "https://api.github.com/repos/uutool/hanzi-convert/zipball/ec3afe9ec3fd3af965291ec9cd3f7f1955010da1",
+                                "reference": "ec3afe9ec3fd3af965291ec9cd3f7f1955010da1",
+                                "shasum": "",
+                                "mirrors": [
+                                        {
+                                                "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                                                "preferred": true
+                                        }
+                                ]
+                        },
+                        "time": "2018-06-29T07:56:45+00:00",
+                        "type": "library",
+                        "installation-source": "dist",
+                        "autoload": {
+                                "psr-4": {
+                                        "sqhlib\\Hanzi\\": "src"
+                                }
+                        },
+                        "notification-url": "https://packagist.org/downloads/",
+                        "license": [
+                                "MIT"
+                        ],
+                        "authors": [
+                                {
+                                        "name": "sqh"
+                                }
+                        ],
+                        "description": "PHP中文繁简体字转换程序，支持繁体转简体或简体转繁体",
+                        "support": {
+                                "issues": "https://github.com/uutool/hanzi-convert/issues",
+                                "source": "https://github.com/uutool/hanzi-convert/tree/1.1"
+                        },
+                        "install-path": "../sqhlib/hanzi-convert"
                 },
                 {
                         "name": "symfony/deprecation-contracts",

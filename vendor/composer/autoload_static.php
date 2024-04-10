@@ -31,6 +31,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         's' => 
         array (
+            'sqhlib\\Hanzi\\' => 13,
             'setasign\\Fpdi\\' => 14,
         ),
         'Y' => 
@@ -129,6 +130,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'think\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-template/src',
+        ),
+        'sqhlib\\Hanzi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sqhlib/hanzi-convert/src',
         ),
         'setasign\\Fpdi\\' => 
         array (
