@@ -147,8 +147,8 @@ if($info){
         if(!empty($rt)){
             $now_time = time();
             //重新赋值进行计算
-            $chapter_detal = $rt;
-            foreach($chapter_detal as $val){
+            $chapter_detail = $rt;
+            foreach($chapter_detail as $val){
                 $link_url = trim($val['link_url']);
                 $chapter_ret= explode('/',$link_url);
                 $chapter_str=str_replace('.html','',$chapter_ret[2]);
