@@ -11,7 +11,19 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+$od = opencc_open("s2twp.json");
+$text = opencc_convert("我鼠标哪儿去了。", $od);
+echo $text;
+opencc_close($od);
+die;
 
+
+$aa = webRequest('https://www.xsw.tw/book/1655517.html','GET');
+$t = HanziConvert::convert($aa);
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
 //繁体转简体
 $str = '當過超人的都知道，無論是一拳超人，還是氪星之子，都是吊炸天的存在。一個鍛煉就能變強，一個曬太陽就能無敵，可當江瀾兩樣都獲得時。同學們竟瘋狂嘲諷他是廢物。隻因這個世界在覺醒時，需要喊出英雄的名字。他們竟然把琦玉老師稱為身穿黃色戰衣的禿子，更是稱呼超人為內褲外穿的暴露狂。導致覺醒時，隻能獲得他們千萬分之一的力量。穿越而來的江瀾，驚訝的發現，琦玉的天賦、超人的天賦竟然被劃為D級！在覺醒儀式上，江瀾因為是穿越而來，竟然可以選擇兩個天賦。他毫不猶豫的選擇了覺醒琦玉天賦和超人天賦，頓時招來無數人的嘲諷。“哈哈，這個弱智，居然選擇D級天賦。”“我變禿也變強了，隻能讓他變成一個禿頭廢物！”麵對嘲笑，江瀾隻是默默的堅持鍛煉、曬太陽。幾年後，麵對入侵的神級凶獸，全國上下一片絕望，人類的末日來臨了嗎？江瀾披上黃色戰衣，一拳將其轟成渣滓。所有人都沉默了，這，這不對吧......而無敵才剛剛開始！';
 echo HanziConvert::convert($str);//默认是繁体转简体
