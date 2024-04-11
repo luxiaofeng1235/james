@@ -40,12 +40,12 @@ class sort{
 	// }
 	//gbk占用两个字符 $str = ’hello你好世界’;
 
-	//echo strlen($str); 输出13array+combine 铜鼓欧联哥哥数组创建一个新的住宿 range范围内创建 compact 建立一个数组 
+	//echo strlen($str); 输出13array+combine 铜鼓欧联哥哥数组创建一个新的住宿 range范围内创建 compact 建立一个数组
 	//array_chunk数组分割成多个 array_slice 返回指定范围的数组 array_idff求茶几 array_intersect 求交集 array_merge合并数组
 	//array_search搜索数组 array_flip 交换数组中的k和v
 
 //php读取文件的方法有哪些？ fopen fread file_get_contetns
-////php加速扩展模式 zend opetion 加速器， 调试工具：xdebug 
+////php加速扩展模式 zend opetion 加速器， 调试工具：xdebug
 ///常用的mysql操作数据库命令：show databses show tables drop table inert into update 表明 set 字段=value wehre 条件
 ///delete fomr biaoming wehre tiao
 ///inert into se;ect * from orders whre order_id = xxx

@@ -10,6 +10,9 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
+echo 11111111111111111111;exit;
+echo 311112133;die;
+
 
 
 $urls[]='http://m.paoshu8.info/wapbook-198660-194130151/';
