@@ -12,11 +12,16 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-$urls[] = 'http://m.paoshu8.info/wapbook-198660-194130151/';
+$urls[]='http://m.paoshu8.info/wapbook-198660-194130151/';
 $urls[]='http://m.paoshu8.info/wapbook-198660-194034570/';
 $urls[]='http://m.paoshu8.info/wapbook-198660-194007568/';
 $urls[]='http://m.paoshu8.info/wapbook-198660-194034570/';
 $urls[]='http://m.paoshu8.info/wapbook-198660-194001601/';
+$urls[]='http://m.paoshu8.info/wapbook-3170-196470514/';
+$urls[]='http://m.paoshu8.info/wapbook-3170-196438636/';
+$urls[]='http://m.paoshu8.info/wapbook-3170-196148504/';
+$urls[]='http://m.paoshu8.info/wapbook-3170-196152737/';
+$urls[]='http://m.paoshu8.info/wapbook-3170-196164182/';
 
 
 $item = curl_pic_multi::Curl_http($urls);

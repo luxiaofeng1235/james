@@ -349,36 +349,6 @@ class NovelModel{
      }
    }
 
-
-
-   /**
-   * @note
-    *  //处理抓取中按照章节名称返回
-    //将章节中的全角符号转换成英文
-    //过滤调一些特殊分符号
-    *
-   * @param  $data array 处理的章节
-   * @return  array
-   */
-
-  public static function removeDataRepeatStr($data){
-      if(!$data) return false;
-      $t= [];
-      foreach($data as $key=>$val){
-          $link_name = replaceLRSpace($val['link_name']); //只替换首尾空格，
-          if(!empty($link_name)){
-              $t[] = [
-                  'link_name' =>$link_name,
-                  'link_url'  =>$val['link_url']
-              ];
-          }
-      }
-      $t= array_values($t);
-      //移除广告章节
-      $list = NovelModel::removeAdInfo($t);
-      return $list;
-  }
-
   /**
   * @note 获取M站的连接地址
   * @param string $msg

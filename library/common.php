@@ -1189,7 +1189,13 @@ function combineProxyParam($data){
 	if(!$data)
 		return [];
 	if(!isset($data['port'])) $data['port'] = $data['proxy_port'] ?? '';//端口转换
-	if(!isset($data['ip'])) $data['ip'] = $data['real_ip'] ?? '';
+	if(!isset($data['ip'])) $data['ip'] = $data['real_ip'] ?? '';//端口IP
+	//兼容其他代理返回的数据
+	if(isset($data['ip']) && strpos($data['ip'], ':')){
+		 $ipData = explode(':',$data['ip']);
+		 $data['ip'] = $ipData[0];
+		 $data['port'] = $ipData[1];
+	}
 	return $data;
 }
 

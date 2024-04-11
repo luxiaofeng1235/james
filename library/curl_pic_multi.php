@@ -109,11 +109,14 @@ public static function Rand_refer(){
       // }
       $proxy_info = webRequest('http://api.yilian.top/v2/proxy/proxies?token=TnFOk8GFECExUxpkdbFrEklkAx7Ubhq4&pull_num=1&format=json&protocol=3&separator=1','GET');
 
-
+      // $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
       //转换字段
       $proxy_data = combineProxyParam($proxy_data);
+      // ////隧道转发
+      // $proxy_data['ip']   = '110.42.9.74';
+      // $proxy_data['port'] = '10001';
       // //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
@@ -127,6 +130,7 @@ public static function Rand_refer(){
       'CLIENT-IP:'.self::Rand_IP(),
       'X-FORWARDED-FOR:'.self::Rand_IP(),
     );
+
       // if(!$proxy_data)
       //   return [];
       $mh = curl_multi_init();//创建多个curl语柄
