@@ -93,4 +93,4 @@ $Global['F_host'] = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] :'';
 $Global['F_time'] = time();
 
 
-// ob_end_flush();
+ob_end_flush();
