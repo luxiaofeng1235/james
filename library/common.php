@@ -336,9 +336,11 @@ function webRequest($url,$method,$params=[],$header = []){
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER,1);
 	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-	if(!empty($header)){
-		curl_setopt ( $curl, CURLOPT_HTTPHEADER, $header );
-	}
+	//重要！
+	curl_setopt($curl, CURLOPT_ACCEPT_ENCODING, "gzip,deflate");
+	// if(!empty($header)){
+	// 	curl_setopt ( $curl, CURLOPT_HTTPHEADER, $header );
+	// }
 	 curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3');//
 	//请求时间
 	$timeout = 30;
@@ -359,7 +361,7 @@ function webRequest($url,$method,$params=[],$header = []){
 	$data = curl_exec($curl);
 	$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 	curl_close($curl);//关闭cURL会话
-
+	//使用该函数对结果进行转码
 	return $data;
 }
 
@@ -1168,10 +1170,9 @@ function writeFileAppend($file_path , $content)
  */
 function array_iconv($arr, $in_charset="gbk", $out_charset="utf-8")
 {
+
 	$encode = mb_detect_encoding($arr,array("ASCII","GB2312","GBK",'BIG5','UTF-8'));
-
 	return iconv($encode, "UTF-8",$arr);
-
 	$ret =iconv($in_charset, $out_charset, $arr) ;
  	// $ret = eval('return '.iconv($in_charset,$out_charset,var_export($arr,true).';'));
  	return $ret;

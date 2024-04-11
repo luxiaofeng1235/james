@@ -80,14 +80,11 @@ if (is_file(dirname(__DIR__) . '/config/advert.php')) {
 
 //$mysql_obj = new Mysql_class();
 $mysql_obj =new Mysql_class(); //本地测试库
-$mysql_obj_pro = new Mysql_class_pro(); //线上操作库
 $http_client= new curl_http();
 $redis_data = new redis_codes();
 
 $socket_handle = new HttpClientRequest(); //定义socket链接类
-
 //$qdb = new sql_db($Q_MySQL['hostname'], $Q_MySQL['username'], $Q_MySQL['password'], $Q_MySQL['database']);
-
 $PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
 
 $Global['F_userip'] = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (!empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : @$_SERVER['REMOTE_ADDR']);
@@ -96,4 +93,4 @@ $Global['F_host'] = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] :'';
 $Global['F_time'] = time();
 
 
-ob_end_flush();
+// ob_end_flush();
