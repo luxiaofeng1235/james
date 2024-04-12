@@ -3,6 +3,8 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+
+
 // header('Content-Type: text/html; charset=big5');
 
 
