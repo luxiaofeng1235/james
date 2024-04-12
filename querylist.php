@@ -127,12 +127,13 @@ if(empty($content)){
 ////自动获取首页信息并爬取到本地
 $page = 'https://www.xsw.tw/allvisit_1.html';
 $reg = [
-    'img' =>['.pic img','src','',function($return) {
+    'img' =>['.pic img','src','',function($return) use($page) {
          if(!strstr($return, 'https')){
-                // $url = parse_url($page);
-                // $referer = $url['scheme'] . '://'.$url['host'];
-                return 1;
+            $url = parse_url($page);
+            $referer = $url['scheme'] . '://'.$url['host'];
+            $return  =$referer .$return;
          }
+         return $return;
     }],
     'title' =>['.title a','text'],
     'author'    =>  ['.title span','text'],
