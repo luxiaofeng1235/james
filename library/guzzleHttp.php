@@ -109,9 +109,13 @@ class guzzleHttp{
         //     return false;
 
 
-      $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
-      $tdata = json_decode($proxy_info,true);
-      $proxy_data = $tdata['data'][0] ??[];
+      // $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
+      // $tdata = json_decode($proxy_info,true);
+      // $proxy_data = $tdata['data'][0] ??[];
+      $proxy_data['ip'] = '7b2f9a6713186a90.rty.na.roxlabs.vip';
+      $proxy_data['port'] = '4600';
+      $proxy_data['username'] = 'user-red1235-region-tw-sessid-twt6sX5ZrT-sesstime-30-keep-true';
+      $proxy_data['password'] = '123456abc';
       //转换字段
         $proxy_data = combineProxyParam($proxy_data);
         if(!$proxy_data){
@@ -120,7 +124,13 @@ class guzzleHttp{
             exit(1);
         }
 
-        $proxy_server =$proxy_data['ip'] .':'.$proxy_data['port'];
+        //带密码的访问
+       if(isset($proxy_data['username']) && isset($proxy_data['password'])){
+           $proxy_server =$proxy_data['username'] .':'.$proxy_data['password'] . '@'.$proxy_data['ip'] . ':'.$proxy_data['port'];
+       }else{
+            $proxy_server =$proxy_data['ip'] .':'.$proxy_data['port'];
+       }
+
         $client = new Client([
             'verify' => false,//配置认证
             'http_errors'     => true,

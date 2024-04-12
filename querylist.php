@@ -5,27 +5,36 @@ set_time_limit(0);
 require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;
 use QL\Ext\CurlMulti;
-
-$aa = guzzleHttp::multi_req([
-    'https://www.xsw.tw/book/1263567/231595388.html',
-    'https://www.xsw.tw/book/1263567/231595256.html',
-    'https://www.xsw.tw/book/1322907/247788880.html',
-    'https://www.xsw.tw/book/1322907/236948732.html',
-    'https://www.xsw.tw/book/1322907/236948792.html',
-    'https://www.xsw.tw/book/1322907/236949357.html',
-    'https://www.xsw.tw/book/1322907/236949460.html',
-    'https://www.xsw.tw/book/1322907/237194028.html',
-    'https://www.xsw.tw/book/1322907/236949492.html',
-    'https://www.xsw.tw/book/1322907/236949828.html',
-]);
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
+// $aa = guzzleHttp::multi_req([
+//     'https://www.xsw.tw/book/1263567/231595388.html',
+//     'https://www.xsw.tw/book/1263567/231595256.html',
+//     'https://www.xsw.tw/book/1322907/247788880.html',
+//     'https://www.xsw.tw/book/1322907/236948732.html',
+//     'https://www.xsw.tw/book/1322907/236948792.html',
+//     'https://www.xsw.tw/book/1322907/236949357.html',
+//     'https://www.xsw.tw/book/1322907/236949460.html',
+//     'https://www.xsw.tw/book/1322907/237194028.html',
+//     'https://www.xsw.tw/book/1322907/236949492.html',
+//     'https://www.xsw.tw/book/1322907/236949828.html',
+//     'https://www.xsw.tw/book/905845/248207375.html',
+//     'https://www.xsw.tw/book/905845/248190253.html',
+//     'https://www.xsw.tw/book/905845/248175273.html',
+//     'https://www.xsw.tw/book/905845/248163971.html',
+//     'https://www.xsw.tw/book/905845/248149626.html',
+//     'https://www.xsw.tw/book/905845/248136859.html',
+//     'https://www.xsw.tw/book/1129080/248189962.html',
+//     'https://www.xsw.tw/book/1129080/248176604.html',
+//     'https://www.xsw.tw/book/1129080/248176602.html',
+//     'https://www.xsw.tw/book/1129080/248176600.html'
+// ]);
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
 
 $ql = QueryList::getInstance();
 $ql->use(CurlMulti::class);
-//https://www.payeasy.com.tw/PWelfareWeb/COMMON/invitation/media/media_20240117.html
+https://www.payeasy.com.tw/PWelfareWeb/COMMON/invitation/media/media_20240117.html
 $ql->rules([
     // 'title' => ['.pic img','src'],
     // 'link' => ['h3 a','href']
