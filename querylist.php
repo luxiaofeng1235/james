@@ -12,10 +12,10 @@ $ql->rules([
     // 'link' => ['h3 a','href']
 ])->curlMulti([
     // 'https://www.xsw.tw/book/1223059.html',
-    'https://www.xsw.tw/allvisit_1.html'
+    'https://www.xsw.tw/'
 ])->success(function (QueryList $ql,CurlMulti $curl,$r){
     echo '<pre>';
-    print_R($r);
+    var_dump($r['body']);
     echo '</pre>';
     exit;
     echo "Current url:{$r['info']['url']} \r\n";
