@@ -20,6 +20,35 @@ $html =<<<STR
     </div>
 STR;
 
+
+$html =<<<STR
+    <div id="demo">
+        xxx
+        <a href="/yyy">链接一</a>
+        <a href="/zzz">链接二</a>
+    </div>
+STR;
+
+$baseUrl = 'http://xxx.com';
+
+//获取id为demo的元素下的最后一个a链接的链接和文本
+//并补全相对链接
+
+//方法一
+
+// $ql = QueryList::get('http://www.baidu.com/s?wd=QueryList')->rules([
+//     'title'=>array('h3','text'),
+//     'link'=>array('h3>a','href')
+// ]);
+
+// $str = '<meta http-equiv="mobile-agent" content="format=html5; url=https://m.xsw.tw/1229150/226958802.html">';
+// preg_match('/url=([^&=]+\.html)/',$str,$aa);
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
+
+
 // DOM解析规则
 $rules = [
      //设置了内容过滤选择器
@@ -28,16 +57,32 @@ $rules = [
 $rt = QueryList::rules($rules)->html($html)->query()->getData();
 
 $reg = [
-    'content'   =>['#content','html']
+    'content'   =>['#content','html'],
+    'banner'    =>['.bread-crumbs li:eq(3)','text'],
+    'page'      =>['meta[http-equiv="mobile-agent"]','content'],
 ];
 
 $rt  = QueryList::get('https://www.xsw.tw/book/1229150/226958802.html');
 $item = $rt
             ->rules($reg)
             ->query()
-            ->getData();
+            ->getData(function($item){
+                preg_match('/url=([^&=]+\.html)/',$item['page'],$matches);
+                $item['page'] = $matches[1] ?? '';
+                return $item;
+            });
 $item = $item->all();
+dd($item);
 $content = $item['content'] ?? '';
+echo '<pre>';
+print_R($content);
+echo '</pre>';
+exit;
+$aa = $str = iconv('big5','utf8',$item['banner']);
+echo '<pre>';
+var_dump($aa);
+echo '</pre>';
+exit;
 if(empty($content)){
     echo "获取数据失败\r\n";
 }else{
