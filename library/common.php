@@ -1202,7 +1202,8 @@ function combineProxyParam($data){
 
 
 /**
- * @param   string     $path [要读取的文件目录]
+ * @note 遍历当前的文件夹列表
+ * @param   string   $path [要读取的文件目录]
  */
 function traverse($dir = '.') {
 	// 使用 glob() 函数获取指定目录下的所有 txt 文件
@@ -1220,7 +1221,7 @@ function traverse($dir = '.') {
  * @param   string  $content 换换的字体
  * @return array
  */
-function fantiCovert($content=''){
+function traditionalCovert($content=''){
 	if(!$content){
 		return '';
 	}

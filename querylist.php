@@ -152,8 +152,15 @@ $list = $rt->rules($reg)
             ->query()
             ->getData(function($data){
                 foreach($data as &$val){
-                    $val  = iconv('big5', 'utf8', $val);
+                    $val  = traditionalCovert($val);
                 }
+                //过滤作者
+                $data['author'] =str_replace('作者：','',$data['author']);
+                // //保存图片
+                // $localSrc = 'image/'.md5($data['img']).'.jpg';
+                // $stream = webRequest($data['img'],'GET');
+                // file_put_contents($localSrc,$stream);
+                //后续可以使用生成后的图片信息
                 return $data;
             });
 $list = $list->all();
