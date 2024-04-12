@@ -64,9 +64,10 @@ $reg = [
     'page'      =>['meta[http-equiv="mobile-agent"]','content'],
 ];
 
+/**
 $rt  = QueryList::get('https://www.xsw.tw/book/1229150/226958802.html',[],
     [
-        'proxy' => 'socks5://43.152.113.72:11295',
+        // 'proxy' => 'socks5://43.152.113.72:11295',
         //设置超时时间，单位：秒
         'timeout' => 30,
     ]
@@ -81,7 +82,7 @@ $item = $rt
                 return $item;
             });
 $item = $item->all();
-
+dd($item);
 
 $content = $item['content'] ?? '';
 if(empty($content)){
@@ -102,6 +103,24 @@ if(empty($content)){
     exit;
     file_put_contents('nginx.txt',$store_content);
 }
+**/
 
-
+$rules =[
+    'chaper_name' =>['a','text'],
+    'chaper_link'   =>['a','href'],
+];
+//采集章节列表信息
+$range  = '.liebiao li';
+$rt = QueryList::get('https://www.xsw.tw/book/230000/');
+$item = $rt->rules($rules)
+            ->range($range)
+            ->query()
+            ->getData(function($callback){
+                 $callback['chaper_link'] = 'https://www.xsw.tw'.$callback['chaper_link'];
+                 return $callback;
+            });
+echo '<pre>';
+print_R($item);
+echo '</pre>';
+exit;
 ?>
