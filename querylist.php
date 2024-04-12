@@ -139,6 +139,11 @@ $reg = [
     'author'    =>  ['.title span','text'],
     'update_zhangjie'   =>['.sys a','text'],
     'intro' =>['.intro','text'],
+    'chapter_link'  =>  ['.pic a','href','',function($item)  use($page){
+            $url = parse_url($page);
+            $referer = $url['scheme'] . '://'.$url['host'];
+            return $referer . $item;
+    }],
 ];
 $range  ='#alistbox';
 $rt = QueryList::get($page);
