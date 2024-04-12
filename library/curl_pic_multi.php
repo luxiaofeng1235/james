@@ -107,9 +107,9 @@ public static function Rand_refer(){
       // }else if($type ==5){
       //     $proxy_data = getImgProxy();//获取下载图片使用的代理
       // }
-      // $proxy_info = webRequest('http://api.yilian.top/v2/proxy/proxies?token=TnFOk8GFECExUxpkdbFrEklkAx7Ubhq4&pull_num=1&format=json&protocol=3&separator=1','GET');
+      $proxy_info = webRequest('http://api.yilian.top/v2/proxy/proxies?token=TnFOk8GFECExUxpkdbFrEklkAx7Ubhq4&pull_num=1&format=json&protocol=3&separator=1','GET');
 
-      $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
+      // $proxy_info = webRequest('https://bapi.51daili.com/traffic/getip?linePoolIndex=1&packid=12&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
       // $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
