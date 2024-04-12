@@ -150,7 +150,12 @@ $rt = QueryList::get($page);
 $list = $rt->rules($reg)
             ->range($range)
             ->query()
-            ->getData();
+            ->getData(function($data){
+                foreach($data as &$val){
+                    $val  = iconv('big5', 'utf8', $val);
+                }
+                return $data;
+            });
 $list = $list->all();
 echo '<pre>';
 print_R($list);
