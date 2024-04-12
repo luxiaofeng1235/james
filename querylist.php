@@ -105,22 +105,49 @@ if(empty($content)){
 }
 **/
 
-$rules =[
-    'chaper_name' =>['a','text'],
-    'chaper_link'   =>['a','href','',function($content){
-        $baseUrl = 'https://www.xsw.tw';
-        return $baseUrl.$content;
+
+/////////////获取章节列表信息
+// $rules =[
+//     'chaper_name' =>['a','text'],
+//     'chaper_link'   =>['a','href','',function($content){
+//         $baseUrl = 'https://www.xsw.tw';
+//         return $baseUrl.$content;
+//     }],
+// ];
+// //采集章节列表信息
+// $range  = '.liebiao li';
+// $rt = QueryList::get('https://www.xsw.tw/book/230000/');
+// $item = $rt->rules($rules)
+//             ->range($range)
+//             ->query()
+//             ->getData();
+
+
+
+////自动获取首页信息并爬取到本地
+$page = 'https://www.xsw.tw/allvisit_1.html';
+$reg = [
+    'img' =>['.pic img','src','',function($return) {
+         if(!strstr($return, 'https')){
+                // $url = parse_url($page);
+                // $referer = $url['scheme'] . '://'.$url['host'];
+                return 1;
+         }
     }],
+    'title' =>['.title a','text'],
+    'author'    =>  ['.title span','text'],
+    'update_zhangjie'   =>['.sys a','text'],
+    'intro' =>['.intro','text'],
 ];
-//采集章节列表信息
-$range  = '.liebiao li';
-$rt = QueryList::get('https://www.xsw.tw/book/230000/');
-$item = $rt->rules($rules)
+$range  ='#alistbox';
+$rt = QueryList::get($page);
+$list = $rt->rules($reg)
             ->range($range)
             ->query()
             ->getData();
+$list = $list->all();
 echo '<pre>';
-print_R($item);
+print_R($list);
 echo '</pre>';
 exit;
 ?>

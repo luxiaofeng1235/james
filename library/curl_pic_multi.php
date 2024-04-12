@@ -116,16 +116,15 @@ public static function Rand_refer(){
       // //转换字段
       // $proxy_data = combineProxyParam($proxy_data);
       // ////隧道转发
-      // $proxy_data['ip']   = '110.42.9.74';
-      // $proxy_data['port'] = '10001';
-
-      $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
-       $tdata = json_decode($proxy_info,true);
-      $proxy_data = $tdata['data'][0] ??[];
-      echo '<pre>';
-      print_R($proxy_data);
-      echo '</pre>';
-      exit;
+      $proxy_data['ip']   = '110.42.9.74';
+      $proxy_data['port'] = '10001';
+      // $proxy_info = webRequest('https://tj.xiaobaibox.com/goldprod/ippool/list?token=56edbb1f-6b97-4897-9006-751b78b6e085&country=CN&loop=1','GET');
+      //  $tdata = json_decode($proxy_info,true);
+      // $proxy_data = $tdata['data'][0] ??[];
+      // echo '<pre>';
+      // print_R($proxy_data);
+      // echo '</pre>';
+      // exit;
       // //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
