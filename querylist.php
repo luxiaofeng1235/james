@@ -107,7 +107,10 @@ if(empty($content)){
 
 $rules =[
     'chaper_name' =>['a','text'],
-    'chaper_link'   =>['a','href'],
+    'chaper_link'   =>['a','href','',function($content){
+        $baseUrl = 'https://www.xsw.tw';
+        return $baseUrl.$content;
+    }],
 ];
 //采集章节列表信息
 $range  = '.liebiao li';
@@ -115,10 +118,7 @@ $rt = QueryList::get('https://www.xsw.tw/book/230000/');
 $item = $rt->rules($rules)
             ->range($range)
             ->query()
-            ->getData(function($callback){
-                 $callback['chaper_link'] = 'https://www.xsw.tw'.$callback['chaper_link'];
-                 return $callback;
-            });
+            ->getData();
 echo '<pre>';
 print_R($item);
 echo '</pre>';
