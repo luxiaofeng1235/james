@@ -7,14 +7,10 @@ require_once($dirname.'/library/init.inc.php');
 
 
 $content = webRequest('https://www.xsw.tw/fenlei2_1.html','GET');
-
-
-// $t =readFileData('./new.txt');
 $str = iconv('big5','utf8',$content);
 $od = opencc_open("tw2sp.json");
 $text = opencc_convert($str, $od);
-echo $text;
-echo "\r\n";
 opencc_close($od);
+dd($text);
 
 ?>
