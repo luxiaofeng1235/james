@@ -46,10 +46,15 @@ if(empty($content)){
     $string = html_entity_decode($str);
     $replace_str = '/<center.*?>.*?<\/center>/ism';
     $t = preg_replace($replace_str, '', $string);
+    $store_content = str_replace("<p>",'',$t);
+    $store_content = str_replace("</p>",'',$store_content);
+    //把br替换成\n标签存储
+    $store_content = str_replace("<br>","\n",$store_content);
     echo '<pre>';
-    var_dump($t);
+    print_R($store_content);
     echo '</pre>';
     exit;
+    file_put_contents('nginx.txt',$store_content);
 }
 
 
