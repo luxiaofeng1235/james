@@ -56,33 +56,35 @@ $rules = [
 ];
 $rt = QueryList::rules($rules)->html($html)->query()->getData();
 
+
+//////////////获取文章的正文和内容信息
 $reg = [
     'content'   =>['#content','html'],
     'banner'    =>['.bread-crumbs li:eq(3)','text'],
     'page'      =>['meta[http-equiv="mobile-agent"]','content'],
 ];
 
-$rt  = QueryList::get('https://www.xsw.tw/book/1229150/226958802.html');
+$rt  = QueryList::get('https://www.xsw.tw/book/1229150/226958802.html',[],
+    [
+        'proxy' => 'socks5://43.152.113.72:11295',
+        //设置超时时间，单位：秒
+        'timeout' => 30,
+    ]
+);
 $item = $rt
             ->rules($reg)
+            // ->removeHead()
             ->query()
             ->getData(function($item){
                 preg_match('/url=([^&=]+\.html)/',$item['page'],$matches);
                 $item['page'] = $matches[1] ?? '';
                 return $item;
             });
-$item = $item->all();
 dd($item);
+$item = $item->all();
+
+
 $content = $item['content'] ?? '';
-echo '<pre>';
-print_R($content);
-echo '</pre>';
-exit;
-$aa = $str = iconv('big5','utf8',$item['banner']);
-echo '<pre>';
-var_dump($aa);
-echo '</pre>';
-exit;
 if(empty($content)){
     echo "获取数据失败\r\n";
 }else{

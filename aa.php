@@ -13,20 +13,6 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-//台湾繁体转简体
-// $string = "金發金眸，膚色暗金，渾身透著金屬光澤的張元清盤坐在虛空中，眉心是一輪金漆烈陽印記，腦後懸掛著淡淡的黑色圓月，時而浮現，時而隱匿";
-// $t = str2UTF8($string);
-$content  = '蝔韦韮纎蝛';
-
-
-
-$od = opencc_open("tw2sp.json");
-$text = opencc_convert($content, $od);
-echo $text;
-echo "\r\n";
-opencc_close($od);
-die;
-
 
 $urls[]='http://m.paoshu8.info/wapbook-198660-194130151/';
 $urls[]='http://m.paoshu8.info/wapbook-198660-194034570/';
