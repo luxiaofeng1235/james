@@ -42,7 +42,14 @@ if(empty($content)){
     echo "获取数据失败\r\n";
 }else{
     $str = fantiCovert($content);
-    dd($str);
+    //转换程=为实体标签
+    $string = html_entity_decode($str);
+    $replace_str = '/<center.*?>.*?<\/center>/ism';
+    $t = preg_replace($replace_str, '', $string);
+    echo '<pre>';
+    var_dump($t);
+    echo '</pre>';
+    exit;
 }
 
 
