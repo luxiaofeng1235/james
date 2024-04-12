@@ -41,8 +41,8 @@ $content = $item['content'] ?? '';
 if(empty($content)){
     echo "获取数据失败\r\n";
 }else{
-  $str = iconv('big5','utf8',$content);
-  dd($str);
+    $str = fantiCovert($content);
+    dd($str);
 }
 
 

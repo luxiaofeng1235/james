@@ -1214,4 +1214,20 @@ function traverse($dir = '.') {
 	}
 	return $list;
 }
+
+/**
+ * @note 繁体转换
+ * @param   string  $content 换换的字体
+ * @return array
+ */
+function fantiCovert($content=''){
+	if(!$content){
+		return '';
+	}
+	$str = iconv('big5','utf8',$content);
+    $od = opencc_open("tw2sp.json");
+    $text = opencc_convert($str, $od);
+    opencc_close($od);
+    return $text;
+}
 ?>
