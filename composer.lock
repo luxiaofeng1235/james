@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e96b2c8e63320d51dedeb495b402fa0",
+    "content-hash": "4bfca7569ee311cb2edf5dcafdfcd334",
     "packages": [
         {
             "name": "ares333/php-curl",
@@ -1250,6 +1250,56 @@
                 }
             ],
             "time": "2021-07-05T06:07:58+00:00"
+        },
+        {
+            "name": "jaeger/querylist-curl-multi",
+            "version": "4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jae-jae/QueryList-CurlMulti.git",
+                "reference": "6f9bec5198cdafc56ffcc2e047374c76a08b153a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jae-jae/QueryList-CurlMulti/zipball/6f9bec5198cdafc56ffcc2e047374c76a08b153a",
+                "reference": "6f9bec5198cdafc56ffcc2e047374c76a08b153a",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ares333/php-curl": "^4.2",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "jaeger/querylist": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "QL\\Ext\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jaeger",
+                    "email": "JaegerCode@gmail.com"
+                }
+            ],
+            "description": "QueryList Plugin: Curl multi threading. QueryList Curl多线程插件",
+            "support": {
+                "issues": "https://github.com/jae-jae/QueryList-CurlMulti/issues",
+                "source": "https://github.com/jae-jae/QueryList-CurlMulti/tree/master"
+            },
+            "time": "2018-10-16T07:13:30+00:00"
         },
         {
             "name": "league/flysystem",

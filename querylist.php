@@ -2,34 +2,86 @@
 ///querylist测试程序
 require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;
+use QL\Ext\CurlMulti;
 
+$ql = QueryList::getInstance();
+$ql->use(CurlMulti::class);
+
+$ql->rules([
+    'title' => ['.pic img','src'],
+    // 'link' => ['h3 a','href']
+])->curlMulti([
+    // 'https://www.xsw.tw/book/1223059.html',
+    'https://www.xsw.tw/allvisit_1.html'
+])->success(function (QueryList $ql,CurlMulti $curl,$r){
+    echo '<pre>';
+    print_R($r);
+    echo '</pre>';
+    exit;
+    echo "Current url:{$r['info']['url']} \r\n";
+    $data = $ql->query()->getData();
+    print_r($data->all());
+})->start();
+
+    exit;
+
+
+///使用多线程请求url
+$ql->curlMulti([
+    'https://www.xsw.tw/book/860078.html',
+    'https://www.xsw.tw/book/1223059.html'
+])->success(function (QueryList $ql,CurlMulti $curl,$r){
+    echo "Current url:{$r['info']['url']} \r\n";
+    echo '<pre>';
+    print_R($ql);
+    echo '</pre>';
+    exit;
+    echo "-----------------------\r\n";
+})->error(function ($errorInfo,CurlMulti $curl){
+    echo "Current url:{$errorInfo['info']['url']} \r\n";
+    echo "<pre>";
+    print_r($errorInfo['error']);
+})->start([
+    // 最大并发数，这个值可以运行中动态改变。
+    'maxThread' => 10,
+    // 触发curl错误或用户错误之前最大重试次数，超过次数$error指定的回调会被调用。
+    'maxTry' => 3,
+    // 全局CURLOPT_*
+    'opt' => [
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_CONNECTTIMEOUT => 1,
+        CURLOPT_RETURNTRANSFER => true
+    ],
+    // 缓存选项很容易被理解，缓存使用url来识别。如果使用缓存类库不会访问网络而是直接返回缓存。
+    'cache' => ['enable' => false, 'compress' => false, 'dir' => null, 'expire' =>86400, 'verifyPost' => false]
+]);
 //使用过滤
-$html =<<<STR
-    <div id="content">
+// $html =<<<STR
+//     <div id="content">
 
-        <span class="tt">作者：xxx</span>
+//         <span class="tt">作者：xxx</span>
 
-        这是正文内容段落1.....
+//         这是正文内容段落1.....
 
-        <span>这是正文内容段落2</span>
+//         <span>这是正文内容段落2</span>
 
-        <p>这是正文内容段落3......</p>
+//         <p>这是正文内容段落3......</p>
 
-        <span>这是广告</span>
-        <p>这是版权声明！</p>
-    </div>
-STR;
+//         <span>这是广告</span>
+//         <p>这是版权声明！</p>
+//     </div>
+// STR;
 
 
-$html =<<<STR
-    <div id="demo">
-        xxx
-        <a href="/yyy">链接一</a>
-        <a href="/zzz">链接二</a>
-    </div>
-STR;
+// $html =<<<STR
+//     <div id="demo">
+//         xxx
+//         <a href="/yyy">链接一</a>
+//         <a href="/zzz">链接二</a>
+//     </div>
+// STR;
 
-$baseUrl = 'http://xxx.com';
+// $baseUrl = 'http://xxx.com';
 
 //获取id为demo的元素下的最后一个a链接的链接和文本
 //并补全相对链接
@@ -49,20 +101,20 @@ $baseUrl = 'http://xxx.com';
 // exit;
 
 
-// DOM解析规则
-$rules = [
-     //设置了内容过滤选择器
-    'content' => ['#content','html','-.tt -span:last -p:last']
-];
-$rt = QueryList::rules($rules)->html($html)->query()->getData();
+// // DOM解析规则
+// $rules = [
+//      //设置了内容过滤选择器
+//     'content' => ['#content','html','-.tt -span:last -p:last']
+// ];
+// $rt = QueryList::rules($rules)->html($html)->query()->getData();
 
 
-//////////////获取文章的正文和内容信息
-$reg = [
-    'content'   =>['#content','html'],
-    'banner'    =>['.bread-crumbs li:eq(3)','text'],
-    'page'      =>['meta[http-equiv="mobile-agent"]','content'],
-];
+// //////////////获取文章的正文和内容信息
+// $reg = [
+//     'content'   =>['#content','html'],
+//     'banner'    =>['.bread-crumbs li:eq(3)','text'],
+//     'page'      =>['meta[http-equiv="mobile-agent"]','content'],
+// ];
 
 /**
 $rt  = QueryList::get('https://www.xsw.tw/book/1229150/226958802.html',[],
@@ -125,47 +177,52 @@ if(empty($content)){
 
 
 ////自动获取首页信息并爬取到本地
-$page = 'https://www.xsw.tw/allvisit_1.html';
-$reg = [
-    'img' =>['.pic img','src','',function($return) use($page) {
-         if(!strstr($return, 'https')){
-            $url = parse_url($page);
-            $referer = $url['scheme'] . '://'.$url['host'];
-            $return  =$referer .$return;
-         }
-         return $return;
-    }],
-    'title' =>['.title a','text'],
-    'author'    =>  ['.title span','text'],
-    'update_zhangjie'   =>['.sys a','text'],
-    'intro' =>['.intro','text'],
-    'chapter_link'  =>  ['.pic a','href','',function($item)  use($page){
-            $url = parse_url($page);
-            $referer = $url['scheme'] . '://'.$url['host'];
-            return $referer . $item;
-    }],
-];
-$range  ='#alistbox';
-$rt = QueryList::get($page);
-$list = $rt->rules($reg)
-            ->range($range)
-            ->query()
-            ->getData(function($data){
-                foreach($data as &$val){
-                    $val  = traditionalCovert($val);
-                }
-                //过滤作者
-                $data['author'] =str_replace('作者：','',$data['author']);
-                // //保存图片
-                // $localSrc = 'image/'.md5($data['img']).'.jpg';
-                // $stream = webRequest($data['img'],'GET');
-                // file_put_contents($localSrc,$stream);
-                //后续可以使用生成后的图片信息
-                return $data;
-            });
-$list = $list->all();
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
+// $page = 'https://www.xsw.tw/allvisit_1.html';
+// $reg = [
+//     'img' =>['.pic img','src','',function($return) use($page) {
+//          if(!strstr($return, 'https')){
+//             $url = parse_url($page);
+//             $referer = $url['scheme'] . '://'.$url['host'];
+//             $return  =$referer .$return;
+//          }
+//          return $return;
+//     }],
+//     'title' =>['.title a','text'],
+//     'author'    =>  ['.title span','text'],
+//     'update_zhangjie'   =>['.sys a','text'],
+//     'intro' =>['.intro','text'],
+//     'chapter_link'  =>  ['.pic a','href','',function($item)  use($page){
+//             $url = parse_url($page);
+//             $referer = $url['scheme'] . '://'.$url['host'];
+//             return $referer . $item;
+//     }],
+// ];
+// $range  ='#alistbox';
+// $rt = QueryList::get($page);
+// $list = $rt->rules($reg)
+//             ->range($range)
+//             ->query()
+//             ->getData(function($data){
+//                 foreach($data as &$val){
+//                     $val  = traditionalCovert($val);
+//                 }
+//                 //过滤作者
+//                 $data['author'] =str_replace('作者：','',$data['author']);
+//                 // //保存图片
+//                 // $localSrc = 'image/'.md5($data['img']).'.jpg';
+//                 // $stream = webRequest($data['img'],'GET');
+//                 // file_put_contents($localSrc,$stream);
+//                 //后续可以使用生成后的图片信息
+//                 return $data;
+//             });
+// $list = $list->all();
+// echo '<pre>';
+// print_R($list);
+// echo '</pre>';
+// exit;
+//
+//
+
+///多线程采集
+
 ?>

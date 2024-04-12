@@ -63,6 +63,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'Q' => 
         array (
             'QL\\Ext\\Lib\\' => 11,
+            'QL\\Ext\\' => 7,
             'QL\\' => 3,
         ),
         'P' => 
@@ -198,6 +199,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'QL\\Ext\\Lib\\' => 
         array (
             0 => __DIR__ . '/..' . '/jaeger/curlmulti',
+        ),
+        'QL\\Ext\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaeger/querylist-curl-multi',
         ),
         'QL\\' => 
         array (

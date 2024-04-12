@@ -25,6 +25,7 @@ return array(
     'React\\Dns\\' => array($vendorDir . '/react/dns/src'),
     'React\\Cache\\' => array($vendorDir . '/react/cache/src'),
     'QL\\Ext\\Lib\\' => array($vendorDir . '/jaeger/curlmulti'),
+    'QL\\Ext\\' => array($vendorDir . '/jaeger/querylist-curl-multi'),
     'QL\\' => array($vendorDir . '/jaeger/querylist/src'),
     'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
