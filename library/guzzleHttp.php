@@ -109,7 +109,7 @@ class guzzleHttp{
         //     return false;
 
 
-     $proxy_info = webRequest('http://api.yilian.top/v2/proxy/proxies?token=TnFOk8GFECExUxpkdbFrEklkAx7Ubhq4&pull_num=1&format=json&protocol=3&separator=1','GET');
+      $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
       //转换字段
@@ -137,7 +137,6 @@ class guzzleHttp{
                 'x-requested-with' => self::$requestMehtod //x-rquest-with参数
             ]
         ]);
-
         //采用多线程的getAsync去并发请求
         foreach($reqs as $val){
             $promises[] = $client->getAsync($val);

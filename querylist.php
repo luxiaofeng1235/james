@@ -1,60 +1,45 @@
 <?php
 ///querylist测试程序
+ini_set("memory_limit", "8000M");
+set_time_limit(0);
 require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;
 use QL\Ext\CurlMulti;
 
+$aa = guzzleHttp::multi_req([
+    'https://www.xsw.tw/book/1263567/231595388.html',
+    'https://www.xsw.tw/book/1263567/231595256.html',
+    'https://www.xsw.tw/book/1322907/247788880.html',
+    'https://www.xsw.tw/book/1322907/236948732.html',
+    'https://www.xsw.tw/book/1322907/236948792.html',
+    'https://www.xsw.tw/book/1322907/236949357.html',
+    'https://www.xsw.tw/book/1322907/236949460.html',
+    'https://www.xsw.tw/book/1322907/237194028.html',
+    'https://www.xsw.tw/book/1322907/236949492.html',
+    'https://www.xsw.tw/book/1322907/236949828.html',
+]);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+
 $ql = QueryList::getInstance();
 $ql->use(CurlMulti::class);
-
+//https://www.payeasy.com.tw/PWelfareWeb/COMMON/invitation/media/media_20240117.html
 $ql->rules([
-    'title' => ['.pic img','src'],
+    // 'title' => ['.pic img','src'],
     // 'link' => ['h3 a','href']
 ])->curlMulti([
-    // 'https://www.xsw.tw/book/1223059.html',
-    'https://www.xsw.tw/'
+     'https://www.payeasy.com.tw/PWelfareWeb/COMMON/invitation/media/media_20240117.html',
 ])->success(function (QueryList $ql,CurlMulti $curl,$r){
     echo '<pre>';
-    var_dump($r['body']);
+    var_dump($r);
     echo '</pre>';
     exit;
     echo "Current url:{$r['info']['url']} \r\n";
     $data = $ql->query()->getData();
     print_r($data->all());
 })->start();
-
-    exit;
-
-
-///使用多线程请求url
-$ql->curlMulti([
-    'https://www.xsw.tw/book/860078.html',
-    'https://www.xsw.tw/book/1223059.html'
-])->success(function (QueryList $ql,CurlMulti $curl,$r){
-    echo "Current url:{$r['info']['url']} \r\n";
-    echo '<pre>';
-    print_R($ql);
-    echo '</pre>';
-    exit;
-    echo "-----------------------\r\n";
-})->error(function ($errorInfo,CurlMulti $curl){
-    echo "Current url:{$errorInfo['info']['url']} \r\n";
-    echo "<pre>";
-    print_r($errorInfo['error']);
-})->start([
-    // 最大并发数，这个值可以运行中动态改变。
-    'maxThread' => 10,
-    // 触发curl错误或用户错误之前最大重试次数，超过次数$error指定的回调会被调用。
-    'maxTry' => 3,
-    // 全局CURLOPT_*
-    'opt' => [
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_CONNECTTIMEOUT => 1,
-        CURLOPT_RETURNTRANSFER => true
-    ],
-    // 缓存选项很容易被理解，缓存使用url来识别。如果使用缓存类库不会访问网络而是直接返回缓存。
-    'cache' => ['enable' => false, 'compress' => false, 'dir' => null, 'expire' =>86400, 'verifyPost' => false]
-]);
 //使用过滤
 // $html =<<<STR
 //     <div id="content">
@@ -176,7 +161,7 @@ if(empty($content)){
 
 
 
-////自动获取首页信息并爬取到本地
+//自动获取首页信息并爬取到本地
 // $page = 'https://www.xsw.tw/allvisit_1.html';
 // $reg = [
 //     'img' =>['.pic img','src','',function($return) use($page) {
@@ -220,8 +205,8 @@ if(empty($content)){
 // print_R($list);
 // echo '</pre>';
 // exit;
-//
-//
+
+
 
 ///多线程采集
 
