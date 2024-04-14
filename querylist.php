@@ -14,7 +14,7 @@ use QL\Ext\CurlMulti;
 // exit;
 
 $urls = [
-    'https://www.baidu.com',
+    'http://m.paoshu8.info/wapbook-21437-139847322-3',
     ];
 
 // $num = 0;
