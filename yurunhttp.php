@@ -7,7 +7,7 @@ use Swoole\Timer;
 use Yurun\Util\HttpRequest;
 use Yurun\Util\YurunHttp\ConnectionPool;
 use Yurun\Util\YurunHttp\Handler\Swoole\SwooleHttpConnectionManager;
-
+$exec_start_time = microtime(true);
 function dumpPoolInfo()
 {
     foreach (SwooleHttpConnectionManager::getInstance()->getConnectionPools() as $pool)
@@ -31,7 +31,7 @@ Co\run(function () {
     });
 
     $wg = new \Swoole\Coroutine\WaitGroup();
-    for ($i = 0; $i < 20; ++$i)
+    for ($i = 0; $i < 200; ++$i)
     {
         $wg->add();
         go(function () use ($wg,$i) {
@@ -48,5 +48,7 @@ Co\run(function () {
 
     dumpPoolInfo();
 });
-
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time;
+echo "Script execution time: ".round(($executionTime/60),2)." minutes \r\n";
 ?>
