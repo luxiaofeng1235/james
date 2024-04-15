@@ -200,6 +200,7 @@ class FileFactory{
                 //抓取内容信息
                 // $html_data = ClientModel::getClientContents($v,$store_id,$download_path);
                 $html_data = getStoryCotents($v,0,$download_path);
+
                 // $html_data= NovelModel::getDataListItem($v,$download_path);
                 if($html_data){
                     $a_num =0;

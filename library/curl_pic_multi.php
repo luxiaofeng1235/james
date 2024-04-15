@@ -107,11 +107,14 @@ public static function Rand_refer(){
       // }else if($type ==5){
       //     $proxy_data = getImgProxy();//获取下载图片使用的代理
       // }
-      $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
-      $tdata = json_decode($proxy_info,true);
-      $proxy_data = $tdata['data'][0] ??[];
-      //转换对应的字段
-      $proxy_data = combineProxyParam($proxy_data);
+      // $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
+      // $tdata = json_decode($proxy_info,true);
+      // $proxy_data = $tdata['data'][0] ??[];
+      // //转换对应的字段
+      // $proxy_data = combineProxyParam($proxy_data);
+
+      $proxy_data['ip'] = '14.18.102.68';
+      $proxy_data['port'] ='33002';
       //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
@@ -166,7 +169,6 @@ public static function Rand_refer(){
           curl_setopt($conn[$k], CURLOPT_TCP_NODELAY, 1);//TRUE 时禁用 TCP 的 Nagle 算法，就是减少网络上的小包数量。
           curl_setopt($conn[$k], CURLOPT_NOSIGNAL, 1); //TRUE 时忽略所有的 cURL 传递给 PHP 进行的信号。在 SAPI 多线程传输时此项被默认启用，所以超时选项仍能使用。
 
-
           //设置版本号和启用ipv4
           curl_setopt($conn[$k], CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);    // 强制使用 HTTP/1.0
           curl_setopt($conn[$k], CURLOPT_FOLLOWLOCATION, 1);// 302 redirect
@@ -175,7 +177,7 @@ public static function Rand_refer(){
 
           curl_multi_add_handle ($mh,$conn[$k]);
       }
-       //防止死循环耗死cpu 这段是根据网上的写法
+        //防止死循环耗死cpu 这段是根据网上的写法
           do {
               $mrc = curl_multi_exec($mh,$active);//当无数据，active=true
           } while ($mrc == CURLM_CALL_MULTI_PERFORM);//当正在接受数据时
@@ -186,7 +188,7 @@ public static function Rand_refer(){
                   } while ($mrc == CURLM_CALL_MULTI_PERFORM);
               }
           }
-
+        //配置当前需要去请求的列表数据
       foreach ($array as $k => $url) {
             if(!curl_errno($conn[$k])){
              $data[$k]=curl_multi_getcontent($conn[$k]);//数据转换为array
