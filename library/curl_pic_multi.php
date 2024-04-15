@@ -89,6 +89,42 @@ public static function Rand_refer(){
     return $get_url;
   }
 
+
+/**
+* @note 批量获取代理配置信息
+*
+* @return array
+*/
+  public static function getMultiPorxy($num = 0){
+      if(!$num){
+        return [];
+      }
+      $limit = 10; //默认取10条
+      if($num<$limit){
+        $limit = $num;
+      }
+      $t = ceil($num/$limit);
+
+      $list = [];
+      for ($i=0; $i <$t ; $i++) {
+         $info = webRequest('https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty='.$limit.'&port=2&format=json&field=ipport,expiretime,regioncode,isptype&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558','GET');
+         var_dump($info);
+        $data = json_decode($info,true);
+        $return =$data['data'] ?? [];
+        if(!$return) $return = [];
+        $list = array_merge($list , $return);
+        echo " num = " .($i+1). "\r\n";
+        sleep(1);
+      }
+      $newlist = [];
+      foreach($list as $key =>$val){
+        if($key<$num){
+          $newlist[]=$val;
+        }
+      }
+      return $newlist;
+  }
+
     //获取当前的图片信息
     //type = 1 原生系统代理  2 章节统计 3.数据列表为空统计
     public  static function Curl_http($array,$type=1,$timeout='15'){
@@ -108,6 +144,7 @@ public static function Rand_refer(){
       //     $proxy_data = getImgProxy();//获取下载图片使用的代理
       // }
       $proxy_info = webRequest('https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty=1&port=2&format=json&field=ipport,expiretime,isptype,regioncode&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558','GET');
+      sleep(1);//主要方式IP获取不到，每次获取都休息一秒
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
       //转换对应的字段

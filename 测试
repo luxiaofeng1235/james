@@ -1,9 +1,7 @@
 {"type":"","host":"tw.ipdodo.cloud","user":"n1_1712733036-dh-2-region-tw","port":"10801","password":"11e475e0"}
 
-
-
+###也可以实现
 curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http://www.baidu.com
 
-curl  --socks5 tw.ipdodo.cloud:10801  http://m.paoshu8.info/wapbook-11-5859/
-
-curl --socks5 n1_1712733036-dh-2-region-tw-session-907044132-30:11e475e0@tw.ipdodo.cloud:10801  http://www.baidu.com
+##标准的代理模式
+curl -x socks5://tw.ipdodo.cloud:10801 -U "n1_1712733036-dh-2-region-tw-session-928781949-30:11e475e0" http://www.baidu.com
