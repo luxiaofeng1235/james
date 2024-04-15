@@ -26,18 +26,18 @@ ConnectionPool::setConfig('https://www.xsw.tw', 10);
 Co\run(function () {
     dumpPoolInfo();
 
-    $timer = Timer::tick(500, function () {
+    $timer = Timer::tick(300, function () {
         dumpPoolInfo();
     });
 
     $wg = new \Swoole\Coroutine\WaitGroup();
-    for ($i = 0; $i < 200; ++$i)
+    for ($i = 0; $i < 3; ++$i)
     {
         $wg->add();
         go(function () use ($wg,$i) {
             $http = new HttpRequest();
             $response = $http->get('https://www.xsw.tw/book/1654104.html');
-            // var_dump($response->body());
+            var_dump($response->body('big5','utf8'));
 
             echo  "num ={$i} +++++++++++++++++++++++++++++++++++++++ \r\n";
             $wg->done();
