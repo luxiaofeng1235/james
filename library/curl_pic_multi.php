@@ -107,14 +107,11 @@ public static function Rand_refer(){
       // }else if($type ==5){
       //     $proxy_data = getImgProxy();//获取下载图片使用的代理
       // }
-      // $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
-      // $tdata = json_decode($proxy_info,true);
-      // $proxy_data = $tdata['data'][0] ??[];
-      // //转换对应的字段
-      // $proxy_data = combineProxyParam($proxy_data);
-
-      $proxy_data['ip'] = '14.18.102.68';
-      $proxy_data['port'] ='33002';
+      $proxy_info = webRequest('https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty=1&port=2&format=json&field=ipport,expiretime,isptype,regioncode&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558','GET');
+      $tdata = json_decode($proxy_info,true);
+      $proxy_data = $tdata['data'][0] ??[];
+      //转换对应的字段
+      $proxy_data = combineProxyParam($proxy_data);
       //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;

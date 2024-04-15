@@ -1493,6 +1493,23 @@ public static function getErrSucData($content,$data,$type='ghttp'){
     return $info;
 }
 
+/**
+* @note 获取url里的ID信息
+*
+* @param  $url array url信息
+* @return array
+*/
+public static function getUrlById($url =""){
+  if(!$url)
+    return false;
+  $urlArr = parse_url($url);
+  $arr  = explode('/', $urlArr['path']);
+  $arr = array_filter($arr);
+  $ccx = end($arr);
+  if(!$ccx) return false;
+  return $ccx;
+}
+
 
 }
 ?>
