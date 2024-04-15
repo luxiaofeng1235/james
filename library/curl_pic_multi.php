@@ -110,24 +110,22 @@ public static function Rand_refer(){
       $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
-      //转换字段
+      //转换对应的字段
       $proxy_data = combineProxyParam($proxy_data);
-      // //判断代理IP是否失效，防止数据异常
+      //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
           echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
           NovelModel::killMasterProcess(); //结束当前进程
           exit(1);
       }
-    //伪造referer地址
-    $referer = self::Rand_refer();
-    //伪造客户端IP进行访问，
-    $headerIp = array(
-      'CLIENT-IP:'.self::Rand_IP(),
-      'X-FORWARDED-FOR:'.self::Rand_IP(),
-    );
+      //伪造referer地址方便去进行伪造
+      $referer = self::Rand_refer();
+      //伪造客户端IP进行访问，
+      $headerIp = array(
+        'CLIENT-IP:'.self::Rand_IP(),
+        'X-FORWARDED-FOR:'.self::Rand_IP(),
+      );
 
-      // if(!$proxy_data)
-      //   return [];
       $mh = curl_multi_init();//创建多个curl语柄
       foreach($array as $k=>$url){
           $conn[$k]=curl_init($url);//初始化

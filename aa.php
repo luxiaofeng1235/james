@@ -12,45 +12,24 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+$url = 'https://m.xsw.tw/1123700/247529821.html';
+
+$list =range(0,2);
+foreach ($list as $key => $value) {
+  $urls[]=$url;
+}
 
 
-$urls[]='http://m.paoshu8.info/wapbook-198660-194130151/';
-$urls[]='http://m.paoshu8.info/wapbook-198660-194034570/';
-$urls[]='http://m.paoshu8.info/wapbook-198660-194007568/';
-$urls[]='http://m.paoshu8.info/wapbook-198660-194034570/';
-$urls[]='http://m.paoshu8.info/wapbook-198660-194001601/';
-$urls[]='http://m.paoshu8.info/wapbook-3170-196470514/';
-$urls[]='http://m.paoshu8.info/wapbook-3170-196438636/';
-$urls[]='http://m.paoshu8.info/wapbook-3170-196148504/';
-$urls[]='http://m.paoshu8.info/wapbook-3170-196152737/';
-$urls[]='http://m.paoshu8.info/wapbook-3170-196164182/';
-
-
-$item = curl_pic_multi::Curl_http($urls);
-dd($item);
-$list = guzzleHttp::multi_req($urls,'story');
-dd($list);
-
-$a  =webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=&protocol=socks5','GET');
-$t = json_decode($a,true);
-$data = $t['data'][0]?? [];
-$str = 'curl --socks5 '.$data['ip'].':'.$data['port'].' http://www.baidu.com';
+foreach($urls as $i=> $i){
+  $cc = webRequest($i,'GET');
+   echo "num =".($i+1)." \r\n ";
+}
+echo 3;exit;
+$t= curl_pic_multi::Curl_http($urls);
 echo '<pre>';
-print_R($str);
+print_R($t);
 echo '</pre>';
 exit;
-
-$aa = webRequest('https://m.xsw.tw/1123700/247529821.html','GET');
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
-$od = opencc_open("tw2sp.json");
-$text = opencc_convert($str, $od);
-echo $text;
-echo "\r\n";
-opencc_close($od);
-die;
 
 
 $aa = webRequest('https://m.xsw.tw/1123700/247529821.html','GET');
