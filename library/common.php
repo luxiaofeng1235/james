@@ -40,7 +40,7 @@ function is_cli(){
 }
 
 //分页封装
-function paging($ob_pger="",$page_param){
+function paging($ob_pger="",$page_param=[]){
 	if(!is_array($page_param))return false;
 	parse_str($page_param['param'], $query_string);
 	$query_string['page'] = "#PAGE#";

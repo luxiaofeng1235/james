@@ -109,7 +109,7 @@ class guzzleHttp{
         //     return false;
 
 
-      $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
+      $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
       $tdata = json_decode($proxy_info,true);
       $proxy_data = $tdata['data'][0] ??[];
       // $proxy_data['ip'] = '7b2f9a6713186a90.rty.na.roxlabs.vip';
@@ -130,7 +130,6 @@ class guzzleHttp{
        }else{
             $proxy_server =$proxy_data['ip'] .':'.$proxy_data['port'];
        }
-
         $client = new Client([
             'verify' => false,//配置认证
             'http_errors'     => true,
@@ -147,6 +146,10 @@ class guzzleHttp{
                 'x-requested-with' => self::$requestMehtod //x-rquest-with参数
             ]
         ]);
+        echo '<pre>';
+        print_R($client);
+        echo '</pre>';
+        exit;
         //采用多线程的getAsync去并发请求
         foreach($reqs as $val){
             $promises[] = $client->getAsync($val);

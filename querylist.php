@@ -3,9 +3,14 @@
 ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once(__DIR__.'/library/init.inc.php');
-use QL\QueryList;
-use QL\Ext\CurlMulti;
+ use Yurun\Util\YurunHttp\Http\Request;
+use Yurun\Util\YurunHttp;
 
+$str= '我是一串比较长的中文-www.jefflei.com';
+echo 'mb_substr:' . mb_substr($str, 0, 6, 'utf-8');
+echo "\r\n";
+echo 'mb_strcut:' . mb_strcut($str, 0, 6, 'utf-8');
+exit;
 
 // $aa= webRequest('https://www.xsw.tw/book/1263567/231595256.html','GET');
 // echo '<pre>';
@@ -14,7 +19,7 @@ use QL\Ext\CurlMulti;
 // exit;
 
 $urls = [
-    'http://m.paoshu8.info/wapbook-21437-139847322-3',
+    'http://www.baidu.com',
     ];
 
 // $num = 0;
@@ -31,6 +36,11 @@ $urls = [
 // exit;
 // die;
 
+$aa =guzzleHttp::multi_req($urls);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 $aa = curl_pic_multi::Curl_http($urls);
 
 echo '<pre>';
