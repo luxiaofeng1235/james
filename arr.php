@@ -3,6 +3,28 @@
 ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once(__DIR__.'/library/init.inc.php');
+use QL\QueryList;
+
+
+$html = QueryList::get('https://www.xsw.tw/book/230000/',null,[
+            'cache' => '/tmp/',
+            'cache_ttl' => 87600 // 缓存有效时间，单位：秒，可以不设置缓存有效时间
+        ])->getHtml();
+$aa =traditionalCovert($html);
+dd($aa);
+echo '<pre>';
+print_R($html);
+echo '</pre>';
+exit;
+echo '<pre>';
+print_R($rt);
+echo '</pre>';
+exit;
+
+     echo '<pre>';
+     print_R($item);
+     echo '</pre>';
+     exit;
 //https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty=10&port=2&format=json&field=ipport,expiretime,regioncode,isptype&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558
 $num =135;
 
