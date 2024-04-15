@@ -3,61 +3,50 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once(__DIR__.'/library/init.inc.php');
 
+use Swoole\Timer;
 use Yurun\Util\HttpRequest;
-use Swoole\Coroutine\Channel;
-use Yurun\Util\YurunHttp\Http\Psr7\Uri;
+use Yurun\Util\YurunHttp\ConnectionPool;
+use Yurun\Util\YurunHttp\Handler\Swoole\SwooleHttpConnectionManager;
 
+function dumpPoolInfo()
+{
+    foreach (SwooleHttpConnectionManager::getInstance()->getConnectionPools() as $pool)
+    {
+        // var_dump($pool->getConfig()->getUrl() . ': Count=' . $pool->getCount() . ', Free=' . $pool->getFree() . ', Used=' . $pool->getUsed());
+    }
+}
 
+// 启用连接池
+ConnectionPool::enable();
 
-go(function () {
-    $uri = new Uri('http://www.taobao.com/');
+// 为这个地址设置限制连接池连接数量3个
+// 一定不要有 / 及后续参数等
+ConnectionPool::setConfig('http://www.baidu.com', 10);
 
-    $client = new \Yurun\Util\YurunHttp\Http2\SwooleClient($uri->getHost(), Uri::getServerPort($uri), 'https' === $uri->getScheme());
-    $client->connect(); // 连接
-    $client->ping(); // ping
+Co\run(function () {
+    dumpPoolInfo();
 
-    // 接收服务端主动推送
-    $client->setServerPushQueueLength(16); // 接收服务端推送的队列长度
-    go(function () use ($client) {
-        do
-        {
-            $response = $client->recv();
-            var_dump($response->body());
-        } while ($response->success);
+    $timer = Timer::tick(500, function () {
+        dumpPoolInfo();
     });
 
-    // 客户端请求和响应获取
-    $httpRequest = new HttpRequest();
-
-    $count = 10;
-    $channel = new Channel($count);
-    for ($i = 0; $i < $count; ++$i)
+    $wg = new \Swoole\Coroutine\WaitGroup();
+    for ($i = 0; $i < 200; ++$i)
     {
-        go(function () use ($i, $client, $channel, $httpRequest, $uri) {
-            $request = $httpRequest->header('aaa', 'bbb')->buildRequest($uri, [
-                'date'  => $i,
-            ], 'POST', 'json');
-            $streamId = $client->send($request);
-            var_dump('send:' . $streamId);
-            $response = $client->recv($streamId, 3);
-            $content = $response->body();
-            var_dump('recv:' . $response->getStreamId() . ';statusCode:' . $response->getStatusCode(), ';contentLength:' . strlen($content));
-            $channel->push(1);
+        $wg->add();
+        go(function () use ($wg,$i) {
+            $http = new HttpRequest();
+            $response = $http->get('http://www.baidu.com/?keywords=112');
+            var_dump($response->body());
+
+            echo  "num ={$i} +++++++++++++++++++++++++++++++++++++++ \r\n";
+            $wg->done();
         });
     }
-    $returnCount = 0;
-    do
-    {
-        if ($channel->pop())
-        {
-            ++$returnCount;
-        }
-    } while ($returnCount < $count);
+    $wg->wait();
+    Timer::clear($timer);
 
-    $client->close();
+    dumpPoolInfo();
 });
-Swoole\Event::wait();
-
-
 
 ?>
