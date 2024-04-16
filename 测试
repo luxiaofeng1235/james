@@ -5,3 +5,8 @@ curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http:
 
 ##标准的代理模式
 curl -x socks5://tw.ipdodo.cloud:10801 -U "n1_1712733036-dh-2-region-tw-session-928781949-30:11e475e0" http://www.baidu.com
+
+curl -x socks5://183.134.38.20:11632   http://www.baidu.com
+
+
+curl --socks5 183.134.38.185:5648 http://www.baidu.com
