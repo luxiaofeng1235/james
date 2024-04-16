@@ -13,19 +13,19 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-$ar = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=30&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
-$data =json_decode($ar,true);
-$arr =[];
-foreach($data['data'] as $key=>$val){
-  echo $val['expireTime']."\r\n";
-  $arr[] =strtotime($val['expireTime']);
-}
-echo "=============\r\n";
-$t = min($arr);
-echo date('Y-m-d H:i:s',$t);
-die;
-$url='http://m.paoshu8.info/wapbook-168201-195662726/';
-
+// $ar = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=30&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
+// $data =json_decode($ar,true);
+// $arr =[];
+// foreach($data['data'] as $key=>$val){
+//   echo $val['expireTime']."\r\n";
+//   $arr[] =strtotime($val['expireTime']);
+// }
+// echo "=============\r\n";
+// $t = min($arr);
+// echo date('Y-m-d H:i:s',$t);
+// die;
+$url='http://m.paoshu8.info/wapbook-21437-139847322-3';
+$list = range(0,30);
 foreach($list as $v){
   $urls[]=$url;
 }

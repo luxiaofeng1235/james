@@ -108,9 +108,9 @@ class guzzleHttp{
         // if(!$proxy_server)
         //     return false;
 
-    $proxy_data = getQyZhimaRand();
-      // //转换字段
-      $proxy_data = combineProxyParam($proxy_data);
+        $proxy_data = getQyZhimaRand();
+        // //转换字段
+        $proxy_data = combineProxyParam($proxy_data);
         if(!$proxy_data){
             echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
             NovelModel::killMasterProcess(); //结束当前进程
