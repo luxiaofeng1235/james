@@ -11,37 +11,16 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
-$aa = getQyZhimaRand();
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
 
-$list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is',true);
-$data = json_decode($list,true);
-$proxy = $data['data'] ?? [];
-$i =$c=0;
-foreach($proxy as $val){
-  $i++;
-   $time = strtotime($val['expire_time']) - time();
-   $time = sprintf('%.2f',$time/60);
-   if($time>=8){
-      $c++;
-   }
-   echo "num ={$i} ip = {$val['ip']} port ={$val['port']} expire_time = {$val['expire_time']} minutes = $time\r\n";
-}
-echo '<pre>';
-print_R($c);
-echo '</pre>';
-exit;
-exit;
-$list =range(0,100);
 
+$list =range(0,5);
+
+$url ='http://www.baidu.com';
 foreach ($list as $key => $value) {
   $urls[]=$url;
 }
 $i = 0;
-$list = guzzleHttp::multi_req($urls);
+$list = curl_pic_multi::Curl_http($urls);
 dd($list);
 foreach($list as $val){
   if(strpos($val,'请求失败')){
