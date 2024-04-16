@@ -108,14 +108,7 @@ class guzzleHttp{
         // if(!$proxy_server)
         //     return false;
 
-
-      $proxy_info = webRequest('https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty=1&port=2&format=json&field=ipport,expiretime,isptype,regioncode&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558','GET');
-      $tdata = json_decode($proxy_info,true);
-      $proxy_data = $tdata['data'][0] ??[];
-      // // $proxy_data['ip'] = '7b2f9a6713186a90.rty.na.roxlabs.vip';
-      // // $proxy_data['port'] = '4600';
-      // // $proxy_data['username'] = 'user-red1235-region-tw-sessid-twt6sX5ZrT-sesstime-30-keep-true';
-      // // $proxy_data['password'] = '123456abc';
+    $proxy_data = getQyZhimaRand();
       // //转换字段
       $proxy_data = combineProxyParam($proxy_data);
         if(!$proxy_data){

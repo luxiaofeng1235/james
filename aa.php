@@ -15,11 +15,16 @@ use sqhlib\Hanzi\HanziConvert;
 
 $list =range(0,5);
 
-$url ='http://www.baidu.com';
-foreach ($list as $key => $value) {
+$url='http://m.paoshu8.info/info-168201/';
+
+foreach($list as $v){
   $urls[]=$url;
 }
-$i = 0;
+// $aa= guzzleHttp::multi_req($urls);
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
 $list = curl_pic_multi::Curl_http($urls);
 dd($list);
 foreach($list as $val){
