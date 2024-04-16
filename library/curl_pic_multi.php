@@ -149,14 +149,15 @@ public static function Rand_refer(){
       // $proxy_data = $tdata['data'][0] ??[];
 
       //随机获取一个代理配置信息
+      sleep(1);
       $proxy_data = getQyZhimaRand();
       //转换对应的字段
       $proxy_data = combineProxyParam($proxy_data);
       //判断代理IP是否失效，防止数据异常
       if(!$proxy_data){
-          echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
-          NovelModel::killMasterProcess(); //结束当前进程
-          exit(1);
+          // echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
+          // NovelModel::killMasterProcess(); //结束当前进程
+          // exit(1);
       }
       //伪造referer地址方便去进行伪造
       $referer = self::Rand_refer();

@@ -14,18 +14,24 @@ $proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
         sleep(1); //防止接口频繁请求
-        $list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is','GET');
+        $list = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=10&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
         $data = json_decode($list,true);
         $proxy = $data['data'] ?? [];
         $proxy_ret=[];
         if($proxy){
+            $t= [];
              foreach($proxy as $val){
-               $time = strtotime($val['expire_time']) - time();
-               $time = sprintf('%.2f',$time/60);
-               if($time>= $set_minute){
-                    $proxy_ret[]=$val;
-               }
+                $expire_time = isset($val['expireTime']) ? $val['expireTime'] : $val['expire_time'];
+                $t[]=strtotime($expire_time);
+                $proxy_ret[]=$val;
+               // $time = strtotime($val['expire_time']) - time();
+               // $time = sprintf('%.2f',$time/60);
+               // if($time>= $set_minute){
+               //      $proxy_ret[]=$val;
+               // }
             }
+            $diff_time = min($t);
+            echo "expire_time = ".date('Y-m-d H:i:s',$diff_time).PHP_EOL;
             //如果匹配到就退出
             if(!empty($proxy_ret)){
                 break;
@@ -34,10 +40,10 @@ if(!$proxy_data){
             echo "未获取到代理配置信息重新获取\r\n";
         }
     }while(true);
-    echo "新代理拉取：当前共匹配到大于{{$set_minute}}分钟的代理有 ".count($proxy_ret)."个\r\n";
+    echo "新代理拉取：当前共匹配到的代理有 ".count($proxy_ret)."个\r\n";
     $list =array_slice($proxy_ret,0 ,$limit);
     echo "只取配置中 limit={$limit}中匹配到的总代理数有 ".count($list)."\r\n";
-    $expire_time = $set_minute * 60; //设置dialing保存的成功数据
+    $expire_time = $diff_time - time(); //设置dialing保存的成功数据
     $ret = $redis_data->set_redis($redis_cache_key,json_encode($list),$expire_time);
     if($ret){
         echo "代理缓存成功,key={$redis_cache_key} \r\n";

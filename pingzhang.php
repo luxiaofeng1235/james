@@ -15,13 +15,13 @@ run(function () {
     $barrier = Barrier::make();
 
     $count = 0;
-    $N = 100;
+    $N = 5;
 
     foreach (range(1, $N) as $i) {
         Coroutine::create(function () use ($barrier, &$count,$i) {
              $http = new HttpRequest;
              $response = $http->ua('YurunHttp')
-                             ->get('https://www.xsw.tw/book/2/192621125.html');
+                             ->get('http://www.baidu.com/');
             echo '<pre>';
             var_dump($response);
             echo '</pre>';
