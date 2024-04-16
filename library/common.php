@@ -593,9 +593,6 @@ function getQyZhimaRand(){
 	global $redis_data;
 	$redis_cache_key = Env::get('ZHIMA_QY_REDIS_KEY');
 	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
-	// sleep(1);
-	// $api_proxy_data = webRequest(
-	// 	'http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=1&regions=&code=qlwo1314is','GET');
 	$proxy_conf = json_decode($api_proxy_data , true);
 	if(!empty($proxy_conf)){
 		$tmp = range(0,count($proxy_conf)-1);//生成一定区间的随机数
