@@ -5,9 +5,10 @@ require_once($dirname.'/library/init.inc.php');
 $exec_start_time = microtime(true);
 $set_minute = 8;
 $limit =30;
-$cache_key= 'zhima_multi_data';
-
-$proxy_data = $redis_data->get_redis($cache_key);
+//缓存的key
+$redis_cache_key= Env::get('ZHIMA_QY_REDIS_KEY');
+echo "cache_key：".$redis_cache_key."\r\n";
+$proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
         $list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is',true);
@@ -34,19 +35,20 @@ if(!$proxy_data){
     $list =array_slice($proxy_ret,0 ,$limit);
     echo "只取配置中 limit={$limit}中匹配到的总代理数有 ".count($list)."\r\n";
     $expire_time = $set_minute * 60; //设置dialing保存的成功数据
-    $ret = $redis_data->set_redis($cache_key,json_encode($list),$expire_time);
+    $ret = $redis_data->set_redis($redis_cache_key,json_encode($list),$expire_time);
     if($ret){
-        echo "代理缓存成功,key={$cache_key} \r\n";
+        echo "代理缓存成功,key={$redis_cache_key} \r\n";
     }else{
         echo "代理缓存失败\r\n";
     }
 }else{
     $data = json_decode($proxy_data ,true);
     echo "缓存里的代理还未过期，暂时可用 ,length = ".count($data)."\r\n";
-    $ttl =$redis_data->ttl($cache_key); //获取缓存的可用时间
+    $ttl =$redis_data->ttl($redis_cache_key); //获取缓存的可用时间
     $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数
     echo "剩余可用缓存时间：".$minutes." minutes\r\n";
 }
 echo "finish\r\n";
+echo "now-time：".date('Y-m-d H:i:s')."\r\n";
 
 ?>
