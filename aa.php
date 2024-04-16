@@ -13,9 +13,9 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-$list =range(0,5);
+$list =range(0,1);
 
-$url='http://m.paoshu8.info/info-168201/';
+$url='http://m.paoshu8.info/wapbook-168201-195662726/';
 
 foreach($list as $v){
   $urls[]=$url;
