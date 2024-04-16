@@ -6,7 +6,7 @@ $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
 $exec_start_time = microtime(true);
 $set_minute = 8;
-$limit =30;
+$limit =6;
 //缓存的key
 $redis_cache_key= Env::get('ZHIMA_QY_REDIS_KEY');
 echo "cache_key：".$redis_cache_key."\r\n";
