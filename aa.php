@@ -12,16 +12,32 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
-$url = 'http://m.paoshu8.info/wapbook-26189-140160348-2';
-
-$list =range(0,150);
+$list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is',true);
+$data = json_decode($list,true);
+$proxy = $data['data'] ?? [];
+$i =$c=0;
+foreach($proxy as $val){
+  $i++;
+   $time = strtotime($val['expire_time']) - time();
+   $time = sprintf('%.2f',$time/60);
+   if($time>=8){
+      $c++;
+   }
+   echo "num ={$i} ip = {$val['ip']} port ={$val['port']} expire_time = {$val['expire_time']} minutes = $time\r\n";
+}
+echo '<pre>';
+print_R($c);
+echo '</pre>';
+exit;
+exit;
+$list =range(0,100);
 
 foreach ($list as $key => $value) {
   $urls[]=$url;
 }
-dd($urls);
 $i = 0;
 $list = guzzleHttp::multi_req($urls);
+dd($list);
 foreach($list as $val){
   if(strpos($val,'请求失败')){
       $i++;
