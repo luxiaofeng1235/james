@@ -13,6 +13,7 @@ echo "cache_key：".$redis_cache_key."\r\n";
 $proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
+        sleep(1); //防止接口频繁请求
         $list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is','GET');
         $data = json_decode($list,true);
         $proxy = $data['data'] ?? [];
