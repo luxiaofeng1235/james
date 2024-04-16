@@ -1,4 +1,6 @@
 <?php
+set_time_limit(0);
+ini_set('memory_limit','9000M');
 $dirname = dirname(dirname(__FILE__));
 $dirname =str_replace("\\", "/", $dirname) ;
 require_once($dirname.'/library/init.inc.php');
@@ -11,7 +13,7 @@ echo "cache_key：".$redis_cache_key."\r\n";
 $proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
-        $list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is',true);
+        $list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is','GET');
         $data = json_decode($list,true);
         $proxy = $data['data'] ?? [];
         $proxy_ret=[];
