@@ -109,26 +109,26 @@ class guzzleHttp{
         //     return false;
 
 
-      // $proxy_info = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=2&qty=1&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
-      // $tdata = json_decode($proxy_info,true);
-      // $proxy_data = $tdata['data'][0] ??[];
+      $proxy_info = webRequest('https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty=1&port=2&format=json&field=ipport,expiretime,isptype,regioncode&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558','GET');
+      $tdata = json_decode($proxy_info,true);
+      $proxy_data = $tdata['data'][0] ??[];
       // // $proxy_data['ip'] = '7b2f9a6713186a90.rty.na.roxlabs.vip';
       // // $proxy_data['port'] = '4600';
       // // $proxy_data['username'] = 'user-red1235-region-tw-sessid-twt6sX5ZrT-sesstime-30-keep-true';
       // // $proxy_data['password'] = '123456abc';
       // //转换字段
-      //   $proxy_data = combineProxyParam($proxy_data);
-      //   if(!$proxy_data){
-      //       echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
-      //       NovelModel::killMasterProcess(); //结束当前进程
-      //       exit(1);
-      //   }
+      $proxy_data = combineProxyParam($proxy_data);
+        if(!$proxy_data){
+            echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
+            NovelModel::killMasterProcess(); //结束当前进程
+            exit(1);
+        }
 
 
-        $proxy_data['ip'] = 'tw.ipdodo.cloud';
-        $proxy_data['port'] = '10801';
-        $proxy_data['username'] = 'n1_1712733036-dh-2-region-tw';
-        $proxy_data['password']  = '11e475e0';
+        // $proxy_data['ip'] = 'tw.ipdodo.cloud';
+        // $proxy_data['port'] = '10801';
+        // $proxy_data['username'] = 'n1_1712733036-dh-2-region-tw';
+        // $proxy_data['password']  = '11e475e0';
         //带密码的访问
        if(isset($proxy_data['username']) && isset($proxy_data['password'])){
            $proxy_server ='socks5://'.$proxy_data['username'] .':'.$proxy_data['password'] . '@'.$proxy_data['ip'] . ':'.$proxy_data['port'];

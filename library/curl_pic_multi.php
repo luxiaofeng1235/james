@@ -113,7 +113,7 @@ public static function Rand_refer(){
         $return =$data['data'] ?? [];
         if(!$return) $return = [];
         $list = array_merge($list , $return);
-        echo " num = " .($i+1). "\r\n";
+        echo " proxy page num = " .($i+1). "\r\n";
         sleep(1);
       }
       $newlist = [];

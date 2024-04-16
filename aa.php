@@ -12,25 +12,25 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
-$url = 'https://m.xsw.tw/1123700/247529821.html';
+$url = 'http://m.paoshu8.info/wapbook-26189-140160348-2';
 
-$list =range(0,2);
+$list =range(0,150);
+
 foreach ($list as $key => $value) {
   $urls[]=$url;
 }
-
-
-foreach($urls as $i=> $i){
-  $cc = webRequest($i,'GET');
-   echo "num =".($i+1)." \r\n ";
+dd($urls);
+$i = 0;
+$list = guzzleHttp::multi_req($urls);
+foreach($list as $val){
+  if(strpos($val,'请求失败')){
+      $i++;
+  }
 }
-echo 3;exit;
-$t= curl_pic_multi::Curl_http($urls);
 echo '<pre>';
-print_R($t);
+var_dump($i);
 echo '</pre>';
 exit;
-
 
 $aa = webRequest('https://m.xsw.tw/1123700/247529821.html','GET');
 
@@ -315,9 +315,17 @@ die;
 
 $url = [
 
-    'https://www.fumubang.com/',
+    'http://m.paoshu8.info/wapbook-26189-140160348-2',
 ];
 
+
+for ($i=0; $i < 50; $i++) {
+   $urls[] = $url;
+}
+echo '<pre>';
+print_R($urls);
+echo '</pre>';
+exit;
 // $data = $mutl_curl->Curl_http($url,3);
 // echo '<pre>';
 // print_R($data);
