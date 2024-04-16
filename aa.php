@@ -25,15 +25,20 @@ use sqhlib\Hanzi\HanziConvert;
 // echo date('Y-m-d H:i:s',$t);
 // die;
 $url='http://m.paoshu8.info/wapbook-21437-139847322-3';
-$list = range(0,150);
-foreach($list as $v){
-  $urls[]=$url;
+$list = range(0,30);
+foreach($list as $key =>$v){
+   $arr= guzzleHttp::multi_req([$url]);
+   echo '<pre>';
+   print_R($arr);
+   echo '</pre>';
+   echo "num = ".($key+1).PHP_EOL;
 }
+die;
 $arr= guzzleHttp::multi_req($urls);
-// echo '<pre>';
-// print_R($aa);
-// echo '</pre>';
-// exit;
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
 // $list = curl_pic_multi::Curl_http($urls);
 $i = 0;
 foreach($arr as $val){

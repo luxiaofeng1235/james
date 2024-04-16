@@ -7,6 +7,8 @@ use Swoole\Timer;
 use Yurun\Util\HttpRequest;
 use Yurun\Util\YurunHttp\ConnectionPool;
 use Yurun\Util\YurunHttp\Handler\Swoole\SwooleHttpConnectionManager;
+
+
 $exec_start_time = microtime(true);
 function dumpPoolInfo()
 {
@@ -21,7 +23,7 @@ ConnectionPool::enable();
 
 // 为这个地址设置限制连接池连接数量3个
 // 一定不要有 / 及后续参数等
-ConnectionPool::setConfig('https://www.baidu.com', 16);
+ConnectionPool::setConfig('http://m.paoshu8.info', 16);
 
 Co\run(function () {
     dumpPoolInfo();
