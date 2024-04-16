@@ -25,19 +25,19 @@ use sqhlib\Hanzi\HanziConvert;
 // echo date('Y-m-d H:i:s',$t);
 // die;
 $url='http://m.paoshu8.info/wapbook-21437-139847322-3';
-$list = range(0,30);
+$list = range(0,150);
 foreach($list as $v){
   $urls[]=$url;
 }
-$aa= guzzleHttp::multi_req($urls);
-echo '<pre>';
-print_R($aa);
-echo '</pre>';
-exit;
-$list = curl_pic_multi::Curl_http($urls);
-dd($list);
-foreach($list as $val){
-  if(strpos($val,'请求失败')){
+$arr= guzzleHttp::multi_req($urls);
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
+// $list = curl_pic_multi::Curl_http($urls);
+$i = 0;
+foreach($arr as $val){
+  if(empty($val) ||  strpos($val,'请求失败')){
       $i++;
   }
 }
