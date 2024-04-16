@@ -586,6 +586,25 @@ function getImgProxy(){
 }
 
 /**
+ * 随机获取芝麻的配置代理 每次取一条
+ * @return array
+ */
+function getQyZhimaRand(){
+	global $redis_data;
+	$redis_cache_key = Env::get('ZHIMA_QY_REDIS_KEY');
+	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
+	$proxy_conf = json_decode($api_proxy_data , true);
+	if(!empty($proxy_conf)){
+		$tmp = range(0,count($proxy_conf)-1);//生成一定区间的随机数
+		$rand = array_rand($tmp,1);//每次取一条
+		$proxy_ret = $proxy_conf[$rand] ?? [];
+		return $proxy_ret;
+	}else{
+		return [];
+	}
+}
+
+/**
  * 获取移动端页面为空处理获取的新的IP
  * @return mixed
  */

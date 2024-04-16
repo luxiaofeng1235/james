@@ -11,6 +11,11 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
+$aa = getQyZhimaRand();
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 
 $list = webRequest('http://pg.tiqu.letecs.com/getip_cm?neek=321a408a&num=50&type=2&pro=0&city=0&yys=0&port=2&pack=342905&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=2&regions=&code=qlwo1314is',true);
 $data = json_decode($list,true);
