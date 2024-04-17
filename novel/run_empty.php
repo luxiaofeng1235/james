@@ -173,7 +173,7 @@ public function updateFewStatus($pro_book_id= 0){
     }
     global $mysql_obj;
     $where_condition = "id = '".$pro_book_id."'";
-    $no_chapter_data['is_few'] = 2;
+    $no_chapter_data['is_less'] = 2;
     //对比新旧数据返回最新的更新
     $mysql_obj->update_data($no_chapter_data,$where_condition,'mc_book',false,0,'db_novel_pro');
 }

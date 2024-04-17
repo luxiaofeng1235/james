@@ -6,9 +6,9 @@ user="root"
 password="HM9GO3JH3XrLoouh"
 database="book_center"
 
-query="SELECT  i.store_id,mc.book_name as title,mc.id as pro_book_id,mc.author,mc.source_url,is_few,chapter_num,chapter_few_num  from novel.mc_book as mc left join book_center.ims_novel_info as i
+query="SELECT  i.store_id,mc.book_name as title,mc.id as pro_book_id,mc.author,mc.source_url,is_less,chapter_num,chapter_few_num  from novel.mc_book as mc left join book_center.ims_novel_info as i
 on mc.id = i.pro_book_id
-WHERE  mc.is_few=1 and  source='paoshu8' and mc.id is not null  and mc.chapter_num>1000 and mc.chapter_num<3000 order by mc.uptime desc LIMIT 50"
+WHERE  mc.is_less=1 and  source='paoshu8' and mc.id is not null  and mc.chapter_num>1000 and mc.chapter_num<3000 order by mc.uptime desc LIMIT 50"
 #echo "$query"
 result=$(mysql -h $host -u $user -p$password $database -s -e "$query")
 
