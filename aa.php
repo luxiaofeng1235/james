@@ -12,7 +12,6 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
-
 // $ar = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=30&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
 // $data =json_decode($ar,true);
 // $arr =[];
@@ -24,22 +23,26 @@ use sqhlib\Hanzi\HanziConvert;
 // $t = min($arr);
 // echo date('Y-m-d H:i:s',$t);
 // die;
-$url='http://m.paoshu8.info/wapbook-21437-139847322-3';
-$list = range(0,30);
-foreach($list as $key =>$v){
-   $arr= guzzleHttp::multi_req([$url]);
-   echo '<pre>';
-   print_R($arr);
-   echo '</pre>';
-   echo "num = ".($key+1).PHP_EOL;
-}
-die;
-$arr= guzzleHttp::multi_req($urls);
+$url='http://m.paoshu8.info/wapbook-21437-147695292/';
+// $list = range(0,30);
+// foreach($list as $key =>$v){
+//    $arr= guzzleHttp::multi_req([$url]);
+//    echo '<pre>';
+//    print_R($arr);
+//    echo '</pre>';
+//    echo "num = ".($key+1).PHP_EOL;
+// }
+// die;
+// $arr= guzzleHttp::multi_req([$url]);
+// echo '<pre>';
+// print_R($arr);
+// echo '</pre>';
+// exit;
+$list = curl_pic_multi::Curl_http([$url]);
 echo '<pre>';
-print_R($arr);
+print_R($list);
 echo '</pre>';
 exit;
-// $list = curl_pic_multi::Curl_http($urls);
 $i = 0;
 foreach($arr as $val){
   if(empty($val) ||  strpos($val,'请求失败')){

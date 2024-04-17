@@ -153,12 +153,16 @@ public static function Rand_refer(){
       $proxy_data = getQyZhimaRand();
       //转换对应的字段
       $proxy_data = combineProxyParam($proxy_data);
-      //判断代理IP是否失效，防止数据异常
-      if(!$proxy_data){
-          echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
-          NovelModel::killMasterProcess(); //结束当前进程
-          exit(1);
-      }
+      // //判断代理IP是否失效，防止数据异常
+      // if(!$proxy_data){
+      //     echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
+      //     NovelModel::killMasterProcess(); //结束当前进程
+      //     exit(1);
+      // }
+      // $proxy_data['ip'] = '175.149.61.228'; //180.112.239.244:54105
+      // $proxy_data['port'] = '4256';
+      // $proxy_data['username'] = 'lady1235';
+      // $proxy_data['password']  = 'F24865A4F2EE1B8EC41696C1AC69015E';
       //伪造referer地址方便去进行伪造
       $referer = self::Rand_refer();
       //伪造客户端IP进行访问，

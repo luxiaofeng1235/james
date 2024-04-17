@@ -10,11 +10,13 @@ $limit =6;
 //缓存的key
 $redis_cache_key= Env::get('ZHIMA_QY_REDIS_KEY');
 echo "cache_key：".$redis_cache_key."\r\n";
+// $redis_data->del_redis($redis_cache_key);
+// echo 3;die;
 $proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
         sleep(1); //防止接口频繁请求
-        $list = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=10&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
+        $list = webRequest('http://webapi.http.zhimacangku.com/getip_3h?neek=321a408a&num=6&type=2&time=3&pro=0&city=0&yys=0&port=1&pack=0&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=1&regions=','GET');
         $data = json_decode($list,true);
         $proxy = $data['data'] ?? [];
         $proxy_ret=[];
@@ -23,6 +25,7 @@ if(!$proxy_data){
              foreach($proxy as $val){
                 $expire_time = isset($val['expireTime']) ? $val['expireTime'] : $val['expire_time'];
                 $t[]=strtotime($expire_time);
+                // echo $expire_time."\r\n";
                 $proxy_ret[]=$val;
                // $time = strtotime($val['expire_time']) - time();
                // $time = sprintf('%.2f',$time/60);
@@ -31,7 +34,7 @@ if(!$proxy_data){
                // }
             }
             $diff_time = min($t);
-            echo "expire_time = ".date('Y-m-d H:i:s',$diff_time).PHP_EOL;
+            echo "proxy-max-expire_time = ".date('Y-m-d H:i:s',$diff_time).PHP_EOL;
             //如果匹配到就退出
             if(!empty($proxy_ret)){
                 break;
