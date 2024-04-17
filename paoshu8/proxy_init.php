@@ -16,7 +16,7 @@ $proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
         sleep(1); //防止接口频繁请求
-        $list = webRequest('http://webapi.http.zhimacangku.com/getip_3h?neek=321a408a&num=6&type=2&time=3&pro=0&city=0&yys=0&port=1&pack=0&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=1&regions=','GET');
+        $list = webRequest('http://webapi.http.zhimacangku.com/getip_3h?neek=321a408a&num=6&type=2&time=3&pro=0&city=0&yys=0&port=2&pack=0&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=1&regions=120000,430000,420000,310000,110000,530000,440000,610000,620000,340000,140000,150000,350000,460000,630000,500000,360000,210000,220000,370000,510000,520000,410000,230000','GET');
         $data = json_decode($list,true);
         $proxy = $data['data'] ?? [];
         $proxy_ret=[];
@@ -56,6 +56,10 @@ if(!$proxy_data){
 }else{
     //代理不为空的情况
     $data = json_decode($proxy_data ,true);
+    echo '<pre>';
+    print_R($data);
+    echo '</pre>';
+    exit;
     echo "缓存里的代理还未过期，暂时可用 ,length = ".count($data)."\r\n";
     $ttl =$redis_data->ttl($redis_cache_key); //获取缓存的可用时间
     $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数

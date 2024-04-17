@@ -23,7 +23,19 @@ use sqhlib\Hanzi\HanziConvert;
 // $t = min($arr);
 // echo date('Y-m-d H:i:s',$t);
 // die;
-$url='http://m.paoshu8.info/wapbook-21437-147695292/';
+$url=[
+  'http://m.paoshu8.info/wapbook-21437-147695292/',
+  'http://m.paoshu8.info/wapbook-21437-147593596/',
+  'http://m.paoshu8.info/wapbook-21437-147593596/',
+  'http://m.paoshu8.info/wapbook-21437-147527339/',
+  'http://m.paoshu8.info/wapbook-21437-147430997/',
+  'http://m.paoshu8.info/wapbook-21437-147357525/',
+  'http://m.paoshu8.info/wapbook-21437-147282059/',
+  'http://m.paoshu8.info/wapbook-21437-147282059/',
+  'http://m.paoshu8.info/wapbook-21437-147043547/',
+  'http://m.paoshu8.info/wapbook-21437-146944033/',
+  'http://m.paoshu8.info/wapbook-21437-146944033-2/',
+];
 // $list = range(0,30);
 // foreach($list as $key =>$v){
 //    $arr= guzzleHttp::multi_req([$url]);
@@ -38,7 +50,7 @@ $url='http://m.paoshu8.info/wapbook-21437-147695292/';
 // print_R($arr);
 // echo '</pre>';
 // exit;
-$list = curl_pic_multi::Curl_http([$url]);
+$list = curl_pic_multi::Curl_http($url);
 echo '<pre>';
 print_R($list);
 echo '</pre>';
