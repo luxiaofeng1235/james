@@ -12,6 +12,12 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+
+$aa = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=6&xy=3&type=2&lb=%5Cr%5Cn&nr=99&area_id=&isp=0&','GET');
+echo '<pre>';
+var_dump($aa);
+echo '</pre>';
+exit;
 // $ar = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=30&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
 // $data =json_decode($ar,true);
 // $arr =[];

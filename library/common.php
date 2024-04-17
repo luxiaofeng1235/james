@@ -794,12 +794,21 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	}
 	sleep(1);
 
-	//最终需要请求的列表
-	$proxy_type = ClientModel::getCurlRandProxy();
-	$finalList = curl_pic_multi::Curl_http(array_column($new_list,'mobile_url'),$proxy_type);
-	$rand_str_new = ClientModel::getCurlRandProxy();//基础小说的代理IP
-	//重复请求，防止数据丢失
-	$finalList = NovelModel::callRequests($finalList , $new_list,$valid_curl,$rand_str_new);
+	/*******************采集需要处理的N*3的一个章节 start************************/
+	$chunkBuffer  =array_chunk($new_list, 50); //按照50个一组进行分割,由于采集下来是一个矩阵，导致数据比较多
+	$finalList = [];
+	foreach($chunkBuffer as $jhv){
+		//最终需要请求的列表
+		$proxy_type = ClientModel::getCurlRandProxy();
+		$cdata = curl_pic_multi::Curl_http(array_column($jhv,'mobile_url'),$proxy_type);
+		$rand_str_new = ClientModel::getCurlRandProxy();//基础小说的代理IP
+		//重复请求，防止数据丢失
+		$cdata = NovelModel::callRequests($cdata , $new_list,$valid_curl,$rand_str_new);
+		$finalList = array_merge($finalList,$cdata);
+	}
+	/*******************采集需要处理的N*3的一个章节 end************************/
+
+
 	if($finalList){
 		foreach($finalList as $ck =>$cv){
 			// if(!$cv) continue;

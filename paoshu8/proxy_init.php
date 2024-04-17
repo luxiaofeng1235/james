@@ -15,8 +15,8 @@ echo "cache_key：".$redis_cache_key."\r\n";
 $proxy_data = $redis_data->get_redis($redis_cache_key);
 if(!$proxy_data){
     do{
-        sleep(1); //防止接口频繁请求
-        $list = webRequest('http://webapi.http.zhimacangku.com/getip_3h?neek=321a408a&num=6&type=2&time=3&pro=0&city=0&yys=0&port=2&pack=0&ts=1&ys=1&cs=1&lb=1&sb=&pb=4&mr=1&regions=120000,430000,420000,310000,110000,530000,440000,610000,620000,340000,140000,150000,350000,460000,630000,500000,360000,210000,220000,370000,510000,520000,410000,230000','GET');
+        // sleep(1); //防止接口频繁请求
+        $list = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=6&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
         $data = json_decode($list,true);
         $proxy = $data['data'] ?? [];
         $proxy_ret=[];
