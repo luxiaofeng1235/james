@@ -56,10 +56,6 @@ if(!$proxy_data){
 }else{
     //代理不为空的情况
     $data = json_decode($proxy_data ,true);
-    echo '<pre>';
-    print_R($data);
-    echo '</pre>';
-    exit;
     echo "缓存里的代理还未过期，暂时可用 ,length = ".count($data)."\r\n";
     $ttl =$redis_data->ttl($redis_cache_key); //获取缓存的可用时间
     $minutes = sprintf('%.2f',($ttl/60)); //剩余的分钟数
