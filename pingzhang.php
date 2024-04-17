@@ -15,21 +15,25 @@ run(function () {
     $barrier = Barrier::make();
 
     $count = 0;
-    $N = 5;
+    $N = 300;
 
     foreach (range(1, $N) as $i) {
         Coroutine::create(function () use ($barrier, &$count,$i) {
              $http = new HttpRequest;
              $response = $http->ua('YurunHttp')
-                             ->get('http://www.baidu.com/');
-            echo '<pre>';
-            var_dump($response);
-            echo '</pre>';
+                            ->proxy('tw.ipdodo.cloud', '10801', 'socks5') //认证类型设置
+                            ->proxyAuth('n1_1712733036-dh-2-region-tw','11e475e0') //认证账密
+                             ->get('https://www.xsw.tw/book/1263567/231595420.html');
             // echo $file.PHP_EOL;
             echo "num = {$i} \r\n";
-            System::sleep(0.5);
+            var_dump(strlen($response->body()),$response->getStatusCode());
+            if($response->getStatusCode() != 200){
+                echo "获取数据失败=============================\r\n";
+            }
+            System::sleep(1);
             $count++;
         });
+
     }
     Barrier::wait($barrier);
 
