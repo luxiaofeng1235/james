@@ -9,36 +9,40 @@ use Swoole\Coroutine;
 use Yurun\Util\HttpRequest;
 
 
-
+$items = [];
 $exec_start_time = microtime(true);
-run(function () {
+run(function () use(&$items){
     $barrier = Barrier::make();
-
     $count = 0;
-    $N = 300;
-
+    $N = 30;
     foreach (range(1, $N) as $i) {
-        Coroutine::create(function () use ($barrier, &$count,$i) {
-             $http = new HttpRequest;
+        Coroutine::create(function () use ($barrier, &$count,$i,&$items) {
+            $http = new HttpRequest;
+            $proxy_data = getQyZhimaRand();
+            $proxy_data = combineProxyParam($proxy_data);
              $response = $http->ua('YurunHttp')
-                            ->proxy('tw.ipdodo.cloud', '10801', 'socks5') //认证类型设置
-                            ->proxyAuth('n1_1712733036-dh-2-region-tw','11e475e0') //认证账密
-                             ->get('https://www.xsw.tw/book/1263567/231595420.html');
+                            ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
+                            // ->proxy('tw.ipdodo.cloud', '10801', 'socks5') //认证类型设置
+                            // ->proxyAuth('n1_1712733036-dh-2-region-tw','11e475e0') //认证账密
+                             ->get('http://m.paoshu8.info/wapbook-158797-176816601-1');
             // echo $file.PHP_EOL;
             echo "num = {$i} \r\n";
+            $items[]=$response->body();
             var_dump(strlen($response->body()),$response->getStatusCode());
-            if($response->getStatusCode() != 200){
-                echo "获取数据失败=============================\r\n";
-            }
+            // if($response->getStatusCode() != 200){
+            //     echo "获取数据失败=============================\r\n";
+            // }
             System::sleep(1);
             $count++;
         });
-
     }
     Barrier::wait($barrier);
-
     assert($count == $N);
 });
+echo '<pre>';
+print_R($items);
+echo '</pre>';
+exit;
 
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time;

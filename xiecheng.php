@@ -7,8 +7,8 @@ require_once($dirname.'/library/init.inc.php');
 use Yurun\Util\HttpRequest;
 
 $arr =getQyZhimaRand();
-$url = 'https://www.xsw.tw/book/1263567/231595420.html';
-foreach(range(1,100) as $val){
+$url = 'http://m.paoshu8.info/wapbook-158797-176816601-1';
+foreach(range(1,35) as $val){
     $urls[]=$url;
 }
 
@@ -27,7 +27,7 @@ Co\run(function () use($urls,&$items){
                 $proxy_data = combineProxyParam($proxy_data);
                 $response = $http // 支持http、socks4、socks4a、socks5
                             ->ua('YurunHttp')
-                            // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
+                            ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
                             ->get($urls[$i]);
 
              //    echo 'html:', PHP_EOL, $response->body('big5','utf8');

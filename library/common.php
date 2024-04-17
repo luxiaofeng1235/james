@@ -797,7 +797,8 @@ function getStoryCotents($item=[],$store_id=0,$txt_path=''){
 	/*******************采集需要处理的N*3的一个章节 start************************/
 	$chunkBuffer  =array_chunk($new_list, 50); //按照50个一组进行分割,由于采集下来是一个矩阵，导致数据比较多
 	$finalList = [];
-	foreach($chunkBuffer as $jhv){
+	foreach($chunkBuffer as  $jhk =>$jhv){
+		echo "==================== detail pages = ".($jhk+1)."\r\n";
 		//最终需要请求的列表
 		$proxy_type = ClientModel::getCurlRandProxy();
 		$cdata = curl_pic_multi::Curl_http(array_column($jhv,'mobile_url'),$proxy_type);

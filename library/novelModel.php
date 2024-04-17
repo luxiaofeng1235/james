@@ -1511,5 +1511,30 @@ public static function getUrlById($url =""){
 }
 
 
+/**
+* @note 获取缓存的基础信息
+*
+* @param  $url array url信息
+* @return array
+*/
+public static function cacheStoryDetail($url, $expire_time = 87600){
+    if(!$url) return false;
+    $novel_id = NovelModel::getUrlById($url);
+    $redis_cache_key ='xsw_detail_'.$novel_id;
+    global $redis_data;
+    $info = $redis_data->get_redis($redis_cache_key);
+    if(!$info){
+        //没有缓存从缓存中获取一次
+        $info = webRequest($url,'GET');//获取页面缓存信息
+        $redis_data->set_redis($redis_cache_key,$info,$expire_time);
+        $data = $info;
+    }else{
+      //直接取出来信息
+       $data  = $info;
+    }
+    return $data;
+}
+
+
 }
 ?>
