@@ -9,6 +9,7 @@ use Swoole\Coroutine;
 use Yurun\Util\HttpRequest;
 
 
+//获取URL的配置信息
 function getUrl($urls = []){
     if(!$urls){
         return false;
@@ -25,10 +26,17 @@ function getUrl($urls = []){
         $http = new HttpRequest;
         foreach (range(0, $N-1) as $i) {
             $link = $urls[$i];
+            /*
+            代理网络: hk.stormip.cn
+            端口: 1000
+            账户名: storm-jekines_area-TW_session-123456_life-5
+            密码: 123456
+             */
             Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls) {
-                $response = $http->ua('YurunHttp')
-                                 // ->proxy('7b2f9a6713186a90.asd.as.roxlabs.vip', '4600', 'socks5') //认证类型设置
-                                 // ->proxyAuth('user-red1235-region-tw-sessid-twZh0b2ezH-sesstime-5-keep-true','123456abc') //认证账密
+                $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
+                                 ->rawHeader('ddd:value4')
+                                 ->proxy('7b2f9a6713186a90.asd.as.roxlabs.vip', '4600', 'socks5') //认证类型设置
+                                 ->proxyAuth('user-red1235-region-tw-sessid-twFEydjEy4-sesstime-5-keep-true','123456abc') //认证账密
                                  ->get($urls[$i]);
                 // echo $file.PHP_EOL;
                 echo "num = {$i} \t url = {$urls[$i]}\r\n";
@@ -48,7 +56,7 @@ function getUrl($urls = []){
 }
 
 $url  = 'https://www.xsw.tw/book/1144673/248318027.html';
-for ($i=0; $i <10 ; $i++) {
+for ($i=0; $i <200 ; $i++) {
     $urls [] = $url;
 }
 

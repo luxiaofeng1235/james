@@ -11,4 +11,7 @@ curl -x socks5://27.158.8.62:38391   http://www.baidu.com
 
 curl --socks5 180.112.239.244:54105  -U "lady1235:F24865A4F2EE1B8EC41696C1AC69015E"  http://www.163.com
  
-curl -x socks5://180.112.239.244:54105 -U "lady1235:F24865A4F2EE1B8EC41696C1AC69015E"http://m.paoshu8.info/wapbook-21437-147695292/
+curl -x socks5://hk.stormip.cn:1000 -U "storm-jekines_area-TW_session-123456_life-5:123456" http://www.baidu.com
+
+curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http://www.baidu.com
+curl --socks5  43.243.171.202:8012 http://www.baidu.com
