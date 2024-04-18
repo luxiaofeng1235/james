@@ -22,10 +22,10 @@ function getUrl($urls = []){
         $N = count($urls);
         $t_url =$urls;
         echo "urls num：".$N."\r\n";
+        $http = new HttpRequest;
         foreach (range(0, $N-1) as $i) {
             $link = $urls[$i];
-            Coroutine::create(function () use ($barrier, &$count,$i,&$items,$urls) {
-                $http = new HttpRequest;
+            Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls) {
                 $response = $http->ua('YurunHttp')
                                  // ->proxy('7b2f9a6713186a90.asd.as.roxlabs.vip', '4600', 'socks5') //认证类型设置
                                  // ->proxyAuth('user-red1235-region-tw-sessid-twZh0b2ezH-sesstime-5-keep-true','123456abc') //认证账密
