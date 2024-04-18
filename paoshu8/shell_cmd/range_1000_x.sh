@@ -6,8 +6,25 @@ user="root"
 password="HM9GO3JH3XrLoouh"
 database="book_center"
 #echo "$query"
-query="SELECT  i.store_id,mc.book_name as title,mc.id as pro_book_id,mc.author,mc.source_url,is_less,chapter_num,chapter_few_num from  book_center.ims_novel_info as i  INNER join novel.mc_book as mc on i.pro_book_id = mc.id
-WHERE mc.is_less=1 and source_url REGEXP 'paoshu8' and mc.chapter_num>1000  order by mc.uptime desc limit 50"
+query="SELECT
+i.store_id,
+mc.book_name AS title,
+mc.id AS pro_book_id,
+mc.author,
+mc.source_url,
+is_less,
+less_count
+FROM
+book_center.ims_novel_info AS i
+INNER JOIN novel.mc_book AS mc ON i.pro_book_id = mc.id
+WHERE
+mc.is_less = 1
+AND source_url REGEXP 'paoshu8'
+AND less_count > 0
+AND  mc.chapter_num>700
+ORDER BY
+less_count ASC
+LIMIT 500"
 result=$(mysql -h $host -u $user -p$password $database -s -e "$query")
 
 
@@ -24,7 +41,7 @@ else
     while IFS=$'\t' read -r column1 column2 column3 column4; do
         # 在这里处理每一行数据，可以使用变量column1、column2、column3
         #   # 例如打印每一行的数据
-        echo "store_id: $column1"
+        echo "store_id: $column1 title：$column2 author：$column4"
         shell_cmd="cd /www/wwwroot/work_project/novelProject/paoshu8/ && nohup /www/server/php/72/bin/php gather_info_local.php $column1 >> run_range.out 2>&1 &"
         echo $shell_cmd | bash;
     done <<< "$result"
