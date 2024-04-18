@@ -1155,7 +1155,7 @@ function getRemoteIp(){
 }
 
 /**
- * @note 写入文件操作
+ * @note 写入文件操作--不追加文件
  *
  * @param $file_path str 文件路径
  * @param $content str 文件内容

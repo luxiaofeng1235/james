@@ -1,4 +1,7 @@
 <?php
+
+
+
 /*
  * 处理小说的主要模型业务（台湾地区的）
  *
@@ -7,6 +10,12 @@
  * @version 0.1
  *
  */
+use QL\QueryList;
+use Swoole\Timer;
+use Yurun\Util\HttpRequest;
+use Yurun\Util\YurunHttp\ConnectionPool;
+use Yurun\Util\YurunHttp\Handler\Swoole\SwooleHttpConnectionManager;
+
 class StoreModel{
 
      private static $imageType ='jpg';//默认的头像

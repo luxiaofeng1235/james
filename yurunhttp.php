@@ -23,7 +23,7 @@ ConnectionPool::enable();
 
 // 为这个地址设置限制连接池连接数量3个
 // 一定不要有 / 及后续参数等
-ConnectionPool::setConfig('http://m.paoshu8.info', 16);
+ConnectionPool::setConfig('https://www.xsw.tw', 16);
 Co\run(function () {
     dumpPoolInfo();
 
@@ -32,7 +32,7 @@ Co\run(function () {
     });
 
     $wg = new \Swoole\Coroutine\WaitGroup();
-    for ($i = 0; $i < 100; ++$i)
+    for ($i = 0; $i < 200; ++$i)
     {
         $wg->add();
         go(function () use ($wg,$i) {
@@ -42,8 +42,8 @@ Co\run(function () {
             $proxy_data = combineProxyParam($proxy_data);
             $http = new HttpRequest();
             $response = $http
-                        ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
-                        ->get('http://m.paoshu8.info/wapbook-21437-139847322-3');
+                        // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
+                        ->get('https://www.xsw.tw/book/3.html');
             var_dump(strlen($response->body()),$response->getStatusCode());
 
             echo  "num ={$i} +++++++++++++++++++++++++++++++++++++++ \r\n";
