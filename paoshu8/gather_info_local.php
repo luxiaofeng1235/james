@@ -71,7 +71,6 @@ function delete_chapter_data($store_id,$story_id,$table_name){
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
-        $factory->updateIndexStatus($store_id);//更新状态
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
         NovelModel::killMasterProcess();//退出主程序
@@ -176,7 +175,6 @@ if($info){
             $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
             //更新首页的标记状态
             $factory->updateDownStatus($info[0]['pro_book_id']);
-            $factory->updateIndexStatus($store_id);//更新状态
             printlog('未匹配到相关章节数据');
             echo "no chapter list\r\n";
             NovelModel::killMasterProcess();//退出主程序
@@ -236,7 +234,6 @@ if($info){
             $no_chapter_data['is_async'] = 1;
             //更新is_down的状态
             $pro_book_id>0 && $factory->updateDownStatus($pro_book_id);
-            $factory->updateIndexStatus($store_id);//更新状态
             //对比新旧数据返回最新的更新
             $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
             echo "此小说【".$store_data['title']."】  pro_book_id =".intval($info[0]['pro_book_id'])." \t暂无没有章节信息----------\r\n";

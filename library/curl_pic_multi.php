@@ -153,11 +153,11 @@ public static function Rand_refer(){
       //转换对应的字段
       $proxy_data = combineProxyParam($proxy_data);
       //判断代理IP是否失效，防止数据异常
-      if(!$proxy_data){
-          echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
-          NovelModel::killMasterProcess(); //结束当前进程
-          exit(1);
-      }
+      // if(!$proxy_data){
+      //     echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
+      //     NovelModel::killMasterProcess(); //结束当前进程
+      //     exit(1);
+      // }
       // $proxy_data['ip'] = '175.149.61.228'; //180.112.239.244:54105
       // $proxy_data['port'] = '4256';
       // $proxy_data['username'] = 'lady1235';
@@ -176,13 +176,13 @@ public static function Rand_refer(){
           curl_setopt($conn[$k], CURLOPT_TIMEOUT, $timeout);//设置超时时间
         if($proxy_data){
         //是否开启代理
-            curl_setopt($conn[$k], CURLOPT_PROXY, $proxy_data['ip']);
-            curl_setopt($conn[$k],CURLOPT_PROXYPORT,$proxy_data['port']);
-            if(isset($proxy_data['username']) && isset($proxy_data['password'])){
-                  curl_setopt($conn[$k],CURLOPT_PROXYUSERPWD,$proxy_data['username'].':'.$proxy_data['password']);
-              }
-              curl_setopt($conn[$k], CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
-              curl_setopt($conn[$k],CURLOPT_PROXYAUTH,CURLAUTH_BASIC);
+            // curl_setopt($conn[$k], CURLOPT_PROXY, $proxy_data['ip']);
+            // curl_setopt($conn[$k],CURLOPT_PROXYPORT,$proxy_data['port']);
+            // if(isset($proxy_data['username']) && isset($proxy_data['password'])){
+            //       curl_setopt($conn[$k],CURLOPT_PROXYUSERPWD,$proxy_data['username'].':'.$proxy_data['password']);
+            //   }
+            //   curl_setopt($conn[$k], CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            //   curl_setopt($conn[$k],CURLOPT_PROXYAUTH,CURLAUTH_BASIC);
         }
          // 设置连接超时时间，单位是秒
           curl_setopt($conn[$k], CURLOPT_CONNECTTIMEOUT, self::$connection_timeout);

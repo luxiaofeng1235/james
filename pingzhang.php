@@ -14,17 +14,17 @@ $exec_start_time = microtime(true);
 run(function () use(&$items){
     $barrier = Barrier::make();
     $count = 0;
-    $N = 30;
+    $N = 200;
     foreach (range(1, $N) as $i) {
         Coroutine::create(function () use ($barrier, &$count,$i,&$items) {
             $http = new HttpRequest;
             $proxy_data = getQyZhimaRand();
             $proxy_data = combineProxyParam($proxy_data);
              $response = $http->ua('YurunHttp')
-                            ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
-                            // ->proxy('tw.ipdodo.cloud', '10801', 'socks5') //认证类型设置
-                            // ->proxyAuth('n1_1712733036-dh-2-region-tw','11e475e0') //认证账密
-                             ->get('http://m.paoshu8.info/wapbook-158797-176816601-1');
+                            // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
+                            ->proxy('tw.ipdodo.cloud', '10801', 'socks5') //认证类型设置
+                            ->proxyAuth('n1_1712733036-dh-2-region-tw','11e475e0') //认证账密
+                             ->get('https://www.xsw.tw/book/1144673/248318027.html');
             // echo $file.PHP_EOL;
             echo "num = {$i} \r\n";
             $items[]=$response->body();
@@ -39,6 +39,7 @@ run(function () use(&$items){
     Barrier::wait($barrier);
     assert($count == $N);
 });
+exit;
 echo '<pre>';
 print_R($items);
 echo '</pre>';

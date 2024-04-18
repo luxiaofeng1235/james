@@ -50,7 +50,7 @@ class FileFactory{
      * @param string $story_id 小说ID
      * @return string
      */
-    public function updateIndexStatus($store_id= 0){
+    public function updateIndexStatus($store_id){
         if(!$store_id){
             return false;
         }
@@ -128,7 +128,7 @@ class FileFactory{
             $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $md5_str;//下载路径;
             if(!$pro_book_id){
                 $this->updateStatusInfo($store_id);
-                $this->updateIndexStatus($store_id);
+                #$this->#$this->updateIndexStatus($store_id);($store_id);
                 $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 printlog('暂未同步线上pro_bok_id');
                 NovelModel::killMasterProcess();//退出主程序
@@ -143,7 +143,7 @@ class FileFactory{
             if(!$json_data) {
                 $this->updateStatusInfo($store_id);
                 $this->updateDownStatus($pro_book_id); //更新对应的状态信息
-                $this->updateIndexStatus($store_id);
+                #$this->#$this->updateIndexStatus($store_id);($store_id);
                 echo "当前小说未生成json文件\r\n";
                 printlog('当前ID:'.$pro_book_id.'暂未生成json文件');
                 NovelModel::killMasterProcess();//退出主程序
@@ -154,7 +154,7 @@ class FileFactory{
                 return false;
             if(!$chapter_item){
                 $this->updateStatusInfo($store_id);
-                $this->updateIndexStatus($store_id);
+                #$this->#$this->updateIndexStatus($store_id);($store_id);
                 $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 echo  "去除广告暂无发现需同步的章节了 \r\n";
                 NovelModel::killMasterProcess();//退出主程序
@@ -175,7 +175,7 @@ class FileFactory{
              }
              if(!$dataList){
                 $this->updateStatusInfo($store_id); //更新状态信息
-                $this->updateIndexStatus($store_id);//更新首页是否运行的状态
+                #$this->#$this->updateIndexStatus($store_id);($store_id);//更新首页是否运行的状态
                 $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 NovelModel::killMasterProcess();//退出主程序
                 exit("*********************************title = {$info['title']} \t author = {$info['author']} \tstore_id = {$store_id}\t pro_book_id ={$info['pro_book_id']} 已经爬取完毕 ，不需要重复操作了\r\n");
@@ -199,9 +199,9 @@ class FileFactory{
             foreach($items as $k =>&$v){
                 //抓取内容信息
                 // $html_data = ClientModel::getClientContents($v,$store_id,$download_path);
-                $html_data = getStoryCotents($v,0,$download_path);
+                // $html_data = getStoryCotents($v,0,$download_path);
 
-                // $html_data= NovelModel::getDataListItem($v,$download_path);
+                $html_data= NovelModel::getDataListItem($v,$download_path);
                 if($html_data){
                     $a_num =0;
                     foreach ($html_data as  $gvalue) {
@@ -217,7 +217,7 @@ class FileFactory{
                                 // echo "\r\n";
                             }
 
-                            echo "num：{$a_num} \t  chapter_name: {$gvalue['chapter_name']}\t url：{$gvalue['chapter_mobile_link']}\t path：{$gvalue['save_path']} \r\n";
+                            echo "num：{$a_num} \t length=".mb_strlen($gvalue['content'],'utf-8') ."\t chapter_name: {$gvalue['chapter_name']}\t url：{$gvalue['chapter_mobile_link']}\t path：{$gvalue['save_path']} \r\n";
                             $i_num++;
                         }else{
                              echo "num：{$a_num} \t chapter_name: {$gvalue['chapter_name']} \t 小说源内容为空 url：{$gvalue['chapter_mobile_link']}\r\n";
@@ -243,7 +243,7 @@ class FileFactory{
             //更细对应的状态信息
             //更新对应的is_async和syn_success_status状态
             $this->updateStatusInfo($store_id);//更新魔板状态
-            $this->updateIndexStatus($store_id);//更新首页是否运行的状态
+            #$this->#$this->updateIndexStatus($store_id);($store_id);//更新首页是否运行的状态
             $this->updateDownStatus($pro_book_id); //更新对应的状态信息
             printlog('小说（'.$info['title'].'）|pro_book_id='.$pro_book_id.'|story_id='.$story_id.'同步章节完成');
             return true;
