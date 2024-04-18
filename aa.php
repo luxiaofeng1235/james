@@ -13,11 +13,21 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-$aa = webRequest('https://api.wandouapp.com/?app_key=119ee2d033dbb823513e76cacc6db6e1&num=6&xy=3&type=2&lb=%5Cr%5Cn&nr=99&area_id=&isp=0&','GET');
-echo '<pre>';
-var_dump($aa);
-echo '</pre>';
+$a = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=HK&state=&city=&life=30&protocol=1&format=json&lb=%5Cr%5Cn','GET');
+$data = json_decode($a,true);
+$proxy_data = $data['data']['list'][0] ?? null;
+$command =  "curl --socks5 {$proxy_data} https://www.xsw.tw/book/1640061.html";
+dd($command);
 exit;
+$t= readFileData('/mnt/book/txt/deb8ac0d4286d4689b87316273f4b391/421ba9719ee9878f9897471af2df9d86.txt');
+
+echo mb_strlen($t,'utf-8') ;
+exit;
+// $aa = webRequest('https://www.xsw.tw/book/1144673/248318027.html','GET');
+// echo '<pre>';
+// var_dump($aa);
+// echo '</pre>';
+// exit;
 // $ar = webRequest('https://bapi.51daili.com/getapi2?linePoolIndex=-1&packid=2&time=13&qty=30&port=2&format=json&field=ipport,expiretime,regioncode,isptype&dt=1&usertype=17&uid=43558','GET');
 // $data =json_decode($ar,true);
 // $arr =[];
@@ -30,32 +40,9 @@ exit;
 // echo date('Y-m-d H:i:s',$t);
 // die;
 $url=[
-  'http://m.paoshu8.info/wapbook-21437-147695292/',
-  'http://m.paoshu8.info/wapbook-21437-147593596/',
-  'http://m.paoshu8.info/wapbook-21437-147593596/',
-  'http://m.paoshu8.info/wapbook-21437-147527339/',
-  'http://m.paoshu8.info/wapbook-21437-147430997/',
-  'http://m.paoshu8.info/wapbook-21437-147357525/',
-  'http://m.paoshu8.info/wapbook-21437-147282059/',
-  'http://m.paoshu8.info/wapbook-21437-147282059/',
-  'http://m.paoshu8.info/wapbook-21437-147043547/',
-  'http://m.paoshu8.info/wapbook-21437-146944033/',
-  'http://m.paoshu8.info/wapbook-21437-146944033-2/',
+  'https://www.xsw.tw/book/1144673/248318027.html',
+  'https://www.xsw.tw/book/1144673/248318027.html',
 ];
-// $list = range(0,30);
-// foreach($list as $key =>$v){
-//    $arr= guzzleHttp::multi_req([$url]);
-//    echo '<pre>';
-//    print_R($arr);
-//    echo '</pre>';
-//    echo "num = ".($key+1).PHP_EOL;
-// }
-// die;
-// $arr= guzzleHttp::multi_req([$url]);
-// echo '<pre>';
-// print_R($arr);
-// echo '</pre>';
-// exit;
 $list = curl_pic_multi::Curl_http($url);
 echo '<pre>';
 print_R($list);
