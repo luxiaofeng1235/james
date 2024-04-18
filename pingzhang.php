@@ -18,10 +18,7 @@ run(function () use(&$items){
     foreach (range(1, $N) as $i) {
         Coroutine::create(function () use ($barrier, &$count,$i,&$items) {
             $http = new HttpRequest;
-            $proxy_data = getQyZhimaRand();
-            $proxy_data = combineProxyParam($proxy_data);
              $response = $http->ua('YurunHttp')
-                            // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
                             ->proxy('tw.ipdodo.cloud', '10801', 'socks5') //认证类型设置
                             ->proxyAuth('n1_1712733036-dh-2-region-tw','11e475e0') //认证账密
                              ->get('https://www.xsw.tw/book/1144673/248318027.html');

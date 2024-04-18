@@ -34,18 +34,6 @@ if(!$store_id){
     echo '请选择要抓取的内容id';
     exit();
 }
-///一次申请三个一起判断，火力全开来进行判断，需要用三个IP来一起抓取提高效率
-$proxy_detail = NovelModel::checkProxyExpire();//获取列表的PROXY
-$proxy_count =  NovelModel::checkMobileKey();//获取统计的PROXY
-$proxy_empty =  NovelModel::checkMobileEmptyKey();//获取修复空数据的PROXY
-$proxy_img = NovelModel::checkImgKey(); //获取修复图片的PROXY
-
-//校验代理IP是否过期
-if(!$proxy_detail || !$proxy_count || !$proxy_empty || !$proxy_img){
-   //  NovelModel::killMasterProcess();//退出主程序
-   // exit("入口--代理IP已过期，key =".Env::get('ZHIMA_REDIS_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_KEY').",".Env::get('ZHIMA_REDIS_MOBILE_EMPTY_DATA').",".Env::get('ZHIMA_REDIS_IMG')." 请重新拉取最新的ip\r\n");
-}
-
 
 //实例化文件存储工厂类
 $factory = new FileFactory($mysql_obj,$redis_data);
