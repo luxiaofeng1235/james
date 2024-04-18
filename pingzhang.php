@@ -26,10 +26,10 @@ function getUrl($urls = []){
             $link = $urls[$i];
             Coroutine::create(function () use ($barrier, &$count,$i,&$items,$urls) {
                 $http = new HttpRequest;
-                 $response = $http->ua('YurunHttp')
+                $response = $http->ua('YurunHttp')
                                  // ->proxy('7b2f9a6713186a90.asd.as.roxlabs.vip', '4600', 'socks5') //认证类型设置
                                  // ->proxyAuth('user-red1235-region-tw-sessid-twZh0b2ezH-sesstime-5-keep-true','123456abc') //认证账密
-                                 ->get('http://www.baidu.com');
+                                 ->get($urls[$i]);
                 // echo $file.PHP_EOL;
                 echo "num = {$i} \t url = {$urls[$i]}\r\n";
                 $items[]=$response->body();
@@ -48,7 +48,7 @@ function getUrl($urls = []){
 }
 
 $url  = 'https://www.xsw.tw/book/1144673/248318027.html';
-for ($i=0; $i <40 ; $i++) {
+for ($i=0; $i <10 ; $i++) {
     $urls [] = $url;
 }
 
