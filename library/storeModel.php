@@ -12,9 +12,15 @@
  */
 use QL\QueryList;
 use Swoole\Timer;
-use Yurun\Util\HttpRequest;
 use Yurun\Util\YurunHttp\ConnectionPool;
 use Yurun\Util\YurunHttp\Handler\Swoole\SwooleHttpConnectionManager;
+
+##swoole相关的
+use Swoole\Coroutine\Barrier;
+use Swoole\Coroutine\System;
+use function Swoole\Coroutine\run;
+use Swoole\Coroutine;
+use Yurun\Util\HttpRequest;
 
 class StoreModel{
 
@@ -41,6 +47,18 @@ class StoreModel{
             return '';
         }
         return $host_url;
+     }
+
+    /**
+    * @note 通过swoole中的request请求去获取数据信息
+    *
+    * @param $url string  链接地址
+    * @return  str
+    */
+     public static function swooleRquest($urls){
+        if(!$urls){
+            return false;
+        }
      }
 }
 ?>
