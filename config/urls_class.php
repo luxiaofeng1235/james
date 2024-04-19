@@ -3,13 +3,18 @@ return [
     //泡书吧的规则
     'paoshu8'    =>  [
         //小说列表的轮训取值范围
-        'range' =>  '.novellist',
-        'range_home' =>  '#newscontent li',//最近更新
+        'range_update'  =>'#newscontent .r li';
+        'range_ruku'    => '#newscontent .r li'; //入库下的列表
         //小说列表数据
-        'list'  =>  [
+        'update_list'  =>  [
             'story_link'       => ['a','href'],
             'title'     =>  ['a','text'],
         ],
+        //最新入库的列表
+        'ruku_list' =>[
+            'story_link'       => ['a','href'],
+            'title'     =>  ['a','text'],
+        ]
         'list_home'  =>  [
             'story_link'       => ['span:eq(1) a','href'],
             'title'     =>  ['span:eq(1) a','text'],

@@ -8,7 +8,7 @@ use Yurun\Util\HttpRequest;
 
 $arr =getQyZhimaRand();
 $url = 'http://www.paoshu8.info/61_61927/141942425.html';
-foreach(range(1,500) as $val){
+foreach(range(1,300) as $val){
     $urls[]=$url;
 }
 
@@ -22,13 +22,11 @@ Co\run(function () use($urls,&$items){
         $wg->add();
         go(function () use ($wg,$i,$urls,&$items) {
                 $http = new HttpRequest;
-                $proxy_data = getQyZhimaRand();
-                $proxy_data = combineProxyParam($proxy_data);
                 $response = $http // 支持http、socks4、socks4a、socks5
                             ->ua('YurunHttp')
                             ->get($urls[$i]);
                 $items[] = $response->body();
-             // var_dump(strlen($response->body()),$response->getStatusCode());
+              var_dump(strlen($response->body()),$response->getStatusCode());
             echo  "num ={$i} {$urls[$i]} \r\n";
             $wg->done();
         });

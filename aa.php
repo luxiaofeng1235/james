@@ -12,6 +12,12 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+$t = webRequest('https://jkyapi.top/API/jcjkzt.php?url=http://www.paoshu8.info/','GET');
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+
 
 $a = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=HK&state=&city=&life=30&protocol=1&format=json&lb=%5Cr%5Cn','GET');
 $data = json_decode($a,true);

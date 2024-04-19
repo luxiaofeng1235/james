@@ -37,12 +37,8 @@ Co\run(function () {
         $wg->add();
         go(function () use ($wg,$i) {
             co::sleep(1);
-            $proxy_data = getQyZhimaRand();
-            //转换对应的字段
-            $proxy_data = combineProxyParam($proxy_data);
             $http = new HttpRequest();
             $response = $http
-                        // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5')
                         ->get('https://www.xsw.tw/book/3.html');
             var_dump(strlen($response->body()),$response->getStatusCode());
 
