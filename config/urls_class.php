@@ -3,18 +3,48 @@ return [
     //泡书吧的规则
     'paoshu8'    =>  [
         //小说列表的轮训取值范围
-        'range_update'  =>'#newscontent .r li';
-        'range_ruku'    => '#newscontent .r li'; //入库下的列表
+        'range_update'  =>'#newscontent .l li',
+        'range_ruku'    => '#newscontent .r li', //入库下的列表
         //小说列表数据
         'update_list'  =>  [
-            'story_link'       => ['a','href'],
-            'title'     =>  ['a','text'],
+            'story_link'       => ['.s2 a','href','',function($content){
+                 //利用回调函数补全相对链接
+                $baseUrl = Env::get('APICONFIG.PAOSHU_HOST');
+                return $baseUrl.$content;
+            }],//链接地址
+            'title'     =>  ['.s2 a','text'],//标题
+            'cate_name' =>  ['.s1','text','',function($string){
+                 $t = preg_replace('/\[|\]/','',$string);
+                 return $t;
+            }], //分类
+            'author'    =>  ['.s4','text'],//作者名称
+            //存储对应的story_id
+            'story_id'  =>['.s2 a','href' , '',function($item){
+                $res = substr($item ,1,-1);
+                return $res;
+            }], //存一下对应的连接
         ],
         //最新入库的列表
         'ruku_list' =>[
-            'story_link'       => ['a','href'],
-            'title'     =>  ['a','text'],
-        ]
+            'story_link'       => ['.s2 a','href','',function($content){//链接地址
+                  //利用回调函数补全相对链接
+                $baseUrl = Env::get('APICONFIG.PAOSHU_HOST');
+                return $baseUrl.$content;
+            }],
+            'title'     =>  ['.s2 a','text'],//标题
+             'cate_name' =>  ['.s1','text','',function($string){
+                 $t = preg_replace('/\[|\]/','',$string);
+                 $cate_name = $t . '小说';
+                 return $cate_name;
+            }], //分类
+            'author'    =>  ['.s5','text'],//作者名称
+             //存储对应的story_id
+            'story_id'  =>['.s2 a','href' , '',function($item){
+                $res = substr($item ,1,-1);
+                return $res;
+            }], //存一下对应的连接
+
+        ],
         'list_home'  =>  [
             'story_link'       => ['span:eq(1) a','href'],
             'title'     =>  ['span:eq(1) a','text'],
@@ -23,6 +53,7 @@ return [
         'chapter_list'  =>  [
             'link_url'       => ['a','href'],
             'link_name'     =>  ['a','text'],
+
         ],
         //小说详情
         'info'  =>[

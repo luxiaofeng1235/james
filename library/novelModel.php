@@ -65,6 +65,30 @@ class NovelModel{
         $content = $redis_data->get_redis($tag);
     }
 
+
+    /**
+  * @note 检测 缓存跑书吧的首页
+  * @param $url string 网站的url
+  * @param $expire_time stirng 过期时间
+  * @return array
+  *
+  */
+    public static function cacheHomeList($url,$expire_time= 86400){
+        if(!$url){
+            return false;
+        }
+        $redis_key = 'paoshu8_home_list';
+        global $redis_data;
+        $data = $redis_data->get_redis($redis_key);
+        if(!$data){
+            $list = webRequest($url , 'GET');
+            $redis_data->set_redis($redis_key , $list,$expire_time);
+            $data = $list;
+            unset($list);
+        }
+        return $data;
+    }
+
         /**
     * @note 检测 图片的代理是否可用
     *
