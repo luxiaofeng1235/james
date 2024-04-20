@@ -1272,6 +1272,7 @@ function trimBlankSpace($str=''){
 	if(!$str){
 		return '';
 	}
+	$str = trim($str); //不管什么先替换一下
 	$replacement = '';
 	// $pattern = '/\A\s+|\s+\z/u';
 	$pattern = '~^\h+|\h+$~u'; // \h 匹配任何水平空白字符
