@@ -1452,6 +1452,118 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
 }
 
 /**
+* @note 保存HTML实体到指定目录
+*
+* @param $noveList arrya 小说列表
+* @return bool
+*/
+public static function saveDetailHtml($novelList=[]){
+  if(!$novelList){
+    return false;
+  }
+  $combineData = [];
+  foreach($novelList as $key =>$val){
+      $urlPath  = Env::get('SAVE_HTML_PATH').DS.'detail_'.$val['story_id'].'.'.NovelModel::$file_type;
+      //只有检测需要同步的数据才去保存
+      if(!file_exists($urlPath)){
+          $combineData[$urlPath]=$val;
+      }
+  }
+  if(!$combineData) return true;
+  $urls = array_column($combineData,'story_link');
+  //获取关联的数据信息
+  $list = curl_pic_multi::Curl_http($urls);
+  $list = NovelModel::callMultiListRquests($list,  $novelList);
+
+  if(empty($list)){
+      return false;
+  }
+  global $urlRules;
+  //指定的规则
+  $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['detail_url'];
+  $store_content = [];
+  foreach($list as $key =>$val){
+      $data = QueryList::html($val)
+          ->rules($rules)
+          ->query()
+          ->getData();
+      $content = $data->all();
+      $story_id = $content['path'] ?? '';
+      $story_id = str_replace('/','',$story_id);
+      //写入指定的文件信息
+      $file_path  = Env::get('SAVE_HTML_PATH').DS.'detail_'.$story_id.'.'.NovelModel::$file_type;
+      $store_content[$file_path] = $val;
+      // writeFileCombine($file_path,$val); //写入文件操作
+      // echo "path = $path \t";
+  }
+  if(!$store_content) return false;
+  echo "=========================同步文件到指定缓存目录\r\n";
+  foreach($combineData as $k =>$v){
+      $combineData[$k]['content'] = $store_content[$k] ?? '';
+      echo "title = {$v['title']} \t author = {$v['author']}\t url = {$v['story_link']} path = {$k} 缓存成功\r\n";
+  }
+  return 1;
+ }
+
+/**
+* @note 重复调用请求，防止有空数据返回做特殊调用--小说章节详情页检测
+*
+* @param $content_arr array  请求的HTML数据
+* @param $goods_list array 原始请求的校验数据
+* @param $proxy_type 获取移动端的代理配置 4：列表的代理 2：统计移动端页面的代理 3：修补空数据的代理
+* @return unnkower
+*/
+public static function callMultiListRquests($contents_arr=[],$goods_list=[],$proxy_type=1){
+     if(!$contents_arr || !$goods_list){
+        return [];
+     }
+     $goods_list = array_values($goods_list);
+     $errData  =  $sucData  = [];
+     $patterns = '/id="list"/'; //按照正文标签来匹配，如果没有确实是有问题
+     foreach($contents_arr as $key => $val){
+        if(!preg_match($patterns, $val)){
+            $errData[] =$goods_list[$key] ?? [];
+        }else{
+            $sucData[] = $val;
+        }
+     }
+     $repeat_data = $curl_contents1 =[];
+     //数据为空的情况判断
+     if(!empty($errData)){
+        $successNum = 0;
+        $old_num = count($errData);
+        $urls = array_column($errData, 'story_link'); //进来先取出来
+        while(true){
+            $curl_contents1 = curl_pic_multi::Curl_http($urls,$proxy_type);
+            $temp_url =[];//设置中间变量
+            foreach($curl_contents1 as $tkey=> $tval){
+                if(empty($tval)){//为空的情况
+                    echo "获取数据为空，会重新抓取======================{$urls[$tkey]}\r\n";
+                    $temp_url[] =$urls[$tkey];
+                 }else if(!preg_match($patterns,$tval) ){//断章处理，包含有502的未响应都会
+                    echo "不全的HTML，会重新抓取======================{$urls[$tkey]}\r\n";
+                    $temp_url[] =$urls[$tkey];
+                  }else{
+                      $repeat_data[] = $tval;
+                      unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
+                      unset($curl_contents1[$tkey]);
+                      $successNum++;
+                  }
+            }
+            $urls = $temp_url; //起到指针的作用，每次只存失败的连接
+            $urls = array_values($urls);//重置键值，方便查找
+            $curl_contents1 =array_values($curl_contents1);//获取最新的数组
+            if($old_num == $successNum){
+                echo "数据清洗完毕等待入库\r\n";
+                break;
+            }
+        }
+     }
+    $retuernList = array_merge($sucData , $repeat_data);
+    return $retuernList;
+}
+
+/**
 * @note 利用信号机制结束当前进程
 *
 * @return unknown
