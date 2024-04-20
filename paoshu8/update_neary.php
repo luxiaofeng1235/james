@@ -52,7 +52,7 @@ $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
-$novelList = array_slice($novelList, 0, 1);
+$novelList = array_slice($novelList, 1, 1); //测试
 
 //同步小说目录详情到本地
 NovelModel::saveDetailHtml($novelList);

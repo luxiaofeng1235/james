@@ -23,6 +23,7 @@ class NovelModel{
       'story_link'      =>      'source_url',//采集来源
       'cate_name'       =>      'class_name',//小说分类名称
       'status'          =>      'serialize',//是否完本状态
+      'third_update_time' =>    'last_chapter_time',//网站的第三方时间
    ];
    private static $validate_type =['curl','ghttp']; //验证类型 支持curl和ghttp验证
    private static $imageType ='jpg';//默认的头像
@@ -132,7 +133,7 @@ class NovelModel{
       global $redis_data;
         $redis_key =  Env::get('REDIS_STORE_KEY') . $store_id;
         $pro_book_id = $redis_data->get_redis($redis_key);
-       return $pro_book_id ?? 0;
+       return $pro_book_id ? $pro_book_id :  0;
     }
 
 
@@ -838,7 +839,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           }
       }
 
-      $info['chapter_title'] = $info['last_chapter_title'];
+      // $info['chapter_title'] = $info['last_chapter_title'];
       $info['cid'] = self::getNovelCateId($info['class_name']);
       $info['addtime']  = time();
       $info['author'] = $info['author'] ? trim($info['author']) : '未知';
@@ -874,9 +875,26 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       $info['shits'] = rand(100,300);//收藏人气
       $info['read_count']  = rand(1000,5000);
       $info['search_count'] = rand(100,599);
+
+      ////获取每次章节的最后一个更新的ID和名称
+      $md5_str= NovelModel::getAuthorFoleder($info['book_name'] ,$info['author']);
+      $json_file =Env::get('SAVE_JSON_PATH') .DS .$md5_str.'.' .NovelModel::$json_file_type;
+      $json_data = readFileData($json_file);
+      $chapter_item = json_decode($json_data,true);
+      $info['chapter_num'] = count($chapter_item);
+      if(!empty($chapter_item)){
+          //获取最后一个数组元素
+          $return = array_slice($chapter_item,-1,1);
+          $infoArr = $return[0] ?? [];
+          $info['update_chapter_id'] = $infoArr['id'] ?? 0; //最后一次更新的章节ID
+          $info['update_chapter_title'] = $infoArr['chapter_name'] ?? '';//最后一次更新的章节名称
+          $info['update_chapter_time'] = time();
+      }
+
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url not like "%biquge34%" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
+
       if(empty($novelInfo)){
           //插入入库
           $data=  handleArrayKey($info);

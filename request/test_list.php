@@ -60,7 +60,7 @@ if($itemList->all()){
                 $pro_book_id = $pro_ret['id'];
             }else{
                 //线上小说数据转换
-                $pro_data= exchange_book_handle($info);
+                $pro_data= exchange_book_handle1112($info);
                 $pro_book_id = $mysql_obj->add_data($pro_data,Env::get('TABLE_MC_BOOK'),'db_novel_pro');
             }
             $info['pro_book_id'] = $pro_book_id;
@@ -75,7 +75,7 @@ if($itemList->all()){
 }
 
 //转换对应的字段信息
-function exchange_book_handle($data){
+function exchange_book_handle1122($data){
     global $dict_exchange,$mysql_obj;
     if(!$data)
         return false;

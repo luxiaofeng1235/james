@@ -153,7 +153,6 @@ class FileFactory{
             foreach($chapter_item as &$v){
                 $v['chapter_name'] = trim($v['chapter_name']);
             }
-
             echo "JSON文件里的总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
             $sucNum = 0;

@@ -45,15 +45,7 @@ if(empty($info)){
     $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 }
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //获取配置的域名信息
-//删除旧数据，防止有新的进行抓取
-function delete_chapter_data($store_id,$story_id,$table_name){
-    if(!$store_id){
-        return false;
-    }
-    global $mysql_obj;
-    $sql = "delete from ".$table_name." where story_id = '".$story_id."'";
-    $mysql_obj->query($sql,'db_master');
-}
+
 
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
@@ -103,20 +95,18 @@ if($info){
         $location = str_replace("\r\n",'',$store_data['location']);
         $location =trim($location);
         $store_data['location'] = $location;
-        $update_time  = str_replace('最后更新：','',$store_data['third_update_time']);
-        $third_update_time = $update_time.' 00:00:00';
-        $third_update_time = strtotime($third_update_time);
+        $third_update_time = strtotime($store_data['third_update_time']);
+        // /$third_update_time  = str_replace('最后更新：','',$store_data['third_update_time']);
+        // $third_update_time = $update_time.' 00:00:00';
+        // $third_update_time = strtotime($third_update_time);
         $store_data['third_update_time'] = $third_update_time;
         $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
-
         //转义标题
         $store_data['title'] = trimBlankSpace($store_data['title']);
-        //处理作者并转义
-        $author_data = explode('：',$store_data['author']);
-        $author = isset($author_data[1]) ?  trimBlankSpace($author_data[1]) : '';
+        $author = isset($store_data['author']) ?  trimBlankSpace($store_data['author']) : '';
 
         $store_data['author']  = $author;
-        // $store_data['updatetime'] = time();
+
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
         $intro = addslashes($store_data['intro']);//转义 特殊字符
@@ -213,9 +203,6 @@ if($info){
             $store_data);
             //同步当前的章节的基础信息
             $factory->synChapterInfo($story_id,$another_data);//同步章节内容
-
-            //这里需要同步处理未同步下来的章节信息
-            // ProcessUrl::selfRunUrls($store_data);
         }else{
 
             //主要需要更新线上的对应的ID
