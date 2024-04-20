@@ -52,7 +52,7 @@ $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
-$novelList = array_slice($novelList, 1, 1); //测试
+// $novelList = array_slice($novelList, 1, 1); //测试
 
 //同步小说目录详情到本地
 NovelModel::saveDetailHtml($novelList);
@@ -72,6 +72,8 @@ foreach($novelList as $key =>$val){
         $val['source'] = $source; //来源
         $val['createtime'] = time(); //时间
         $insertData[] = $val;
+    }else{
+        echo "exists store_id = {$storyInfo['store_id']} \r\n";
     }
 }
 echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";

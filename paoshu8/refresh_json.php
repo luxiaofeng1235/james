@@ -47,7 +47,6 @@ if($info){
         $pro_book_id = intval($value['pro_book_id']);
         if(!$story_id) continue;
 
-
         //读取相关的内容信息
         $html = getHtmlData($story_id ,$story_link);
         $info_data=QueryList::html($html)
@@ -72,6 +71,13 @@ if($info){
             //去除章节里的首尾空格，并移除广告章节重组数据
             //处理相关数据
             $item_list = buildChapterList($chapter_detail , $value);
+            //去除空的章节目录
+            foreach($item_list as $gkey =>$gval){
+                 if(empty($gval['link_name'])){
+                    unset($item_list[$gkey]);
+                 }
+            }
+            $item_list = array_values($item_list);
             //创建生成json文件信息
             NovelModel::createJsonFile($store_data,$item_list,0);
             echo "num =".($key+1)." \t title={$title} \t store_id = {$store_id}\t pro_book_id={$pro_book_id} \t url ={$story_link} \t path = {$novel_list_path} success \r\n";

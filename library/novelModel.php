@@ -889,7 +889,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $info['update_chapter_title'] = $infoArr['chapter_name'] ?? '';//最后一次更新的章节名称
           $info['update_chapter_time'] = time();
       }
-
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url not like "%biquge34%" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
@@ -1520,6 +1519,7 @@ public static function saveDetailHtml($novelList=[]){
   echo "=========================同步文件到指定缓存目录 {$cache_path}\r\n";
   $i = 0;
   foreach($combineData as $k =>$v){
+      $i++;
       $content = $store_content[$k] ?? '';
       echo "num =".($i+1)."\ttitle = {$v['title']} \t author = {$v['author']}\t url = {$v['story_link']} path = {$k} \tHTML页面缓存成功\r\n";
       writeFileCombine($k,$content);//自动写入追加文件的HTML页面
