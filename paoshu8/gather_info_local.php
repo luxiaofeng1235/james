@@ -68,7 +68,7 @@ if($info){
     $html = readFileData($files);
     $html = html_entity_decode($html);
     if(!$html){
-         //记录是否有相关的HTML的数据信息
+        //记录是否有相关的HTML的数据信息
         printlog('this novel：'.$story_link.' is no local html data');
         echo "no this story files： {$story_link}\r\n";
         //更新为已同步防止重复同步
@@ -114,8 +114,7 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
-        // //保存图片到本地==暂时屏蔽不需要
-        $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
@@ -128,6 +127,10 @@ if($info){
             NovelModel::killMasterProcess();//退出主程序
             exit();
         }
+
+        // //保存图片到本地==暂时屏蔽不需要
+        $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();

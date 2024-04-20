@@ -1575,7 +1575,7 @@ public static function saveDetailHtml($novelList=[]){
 * @param $source string 来源 paoshu8：泡书吧 xsw：台湾小说
 * @return unnkower
 */
- public static function getNovelInfoById($story_id='',$source='',$field ='store_id'){
+ public static function getNovelInfoById($story_id='',$source='',$field ='store_id,title,author'){
     if(!$story_id || !$source){
       return false;
     }

@@ -63,6 +63,7 @@ $insertData = [];
 $source = Env::get('APICONFIG.PAOSHU_STR');//同步的来源
 foreach($novelList as $key =>$val){
     $val['tag'] = $val['cate_name']??'';
+    //查询是否存在次本小说
     $storyInfo = NovelModel::getNovelInfoById($val['story_id'],$source);
     if(empty($storyInfo)){
         $val['title'] = trimBlankSpace($val['title']);//小说名称
@@ -73,7 +74,7 @@ foreach($novelList as $key =>$val){
         $val['createtime'] = time(); //时间
         $insertData[] = $val;
     }else{
-        echo "exists store_id = {$storyInfo['store_id']} \r\n";
+        echo "exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} \r\n";
     }
 }
 echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
