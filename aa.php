@@ -12,23 +12,15 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
-$t = webRequest('https://jkyapi.top/API/jcjkzt.php?url=http://www.paoshu8.info/','GET');
-echo '<pre>';
-print_R($t);
-echo '</pre>';
-exit;
 
 
-$a = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=HK&state=&city=&life=30&protocol=1&format=json&lb=%5Cr%5Cn','GET');
-$data = json_decode($a,true);
-$proxy_data = $data['data']['list'][0] ?? null;
-$command =  "curl --socks5 {$proxy_data} https://www.xsw.tw/book/1640061.html";
-dd($command);
-exit;
-$t= readFileData('/mnt/book/txt/deb8ac0d4286d4689b87316273f4b391/421ba9719ee9878f9897471af2df9d86.txt');
+// $str = 'j11     122       ';
+// echo myTrim($str);
 
-echo mb_strlen($t,'utf-8') ;
-exit;
+// die;
+
+
+
 // $aa = webRequest('https://www.xsw.tw/book/1144673/248318027.html','GET');
 // echo '<pre>';
 // var_dump($aa);
@@ -46,8 +38,7 @@ exit;
 // echo date('Y-m-d H:i:s',$t);
 // die;
 $url=[
-  'https://www.xsw.tw/book/1144673/248318027.html',
-  'https://www.xsw.tw/book/1144673/248318027.html',
+  'http://www.biquge5200.net/182_182787/',
 ];
 $list = curl_pic_multi::Curl_http($url);
 echo '<pre>';

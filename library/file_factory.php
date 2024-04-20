@@ -106,14 +106,13 @@ class FileFactory{
             $info = $this->mysql_conf->fetch($sql,'db_slave');
         }
 
+
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']); //小说网站id
             $store_id = intval($info['store_id']); //库里的id
-
             //获取对应的加密串作为文件名：书名+作者
             $md5_str= NovelModel::getAuthorFoleder($info['title'] ,$info['author']);
-
             $download_path =Env::get('SAVE_NOVEL_PATH') .DS . $md5_str;//下载路径;
             if(!$pro_book_id){
                 $this->updateStatusInfo($store_id);
@@ -131,7 +130,7 @@ class FileFactory{
             $json_data = readFileData($file_name);
             if(!$json_data) {
                 $this->updateStatusInfo($store_id);
-                $this->updateDownStatus($pro_book_id); //更新对应的状态信息
+                // $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 #$this->#$this->updateIndexStatus($store_id);($store_id);
                 echo "当前小说未生成json文件\r\n";
                 printlog('当前ID:'.$pro_book_id.'暂未生成json文件');
@@ -144,38 +143,62 @@ class FileFactory{
             if(!$chapter_item){
                 $this->updateStatusInfo($store_id);
                 #$this->#$this->updateIndexStatus($store_id);($store_id);
-                $this->updateDownStatus($pro_book_id); //更新对应的状态信息
+                // $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 echo  "去除广告暂无发现需同步的章节了 \r\n";
                 NovelModel::killMasterProcess();//退出主程序
                 exit(1);
             }
+
+            //去掉收尾空格处理--误删
+            foreach($chapter_item as &$v){
+                $v['chapter_name'] = trim($v['chapter_name']);
+            }
+
             echo "JSON文件里的总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
             $sucNum = 0;
+
+            $http = new \Yurun\Util\HttpRequest;
             foreach($chapter_item as &$val){
                 $filename =$download_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
+                $val['file_path'] = $filename;
                 $content = readFileData($filename);
                 if(!$content ||$content =='从远端拉取内容失败，有可能是对方服务器响应超时，后续待更新'  || !file_exists($filename)){
+                     // if(!preg_match('/biquge5200/',$val['chapter_link'])){
+                     // }
+                     // $response = $http // 支持http、socks4、socks4a、socks5
+                     //        ->ua('YurunHttp')
+                     //        ->get($val['chapter_link']);
+                    // if( $response->getStatusCode() == 200){
+
+                     if(preg_match('/biquge5200/',$val['chapter_link'])){
+                           $chapter_link = trim($val['chapter_link']);
+                           $chapter_link = str_replace('http://www.paoshu8.infohttps://www.biquge5200.cc','http://www.biquge5200.net',$chapter_link);
+                          $val['chapter_link']  = $chapter_link;
+                     }
                     $val['link_url'] = $val['chapter_link'];
                     $dataList[] =   $val;
+                    // }
                 }else{
+                    // echo $val['id']."\r\n";
                     $sucNum++;
                 }
              }
+             // echo '<pre>';
+             // print_R($dataList);
+             // echo '</pre>';
+             // exit;
              if(!$dataList){
                 $this->updateStatusInfo($store_id); //更新状态信息
                 #$this->#$this->updateIndexStatus($store_id);($store_id);//更新首页是否运行的状态
-                $this->updateDownStatus($pro_book_id); //更新对应的状态信息
+                // $this->updateDownStatus($pro_book_id); //更新对应的状态信息
                 NovelModel::killMasterProcess();//退出主程序
                 exit("*********************************title = {$info['title']} \t author = {$info['author']} \tstore_id = {$store_id}\t pro_book_id ={$info['pro_book_id']} 已经爬取完毕 ，不需要重复操作了\r\n");
              }
+
             echo "\r\n\r\n";
             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
 
-            // echo '<pre>';
-            // print_R($dataList);
-            // echo '</pre>';
-            // exit;
 
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
@@ -233,7 +256,7 @@ class FileFactory{
             //更新对应的is_async和syn_success_status状态
             $this->updateStatusInfo($store_id);//更新魔板状态
             #$this->#$this->updateIndexStatus($store_id);($store_id);//更新首页是否运行的状态
-            $this->updateDownStatus($pro_book_id); //更新对应的状态信息
+            // $this->updateDownStatus($pro_book_id); //更新对应的状态信息
             printlog('小说（'.$info['title'].'）|pro_book_id='.$pro_book_id.'|story_id='.$story_id.'同步章节完成');
             return true;
         }else{
