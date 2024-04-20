@@ -96,9 +96,6 @@ if($info){
         $location =trim($location);
         $store_data['location'] = $location;
         $third_update_time = strtotime($store_data['third_update_time']);
-        // /$third_update_time  = str_replace('最后更新：','',$store_data['third_update_time']);
-        // $third_update_time = $update_time.' 00:00:00';
-        // $third_update_time = strtotime($third_update_time);
         $store_data['third_update_time'] = $third_update_time;
         $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
         //转义标题
@@ -118,7 +115,7 @@ if($info){
             $store_data['createtime']  = time();
         }
         // //保存图片到本地==暂时屏蔽不需要
-        // $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+        $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
         $item_list = $chapter_ids = $items= [];

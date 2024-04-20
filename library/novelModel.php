@@ -624,10 +624,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $t= explode('/',$url);
           $imgFileName = end($t);
       }
-      header("Content-type: application/octet-stream");
-      header("Accept-Ranges: bytes");
-      header("Accept-Length: 348");
-      header("Content-Disposition: attachment; filename=".$imgFileName);
+      // header("Content-type: application/octet-stream");
+      // header("Accept-Ranges: bytes");
+      // header("Accept-Length: 348");
+      // header("Content-Disposition: attachment; filename=".$imgFileName);
       $filename = $save_img_path . DS . $imgFileName;
       //判断文件是否存在，如果不存在就直接保存到本地
       $save_img_path =Env::get('SAVE_IMG_PATH');
@@ -636,8 +636,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       }
       //基准对比时间
       if(!file_exists($filename)){
-          //开启使用代理IP去请求,由于服务器在海外要用代理去请求
-           $res = curl_pic_multi::Curl_http([$url]);//同步图片信息
+          $res = curl_pic_multi::Curl_http([$url]);//同步图片信息
           $img_con = $res[0] ?? '';
           @$t=file_put_contents($filename, $img_con);
       }
