@@ -604,9 +604,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
      /**
     * @note 远程抓取图片保存到本地
     *
-    * @param $cate_name str分类名称
+    * @param $url string  图片地址的url
     * @param $title string 小说标题
     * @param $author string 作者
+    * @param $pinnyin_class object 拼音转英文翻译类
     * @return string
     */
     public static function saveImgToLocal($url,$title='',$author='',$pinyin_class=''){
@@ -632,12 +633,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       if(!is_dir($save_img_path)){
           createFolders($save_img_path);
       }
-      //获取图片的最后修改时间
-      // $modify_time = filemtime($filename);
       //基准对比时间
       if(!file_exists($filename)){
           //开启使用代理IP去请求,由于服务器在海外要用代理去请求
-           $res = MultiHttp::curlGet([$url],null,true);
+           $res = curl_pic_multi::Curl_http([$url]);//同步图片信息
           $img_con = $res[0] ?? '';
           @$t=file_put_contents($filename, $img_con);
       }
