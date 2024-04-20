@@ -1262,4 +1262,21 @@ function traditionalCovert($content=''){
     opencc_close($od);
     return $text;
 }
+
+/**
+ * @note 去除首尾空格字符，包含空白字符
+ * @param   string  $str 输入字符
+ * @return string
+ */
+function trimBlankSpace($str=''){
+	if(!$str){
+		return '';
+	}
+	$replacement = '';
+	// $pattern = '/\A\s+|\s+\z/u';
+	$pattern = '~^\h+|\h+$~u'; // \h 匹配任何水平空白字符
+	$trimmedStr = preg_replace($pattern, $replacement, $str);
+	return $trimmedStr;
+}
+
 ?>

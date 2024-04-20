@@ -109,7 +109,11 @@ if($info){
         $third_update_time = strtotime($third_update_time);
         $store_data['third_update_time'] = $third_update_time;
         $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
-
+        $store_data['author'] = trim($store_data['author']);
+        echo '<pre>';
+        var_dump($store_data);
+        echo '</pre>';
+        exit;
         //转义标题
         $store_data['title'] = trim($store_data['title']);
         //处理作者并转义
@@ -128,6 +132,10 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
+        echo '<pre>';
+        var_dump($store_data);
+        echo '</pre>';
+        exit;
         // //保存图片到本地==暂时屏蔽不需要
         // $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
         //获取相关的列表数据

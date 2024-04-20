@@ -72,7 +72,13 @@ if(!$novelList){
     exit("暂无可用章节信息");
 }
 
-
+$author = '海市蜃楼闲客　花生哥';
+$title  = '网狙';
+$str = md5($title . $author);
+echo '<pre>';
+print_R($str);
+echo '</pre>';
+exit;
 //保存的客户端
 $files = Env::get('SAVE_HTML_PATH').DS.'detail_1235.'.NovelModel::$file_type;
 $urls = array_column($novelList,'story_link');
