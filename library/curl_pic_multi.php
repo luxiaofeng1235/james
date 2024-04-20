@@ -130,19 +130,7 @@ public static function Rand_refer(){
     public  static function Curl_http($array,$type=1,$timeout='15'){
       if(!$array)
         return false;
-      $res = array();
-      $proxy_data = [];
-      // if($type == 1){//使用原生系统的代理请求
-      //     $proxy_data = getProxyInfo();
-      // }else if ($type == 2){//移动端的代理请求
-      //     $proxy_data = getMobileProxy();
-      // }else if($type ==3){//处理列表为空申请的带
-      //     $proxy_data = getMobileEmptyProxy();
-      // }else if($type ==4){//处理基础章节的基础配置类
-      //     $proxy_data = getZhimaProxy();
-      // }else if($type ==5){
-      //     $proxy_data = getImgProxy();//获取下载图片使用的代理
-      // }
+
       // $proxy_info = webRequest('https://www.iproyal.net/web_v1/ip/get-ip-v3?app_key=1f64ee4a81f8726bd51765c4748fd6d4&pt=9&num=1&cc=US&state=&city=&life=3&protocol=1&format=json&lb=%5Cr%5Cn','GET');
       // sleep(1);//主要方式IP获取不到，每次获取都休息一秒
       // $tdata = json_decode($proxy_info,true);
@@ -155,20 +143,6 @@ public static function Rand_refer(){
       // }
       $proxy_data = [];
       //随机获取一个代理配置信息
-      // $proxy_data = getQyZhimaRand();
-      // //转换对应的字段
-      // $proxy_data = combineProxyParam($proxy_data);
-
-      //判断代理IP是否失效，防止数据异常
-      // if(!$proxy_data){
-      //     echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
-      //     NovelModel::killMasterProcess(); //结束当前进程
-      //     exit(1);
-      // }
-      // $proxy_data['ip'] = '175.149.61.228'; //180.112.239.244:54105
-      // $proxy_data['port'] = '4256';
-      // $proxy_data['username'] = 'lady1235';
-      // $proxy_data['password']  = 'F24865A4F2EE1B8EC41696C1AC69015E';
       //伪造referer地址方便去进行伪造
       $referer = self::Rand_refer();
       //伪造客户端IP进行访问，

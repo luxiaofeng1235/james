@@ -55,7 +55,6 @@ function delete_chapter_data($store_id,$story_id,$table_name){
     $mysql_obj->query($sql,'db_master');
 }
 
-
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     if($info[0]['is_async'] == 1){
