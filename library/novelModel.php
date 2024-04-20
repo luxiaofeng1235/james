@@ -808,11 +808,11 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
     * @return string
     */
     public static function getAuthorFoleder($title='',$author=''){
-        if(!$title || !$author){
+        if(!$title){
             return false;
         }
         $title =trim($title);
-        $author = trim($author);
+        $author =$author ?  trim($author) : '未知';
         return md5($title.$author);
     }
 

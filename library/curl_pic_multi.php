@@ -143,16 +143,22 @@ public static function Rand_refer(){
       // }else if($type ==5){
       //     $proxy_data = getImgProxy();//获取下载图片使用的代理
       // }
-      // $proxy_info = webRequest('https://bapi.51daili.com/unlimitedip/getip?linePoolIndex=1&packid=17&time=5&qty=1&port=2&format=json&field=ipport,expiretime,isptype,regioncode&pid=6cb029dd7abb42a7b87e766d11132e43&usertype=17&uid=43558','GET');
+      // $proxy_info = webRequest('https://www.iproyal.net/web_v1/ip/get-ip-v3?app_key=1f64ee4a81f8726bd51765c4748fd6d4&pt=9&num=1&cc=US&state=&city=&life=3&protocol=1&format=json&lb=%5Cr%5Cn','GET');
       // sleep(1);//主要方式IP获取不到，每次获取都休息一秒
       // $tdata = json_decode($proxy_info,true);
-      // $proxy_data = $tdata['data'][0] ??[];
-
+      //  $proxy_data = [];
+      //  $cc = $tdata['data']['list'][0] ??[];
+      // if($cc){
+      //   $t = explode(':',$cc);
+      //   $proxy_data['ip'] = $t[0];
+      //   $proxy_data['port'] = $t[1];
+      // }
+      $proxy_data = [];
       //随机获取一个代理配置信息
       // $proxy_data = getQyZhimaRand();
       // //转换对应的字段
       // $proxy_data = combineProxyParam($proxy_data);
-      $proxy_data = [];
+
       //判断代理IP是否失效，防止数据异常
       // if(!$proxy_data){
       //     echo '【调用位置：curl_pic_multi类】 当前代理IP已经过期了，重新获取吧 --------！'.PHP_EOL;
