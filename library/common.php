@@ -1280,4 +1280,21 @@ function trimBlankSpace($str=''){
 	return $trimmedStr;
 }
 
+/**
+ * @note 剔除章节里的软回车符
+ * @param   string  $str 输入字符
+ * @return string
+ */
+function removeTabEnter($str){
+	if(!$str)
+		return false;
+	 $result = array(); // 转换后的结果
+	  $tokens = preg_split('/[\r\n]+/', $str);
+	  foreach($tokens as &$val){
+	      $val = trimBlankSpace($val);
+	  }
+	  $td = implode('',$tokens);
+	  return $td;
+}
+
 ?>

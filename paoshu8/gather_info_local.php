@@ -137,6 +137,10 @@ if($info){
             //重新赋值进行计算
             $chapter_detail = $rt;
             foreach($chapter_detail as $val){
+                //如果章节名称为空，则不统计
+                if(empty($val['link_name'])){
+                    continue;
+                }
                 $link_url = trim($val['link_url']);
                 $chapter_ret= explode('/',$link_url);
                 $chapter_str=str_replace('.html','',$chapter_ret[2]);

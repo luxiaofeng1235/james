@@ -23,7 +23,7 @@ $redis_key = 'img_pic_id';//redis的对应可以设置
 $id = $redis_data->get_redis($redis_key);
 
 $where_data = '  is_async = 1';
-$limit= 200; //控制图片拉取的步长
+$limit= 10000; //控制图片拉取的步长
 $order_by =' order by pro_book_id desc';
 
 if($id){
@@ -92,7 +92,7 @@ if(!empty($diff_data)){
     if(!empty($o_data)){
 
         //下面是处理对应的为空的数据请求
-        echo 'now is empty url init to async ...................'.PHP_EOL;
+        echo 'now is empty url init to async num = '.count($o_data).'...................'.PHP_EOL;
         //启用多线程去保存处理先关的数据
         $img_list = array_column($o_data,'cover_logo');
         $data  =curl_pic_multi::Curl_http($img_list);
@@ -125,10 +125,6 @@ if(!empty($diff_data)){
 
 $ids = array_column($info,'pro_book_id');
 $min_id = min($ids);
-echo '<pre>';
-print_R($min_id);
-echo '</pre>';
-exit;
 $redis_data->set_redis($redis_key,$min_id);//设置增量ID下一次轮训的次数
 echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$min_id.PHP_EOL;
 
