@@ -31,7 +31,7 @@ foreach($file as &$v){
 
 // $file[]=11431;
 
-$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where 1 and pro_book_id>0";
+$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where 1 and pro_book_id>0 and pro_book_id =140431";
 // $sql .= $order_by;
 // $sql .= " limit ".$limit;
 // echo "sql = {$sql}\n\n";
@@ -54,19 +54,13 @@ if($info){
                     ->query()->getData();
         $store_data = $info_data->all();
          //转义标题
-        $store_data['title'] = addslashes(trim($store_data['title']));
-        //处理作者并转义
-        $author_data = explode('：',$store_data['author']);
-        $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
-        $store_data['author']  = $author;
-
-
-
+        $store_data['title'] = trimBlankSpace($store_data['title']);
+        $store_data['author'] = trimBlankSpace($store_data['author']);
         $novel_list_path = Env::get('SAVE_JSON_PATH'). DS . NovelModel::getAuthorFoleder($store_data['title'],$store_data['author']).'.' .NovelModel::$json_file_type;
-
         //处理配置信息
         $rt = NovelModel::getCharaList($html , $title);
         if(!empty($rt)){
+            // dd($rt);
             $chapter_detail = $rt;
             //去除章节里的首尾空格，并移除广告章节重组数据
             //处理相关数据

@@ -301,6 +301,30 @@ class NovelModel{
     }
 
 
+     /**
+    * @note 处理指定的HTML中的字符换行问题
+    * @param $html string 文本内容
+    * @return array
+    *
+    */
+    public static function dealHtmlBr($string){
+        if(!$string){
+          return false;
+        }
+        $aa    =preg_split('/\r\n/',$string);
+        foreach($aa as &$v){
+            // $v = removeTabEnter($v);
+        }
+        echo "<pre>";
+       var_dump($aa);
+       exit;
+        $data = implode('',$aa);
+        //按照</dd>切割换行符进行转换
+        $str  =preg_replace('/<\/dd>/',"</dd>\r\n",$data);
+        return $str;
+    }
+
+
     /**
     * @note 从特定的url中获取对应的数据信息
     * @param $html string 文本内容
@@ -311,8 +335,21 @@ class NovelModel{
       if(!$html || !$title){
         return '';
       }
+
+
+// $subject = '<a href="1233.php">abc
+// 测试</a>';   // 假设这是需要匹配的字符串
+
+// $pattern = '/<a href=".*>(.*)<\/a>/siU';    // 这是匹配的正则表达式
+
+// preg_match_all($pattern, $subject, $matches);
+// echo '<pre>';
+// print_R($matches);
+// echo '</pre>';
+// exit;
+
       $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
-      $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/i';//匹配链接里的文本
+      $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
       //匹配正文章节内容
 
@@ -336,6 +373,8 @@ class NovelModel{
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
            if($contents){
+              //处理中间的换行字符,不然匹配会出问题
+            // dd($contents);
               preg_match_all($link_reg,$contents,$link_href);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
               $len = count($link_href[1]);
@@ -998,7 +1037,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
                 'cion'  =>  0,
                 'is_first' =>   0,
                 'is_last'   => 0,
-                'text_num'  => 2000,
+                'text_num'  => rand(2000,7000),//随机生成文本字数统计
                 'addtime'   =>(int) $val['createtime'],
           ];
       }
