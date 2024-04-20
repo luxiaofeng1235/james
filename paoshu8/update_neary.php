@@ -96,7 +96,6 @@ foreach($novelList as $key =>$val){
     }
 }
 echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
-
 echo "finish\r\n";
 
 ?>

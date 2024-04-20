@@ -16,11 +16,6 @@ $pinyin = new  Pinyin(); //初始化拼音类
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
 $exec_start_time = microtime(true);
 
-//检测代理
-if(!NovelModel::checkImgKey()){
-    exit("代理IP已过期，请重新拉取最新的ip\r\n");
-}
-
 $store_id = isset($argv[1])   ? $argv[1] : 0; //匹配对应的ID去关联
 $db_name = 'db_novel_pro';
 $redis_key = 'img_pic_id';//redis的对应可以设置
@@ -72,7 +67,6 @@ if(!empty($info)){
     echo "no data\r\n";
     exit();
 }
-
 echo "ts_count exists img::".count($diff_data)."\r\n";
 $o_data  = [];
 if(!empty($diff_data)){
@@ -101,14 +95,7 @@ if(!empty($diff_data)){
         echo 'now is empty url init to async ...................'.PHP_EOL;
         //启用多线程去保存处理先关的数据
         $img_list = array_column($o_data,'cover_logo');
-        $img_pro_type =5;
-
-        $detail_proxy_type =4;//基础小说的代理IP
-        $count_proxy_type= 2;//列表为空的代理IP
-        $empty_proxy_type =3;//修补数据的代理IP
-        $proxy_arr= array($detail_proxy_type, $count_proxy_type,$empty_proxy_type);
-        $rand_str =$proxy_arr[mt_rand(0,count($proxy_arr)-1)];
-        $data  =guzzleHttp::multi_req($img_list,'image');
+        $data  =curl_pic_multi::Curl_http($img_list);
         $t_num = 0;
         foreach($data as $gkey=> $img_con){
             $t_num++;
@@ -138,6 +125,10 @@ if(!empty($diff_data)){
 
 $ids = array_column($info,'pro_book_id');
 $min_id = min($ids);
+echo '<pre>';
+print_R($min_id);
+echo '</pre>';
+exit;
 $redis_data->set_redis($redis_key,$min_id);//设置增量ID下一次轮训的次数
 echo "下次轮训的起止pro_book_id起止位置 pro_book_id：".$min_id.PHP_EOL;
 

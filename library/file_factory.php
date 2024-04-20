@@ -290,7 +290,7 @@ class FileFactory{
             $content = $val['content'] ?? '';//提交的内容
             $save_path = $val['save_path'] ?? '';
             if(!$save_path || !$content) continue;
-            writeFileAppend($save_path, $content); //写入文件，以追加的方式，由于移动端带有分页，有可能是某个章节在第二页所以要处理下。
+            writeFileCombine($save_path, $content); //写入文件，以追加的方式，由于移动端带有分页，有可能是某个章节在第二页所以要处理下。
              //用md5加密的方式去更新
             // $filename = $save_path .DS. md5($val['link_name']).'.'.NovelModel::$file_type;
             // file_put_contents($filename,$content); //防止文件名出错
