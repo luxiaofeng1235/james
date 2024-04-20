@@ -48,7 +48,9 @@ return [
 
         ],
         //详情页面的URL
-        'detail_url'    =>  ['meta[og:novel:read_url]','content'],
+        'detail_url'   =>[
+            'path'=>        ['meta[property=og:novel:read_url]','content'],//小说的当前阅读链接
+        ],
         'list_home'  =>  [
             'story_link'       => ['span:eq(1) a','href'],
             'title'     =>  ['span:eq(1) a','text'],

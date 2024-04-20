@@ -29,6 +29,26 @@ $update_rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['update_list'];
 $ruku_rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['ruku_list'];
 
 
+$html  =readFileData('./1.html');
+
+$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['detail_url'];
+$data = QueryList::html($html)
+        ->rules($rules)
+        ->query()
+        ->getData();
+
+$data = $data->all();
+
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+die;
+
+echo '<pre>';
+print_R($content);
+echo '</pre>';
+exit;
+
 //最新更新的列表
 $update_list = QueryList::html($pageList)
                 ->rules($update_rules)
@@ -55,6 +75,8 @@ $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
+
+
 
 
 
