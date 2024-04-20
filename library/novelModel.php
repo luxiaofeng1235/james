@@ -1506,6 +1506,7 @@ public static function saveDetailHtml($novelList=[]){
   foreach($combineData as $k =>$v){
       $content = $store_content[$k] ?? '';
       echo "num =".($i+1)."\ttitle = {$v['title']} \t author = {$v['author']}\t url = {$v['story_link']} path = {$k} \tHTML页面缓存成功\r\n";
+      // writeFileCombine($k,$content);
 
   }
   return 1;

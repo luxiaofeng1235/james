@@ -1,6 +1,6 @@
 <?php
 /*
- * 同步跑书吧最新入库和最新更新的章节信息
+ * 同步跑书吧最新入库和最新更新的章节信息自动同步到数据库
 
  *
  * Copyright (c) 2017 - Linktone
@@ -19,7 +19,7 @@ if(!$pageList){
 }
 
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
-
+$db_conn = 'db_master';
 //定义采集规则：
 //最新更新章节循环的class
 $range_update  = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['range_update'];
@@ -29,27 +29,6 @@ $range_ruku  = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['range_ruku'];
 $update_rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['update_list'];
 //最新入库的规则
 $ruku_rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['ruku_list'];
-
-
-// $html  =readFileData('./1.html');
-
-// $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['detail_url'];
-// $data = QueryList::html($html)
-//         ->rules($rules)
-//         ->query()
-//         ->getData();
-
-// $data = $data->all();
-
-// echo '<pre>';
-// print_R($data);
-// echo '</pre>';
-// die;
-
-// echo '<pre>';
-// print_R($content);
-// echo '</pre>';
-// exit;
 
 //最新更新的列表
 $update_list = QueryList::html($pageList)
@@ -94,6 +73,15 @@ foreach($novelList as $key =>$val){
         $val['createtime'] = time(); //时间
         $insertData[] = $val;
     }
+}
+if($insertData){
+    //同步数据
+    $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
+    if(!$ret){
+        echo "数据库数据同步失败\r\n";
+    }
+}else{
+    echo "暂无小说需要同步\r\n";
 }
 echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
 echo "finish\r\n";
