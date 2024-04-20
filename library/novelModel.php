@@ -1462,8 +1462,9 @@ public static function saveDetailHtml($novelList=[]){
     return false;
   }
   $combineData = [];
+  $cache_path = Env::get('SAVE_HTML_PATH');
   foreach($novelList as $key =>$val){
-      $urlPath  = Env::get('SAVE_HTML_PATH').DS.'detail_'.$val['story_id'].'.'.NovelModel::$file_type;
+      $urlPath  = $cache_path.DS.'detail_'.$val['story_id'].'.'.NovelModel::$file_type;
       //只有检测需要同步的数据才去保存
       if(!file_exists($urlPath)){
           $combineData[$urlPath]=$val;
@@ -1491,15 +1492,17 @@ public static function saveDetailHtml($novelList=[]){
       $story_id = $content['path'] ?? '';
       $story_id = str_replace('/','',$story_id);
       //写入指定的文件信息
-      $file_path  = Env::get('SAVE_HTML_PATH').DS.'detail_'.$story_id.'.'.NovelModel::$file_type;
-      $store_content[$file_path] = $val;
+      $file_path  = $cache_path.DS.'detail_'.$story_id.'.'.NovelModel::$file_type;
+      if(!empty($val)){
+           $store_content[$file_path] = $val;
+      }
       // writeFileCombine($file_path,$val); //写入文件操作
       // echo "path = $path \t";
   }
   if(!$store_content) return false;
-  echo "=========================同步文件到指定缓存目录\r\n";
+  echo "=========================同步文件到指定缓存目录 {$cache_path}\r\n";
   foreach($combineData as $k =>$v){
-      $combineData[$k]['content'] = $store_content[$k] ?? '';
+      $content = $store_content[$k] ?? '';
       echo "title = {$v['title']} \t author = {$v['author']}\t url = {$v['story_link']} path = {$k} 缓存成功\r\n";
   }
   return 1;
