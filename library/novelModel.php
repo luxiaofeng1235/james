@@ -1474,6 +1474,7 @@ public static function saveDetailHtml($novelList=[]){
   $urls = array_column($combineData,'story_link');
   //获取关联的数据信息
   $list = curl_pic_multi::Curl_http($urls);
+  //重复获取数据防止有漏掉的
   $list = NovelModel::callMultiListRquests($list,  $novelList);
 
   if(empty($list)){
@@ -1501,11 +1502,31 @@ public static function saveDetailHtml($novelList=[]){
   }
   if(!$store_content) return false;
   echo "=========================同步文件到指定缓存目录 {$cache_path}\r\n";
+  $i = 0;
   foreach($combineData as $k =>$v){
       $content = $store_content[$k] ?? '';
-      echo "title = {$v['title']} \t author = {$v['author']}\t url = {$v['story_link']} path = {$k} 缓存成功\r\n";
+      echo "num =".($i+1)."\ttitle = {$v['title']} \t author = {$v['author']}\t url = {$v['story_link']} path = {$k} \tHTML页面缓存成功\r\n";
+
   }
   return 1;
+ }
+
+
+ /**
+* @note 获取小说详情记录
+*
+* @param $story_id string  第三方网站的id
+* @param $source string 来源 paoshu8：泡书吧 xsw：台湾小说
+* @return unnkower
+*/
+ public static function getNovelInfoById($story_id='',$source='',$field ='store_id'){
+    if(!$story_id || !$source){
+      return false;
+    }
+    $sql = "select {$field} from ".Env::get('APICONFIG.TABLE_NOVEL')." where story_id='{$story_id}' and source='{$source}'";
+    global $mysql_obj;
+    $info = $mysql_obj->fetch($sql,'db_slave');
+    return !empty($info) ? $info : [];
  }
 
 /**

@@ -18,6 +18,8 @@ if(!$pageList){
     exit("获取页面内容为空，请稍后重试\r\n");
 }
 
+$novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
+
 //定义采集规则：
 //最新更新章节循环的class
 $range_update  = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['range_update'];
@@ -71,41 +73,30 @@ $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
-
-
 $novelList = array_slice($novelList, 0, 1);
 
-
-$novelList = NovelModel::saveDetailHtml($novelList);
-echo '<pre>';
-print_R($novelList);
-echo '</pre>';
-exit;
-
-// foreach($novelList  as $val){
-//     if(!$val) continue;
-//     //存储保存的路径信息
-//     $file_path = Env::get('SAVE_HTML_PATH').DS.'detail_'.$val['story_id'].'.'.NovelModel::$file_type;
-//     if(!file_exists($file_path)){
-//           //请求接口信息
-//           $contents = curl_pic_multi::Curl_http([$val['story_link']]);
-//           if(!empty($contents)){
-//             //写入文件信息
-//                 echo '<pre>';
-//                 print_R($contents);
-//                 echo '</pre>';
-//                 exit;
-//                 writeFileCombine($file_path , $contents);
-//                 echo "url = {$val['story_link']} path = $file_path \r\n";
-//           }
-//     }
-// }
+//同步小说目录详情到本地
+NovelModel::saveDetailHtml($novelList);
 
 echo "====================插入/更新同步网站数据,共" . count($novelList) ."本小说\r\n";
 
-echo '<pre>';
-print_R($novelList);
-echo '</pre>';
-exit;
+$insertData = [];
+$source = Env::get('APICONFIG.PAOSHU_STR');//同步的来源
+foreach($novelList as $key =>$val){
+    $val['tag'] = $val['cate_name']??'';
+    $storyInfo = NovelModel::getNovelInfoById($val['story_id'],$source);
+    if(empty($storyInfo)){
+        $val['title'] = trimBlankSpace($val['title']);//小说名称
+        $val['author'] = $val['author'] ? trimBlankSpace($val['author']) :'未知';//小说作何
+        $val['is_async'] = 0;//是否同步状态
+        $val['syn_chapter_status'] = 0; //是否同步章节
+        $val['source'] = $source; //来源
+        $val['createtime'] = time(); //时间
+        $insertData[] = $val;
+    }
+}
+echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
+
+echo "finish\r\n";
 
 ?>
