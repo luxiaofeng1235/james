@@ -29,25 +29,25 @@ $update_rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['update_list'];
 $ruku_rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['ruku_list'];
 
 
-$html  =readFileData('./1.html');
+// $html  =readFileData('./1.html');
 
-$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['detail_url'];
-$data = QueryList::html($html)
-        ->rules($rules)
-        ->query()
-        ->getData();
+// $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['detail_url'];
+// $data = QueryList::html($html)
+//         ->rules($rules)
+//         ->query()
+//         ->getData();
 
-$data = $data->all();
+// $data = $data->all();
 
-echo '<pre>';
-print_R($data);
-echo '</pre>';
-die;
+// echo '<pre>';
+// print_R($data);
+// echo '</pre>';
+// die;
 
-echo '<pre>';
-print_R($content);
-echo '</pre>';
-exit;
+// echo '<pre>';
+// print_R($content);
+// echo '</pre>';
+// exit;
 
 //最新更新的列表
 $update_list = QueryList::html($pageList)
@@ -55,7 +55,6 @@ $update_list = QueryList::html($pageList)
                 ->range($range_update)
                 ->query()
                 ->getData();
-// dd($update_list);
 $update_list = $update_list->all();
 
 //最新入库的列表
@@ -67,25 +66,21 @@ $ruku_list = QueryList::html($pageList)
 $ruku_list = $ruku_list->all();
 
 //合并数据
-
-
 $novelList = array_merge($update_list , $ruku_list) ;
-
 $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
 
 
-
-
-
 //保存的客户端
 $files = Env::get('SAVE_HTML_PATH').DS.'detail_1235.'.NovelModel::$file_type;
-
 $urls = array_column($novelList,'story_link');
-
 $urls = array_slice($urls, 0 , 1);
+echo '<pre>';
+print_R($urls);
+echo '</pre>';
+exit;
 $list = curl_pic_multi::Curl_http($urls);
 
 echo '<pre>';

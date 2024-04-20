@@ -843,6 +843,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       $info['cid'] = self::getNovelCateId($info['class_name']);
       $info['addtime']  = time();
       $info['author'] = $info['author'] ? trim($info['author']) : '未知';
+      $info['book_name'] = trim($info['book_name']); //去除首尾空格
        //处理图片的存储路径
       if($info['book_name'] || $info['author']){
          //处理图片的存储路径问题，直接保存对应的按照：中文转换成英文，取英文的首字母，书名+作者的首字母计算返回
@@ -875,7 +876,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       $info['read_count']  = rand(1000,5000);
       $info['search_count'] = rand(100,599);
       //根据书籍名称和坐着来进行匹配
-      $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url   not like "%biquge34%" limit 1';
+      $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url not like "%biquge34%" limit 1';
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
       if(empty($novelInfo)){
           //插入入库

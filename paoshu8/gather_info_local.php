@@ -111,10 +111,11 @@ if($info){
         $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
 
         //转义标题
-        $store_data['title'] = addslashes(trim($store_data['title']));
+        $store_data['title'] = trim($store_data['title']);
         //处理作者并转义
         $author_data = explode('：',$store_data['author']);
-        $author = isset($author_data[1]) ?  addslashes(trim($author_data[1])) : '';
+        $author = isset($author_data[1]) ?  trim($author_data[1]) : '';
+
         $store_data['author']  = $author;
         // $store_data['updatetime'] = time();
         //章节也需要处理特殊的转义字符
