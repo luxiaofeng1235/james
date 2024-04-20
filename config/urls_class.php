@@ -23,6 +23,7 @@ return [
                 $res = substr($item ,1,-1);
                 return $res;
             }], //存一下对应的连接
+            'nearby_chapter'    =>['.s3','text'],//最新更新的章节
         ],
         //最新入库的列表
         'ruku_list' =>[
@@ -43,8 +44,11 @@ return [
                 $res = substr($item ,1,-1);
                 return $res;
             }], //存一下对应的连接
+             'nearby_chapter'  =>['.s30','text'],
 
         ],
+        //详情页面的URL
+        'detail_url'    =>  ['meta[og:novel:read_url]','content'],
         'list_home'  =>  [
             'story_link'       => ['span:eq(1) a','href'],
             'title'     =>  ['span:eq(1) a','text'],
