@@ -74,16 +74,18 @@ foreach($novelList as $key =>$val){
         $insertData[] = $val;
     }
 }
+echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
 if($insertData){
     //同步数据
     $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
     if(!$ret){
         echo "数据库数据同步失败\r\n";
     }
+    echo "同步小说列表成功 \r\n";
 }else{
     echo "暂无小说需要同步\r\n";
 }
-echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
+
 echo "finish\r\n";
 
 ?>
