@@ -75,6 +75,7 @@ if($info){
         exit();
     }
     $html = readFileData($files);
+    $html = html_entity_decode($html);
     if(!$html){
          //记录是否有相关的HTML的数据信息
         printlog('this novel：'.$story_link.' is no local html data');
