@@ -49,6 +49,29 @@ $item = StoreModel::swooleRquest($urls);
 $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_ret'];
 
 
+
+$storeArr;
+if(!empty($item)){
+    foreach($item as $key => $val){
+        //获取当前的连接分页信息
+        $pageArr = getCurrentPage($val);
+        if(!empty($pageArr)){
+            $pageArr['content'] = $val;
+            //保存对应的数组信息
+            $storeArr[] = $pageArr;
+        }
+    }
+    //保存对应的路径信息
+    if(!empty($storeArr)){
+        $i = 0;
+        foreach($storeArr as $gkey => $gval){
+            $i++;
+            echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
+        }
+    }
+}
+echo "finish\r\n";
+
 /**
 * @note 获取当前的分页信息
 *
@@ -86,26 +109,4 @@ function getCurrentPage($html){
     $info['save_path'] = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
     return $info;
 }
-$storeArr;
-if(!empty($item)){
-    foreach($item as $key => $val){
-        //获取当前的连接分页信息
-        $pageArr = getCurrentPage($val);
-        if(!empty($pageArr)){
-            $pageArr['content'] = $val;
-            //保存对应的数组信息
-            $storeArr[] = $pageArr;
-        }
-    }
-    //保存对应的路径信息
-    if(!empty($storeArr)){
-        $i = 0;
-        foreach($storeArr as $gkey => $gval){
-            $i++;
-            echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
-        }
-    }
-}
-echo "finish\r\n";
-
 ?>

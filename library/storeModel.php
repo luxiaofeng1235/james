@@ -104,7 +104,7 @@ class StoreModel{
                                      ->get($urls[$i]);
                     $items[]=$response->body();
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
-                    $str ="num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
+                    $str ="async child-fork-process num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
                     echo $str ."\r\n";
                     //判断如果不是200的返回长什么样子
                     if($response->getStatusCode() != 200){
@@ -113,10 +113,6 @@ class StoreModel{
                         echo '</pre>';
                         echo "\r\n";
                     }
-                    echo "\r\n";
-                    // if($response->getStatusCode() != 200){
-                    //     echo "获取数据失败=============================\r\n";
-                    // }
                     System::sleep(0.5);
                     $count++;
                 });
@@ -124,6 +120,7 @@ class StoreModel{
             Barrier::wait($barrier);
             assert($count == $N);
         });
+        echo "====================swoole worker finish \r\n";
         return $items;
     }
 
