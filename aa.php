@@ -22,7 +22,13 @@ $item = QueryList::html($files)->rules($rules)
             ->range($range)
             ->query()
             ->getData();
-  dd($item);
+$item = $item->all();
+
+$data = StoreModel::traverseEncoding($item);
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+exit;
 
 dd(new StoreModel());
  $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];

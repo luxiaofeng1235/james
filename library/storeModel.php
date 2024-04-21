@@ -3,7 +3,7 @@
 
 
 /*
- * 处理小说的主要模型业务（台湾地区的）
+ * 处理小说的主要模型业务（台湾地区的，后期如果想兼容应该也能兼容，不需要额外处理）
  *
  * Copyright (c) 2017 - Linktone
  * @author xiaofeng.lu <xiaofeng.200@163.com>
@@ -204,7 +204,7 @@ class StoreModel{
             //处理二维数组的转换处理
             foreach($data as $key =>$val){
                  foreach($val as &$v){
-                     $v = traditionalCovert($v);
+                    $v = traditionalCovert($v);
                  }
                  $data[$key] = $val; //需要赋值一下，才能生效
             }

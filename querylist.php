@@ -42,9 +42,8 @@ $item = QueryList::html($html)
                 ->getData();
 $item = $item->all();
 
-$res[] = $item;
 
-$aa = StoreModel::traverseEncoding($res);
+$aa = StoreModel::traverseEncoding($item);
 echo '<pre>';
 print_R($aa);
 echo '</pre>';
