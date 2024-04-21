@@ -33,7 +33,7 @@ $size  = explode(',',$limit);
 $pages = range($size[0] , $size[1]);
 
 
-$pages = array_slice($pages,0 , 10);
+$pages = array_slice($pages,0 , 1);
 $dataList =$urls= [];
 //生成页面链接方便进行爬取
 foreach($pages as $page){
