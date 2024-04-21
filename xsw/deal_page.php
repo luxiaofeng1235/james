@@ -73,18 +73,18 @@ function getCurrentPage($html){
     $page = 0;
     if(!empty($pageRet) && isset($pageRet[0])){
         $numData  = $pageRet[0] ?? '';
-        preg_match('/\d{1,}/',$numData , $matches);
+        preg_match('/\d+/',$numData , $matches);
        if(isset($matches[0])){
           $page = $matches[0] ?? 0;
        }
     }
-    echo "-----{$pageStr} \t{$page}\r\n";
+    // echo "-----{$pageStr} \t{$page}\r\n";
     //获取生成的连接信息
     $link_url  = $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
     $info['page'] = $page;
     $info['url'] = $link_url;
     $info['save_path'] = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
-    // return $info;
+    return $info;
 }
 $storeArr;
 if(!empty($item)){
@@ -92,16 +92,11 @@ if(!empty($item)){
         //获取当前的连接分页信息
         $pageArr = getCurrentPage($val);
         if(!empty($pageArr)){
-            // $pageArr['content'] = $val;
+            $pageArr['content'] = $val;
             //保存对应的数组信息
             $storeArr[] = $pageArr;
         }
     }
-    echo 111;exit;
-    echo '<pre>';
-    print_R($storeArr);
-    echo '</pre>';
-    exit;
     //保存对应的路径信息
     if(!empty($storeArr)){
         $i = 0;

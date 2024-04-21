@@ -91,7 +91,7 @@ class StoreModel{
             $count = 0;
             $N = count($urls);
             $t_url =$urls;
-            echo "urls requests num (".$N.")\r\n";
+            echo "swoole urls requests num (".$N.")\r\n";
             $http = new HttpRequest;
             foreach (range(0, $N-1) as $i) {
                 $link = $urls[$i];
@@ -102,10 +102,10 @@ class StoreModel{
                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
                                      ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
-                    // echo $file.PHP_EOL;
-                    echo "num = {$i} \t url = {$urls[$i]}\r\n";
                     $items[]=$response->body();
-                    var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
+                    // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
+                    $str ="num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
+                    echo $str ."\r\n";
                     //判断如果不是200的返回长什么样子
                     if($response->getStatusCode() != 200){
                         echo '<pre>';
