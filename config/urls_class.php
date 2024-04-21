@@ -104,8 +104,17 @@ return [
             'update_zhangjie'   =>['.sys a','text'],
             //小说简介
             'intro' =>['.intro','text'],
+            //详情页链接
+            'detail_link'  =>  ['.pic a','href','',function($url){
+                // $url =
+                return Env::get('TWCONFIG.API_HOST_URL').$url;
+            }],
             //章节链接
-            'chapter_link'  =>  ['.pic a','href'],
+            'chapter_link'  =>['.title a','href', '',function($item){
+                $url = preg_replace('/\.html/','/',$item);
+                $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
+                return $url;
+            }],
         ],
         ///////////////////////////小说详情页相关
         'chapter_range' =>  '.liebiao li',//章节循环的范围

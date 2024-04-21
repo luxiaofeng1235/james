@@ -11,6 +11,19 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
+
+$files = readFileData('/tmp/page.html');
+$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range'];
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list'];
+
+// $rt = QueryList::get('https://www.xsw.tw/book/230000/');
+
+$item = QueryList::html($files)->rules($rules)
+            ->range($range)
+            ->query()
+            ->getData();
+  dd($item);
+
 dd(new StoreModel());
  $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];
  dd($rules);
