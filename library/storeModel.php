@@ -28,6 +28,8 @@ class StoreModel{
 
      public static $file_type = 'txt'; //存储为txt的格式文件
 
+     private static $table_name = 'mc_book'; //对应的表信息
+
 
      /**
      * @note 替换指定url中的参数
