@@ -115,6 +115,16 @@ return [
                 $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
                 return $url;
             }],
+            //存一下story_方便到时候去存取
+            'story_id'  => ['.title a','href', '',function($results){
+                 $data = explode('/',$results);
+                 $ret = end($data);
+                 $story_id  = preg_replace('/\.html/','',$ret);
+                 if(!$story_id){
+                    $story_id = 0;
+                 }
+                 return $story_id;
+            }],
         ],
         ///////////////////////////小说详情页相关
         'chapter_range' =>  '.liebiao li',//章节循环的范围
