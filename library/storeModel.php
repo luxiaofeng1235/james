@@ -51,6 +51,23 @@ class StoreModel{
         return $host_url;
      }
 
+
+
+    /**
+    * @note 获取海外代理IP
+    *
+    * @return   array
+    */
+     protected static function getForeignProxy(){
+        $proxy_data = [
+            'ip'    =>  'proxy.stormip.cn',//IP地址
+            'port'  =>  '1000', //端口
+            'username'  =>  'storm-jekines_area-TW_session-123456',//用户名
+            'password'  =>  '123456', //密码
+        ];
+        return $proxy_data;
+     }
+
     /**
     * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
@@ -64,12 +81,15 @@ class StoreModel{
         $urls = array_filter($urls); //防止有空的url存在
         $items = [];
         $exec_start_time = microtime(true);
-        run(function () use(&$items,$urls){
+        $proxy_data = StoreModel::getForeignProxy();
+
+        ///开启协程访问
+        run(function () use(&$items,$urls,$proxy_data){
             $barrier = Barrier::make();
             $count = 0;
             $N = count($urls);
             $t_url =$urls;
-            echo "urls num：".$N."\r\n";
+            echo "urls requests num (".$N.")\r\n";
             $http = new HttpRequest;
             foreach (range(0, $N-1) as $i) {
                 $link = $urls[$i];
@@ -79,16 +99,23 @@ class StoreModel{
                 账户名: storm-jekines_area-TW_session-123456_life-5
                 密码: 123456
                  */
-                Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls) {
+                Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
-                                     ->proxy('proxy.stormip.cn', '1000', 'socks5') //认证类型设置
-                                     ->proxyAuth('storm-jekines_area-TW_session-123456','123456') //认证账密
+                                     ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+                                     ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
                     // echo $file.PHP_EOL;
                     echo "num = {$i} \t url = {$urls[$i]}\r\n";
                     $items[]=$response->body();
                     var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
+                    //判断如果不是200的返回长什么样子
+                    if($response->getStatusCode() != 200){
+                        echo '<pre>';
+                        var_dump($response->body());
+                        echo '</pre>';
+                        echo "\r\n";
+                    }
                     echo "\r\n";
                     // if($response->getStatusCode() != 200){
                     //     echo "获取数据失败=============================\r\n";

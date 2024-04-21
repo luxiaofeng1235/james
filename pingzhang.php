@@ -56,7 +56,7 @@ function getUrl($urls = []){
 }
 
 $url  = 'https://www.xsw.tw/wanben_3';
-for ($i=0; $i <200 ; $i++) {
+for ($i=0; $i <500 ; $i++) {
     $urls [] = $url;
 }
 
