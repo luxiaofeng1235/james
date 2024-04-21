@@ -100,5 +100,64 @@ class StoreModel{
         });
         return $items;
     }
+
+    /**
+    * @note swoole请求重复调用请求，防止有空数据返回做特殊调用--根据情况来进行调整
+    *
+    * @param $content_arr array  请求的HTML数据
+    * @param $goods_list array 原始请求的校验数据
+    * @return unnkower
+    */
+    public static function swooleCallRequest($contents_arr=[],$goods_list=[]){
+         if(!$contents_arr || !$goods_list){
+            return [];
+         }
+
+        /***************判断是否有空的数据返回 start*****************************/
+         $goods_list = array_values($goods_list);
+         $errData  =  $sucData  = [];
+         foreach($contents_arr as $key => $val){
+            if(empty($val)){
+                $errData[] =$goods_list[$key] ?? [];
+            }else{
+                $sucData[] = $val;
+            }
+         }
+        /***************判断是否有空的数据返回 end*****************************/
+
+         $repeat_data = $curl_contents1 =[];
+         //数据为空的情况判断
+         if(!empty($errData)){
+            echo "有返回需要重新抓取的数据请求啊，会重新去进行请求返回\r\n";
+            $successNum = 0;
+            $old_num = count($errData);
+            $urls = array_column($errData, 'story_link'); //进来先取出来
+            while(true){
+                //通过说swoole来完成并发请求，采用协程
+                $curl_contents1 = StoreModel::swooleRquest($urls);
+                $temp_url =[];//设置中间变量
+                foreach($curl_contents1 as $tkey=> $tval){
+                    if(empty($tval)){//为空的情况
+                        echo "获取数据为空，会重新抓取======================{$urls[$tkey]}\r\n";
+                        $temp_url[] =$urls[$tkey];
+                     }else{
+                        $repeat_data[] = $tval;
+                        unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
+                        unset($curl_contents1[$tkey]);
+                        $successNum++;
+                    }
+                }
+                $urls = $temp_url; //起到指针的作用，每次只存失败的连接
+                $urls = array_values($urls);//重置键值，方便查找
+                $curl_contents1 =array_values($curl_contents1);//获取最新的数组
+                if($old_num == $successNum){
+                    echo "数据清洗完毕等待入库\r\n";
+                    break;
+                }
+            }
+        }
+        $retuernList = array_merge($sucData , $repeat_data);
+        return $retuernList;
+    }
 }
 ?>
