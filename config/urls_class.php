@@ -133,6 +133,10 @@ return [
                  return $story_id;
             }],
         ],
+        ///////////////获取每个分页的页码
+        'page_ret'  =>  [
+            'currentPage'  => [ '.articlepage em' , 'text'], //获取分页
+        ],
         ///////////////////////////小说详情页相关
         'chapter_range' =>  '.liebiao li',//章节循环的范围
          //章节列表数据
