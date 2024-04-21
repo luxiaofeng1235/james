@@ -56,17 +56,13 @@ function getUrl($urls = []){
 }
 
 $url  = 'https://www.xsw.tw/wanben_3';
-for ($i=0; $i <30 ; $i++) {
+for ($i=0; $i <200 ; $i++) {
     $urls [] = $url;
 }
 
 $list = StoreModel::swooleRquest($urls);
-echo 333;exit;
 
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
+echo count($list);
 exit;
 echo '<pre>';
 print_R($items);

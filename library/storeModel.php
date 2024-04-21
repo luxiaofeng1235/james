@@ -86,7 +86,8 @@ class StoreModel{
                     // echo $file.PHP_EOL;
                     echo "num = {$i} \t url = {$urls[$i]}\r\n";
                     $items[]=$response->body();
-                    var_dump(strlen($response->body()),$response->getStatusCode());
+                    var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
+                    echo "\r\n";
                     // if($response->getStatusCode() != 200){
                     //     echo "获取数据失败=============================\r\n";
                     // }
