@@ -66,6 +66,11 @@ if(!empty($item)){
         $i = 0;
         foreach($storeArr as $gkey => $gval){
             $i++;
+            $content = $gval['content'] ?? '';//获取的内容
+            $save_path = $gval['save_path'] ?? '';//文本文件
+            if(!$save_path || !$content) continue;
+            //每次覆盖不追加文件
+            writeFileCombine($save_path, $content);
             echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
         }
     }
