@@ -109,6 +109,7 @@ return [
                 // $url =
                 return Env::get('TWCONFIG.API_HOST_URL').$url;
             }],
+
             //章节链接
             'story_link'  =>['.title a','href', '',function($item){
                 $url = preg_replace('/\.html/','/',$item);
@@ -132,6 +133,22 @@ return [
         'chapter_list'  =>  [
             'link_url'       => ['a','href'],
             'link_name'     =>  ['a','text'],
+        ],
+        /////////////小说详情页的获取分类和连载状态
+         //分类和连载的状态信息
+        'detail_info'   =>  [
+            'cate_name' =>  ['.box_info tr:eq(4) td:eq(0)','text'], //小说分类
+            'status' =>  ['.box_info tr:eq(4) td:eq(2)','text'], //小说分类
+            'third_update_time'   =>  ['.box_info tr:eq(5) td:eq(3)','text'],//小说的更新时间
+            'story_link'    =>  ['.bread-crumbs li:eq(2)','html','',function($item){
+                $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A链接
+                preg_match($link_reg , $item , $matches);
+                $source_url = $matches[1] ?? 0;
+                $story_id = str_replace('/book/','',$source_url);
+                $story_id = str_replace('/','',$story_id);
+                return $story_id;
+
+            }],//获取面包屑里的连接信息
         ],
         /////////////////////////文章内容相关
          //采集文章内容的规则

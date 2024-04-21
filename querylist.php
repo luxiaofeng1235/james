@@ -6,42 +6,10 @@ require_once(__DIR__.'/library/init.inc.php');
 use Yurun\Util\YurunHttp\Http\Request;
 use Yurun\Util\YurunHttp;
 use Yurun\Util\YurunHttp\Http\Psr7\Uri;
-
-echo 11133;exit;
-echo 1;die;
-$request = [];
-go(function() use($uri,&$request){
-    $client = new \Yurun\Util\YurunHttp\Http2\SwooleClient($uri->getHost(), Uri::getServerPort($uri), 'https' === $uri->getScheme());
-    $client->connect();
-    // 请求构建
-    $httpRequest = new \Yurun\Util\HttpRequest();
-    $request = $httpRequest->header('aaa', 'bbb')->buildRequest($uri, [
-        'date'  =>  123,
-    ], 'POST', 'json');
-    return $request;
-});
-Swoole\Event::wait();
-
-for($i = 0; $i < 10; ++$i)
-{
-    go(function(){
-        echo "111 \r\n";
-    });
-}
-exit();
+use QL\QueryList;
 
 
-// 客户端初始化和连接
-$client = new \Yurun\Util\YurunHttp\Http2\SwooleClient($uri->getHost(), Uri::getServerPort($uri), 'https' === $uri->getScheme());
-$client->connect();
-echo 33;exit;
 
-
-$str= '我是一串比较长的中文-www.jefflei.com';
-echo 'mb_substr:' . mb_substr($str, 0, 6, 'utf-8');
-echo "\r\n";
-echo 'mb_strcut:' . mb_strcut($str, 0, 6, 'utf-8');
-exit;
 
 // $aa= webRequest('https://www.xsw.tw/book/1263567/231595256.html','GET');
 // echo '<pre>';
@@ -66,6 +34,22 @@ $urls = [
 // echo '</pre>';
 // exit;
 // die;
+$html = readFileData('/tmp/detail.html');
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
+$item = QueryList::html($html)
+                ->rules($rules)
+                ->query()
+                ->getData();
+echo '<pre>';
+print_R($item);
+echo '</pre>';
+exit;
+$item = $item->all();
+$aa = StoreModel::traverseEncoding($item);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 
 $aa =guzzleHttp::multi_req($urls);
 echo '<pre>';

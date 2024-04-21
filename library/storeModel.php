@@ -71,8 +71,8 @@ class StoreModel{
     /**
     * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
-    * @param $url string  链接地址
-    * @return  str
+    * @param $urls array  链接地址
+    * @return  object
     */
      public static function swooleRquest($urls){
         if(!$urls){
@@ -93,12 +93,7 @@ class StoreModel{
             $http = new HttpRequest;
             foreach (range(0, $N-1) as $i) {
                 $link = $urls[$i];
-                /*
-                代理网络: hk.stormip.cn
-                端口: 1000
-                账户名: storm-jekines_area-TW_session-123456_life-5
-                密码: 123456
-                 */
+                //利用屏障的create来开启对应的配置信息
                 Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
@@ -187,6 +182,25 @@ class StoreModel{
         }
         $retuernList = array_merge($sucData , $repeat_data);
         return $retuernList;
+    }
+
+
+    /**
+    * @note 处理转换的编码数据信息
+    *
+    * @param $data array 待需要处理的数据
+    * @return  array|unkinow
+    */
+
+    public static function traverseEncoding($data = []){
+        if(!$data){
+            return false;
+        }
+        foreach($data as &$val){
+            //转换数组对象
+            $val = traditionalCovert($val);
+        }
+        return $data;
     }
 }
 ?>
