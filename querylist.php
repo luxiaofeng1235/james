@@ -35,6 +35,11 @@ $urls = [
 // exit;
 // die;
 $html = readFileData('/tmp/detail.html');
+// $html = traditionalCovert($html);
+// echo '<pre>';
+// print_R($html);
+// echo '</pre>';
+// exit;
 $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
 $item = QueryList::html($html)
                 ->rules($rules)
