@@ -157,9 +157,9 @@ function filterHtml($str){
 
 	$str = htmlspecialchars_decode($str);
 
-	$html=str_replace("<br></p >","\\n",$str);
-	$html=str_replace("</p >","\\n",$html);
-	$html=str_replace("<br>","\\n",$html);
+	$html=str_replace("<p>","",$str);
+	$html=str_replace("</p>","\n\n",$html);
+	$html=str_replace("<br>","\n",$html);
 	$html=strip_tags($html);
 
 

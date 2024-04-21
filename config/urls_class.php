@@ -88,24 +88,38 @@ return [
             'href'      =>['.con_top a:eq(2)','href'],
         ],
     ],
-    //报的网站的基本配置
-    'baode' =>  [
-        'range' =>  '#newscontent li',
-        'list'  => [
-            'cate_name'       => ['.s1','text'],
-            'title'     =>  ['.s2 a','text'],
-            'story_link'     =>  ['.s2 a','href'],
+    //台湾站的小说采集规则
+    'xsw'   =>[
+        /////////////////////////完本类型排行榜
+        'page_range'    =>  '#alistbox',//分页循环的列表范围
+        //分页相关的数据
+        'page_list' =>[
+            //图片信息
+            'img' =>['.pic img','src'],
+            //小说名
+            'title' =>['.title a','text'],
+            //作者
+            'author'    =>  ['.title span','text'],
+            //最近的章节状态
+            'update_zhangjie'   =>['.sys a','text'],
+            //小说简介
+            'intro' =>['.intro','text'],
+            //章节链接
+            'chapter_link'  =>  ['.pic a','href'],
         ],
-        'info'  =>  [
-            'cover_logo'       =>array('#fmimg img','src'),//小说封面
-            'author'    => array('#info p:eq(0)','text'),//小说作者
-            'title'     =>array('#info>h1','text'),//小说标题
-            'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
-            'third_update_time'    =>array('#info p:eq(2)','text'), //最近的更新时间
-            'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
-            'intro' =>array('meta[property=og:description]','content'),
-            'tag'   => array('meta[property=og:novel:category]','content'),
-            'location'  =>  array('.con_top','html'),//小说的面包屑位置
+        ///////////////////////////小说详情页相关
+        'chapter_range' =>  '.liebiao li',//章节循环的范围
+         //章节列表数据
+        'chapter_list'  =>  [
+            'link_url'       => ['a','href'],
+            'link_name'     =>  ['a','text'],
+        ],
+        /////////////////////////文章内容相关
+         //采集文章内容的规则
+        'content'   =>  [
+            'content'   =>['#content','html'], //内容主体
+            'meta_data'    =>['.bread-crumbs li:eq(3)','text'],//当前页面的对应的ID
+            'href'      =>['meta[http-equiv="mobile-agent"]','content'], //页面链接
         ],
     ],
 ];

@@ -12,7 +12,33 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+ $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];
+ dd($rules);
 
+// $html = readFileData('./biquge.html');
+$html =webRequest('http://www.biquge5200.net/148_148106/178191780.html','GET');
+
+
+$rules = [
+          'content'    =>['#content','html','',function($content){
+             $con =  array_iconv($content);
+             // $con = filterHtml($con);
+             //替换标签
+            $preg = '/<div id=\"gc1\".*?>.*?<\/div>/ism';
+            $con = preg_replace($preg, '',$con);
+            //替换为实体标签的P标签处理
+            $con = filterHtml($con);
+             return $con;
+          }],
+          'meta_data'       =>['meta[http-equiv=mobile-agent]','content'],
+          'href'      =>['.con_top a:eq(2)','href'],
+        ];
+$data = QueryList::html($html)->rules($rules)->query()->getData();
+$data = $data->all();
+$meta_data = $data['meta_data']??'';
+$href = $data['href'];
+$aa = getHtmlUrl($meta_data,$href);
+dd($aa);
 
 // $str = 'j11     122       ';
 // echo myTrim($str);

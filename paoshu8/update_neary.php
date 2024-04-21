@@ -74,6 +74,7 @@ foreach($novelList as $key =>$val){
         $val['createtime'] = time(); //时间
         $insertData[] = $val;
     }else{
+        //更新对应的状态信息，需要改成is_async 0,方便进行同步
         echo "exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} \r\n";
     }
 }

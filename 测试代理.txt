@@ -15,3 +15,12 @@ curl -x socks5://hk.stormip.cn:1000 -U "storm-jekines_area-TW_session-123456_lif
 
 curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http://www.baidu.com
 curl --socks5  43.243.171.202:8012 http://www.baidu.com
+
+
+代理网络: proxy.stormip.cn
+端口: 1000
+账户名: storm-jekines_area-TW_session-123456
+密码: 123456
+
+###测试台湾站
+curl -x socks5://proxy.stormip.cn:1000 -U "storm-jekines_area-TW_session-123456:123456" https://www.xsw.tw/book/230000/
