@@ -15,7 +15,7 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
-
+$exec_start_time = microtime(true);
 
 $limit = Env::get('TWCONFIG.RUN_LIST_PAGE');
 if(!$limit){
@@ -70,6 +70,9 @@ if(!empty($item)){
         }
     }
 }
+$exec_end_time = microtime(true);
+$executionTime = $exec_end_time - $exec_start_time; //执行时间
+echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "finish\r\n";
 
 /**
