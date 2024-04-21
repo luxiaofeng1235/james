@@ -191,14 +191,23 @@ class StoreModel{
     * @param $data array 待需要处理的数据
     * @return  array|unkinow
     */
-
     public static function traverseEncoding($data = []){
         if(!$data){
             return false;
         }
-        foreach($data as &$val){
-            //转换数组对象
-            $val = traditionalCovert($val);
+        if(count($data) == count($data,1)){
+            foreach($data as &$val){
+                //转换数组对象
+                $val = traditionalCovert($val);
+            }
+        }else{
+            //处理二维数组的转换处理
+            foreach($data as $key =>$val){
+                 foreach($val as &$v){
+                     $v = traditionalCovert($v);
+                 }
+                 $data[$key] = $val; //需要赋值一下，才能生效
+            }
         }
         return $data;
     }

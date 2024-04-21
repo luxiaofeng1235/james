@@ -35,22 +35,16 @@ $urls = [
 // exit;
 // die;
 $html = readFileData('/tmp/detail.html');
-// $html = traditionalCovert($html);
-// echo '<pre>';
-// print_R($html);
-// echo '</pre>';
-// exit;
 $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
 $item = QueryList::html($html)
                 ->rules($rules)
                 ->query()
                 ->getData();
-echo '<pre>';
-print_R($item);
-echo '</pre>';
-exit;
 $item = $item->all();
-$aa = StoreModel::traverseEncoding($item);
+
+$res[] = $item;
+
+$aa = StoreModel::traverseEncoding($res);
 echo '<pre>';
 print_R($aa);
 echo '</pre>';
