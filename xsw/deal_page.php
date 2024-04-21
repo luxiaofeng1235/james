@@ -50,10 +50,10 @@ if(!empty($item)){
     $num = 0;
     foreach($item as $key => $val){
         $num++;
-        $page = $pages[$key+1] ?? 1;
+        $page = $pages[$key] ?? 1;
         //保存的文件名生成规则
         $save_file = $download_path.DS. StoreModel::$page_name.$page .'.'.StoreModel::$file_type;
-        echo "No. = $num \t url = {$urls[$key]}  \t path = {$save_file} \t complate \r\n";
+        echo "No. = $num \t url = {$urls[$page-1]}  \t path = {$save_file} \t complate \r\n";
     }
 }
 echo "finish\r\n";
