@@ -20,20 +20,38 @@ if(!$limit){
     exit("请输入完本的起止页码数");
 }
 
+//创建目录
+$download_path =Env::get('SAVE_PAGE_PATH');//下载路径;
+if(!is_dir($download_path)){
+    createFolders($download_path);
+}
+
+
 $size  = explode(',',$limit);
 $pages = range($size[0] , $size[1]);
 
+
+$pages = array_slice($pages,0 , 1);
+
+$dataList =$urls= [];
 //生成页面链接方便进行爬取
 foreach($pages as $page){
    //替换相关的关联参数信息
     $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
-    $dataList[]= $url;
+    $urls[]= $url;
 }
-//先测试几个url方便进行存取
-$list = array_slice($dataList, 0 , 10);
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
+//设置配置细腻
+$item = StoreModel::swooleRquest($urls);
+if(!empty($item)){
+    $num = 0;
+    foreach($item as $key => $val){
+        $num++;
+        $page = $pages[$key+1] ?? 1;
+        //保存的文件名生成规则
+        $save_file = $download_path.DS. StoreModel::$page_name.$page .'.'.StoreModel::$file_type;
+        echo "num = $num \t url = {$urls[$key]}  \t path = {$save_file} \t complate \r\n";
+    }
+}
+echo "finish\r\n";
 
 ?>

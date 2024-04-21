@@ -30,6 +30,8 @@ class StoreModel{
 
      private static $table_name = 'mc_book'; //对应的表信息
 
+     public static $page_name = 'store_page_'; //保存的具体文件的前缀
+
 
      /**
      * @note 替换指定url中的参数
@@ -58,7 +60,7 @@ class StoreModel{
     *
     * @return   array
     */
-     protected static function getForeignProxy(){
+     public static function getForeignProxy(){
         $proxy_data = [
             'ip'    =>  'proxy.stormip.cn',//IP地址
             'port'  =>  '1000', //端口

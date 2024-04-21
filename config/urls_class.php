@@ -95,7 +95,13 @@ return [
         //分页相关的数据
         'page_list' =>[
             //图片信息
-            'cover_logo' =>['.pic img','src'],
+            'cover_logo' =>['.pic img','src','',function($img_url){
+                 if(!preg_match('/https\:\/\//',$img_url)){
+                    //自动补齐封面
+                    $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
+                 }
+                return $img_url;
+            }],
             //小说名
             'title' =>['.title a','text'],
             //作者
