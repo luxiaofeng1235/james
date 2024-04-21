@@ -95,13 +95,13 @@ return [
         //分页相关的数据
         'page_list' =>[
             //图片信息
-            'img' =>['.pic img','src'],
+            'cover_logo' =>['.pic img','src'],
             //小说名
             'title' =>['.title a','text'],
             //作者
             'author'    =>  ['.title span','text'],
             //最近的章节状态
-            'update_zhangjie'   =>['.sys a','text'],
+            'nearby_chapter'   =>['.sys a','text'],
             //小说简介
             'intro' =>['.intro','text'],
             //详情页链接
@@ -110,7 +110,7 @@ return [
                 return Env::get('TWCONFIG.API_HOST_URL').$url;
             }],
             //章节链接
-            'chapter_link'  =>['.title a','href', '',function($item){
+            'story_link'  =>['.title a','href', '',function($item){
                 $url = preg_replace('/\.html/','/',$item);
                 $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
                 return $url;
