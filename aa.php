@@ -11,7 +11,7 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
-
+dd(new StoreModel());
  $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];
  dd($rules);
 

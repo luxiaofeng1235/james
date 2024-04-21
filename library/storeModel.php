@@ -50,7 +50,7 @@ class StoreModel{
      }
 
     /**
-    * @note 通过swoole中的request请求去获取数据信息
+    * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
     * @param $url string  链接地址
     * @return  str
@@ -59,6 +59,45 @@ class StoreModel{
         if(!$urls){
             return false;
         }
-     }
+        $urls = array_filter($urls); //防止有空的url存在
+        $items = [];
+        $exec_start_time = microtime(true);
+        run(function () use(&$items,$urls){
+            $barrier = Barrier::make();
+            $count = 0;
+            $N = count($urls);
+            $t_url =$urls;
+            echo "urls num：".$N."\r\n";
+            $http = new HttpRequest;
+            foreach (range(0, $N-1) as $i) {
+                $link = $urls[$i];
+                /*
+                代理网络: hk.stormip.cn
+                端口: 1000
+                账户名: storm-jekines_area-TW_session-123456_life-5
+                密码: 123456
+                 */
+                Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls) {
+                    $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
+                                     ->rawHeader('ddd:value4')
+                                     ->proxy('proxy.stormip.cn', '1000', 'socks5') //认证类型设置
+                                     ->proxyAuth('storm-jekines_area-TW_session-123456','123456') //认证账密
+                                     ->get($urls[$i]);
+                    // echo $file.PHP_EOL;
+                    echo "num = {$i} \t url = {$urls[$i]}\r\n";
+                    $items[]=$response->body();
+                    var_dump(strlen($response->body()),$response->getStatusCode());
+                    // if($response->getStatusCode() != 200){
+                    //     echo "获取数据失败=============================\r\n";
+                    // }
+                    System::sleep(0.5);
+                    $count++;
+                });
+            }
+            Barrier::wait($barrier);
+            assert($count == $N);
+        });
+        return $items;
+    }
 }
 ?>
