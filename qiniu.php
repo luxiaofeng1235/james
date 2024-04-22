@@ -24,34 +24,6 @@ use Qiniu\Auth;
 use Qiniu\Http\Client;
 
 
-##测试数据
-$list = array(
-    'app_content' =>array(
-        'username' =>111,
-        'password'  => 3334
-    ),
-    'send_message' =>33222,
-    'status' =>array(
-        'plist'=>1,
-        'array'=>array(
-            'http',
-            'arr'
-        )
-    )
-);
-
-//解析数据格式
-$mobile_data = array2string($list);
-
-if($mobile_data){
-     //进行转换
-    $result = string2array(stripslashes($mobile_data));
-    $aids = is_array($result) && !empty($result) ? $result['status'] : array();
-    echo '<pre>';
-    print_R($aids);
-    echo '</pre>';
-
-}
 ##测试
 $img_data[] = array(
     'data'=>
@@ -65,10 +37,60 @@ $img_data[] = array(
             'uri'=>"http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg",
         ),
 */
+
+
+
+$auth = new Auth('yEacIJa59EK8ar6UMlOkRft39W91qoJmmHzhw9fC','dtPS1DPJPFzh523Kp9ItFSqmSFP7CqQ7-CDyttNo');
+
+$uri = 'http://ai.qiniuapi.com/v3/image/censor';
+$contentType = 'application/json';
+$scenes = [
+        'censor' => ['pulp', 'terror', 'politician', 'ads'],
+        'pulp' => ['pulp'],
+        'terror' => ['terror'],
+        'politician' => ['politician'],
+        'ads' => ['ads']
+    ];
+
+$body = [
+    'data' => ['uri' => 'http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg'],
+    'params' => ['scenes' => $scenes['censor']]
+];
+
+// 拦截违规图片级别
+$suggestions = [
+    // 'pass' => 'pass', // 通过
+    // 'review' => 'review', // 疑似
+    'block' => 'block' // 违规
+];
+
+$sign = $auth->authorization($uri, 'POST', json_encode($body), $contentType);
+$header = ['Content-Type: '. $contentType, 'Authorization: '.$sign['Authorization']];
+
+
+ $response = Client::post($uri,json_encode($body),$header);//响应数据
+ echo '<pre>';
+ print_R($response);
+ echo '</pre>';
+ exit;
+
+$res = webRequest($uri,'POST',json_encode($body),$header);
+
+$t = json_decode($res, true);
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+$res = http_request($uri, json_encode($body), $header);
+
+
+
+
 $images_str = json_encode($img_data);
 //返回七牛鉴黄结果
 $response = post_jh($img_data);
-echo '<pre>';
+
+ echo '<pre>';
 print_R($response);
 echo '</pre>';
 exit;
@@ -84,17 +106,40 @@ exit;
             $secretKey = 'dtPS1DPJPFzh523Kp9ItFSqmSFP7CqQ7-CDyttNo';//'VyYy18APKl4qMZ37phH09vWRE4z4gaL-Cyj95FgW';
 
             $auth = new Auth($accessKey, $secretKey); // 构建鉴权对象
-
-            $post_url = "http://argus.atlab.ai/v1/pulp";//七牛请求地址
+            //http://ai.qiniuapi.com/v3/text/censor
+            $post_url = "http://ai.qiniuapi.com/v3/text/censor";//七牛请求地址
 
             $field_list = array(); //一个分享的总请求列表，因为七牛需要单图片请求
             $img_str = array();
             foreach ($img_all as $key => $value) {
-                $images_str = json_encode($value);
+                // $images_str = json_encode($value);
+                $images_str = '{
+    "data": {
+        "text": "七牛文本审核示例"
+    },
+    "params": {
+        "scenes": [
+            "antispam"
+        ]
+    }
+}';
+
                 $sign = $auth->authorization($post_url,$img_str,'application/json');//签名
+                echo '<pre>';
+                print_R($images_str);
+                echo '</pre>';
+                exit;
                 $headers = authorizationV2($post_url, 'POST', $images_str, 'application/json', $auth);//提交头部
                 $headers['Content-Type'] = 'application/json';
+                // echo '<pre>';
+                // print_R($headers);
+                // echo '</pre>';
+                // exit;
                 $response = Client::post($post_url,$images_str,$headers);//响应数据
+                echo '<pre>';
+                print_R($response);
+                echo '</pre>';
+                exit;
                 $response = json_encode($response);
                 $post_decode = json_decode($response,true);
                 $body = json_decode($post_decode['body'],true);
@@ -105,7 +150,7 @@ exit;
 
             //解析请求列表
             $label = 2;//类别：0色情1性感2正常
-            $review = 0;//是否需复审：0否，1是
+            $review = 1;//是否需复审：0否，1是
             $score = 1;//概率
 
             if(is_array($field_list) && count($field_list)){
@@ -125,13 +170,12 @@ exit;
 
                 }
                 $image_str = array2string($image_question);
-                $review_time = date('Y-m-d H:i:s');
                 //组合数据返回
                 $return=array(
                     'status'=>'success',
                     'rate'=>$score,
                     'label'=>$label,
-                    'review_time'=>$review_time,
+                    // 'review_time'=>$review_time,
                     'image_str'=>$image_str,
                     'review'=>$review,
                     'body'=>json_encode($field_list)

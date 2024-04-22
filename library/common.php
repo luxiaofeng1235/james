@@ -382,9 +382,9 @@ function webRequest($url,$method,$params=[],$header = []){
 	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
 	//重要！
 	curl_setopt($curl, CURLOPT_ACCEPT_ENCODING, "gzip,deflate");
-	// if(!empty($header)){
-	// 	curl_setopt ( $curl, CURLOPT_HTTPHEADER, $header );
-	// }
+	if(!empty($header)){
+		curl_setopt ( $curl, CURLOPT_HTTPHEADER, $header );
+	}
 	 curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3');//
 	//请求时间
 	$timeout = 30;
@@ -394,9 +394,9 @@ function webRequest($url,$method,$params=[],$header = []){
 		curl_setopt($curl, CURLOPT_HTTPGET, true);
 		break;
 	case "POST":
-		if(is_array($params)){
-			$params = json_encode($params,320);
-		}
+		// if(is_array($params)){
+		// 	$params = json_encode($params,320);
+		// }
 		// echo $params;
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
 		curl_setopt($curl, CURLOPT_POSTFIELDS,$params);
@@ -1300,6 +1300,7 @@ function traditionalCovert($content=''){
 	}
 	//不知道为啥mb_convert_encoding转换会乱码，先这么用吧
 	$str = iconv('big5','utf8',$content);
+
     $od = opencc_open("tw2sp.json");
     //转换繁体到简体，利用本地语言库来实现
     $text = opencc_convert($str, $od);

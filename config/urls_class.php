@@ -95,13 +95,13 @@ return [
         'page_range_mobile' =>'.bookbox',//分页循环的移动段列表范围
         //移动端分页列表
         'page_list_mobile' =>[
-            'cover_logo' => ['.bookimg img','src','',function($img_url){ //图片信息
-                if(!preg_match('/https\:\/\//',$img_url)){
-                    //自动补齐封面
-                    $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
-                 }
-                return $img_url;
-            }],
+            // 'cover_logo' => ['.bookimg img','src','',function($img_url){ //图片信息
+            //     if(!preg_match('/https\:\/\//',$img_url)){
+            //         //自动补齐封面
+            //         $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
+            //      }
+            //     return $img_url;
+            // }],
             'title' =>  ['.iTit a','text'],//小说标题
             'author'    =>  ['.author','text'], //作者
             'nearby_chapter'   =>['.update a','text'], //最近的章节状态
