@@ -800,7 +800,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
     * @return string
     */
     public static function getFirstImgePath($title , $author,$url,$pinyin_class = []){
-       if(!$title || !$author){
+       if(!$title){
           return false;
        }
 
@@ -827,14 +827,19 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           }
             return $str;
       };
-
       $cover_logo = '';
       if(!empty($url)){
           $title_string = $trimBlank($title);
           $author_string = $trimBlank($author);
           $imgInfo = pathinfo($url);
           $extension = $imgInfo['extension'] ?? self::$imageType;
-          $cover_logo =  $title_string.'-'.$author_string .'.'. $extension;
+          if(!empty($author_string)){
+            //如果作者不为空，进行作者和标题链接
+              $cover_logo =  $title_string.'-'.$author_string .'.'. $extension;
+          }else{
+            //如果作者为空，只计算标题
+             $cover_logo =  $title_string .'.'. $extension;
+          }
        }
        return $cover_logo;
     }
