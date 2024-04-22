@@ -91,12 +91,11 @@ return [
     //台湾站的小说采集规则
     'xsw'   =>[
         /////////////////////////完本类型排行榜
-        'page_range'    =>  '#alistbox',//分页循环的列表范围
+        'page_range'    =>  '#alistbox',//分页循环的PC的列表范围
         'page_range_mobile' =>'.bookbox',//分页循环的移动段列表范围
-        //分页相关的数据
+        //移动端分页列表
         'page_list_mobile' =>[
-            //图片信息
-            'cover_logo' => ['.bookimg img','src','',function($img_url){
+            'cover_logo' => ['.bookimg img','src','',function($img_url){ //图片信息
                 if(!preg_match('/https\:\/\//',$img_url)){
                     //自动补齐封面
                     $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
@@ -104,23 +103,18 @@ return [
                 return $img_url;
             }],
             'title' =>  ['.iTit a','text'],//小说标题
-             //作者
-            'author'    =>  ['.author','text'],
-             'detail_link'  =>  ['.iTit a','href','',function($url){
+            'author'    =>  ['.author','text'], //作者
+            'nearby_chapter'   =>['.update a','text'], //最近的章节状态
+            'intro' =>['.intro_line','text'],   //小说简介
+            'detail_link'  =>  ['.iTit a','href','',function($url){ //小说的详情页链接
                 return Env::get('TWCONFIG.API_HOST_URL').$url;
             }],
-            //最近的章节状态
-            'nearby_chapter'   =>['.update a','text'],
-            //小说简介
-            'intro' =>['.intro_line','text'],
-             //章节链接
-            'story_link'  =>['.iTit a','href', '',function($item){
+            'story_link'  =>['.iTit a','href', '',function($item){//小说的章节链接
                 $url = preg_replace('/\.html/','/',$item);
                 $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
                 return $url;
             }],
-            //存一下story_方便到时候去存取
-            'story_id'  => ['.iTit a','href', '',function($results){
+            'story_id'  => ['.iTit a','href', '',function($results){ //存一下story_方便到时候去存取
                  preg_match('/\d+/',$results, $matches);
                  $story_id = 0;
                  if(isset($matches[0])){
@@ -129,42 +123,33 @@ return [
                  return $story_id;
             }],
         ],
+        //PC端分页列表
         'page_list' =>[
-            //图片信息
-            'cover_logo' =>['.pic img','src','',function($img_url){
+            'cover_logo' =>['.pic img','src','',function($img_url){//图片信息
                  if(!preg_match('/https\:\/\//',$img_url)){
                     //自动补齐封面
                     $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
                  }
                 return $img_url;
             }],
-            //小说名
-            'title' =>['.title a','text'],
-            //作者
-            'author'    =>  ['.title span','text'],
-            //最近的章节状态
-            'nearby_chapter'   =>['.sys a','text'],
-            //小说简介
-            'intro' =>['.intro','text'],
-            //详情页链接
-            'detail_link'  =>  ['.pic a','href','',function($url){
+            'title' =>['.title a','text'],  //小说名
+            'author'    =>  ['.title span','text'], //作者
+            'nearby_chapter'   =>['.sys a','text'],//最近的章节状态
+            'intro' =>['.intro','text'],  //小说简介
+            'detail_link'  =>  ['.pic a','href','',function($url){//详情页链接
                 // $url =
                 return Env::get('TWCONFIG.API_HOST_URL').$url;
             }],
-
-            //章节链接
-            'story_link'  =>['.title a','href', '',function($item){
+            'story_link'  =>['.title a','href', '',function($item){//章节链接
                 $url = preg_replace('/\.html/','/',$item);
                 $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
                 return $url;
             }],
-            //存一下story_方便到时候去存取
-            'story_id'  => ['.title a','href', '',function($results){
-                 $data = explode('/',$results);
-                 $ret = end($data);
-                 $story_id  = preg_replace('/\.html/','',$ret);
-                 if(!$story_id){
-                    $story_id = 0;
+            'story_id'  => ['.title a','href', '',function($results){//存一下story_方便到时候去存取
+                 preg_match('/\d+/',$results, $matches);
+                 $story_id = 0;
+                 if(isset($matches[0])){
+                    $story_id = $matches[0];
                  }
                  return $story_id;
             }],

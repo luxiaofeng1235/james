@@ -13,12 +13,12 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-$files = readFileData('/tmp/mobile_list.html');
+$files = readFileData('/tmp/page.html');
 
-$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range_mobile'];
+$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range'];
 
 
-$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list_mobile'];
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list'];
 
 
 
