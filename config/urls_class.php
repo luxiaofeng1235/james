@@ -171,7 +171,7 @@ return [
             'location'  =>  ['.bread-crumbs','text','',function($location){
                 //更新对应的章节信息
                 $brandStr  = trimBlankLine($location);
-                $brandStr =preg_replace('/\s+/','>',$brandStr); //转成面包屑的对应的提示
+                $brandStr =preg_replace('/\s+/',' &gt; ',$brandStr); //转成面包屑的对应的提示
                 return $brandStr;
             }],//面包屑
             'cate_name' =>  ['.box_info tr:eq(4) td:eq(0)','text'], //小说分类
