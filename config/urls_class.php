@@ -170,23 +170,23 @@ return [
         'detail_info'   =>  [
             'location'  =>  ['.bread-crumbs','text','',function($location){
                 //更新对应的章节信息
-                 $brandStr  = trimBlankLine($location);
-                 // $brandStr = htmlspecialchars($brandStr);
-                 // dd($brandStr);
+                $brandStr  = trimBlankLine($location);
+                $brandStr =preg_replace('/\s+/','>',$brandStr); //转成面包屑的对应的提示
                 return $brandStr;
             }],//面包屑
             'cate_name' =>  ['.box_info tr:eq(4) td:eq(0)','text'], //小说分类
             'status' =>  ['.box_info tr:eq(4) td:eq(2)','text'], //小说分类
             'third_update_time'   =>  ['.box_info tr:eq(5) td:eq(3)','text'],//小说的更新时间
-            'story_id'    =>  ['.bread-crumbs li:eq(2)','html','',function($item){
-                $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A链接
-                preg_match($link_reg , $item , $matches);
-                $source_url = $matches[1] ?? 0;
-                $story_id = str_replace('/book/','',$source_url);
+            'story_id'    =>  ['.bread-crumbs li:eq(2) a','href','',function($item){
+                // $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A链接
+                // preg_match($link_reg , $item , $matches);
+                // $source_url = $matches[1] ?? 0;
+                $story_id = str_replace('/book/','',$item);
                 $story_id = str_replace('/','',$story_id);
                 return $story_id;
 
             }],//获取面包屑里的连接信息
+            'link_url'  =>  ['.bread-crumbs li:eq(2) a','href'],
         ],
         /////////////////////////文章内容相关
          //采集文章内容的规则
