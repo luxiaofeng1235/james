@@ -31,10 +31,10 @@ foreach($file as &$v){
 
 // $file[]=11431;
 
-$sql = "select pro_book_id,store_id,title,story_id,story_link from ims_novel_info where 1 and pro_book_id>0 and pro_book_id =140431";
-// $sql .= $order_by;
-// $sql .= " limit ".$limit;
-// echo "sql = {$sql}\n\n";
+$sql = "select pro_book_id,store_id,author,title,story_id,story_link from ims_novel_info where 1 and pro_book_id>0 and pro_book_id =50605";
+$sql .= $order_by;
+$sql .= " limit ".$limit;
+echo "sql = {$sql}\n\n";
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
 if($info){

@@ -61,12 +61,21 @@ class StoreModel{
     * @return   array
     */
      public static function getForeignProxy(){
-        $proxy_data = [
-            'ip'    =>  'proxy.stormip.cn',//IP地址
-            'port'  =>  '1000', //端口
-            'username'  =>  'storm-jekines_area-TW_session-123456',//用户名
-            'password'  =>  '123456', //密码
-        ];
+        // $proxy_data = [
+        //     'ip'    =>  'proxy.stormip.cn',//IP地址
+        //     'port'  =>  '1000', //端口
+        //     'username'  =>  'storm-jekines_area-TW_session-123456',//用户名
+        //     'password'  =>  '123456', //密码
+        // ];
+        $proxy_info = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=TW&state=&city=&life=2&protocol=1&format=json&lb=%5Cr%5Cn','GET');
+        $tdata = json_decode($proxy_info,true);
+        $proxy_data = [];
+        $proxy_ret = $tdata['data']['list'][0] ??[];
+        if($proxy_ret){
+            $results = explode(':',$proxy_ret);
+            $proxy_data['ip'] = $results[0];
+            $proxy_data['port'] = $results[1];
+        }
         return $proxy_data;
      }
 
@@ -84,7 +93,7 @@ class StoreModel{
         $items = [];
         $exec_start_time = microtime(true);
         $proxy_data = StoreModel::getForeignProxy();
-
+        dd($proxy_data);
         ///开启协程访问
         run(function () use(&$items,$urls,$proxy_data){
             $barrier = Barrier::make();
@@ -113,7 +122,7 @@ class StoreModel{
                         echo '</pre>';
                         echo "\r\n";
                     }
-                    System::sleep(0.5);
+                    System::sleep(1);
                     $count++;
                 });
             }

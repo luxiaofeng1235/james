@@ -369,16 +369,18 @@ class NovelModel{
       $title = str_replace('$','\$',$title);
       $title = str_replace('^','\^',$title);
       $title = str_replace('|','\|',$title);
+
       preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
            if($contents){
               //处理中间的换行字符,不然匹配会出问题
-            // dd($contents);
               preg_match_all($link_reg,$contents,$link_href);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
               $len = count($link_href[1]);
               $chapter_list = [];
+              //回调函数处理去除换行
+              $link_text = array_map('trimBlankLine',$link_text);
               for ($i=0; $i <$len ; $i++) {
                  $chapter_list[] =[
                     'link_name' => $link_text[1][$i] ?? '',

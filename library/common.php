@@ -331,6 +331,7 @@ function remote_file_exists($url_file){
 
 function webRequest($url,$method,$params=[],$header = []){
 	//初始化CURL句柄
+
 	$curl = curl_init();
 	curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER,1);
@@ -1278,6 +1279,21 @@ function trimBlankSpace($str=''){
 	$pattern = '~^\h+|\h+$~u'; // \h 匹配任何水平空白字符
 	$trimmedStr = preg_replace($pattern, $replacement, $str);
 	return $trimmedStr;
+}
+
+/**
+* @note 替换字符中含有\r \n \r\n的字符
+* @param   string  $str 输入字符
+* @return string
+*/
+function trimBlankLine($str=''){
+	if(!$str){
+		return false;
+	}
+	$patten = array("\r\n", "\n", "\r");
+	//先替换掉\\r\\n,然后是否存在\\n,最后替换\\r
+	$str=str_replace($patten, " ", $str);
+	return $str;
 }
 
 /**

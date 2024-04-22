@@ -32,8 +32,34 @@ if(!is_dir($download_path)){
 $size  = explode(',',$limit);
 $pages = range($size[0] , $size[1]);
 
+/*
+0  ***已处理，全部抓取
+100  ***已处理，全部抓取
+2000
+300
+400
+500
+600
+700
+800
+900
+1000
+1100
+1200
+1300
+1400
+1500
+1600
+1700
+1800
+1900
+2000
+2100
+ */
 
-$pages = array_slice($pages,0 , 1);
+$start =isset($argv[1]) ? trim($argv[1]) : 0; //开始的长度
+$end = 100; //最终的尺寸
+$pages = array_slice($pages,$start , $end);
 $dataList =$urls= [];
 //生成页面链接方便进行爬取
 foreach($pages as $page){
@@ -43,11 +69,12 @@ foreach($pages as $page){
         'story_link'    =>  $url,
     ];
 }
+
+
 $urls = array_column($dataList,'story_link');
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
 $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_ret'];
-
 
 
 $storeArr;
@@ -77,6 +104,7 @@ if(!empty($item)){
 }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time; //执行时间
+echo "本地寻址的数据长度范围为：{$start} - {$end} \r\n";
 echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "finish\r\n";
 
