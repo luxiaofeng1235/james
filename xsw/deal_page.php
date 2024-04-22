@@ -44,15 +44,15 @@ $pages = range($size[0] , $size[1]);
 800 **已处理，全部抓取
 900 **已处理，全部抓取
 1000 **已处理，全部抓取
-1100
-1200
-1300
-1400
-1500
-1600
-1700
-1800
-1900
+1100 **已处理，全部抓取
+1200 **已处理，全部抓取
+1300 **已处理，全部抓取
+1400 **已处理，全部抓取
+1500 **已处理，全部抓取
+1600  **已处理，全部抓取
+1700 **已处理，全部抓取
+1800 **已处理，全部抓取
+1900 **已处理，全部抓取
 2000
 2100
  */
@@ -64,12 +64,12 @@ $dataList =$urls= [];
 //生成页面链接方便进行爬取
 foreach($pages as $page){
    //替换相关的关联参数信息
+    // $url ='http://www.baidu.com';
     $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
     $dataList[]= [
         'story_link'    =>  $url,
     ];
 }
-
 
 $urls = array_column($dataList,'story_link');
 //设置配置细腻
@@ -88,6 +88,7 @@ if(!empty($item)){
             $storeArr[] = $pageArr;
         }
     }
+    $successNum = 0;
     //保存对应的路径信息
     if(!empty($storeArr)){
         $i = 0;
@@ -96,6 +97,9 @@ if(!empty($item)){
             $content = $gval['content'] ?? '';//获取的内容
             $save_path = $gval['save_path'] ?? '';//文本文件
             if(!$save_path || !$content) continue;
+            if(!empty($content)){
+                $successNum++;
+            }
             //每次覆盖不追加文件
             writeFileCombine($save_path, $content);
             echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
@@ -105,6 +109,7 @@ if(!empty($item)){
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time; //执行时间
 echo "本地寻址的数据长度范围为：{$start} - {$end} \r\n";
+echo "共爬取下来的页面总数量为：{$successNum} \r\n";
 echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "finish\r\n";
 

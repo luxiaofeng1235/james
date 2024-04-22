@@ -24,25 +24,12 @@ use Qiniu\Auth;
 use Qiniu\Http\Client;
 
 
-##测试
-$img_data[] = array(
-    'data'=>
-        array(
-            'uri'=>"http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg",
-        ),
-);
-/*
- array(
- https://www.baidu.com/img/bd_logo1.png
-            'uri'=>"http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg",
-        ),
-*/
-
-
 
 $auth = new Auth('yEacIJa59EK8ar6UMlOkRft39W91qoJmmHzhw9fC','dtPS1DPJPFzh523Kp9ItFSqmSFP7CqQ7-CDyttNo');
+//检测的文本信息
+// $uri = 'http://ai.qiniuapi.com/v3/image/censor'; //检测图片
+$uri  ='http://ai.qiniuapi.com/v3/text/censor' ; //检测文本
 
-$uri = 'http://ai.qiniuapi.com/v3/image/censor';
 $contentType = 'application/json';
 $scenes = [
         'censor' => ['pulp', 'terror', 'politician', 'ads'],
@@ -52,10 +39,37 @@ $scenes = [
         'ads' => ['ads']
     ];
 
+
+//图片检测的字段
+// $body = [
+//     'data' => [
+//         'uri' => 'http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg',
+//     ],
+//     'params' => ['scenes' => $scenes['censor']]
+// ];
+// $t = '{
+//     "data": {
+//         "text": "七牛文本审核示例"
+//     },
+//     "params": {
+//         "scenes": [
+//             "antispam"
+//         ]
+//     }
+// }';
+// echo '<pre>';
+// print_R(json_decode($t,true));
+// echo '</pre>';
+// exit;
+//文本检测的字段
 $body = [
-    'data' => ['uri' => 'http://big5.taiwan.cn/xwzx/bwkx/201401/W020140103537538775945.jpg'],
-    'params' => ['scenes' => $scenes['censor']]
+    'data'  =>[
+        'text'  => '新书已发《我真没想当艺人 ',
+    ],
+    'params'    =>['scenes'=>['antispam']]
+
 ];
+
 
 // 拦截违规图片级别
 $suggestions = [
@@ -64,9 +78,9 @@ $suggestions = [
     'block' => 'block' // 违规
 ];
 
+
 $sign = $auth->authorization($uri, 'POST', json_encode($body), $contentType);
 $header = ['Content-Type: '. $contentType, 'Authorization: '.$sign['Authorization']];
-
 
  // $response = Client::post($uri,json_encode($body),$header);//响应数据
  // echo '<pre>';
@@ -75,7 +89,6 @@ $header = ['Content-Type: '. $contentType, 'Authorization: '.$sign['Authorizatio
  // exit;
 
 $res = webRequest($uri,'POST',json_encode($body),$header);
-
 $t = json_decode($res, true);
 echo '<pre>';
 print_R($t);
