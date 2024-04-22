@@ -315,6 +315,49 @@ function getCookie($name){
 }
 
 /**
+* 生成0-9 A-Z 随机字符串或数组
+* @param int $format   格式 1：字母数字组合 2：纯数字 3：纯字母
+* @param int $count    长度
+* @param string $type  类型 默认字符串
+* @param string $data  检测随机字符串是否存在
+* @return array|string
+*/
+function getMixedChars($format = 1,$count = 6, $type = 'str', $data = []) {
+
+    switch ($format){
+        case 2 :
+            $arr4 = range(0, 9);
+            break;
+        case 3 :
+            $arr4 = range('A', 'Z');
+            break;
+        default :
+            $arr = range(0, 9);
+            $arr3 = range('A', 'Z');
+            $arr4 = array_merge($arr,$arr3);
+            unset($arr,$arr3);
+    }
+
+    $keys = array_rand($arr4, $count);
+    foreach ($keys as $value) {
+        $arr5[] = $arr4[$value];
+    }
+    shuffle($arr5);
+    if ($type == 'str') {
+        if(in_array($arr5,$data)){
+            return $this->getMixedChars($count, $type, $data);
+        }
+        return implode($arr5);
+
+    } else {
+        return $arr5;
+    }
+
+}
+
+
+
+/**
  * @note 判断远程文件是否存在
  * @param url_file str url对应的文件
  * @author xiaofeng   2020-10-27

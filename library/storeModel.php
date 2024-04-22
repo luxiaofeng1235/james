@@ -51,8 +51,35 @@ class StoreModel{
             return '';
         }
         return $host_url;
-     }
+    }
 
+
+    /**
+    * @note 获取生成不同的随机字符串，重复生成的不再使用
+    *
+    * @param $type string 类型
+    * @return string
+    */
+    public static function createRandStr($type = 'proxy_website')
+    {
+        $code = '';
+        global $redis_data;
+        do {
+
+            $code = getMixedChars(1,10);
+            $redisOrderKey = $type . ':detail:' . $code;//先监测订单是否重复生成了
+            #获取是否存在redis中的缓存
+            $order_sn = $redis_data->get_redis($redisOrderKey);
+            if (!$order_sn) {
+                if (!$code) {
+                    return false;
+                }
+                $redis_data->set_redis($redisOrderKey, $code); //生成订单后保存在缓存里，防止下次重复生成
+                break;
+            }
+        } while (true); // 防止兑换码重复
+        return $code;
+    }
 
 
     /**
@@ -61,12 +88,15 @@ class StoreModel{
     * @return   array
     */
      public static function getForeignProxy(){
-        // $proxy_data = [
-        //     'ip'    =>  'proxy.stormip.cn',//IP地址
-        //     'port'  =>  '1000', //端口
-        //     'username'  =>  'storm-jekines_area-TW_session-123456',//用户名
-        //     'password'  =>  '123456', //密码
-        // ];
+
+        $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
+        $proxy_data = [
+            'ip'    =>  'proxy.stormip.cn',//IP地址
+            'port'  =>  '1000', //端口
+            'username'  =>  'storm-jekines_area-TW_session-' . $rand_str,//用户名
+            'password'  =>  '123456', //密码
+        ];
+        return $proxy_data;
         $proxy_info = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=TW&state=&city=&life=2&protocol=1&format=json&lb=%5Cr%5Cn','GET');
         $tdata = json_decode($proxy_info,true);
         $proxy_data = [];
@@ -93,7 +123,6 @@ class StoreModel{
         $items = [];
         $exec_start_time = microtime(true);
         $proxy_data = StoreModel::getForeignProxy();
-        dd($proxy_data);
         ///开启协程访问
         run(function () use(&$items,$urls,$proxy_data){
             $barrier = Barrier::make();
