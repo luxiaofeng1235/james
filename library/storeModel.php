@@ -93,7 +93,7 @@ class StoreModel{
         $proxy_data = [
             'ip'    =>  'proxy.stormip.cn',//IP地址
             'port'  =>  '1000', //端口
-            'username'  =>  'storm-jekines_area-TW_session-' . $rand_str,//用户名
+            'username'  =>  'storm-jekines_area-TW_session-'.$rand_str.'_life-2' ,//用户名
             'password'  =>  '123456', //密码
         ];
         return $proxy_data;

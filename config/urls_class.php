@@ -92,7 +92,43 @@ return [
     'xsw'   =>[
         /////////////////////////完本类型排行榜
         'page_range'    =>  '#alistbox',//分页循环的列表范围
+        'page_range_mobile' =>'.bookbox',//分页循环的移动段列表范围
         //分页相关的数据
+        'page_list_mobile' =>[
+            //图片信息
+            'cover_logo' => ['.bookimg img','src','',function($img_url){
+                if(!preg_match('/https\:\/\//',$img_url)){
+                    //自动补齐封面
+                    $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
+                 }
+                return $img_url;
+            }],
+            'title' =>  ['.iTit a','text'],//小说标题
+             //作者
+            'author'    =>  ['.author','text'],
+             'detail_link'  =>  ['.iTit a','href','',function($url){
+                return Env::get('TWCONFIG.API_HOST_URL').$url;
+            }],
+            //最近的章节状态
+            'nearby_chapter'   =>['.update a','text'],
+            //小说简介
+            'intro' =>['.intro_line','text'],
+             //章节链接
+            'story_link'  =>['.iTit a','href', '',function($item){
+                $url = preg_replace('/\.html/','/',$item);
+                $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
+                return $url;
+            }],
+            //存一下story_方便到时候去存取
+            'story_id'  => ['.iTit a','href', '',function($results){
+                 preg_match('/\d+/',$results, $matches);
+                 $story_id = 0;
+                 if(isset($matches[0])){
+                    $story_id = $matches[0];
+                 }
+                 return $story_id;
+            }],
+        ],
         'page_list' =>[
             //图片信息
             'cover_logo' =>['.pic img','src','',function($img_url){

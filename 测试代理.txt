@@ -6,7 +6,7 @@ curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http:
 ##标准的代理模式
 curl -x socks5://119.96.237.247:45601 -U "lady1235:F24865A4F2EE1B8EC41696C1AC69015E" http://www.baidu.com
 
-curl -x socks5://27.158.8.62:38391   http://www.baidu.com
+curl -x socks5://84.17.37.52:1000   http://www.baidu.com
 
 
 curl --socks5 180.112.239.244:54105  -U "lady1235:F24865A4F2EE1B8EC41696C1AC69015E"  http://www.163.com
@@ -23,4 +23,4 @@ curl --socks5  43.243.171.202:8012 http://www.baidu.com
 密码: 123456
 
 ###测试台湾站
-curl -x socks5://proxy.stormip.cn:1000 -U "storm-jekines_area-TW_session-123456:123456" https://www.xsw.tw/book/230000/
+curl -x socks5://84.17.37.52:1000 -U "storm-jekines_area-TW:123456" https://www.xsw.tw/book/230000/

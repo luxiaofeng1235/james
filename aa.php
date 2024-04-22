@@ -12,26 +12,27 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
-$files = readFileData('/mnt/book/xsw_page_list/store_page_698.txt');
-$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range'];
-$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list'];
 
-$ret = traditionalCovert($files);
-echo '<pre>';
-print_R($ret);
-echo '</pre>';
-exit;
+$files = readFileData('/tmp/mobile_list.html');
 
-echo '<pre>';
-print_R($files);
-echo '</pre>';
-exit;
+$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range_mobile'];
+
+
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list_mobile'];
+
+
+
+
 // $rt = QueryList::get('https://www.xsw.tw/book/230000/');
 
 $item = QueryList::html($files)->rules($rules)
             ->range($range)
             ->query()
             ->getData();
+  echo '<pre>';
+  print_R($item);
+  echo '</pre>';
+  exit;
 $item = $item->all();
 $data = StoreModel::traverseEncoding($item);
 echo '<pre>';
