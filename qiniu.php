@@ -68,11 +68,11 @@ $sign = $auth->authorization($uri, 'POST', json_encode($body), $contentType);
 $header = ['Content-Type: '. $contentType, 'Authorization: '.$sign['Authorization']];
 
 
- $response = Client::post($uri,json_encode($body),$header);//响应数据
- echo '<pre>';
- print_R($response);
- echo '</pre>';
- exit;
+ // $response = Client::post($uri,json_encode($body),$header);//响应数据
+ // echo '<pre>';
+ // print_R($response);
+ // echo '</pre>';
+ // exit;
 
 $res = webRequest($uri,'POST',json_encode($body),$header);
 

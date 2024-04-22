@@ -95,15 +95,15 @@ return [
         'page_range_mobile' =>'.bookbox',//分页循环的移动段列表范围
         //移动端分页列表
         'page_list_mobile' =>[
-            // 'cover_logo' => ['.bookimg img','src','',function($img_url){ //图片信息
-            //     if(!preg_match('/https\:\/\//',$img_url)){
-            //         //自动补齐封面
-            //         $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
-            //      }
-            //     return $img_url;
-            // }],
             'title' =>  ['.iTit a','text'],//小说标题
             'author'    =>  ['.author','text'], //作者
+            'cover_logo' => ['.bookimg img','src','',function($img_url){ //图片信息
+                if(!preg_match('/https\:\/\//',$img_url)){
+                    //自动补齐封面
+                    $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
+                 }
+                return $img_url;
+            }],
             'nearby_chapter'   =>['.update a','text'], //最近的章节状态
             'intro' =>['.intro_line','text'],   //小说简介
             'detail_link'  =>  ['.iTit a','href','',function($url){ //小说的详情页链接
@@ -125,15 +125,15 @@ return [
         ],
         //PC端分页列表
         'page_list' =>[
-            'cover_logo' =>['.pic img','src','',function($img_url){//图片信息
+            'title' =>['.title a','text'],  //小说名
+            'author'    =>  ['.title span','text'], //作者
+             'cover_logo' =>['.pic img','src','',function($img_url){//图片信息
                  if(!preg_match('/https\:\/\//',$img_url)){
                     //自动补齐封面
                     $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
                  }
                 return $img_url;
             }],
-            'title' =>['.title a','text'],  //小说名
-            'author'    =>  ['.title span','text'], //作者
             'nearby_chapter'   =>['.sys a','text'],//最近的章节状态
             'intro' =>['.intro','text'],  //小说简介
             'detail_link'  =>  ['.pic a','href','',function($url){//详情页链接
