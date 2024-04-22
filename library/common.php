@@ -1292,7 +1292,7 @@ function trimBlankLine($str=''){
 	}
 	$patten = array("\r\n", "\n", "\r");
 	//先替换掉\\r\\n,然后是否存在\\n,最后替换\\r
-	$str=str_replace($patten, " ", $str);
+	$str=str_replace($patten, '', $str);
 	return $str;
 }
 
