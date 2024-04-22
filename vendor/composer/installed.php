@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'b36c2520c700c40cde047117e818add99493e446',
+        'reference' => '414726dec570e4c786a6d74ca24c97fffabac3bd',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'b36c2520c700c40cde047117e818add99493e446',
+            'reference' => '414726dec570e4c786a6d74ca24c97fffabac3bd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -268,6 +268,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'myclabs/php-enum' => array(
+            'pretty_version' => '1.7.7',
+            'version' => '1.7.7.0',
+            'reference' => 'd178027d1e679832db9f38248fcc7200647dc2b7',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../myclabs/php-enum',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'overtrue/pinyin' => array(
             'pretty_version' => '4.1.0',
             'version' => '4.1.0.0',
@@ -369,6 +378,15 @@
             'provided' => array(
                 0 => '^1.0',
             ),
+        ),
+        'qiniu/php-sdk' => array(
+            'pretty_version' => 'v7.12.0',
+            'version' => '7.12.0.0',
+            'reference' => '96971af3cc6151b32e4a9d61001e126624100538',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../qiniu/php-sdk',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'ralouphie/getallheaders' => array(
             'pretty_version' => '3.0.3',

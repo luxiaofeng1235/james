@@ -20,4 +20,6 @@ return array(
     '8592c7b0947d8a0965a9e8c3d16f9c24' => $vendorDir . '/elasticsearch/elasticsearch/src/autoload.php',
     'db356362850385d08a5381de2638b5fd' => $vendorDir . '/mpdf/mpdf/src/functions.php',
     'dc1275c308c5b416beb314b6317daca2' => $vendorDir . '/overtrue/pinyin/src/const.php',
+    '841780ea2e1d6545ea3a253239d59c05' => $vendorDir . '/qiniu/php-sdk/src/Qiniu/functions.php',
+    '5dd19d8a547b7318af0c3a93c8bd6565' => $vendorDir . '/qiniu/php-sdk/src/Qiniu/Http/Middleware/Middleware.php',
 );

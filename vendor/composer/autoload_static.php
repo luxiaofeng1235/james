@@ -21,6 +21,8 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         '8592c7b0947d8a0965a9e8c3d16f9c24' => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/autoload.php',
         'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
         'dc1275c308c5b416beb314b6317daca2' => __DIR__ . '/..' . '/overtrue/pinyin/src/const.php',
+        '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
+        '5dd19d8a547b7318af0c3a93c8bd6565' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/Http/Middleware/Middleware.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -62,6 +64,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         'Q' => 
         array (
+            'Qiniu\\' => 6,
             'QL\\Ext\\Lib\\' => 11,
             'QL\\Ext\\' => 7,
             'QL\\' => 3,
@@ -80,6 +83,7 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         'M' => 
         array (
+            'MyCLabs\\Enum\\' => 13,
             'Mpdf\\PsrLogAwareTrait\\' => 22,
             'Mpdf\\PsrHttpMessageShim\\' => 24,
             'Mpdf\\' => 5,
@@ -196,6 +200,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         array (
             0 => __DIR__ . '/..' . '/react/cache/src',
         ),
+        'Qiniu\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu',
+        ),
         'QL\\Ext\\Lib\\' => 
         array (
             0 => __DIR__ . '/..' . '/jaeger/curlmulti',
@@ -232,6 +240,10 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'Overtrue\\Pinyin\\' => 
         array (
             0 => __DIR__ . '/..' . '/overtrue/pinyin/src',
+        ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
         'Mpdf\\PsrLogAwareTrait\\' => 
         array (
