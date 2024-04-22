@@ -28,12 +28,9 @@ if(!$list){
 }
 
 $urls = array_column($list , 'detail_link');
-echo '<pre>';
-print_R($urls);
-echo '</pre>';
-exit;
-
-
+//设置配置细腻
+$item = StoreModel::swooleRquest($urls);
+echo 33;exit;
 
 /**
 * @note 获取DOM结构中的query字符串长度
