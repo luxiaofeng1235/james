@@ -31,7 +31,6 @@ if(!is_dir($download_path)){
 
 $size  = explode(',',$limit);
 $pages = range($size[0] , $size[1]);
-
 /*
 0   ***已处理，全部抓取
 100 ***已处理，全部抓取
@@ -56,20 +55,34 @@ $pages = range($size[0] , $size[1]);
 2000
 2100
  */
-
-$start =isset($argv[1]) ? trim($argv[1]) : 0; //开始的长度
-$end = 100; //最终的尺寸
-$pages = array_slice($pages,$start , $end);
-$dataList =$urls= [];
-//生成页面链接方便进行爬取
+$urls=[];
 foreach($pages as $page){
-   //替换相关的关联参数信息
-    // $url ='http://www.baidu.com';
-    $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
-    $dataList[]= [
-        'story_link'    =>  $url,
-    ];
+    $save_file = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
+    if(!file_exists($save_file)){
+         $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
+        $dataList[]=['story_link' =>$url];
+    }
 }
+
+
+
+// $start =isset($argv[1]) ? trim($argv[1]) : 0; //开始的长度
+// $end = 100; //最终的尺寸
+// $pages = array_slice($pages,$start , $end);
+// echo '<pre>';
+// print_R($pages);
+// echo '</pre>';
+// exit;
+// $dataList =$urls= [];
+// //生成页面链接方便进行爬取
+// foreach($pages as $page){
+//    //替换相关的关联参数信息
+//     // $url ='http://www.baidu.com';
+//     $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
+//     $dataList[]= [
+//         'story_link'    =>  $url,
+//     ];
+// }
 
 $urls = array_column($dataList,'story_link');
 //设置配置细腻

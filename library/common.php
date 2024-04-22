@@ -1300,7 +1300,6 @@ function traditionalCovert($content=''){
 	}
 	//不知道为啥mb_convert_encoding转换会乱码，先这么用吧
 	$str = iconv('big5','utf8',$content);
-
     $od = opencc_open("tw2sp.json");
     //转换繁体到简体，利用本地语言库来实现
     $text = opencc_convert($str, $od);

@@ -34,15 +34,16 @@ $urls = [
 // echo '</pre>';
 // exit;
 // die;
-$html = readFileData('/tmp/detail.html');
+// $html = readFileData('/tmp/detail.html');
+
+$html = webRequest('https://www.xsw.tw/book/152892.html','GET');
+
 $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
 $item = QueryList::html($html)
                 ->rules($rules)
                 ->query()
                 ->getData();
 $item = $item->all();
-
-
 $aa = StoreModel::traverseEncoding($item);
 echo '<pre>';
 print_R($aa);

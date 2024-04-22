@@ -13,27 +13,20 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
 
-$files = readFileData('/tmp/mobile_new.html');
-$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range_mobile'];
-$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list_mobile'];
-
-$files = iconv('big5','utf8',$files);
+$files = readFileData('/tmp/page.html');
+$range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range'];
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list'];
 
 
-// $rt = QueryList::get('https://www.xsw.tw/book/230000/');
+
 
 $ql = QueryList::html($files);
-// $ql->encoding('big5','UTF-8');
-// $ql->removeHead();
 
 $item = $ql->rules($rules)
             ->range($range)
             ->query()
             ->getData();
-  echo '<pre>';
-  print_R($item);
-  echo '</pre>';
-  exit;
+
 
 $item = $item->all();
 $data = StoreModel::traverseEncoding($item);
