@@ -27,7 +27,7 @@ if(!$list){
     return '数据为空不需要处理';
 }
 
-
+////按照对应的可以去分割数据
 $list = array_slice($list, 0, 1);
 $list = double_array_exchange_by_field($list ,'story_id');
 
@@ -37,19 +37,7 @@ $urls = array_column($list , 'detail_link');
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
 
-$arrList = [];
-foreach($item as $key =>$val){
-    $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
-    $item = QueryList::html($val)
-                    ->rules($rules)
-                    ->query()
-                    ->getData();
-    $item = $item->all();
-    if(!empty($item)){
-        $detailInfo = StoreModel::traverseEncoding($item);
-        $arrList[$detailInfo['story_id']] = $detailInfo;
-    }
-}
+$arrList = getDetailList($item);
 
 //最终需要更新的章节信息去变更处理
 $returnList = [];
@@ -64,6 +52,34 @@ echo '<pre>';
 print_R($returnList);
 echo '</pre>';
 exit;
+
+
+/**
+* @note 获取详情页的数据信息
+*
+* @param $item array 获取的基础数据信息
+* @return  array
+*/
+function getDetailList($item = []){
+    if(!$item){
+        return [];
+    }
+    global $urlRules;
+    $arrList = [];
+    foreach($item as $key =>$val){
+        $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
+        $item = QueryList::html($val)
+                        ->rules($rules)
+                        ->query()
+                        ->getData();
+        $item = $item->all();
+        if(!empty($item)){
+            $detailInfo = StoreModel::traverseEncoding($item);
+            $arrList[$detailInfo['story_id']] = $detailInfo;
+        }
+    }
+    return $arrList;
+}
 
 /**
 * @note 获取DOM结构中的query字符串长度
