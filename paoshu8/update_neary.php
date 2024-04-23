@@ -78,7 +78,7 @@ foreach($novelList as $key =>$val){
         echo "exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} \r\n";
     }
 }
-echo "实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
+echo "===========实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
 if($insertData){
     //同步数据
     $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);

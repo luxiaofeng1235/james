@@ -106,7 +106,6 @@ class FileFactory{
             $info = $this->mysql_conf->fetch($sql,'db_slave');
         }
 
-
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']); //小说网站id
