@@ -24,15 +24,16 @@ $download_path =Env::get('SAVE_CACHE_INFO_PATH');//下载路径;
 if(!is_dir($download_path)){
     createFolders($download_path);
 }
-$page = 2;
+$page = 3;
+// echo "this curent page is {$page} \r\n";
+//获取当前的列表下的所有数据信息
 $list = getPageList($page);
 if(!$list){
     return '数据为空不需要处理';
 }
 
 ////按照对应的可以去分割数据
-$list = array_slice($list, 0, 1);
-
+// $list = array_slice($list, 0, 1);
 $ret = asyncJsonFile($list , $page);
 dd($ret);
 
@@ -131,7 +132,12 @@ function getPageList($page= 1){
     if(!$page) return false;
     //获取分页的列表文件信息
     $pageFile = Env::get('SAVE_PAGE_PATH').DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
+    echo "page = {$page} of html path ----{$pageFile} \r\n";
     $files  =  readFileData($pageFile);
+    if(!$files){
+        echo "this story files is no data\r\n";
+        return ;
+    }
     $ql = QueryList::html($files);
     global $urlRules;
     $range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range']; //循环的列表范围
