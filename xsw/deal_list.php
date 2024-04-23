@@ -14,6 +14,9 @@ set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
 use Yurun\Util\HttpRequest;
+use Overtrue\Pinyin\Pinyin; //导入拼音转换类
+$pinyin = new Pinyin();
+
 $exec_start_time = microtime(true);
 
 //创建对应的目录
@@ -30,7 +33,7 @@ if(!$list){
 
 
 ////按照对应的可以去分割数据
-$list = array_slice($list, 0, 20);
+$list = array_slice($list, 0, 2);
 $list = double_array_exchange_by_field($list ,'story_id');
 
 $urls = array_column($list , 'detail_link');
@@ -49,10 +52,13 @@ $returnList = [];
 ///合并两部分的数据信息
 foreach($list as $key =>$val){
     if(isset($arrList[$key])){
+        $ext_data =$pinyin->name($val['title'] , PINYIN_KEEP_NUMBER);
+        $val['english_name'] = $ext_data ? implode('',$ext_data) : '';
         $val = array_merge($val , $arrList[$key]);
     }
     $returnList[] = $val;
 }
+
 //保存的json文件信息的路径
 $save_json_file = $download_path . DS . StoreModel::$detail_page .$page.'.json';
 
@@ -81,7 +87,7 @@ function getDetailList($item = []){
     if(!$item){
         return [];
     }
-    global $urlRules;
+    global $urlRules,$pinyin;
     $arrList = [];
     //如果存在有数据就返回，否则不要这些数据了
     foreach($item as $key =>$val){
