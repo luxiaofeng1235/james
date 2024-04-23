@@ -22,14 +22,15 @@ if(!is_dir($download_path)){
     createFolders($download_path);
 }
 
-$page = 1;
+$page = 2;
 $list = getPageList($page);
 if(!$list){
     return '数据为空不需要处理';
 }
 
+
 ////按照对应的可以去分割数据
-$list = array_slice($list, 0, 5);
+$list = array_slice($list, 0, 20);
 $list = double_array_exchange_by_field($list ,'story_id');
 
 $urls = array_column($list , 'detail_link');
@@ -52,7 +53,6 @@ foreach($list as $key =>$val){
     }
     $returnList[] = $val;
 }
-
 //保存的json文件信息的路径
 $save_json_file = $download_path . DS . StoreModel::$detail_page .$page.'.json';
 
