@@ -24,22 +24,18 @@ $download_path =Env::get('SAVE_CACHE_INFO_PATH');//下载路径;
 if(!is_dir($download_path)){
     createFolders($download_path);
 }
-$page = 3;
-// echo "this curent page is {$page} \r\n";
-//获取当前的列表下的所有数据信息
-$list = getPageList($page);
-if(!$list){
-    return '数据为空不需要处理';
+for ($i=1; $i <=3 ; $i++) {
+    $page = $i;
+    $list = getPageList($page);
+    if(!$list){
+        return '数据为空不需要处理';
+    }
+    ////按照对应的可以去分割数据
+    $ret = asyncJsonFile($list , $page);
+    sleep(3); //没戏休息三秒钟
 }
-
-////按照对应的可以去分割数据
-// $list = array_slice($list, 0, 1);
-$ret = asyncJsonFile($list , $page);
-dd($ret);
-
-
-
-
+echo "================================================\r\n";
+echo "over\r\n";
 
 /**
 * @note 同步爬取下来的内容到json文件里
