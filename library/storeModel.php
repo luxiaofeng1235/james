@@ -32,6 +32,8 @@ class StoreModel{
 
      public static $page_name = 'store_page_'; //保存的具体文件的前缀
 
+     public static $detail_page = 'detail_page_';//保存对应的详情的分页信息
+
 
      /**
      * @note 替换指定url中的参数

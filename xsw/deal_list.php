@@ -32,10 +32,7 @@ if(!$list){
 $list = array_slice($list, 0, 5);
 $list = double_array_exchange_by_field($list ,'story_id');
 
-
-
-// $urls = array_column($list , 'detail_link');
-$urls[] ='https://www.xsw.tw/book/1696516';
+$urls = array_column($list , 'detail_link');
 
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
@@ -57,20 +54,22 @@ foreach($list as $key =>$val){
 }
 
 //保存的json文件信息的路径
-$save_json_file = $download_path . DS .'detail_page_'.$page.'.json';
+$save_json_file = $download_path . DS . StoreModel::$detail_page .$page.'.json';
 
 if(empty($returnList)){
     exit("数据为空不需要处理\r\n");
 }
 
 
-echo '<pre>';
-print_R($save_json_file);
-echo '</pre>';
-exit;
 //保存的关联的基础数据信息
 $json_data =  json_encode($returnList ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-// writeFileCombine($json_data)
+$t = writeFileCombine($save_json_file,$json_data);
+if(!$t){
+    echo "数据写入失败\r\n";
+}else{
+    echo "success -- {$save_json_file} \r\n";
+}
+echo "finish \r\n";
 
 /**
 * @note 获取详情页的数据信息
