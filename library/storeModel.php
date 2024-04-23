@@ -115,7 +115,7 @@ class StoreModel{
     * @param $urls array  链接地址
     * @return  object
     */
-     public static function swooleRquest($urls){
+     public static function swooleRquest($urls,$type = 1){
         if(!$urls){
             return false;
         }
@@ -140,7 +140,11 @@ class StoreModel{
                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
                                      // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
-                    $items[]=$response->body();
+                    //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
+                    if($response->getStatusCode() != 404){
+                         $items[]=$response->body();
+                    }
+
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
                     $str ="async child-fork-process num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
                     echo $str ."\r\n";

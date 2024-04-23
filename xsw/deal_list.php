@@ -13,6 +13,7 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
+use Yurun\Util\HttpRequest;
 $exec_start_time = microtime(true);
 
 //创建对应的目录
@@ -28,17 +29,23 @@ if(!$list){
 }
 
 ////按照对应的可以去分割数据
-$list = array_slice($list, 0, 1);
+$list = array_slice($list, 0, 5);
 $list = double_array_exchange_by_field($list ,'story_id');
 
 
 
-$urls = array_column($list , 'detail_link');
+// $urls = array_column($list , 'detail_link');
+$urls[] ='https://www.xsw.tw/book/1696516';
+
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
+if(empty($item)){
+    echo "数据有问题，请检查\r\n";
+    exit();
+}
 
+//获取返回的数据判断是否存在404页面信息
 $arrList = getDetailList($item);
-
 //最终需要更新的章节信息去变更处理
 $returnList = [];
 ///合并两部分的数据信息
@@ -48,11 +55,22 @@ foreach($list as $key =>$val){
     }
     $returnList[] = $val;
 }
+
+//保存的json文件信息的路径
+$save_json_file = $download_path . DS .'detail_page_'.$page.'.json';
+
+if(empty($returnList)){
+    exit("数据为空不需要处理\r\n");
+}
+
+
 echo '<pre>';
-print_R($returnList);
+print_R($save_json_file);
 echo '</pre>';
 exit;
-
+//保存的关联的基础数据信息
+$json_data =  json_encode($returnList ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+// writeFileCombine($json_data)
 
 /**
 * @note 获取详情页的数据信息
@@ -66,16 +84,19 @@ function getDetailList($item = []){
     }
     global $urlRules;
     $arrList = [];
+    //如果存在有数据就返回，否则不要这些数据了
     foreach($item as $key =>$val){
-        $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
-        $item = QueryList::html($val)
-                        ->rules($rules)
-                        ->query()
-                        ->getData();
-        $item = $item->all();
-        if(!empty($item)){
-            $detailInfo = StoreModel::traverseEncoding($item);
-            $arrList[$detailInfo['story_id']] = $detailInfo;
+        if(!empty($val) || $val){
+             $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
+            $item = QueryList::html($val)
+                            ->rules($rules)
+                            ->query()
+                            ->getData();
+            $item = $item->all();
+            if(!empty($item)){
+                $detailInfo = StoreModel::traverseEncoding($item);
+                $arrList[$detailInfo['story_id']] = $detailInfo;
+            }
         }
     }
     return $arrList;
@@ -103,8 +124,24 @@ function getPageList($page= 1){
                 ->query()
                 ->getData();
     $item = $item->all();
+    $http = new HttpRequest;
     $data = StoreModel::traverseEncoding($item);
     return $data ?? [];
+    $returnList = [];
+    // if(!empty($data)){
+    //     foreach($data as $key =>$val){
+    //         if(!$val['detail_link']) continue;
+    //         $headers = get_headers($val['detail_link']);
+    //         if(isset($headers[0]) && preg_match('/200 OK/',$headers[0])){
+    //             $returnList[] = $val;
+    //         }
+    //     }
+    // }
+    // echo '<pre>';
+    // print_R($returnList);
+    // echo '</pre>';
+    // exit;
+    return $returnList ?? [];
 }
 
 ?>
