@@ -57,6 +57,38 @@ class StoreModel{
 
 
     /**
+    * @note 统一处理小说信息的返回
+    *
+    * @param $info array 小说基本信息
+    * @return string
+    */
+    public static function combineNovelHandle($info =[]){
+        if(!$info){
+            return [];
+        }
+        //处理小说作者标题，并替换前后空格
+        $author = str_replace('作者：','',$info['author']);
+        $author  = trimBlankSpace($author); //去重收尾空格
+        //处理小说标题的收尾空格
+        $title = trimBlankSpace($info['title']); //去除标题中首尾空格
+        //处理时间戳问题并转换
+        $third_update_time = trim($info['third_update_time']);
+        $third_update_time = str_replace('更新时间：', '',$third_update_time);
+        $third_update_time = strtotime($third_update_time);
+        //小说状态
+        $status = str_replace('小说状态：', '' , $info['status']);
+        //小说分类
+        $cate_name = str_replace('小说分类：','',$info['cate_name']);
+        $info['title'] = $title;
+        $info['author']   = $author;
+        $info['status']  = $status;
+        $info['cate_name'] = $cate_name;
+        $info['third_update_time'] = $third_update_time;
+        return $info;
+    }
+
+
+    /**
     * @note 获取生成不同的随机字符串，重复生成的不再使用
     *
     * @param $type string 类型
