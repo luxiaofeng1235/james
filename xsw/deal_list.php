@@ -78,7 +78,7 @@ function asyncJsonFile($list , $page= 1){
     if(empty($returnList)){
         return "数据为空不需要处理\r\n";
     }
-
+    echo "写入json文件的小说总数：".count($returnList)."\r\n";
     //保存的关联的基础数据信息
     $json_data =  json_encode($returnList ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     $t = writeFileCombine($save_json_file,$json_data);
