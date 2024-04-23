@@ -24,58 +24,71 @@ $download_path =Env::get('SAVE_CACHE_INFO_PATH');//下载路径;
 if(!is_dir($download_path)){
     createFolders($download_path);
 }
-
 $page = 2;
 $list = getPageList($page);
 if(!$list){
     return '数据为空不需要处理';
 }
 
-
 ////按照对应的可以去分割数据
-$list = array_slice($list, 0, 2);
-$list = double_array_exchange_by_field($list ,'story_id');
+$list = array_slice($list, 0, 1);
 
-$urls = array_column($list , 'detail_link');
+$ret = asyncJsonFile($list , $page);
+dd($ret);
 
-//设置配置细腻
-$item = StoreModel::swooleRquest($urls);
-if(empty($item)){
-    echo "数据有问题，请检查\r\n";
-    exit();
-}
 
-//获取返回的数据判断是否存在404页面信息
-$arrList = getDetailList($item);
-//最终需要更新的章节信息去变更处理
-$returnList = [];
-///合并两部分的数据信息
-foreach($list as $key =>$val){
-    if(isset($arrList[$key])){
-        $ext_data =$pinyin->name($val['title'] , PINYIN_KEEP_NUMBER);
-        $val['english_name'] = $ext_data ? implode('',$ext_data) : '';
-        $val = array_merge($val , $arrList[$key]);
+
+
+
+/**
+* @note 同步爬取下来的内容到json文件里
+*
+* @param $item array 需要处理的数据
+* @return array
+*/
+function asyncJsonFile($list , $page= 1){
+    if(!$list){
+        return [];
     }
-    $returnList[] = $val;
+    global $pinyin,$download_path;
+    $list = double_array_exchange_by_field($list ,'story_id');
+    $urls = array_column($list , 'detail_link');
+    //设置配置细腻
+    $item = StoreModel::swooleRquest($urls);
+    if(empty($item)){
+        echo "数据有问题，请检查\r\n";
+        return false;
+    }
+    //组装获取分类和连载的小说状态信息
+    $arrList = getDetailList($item);
+    //最终需要更新的章节信息去变更处理
+    $returnList = [];
+    ///合并两部分的数据信息
+    foreach($list as $key =>$val){
+        if(isset($arrList[$key])){
+            $ext_data =$pinyin->name($val['title'] , PINYIN_KEEP_NUMBER);
+            $val['english_name'] = $ext_data ? implode('',$ext_data) : '';
+            $val = array_merge($val , $arrList[$key]);
+        }
+        $returnList[] = $val;
+    }
+
+    //保存的json文件信息的路径
+    $save_json_file = $download_path . DS . StoreModel::$detail_page .$page.'.json';
+    if(empty($returnList)){
+        return "数据为空不需要处理\r\n";
+    }
+
+    //保存的关联的基础数据信息
+    $json_data =  json_encode($returnList ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    $t = writeFileCombine($save_json_file,$json_data);
+    if(!$t){
+        echo "数据写入失败\r\n";
+    }else{
+        echo "success -- {$save_json_file} \r\n";
+    }
+    echo "finish \r\n";
 }
-
-//保存的json文件信息的路径
-$save_json_file = $download_path . DS . StoreModel::$detail_page .$page.'.json';
-
-if(empty($returnList)){
-    exit("数据为空不需要处理\r\n");
-}
-
-
-//保存的关联的基础数据信息
-$json_data =  json_encode($returnList ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-$t = writeFileCombine($save_json_file,$json_data);
-if(!$t){
-    echo "数据写入失败\r\n";
-}else{
-    echo "success -- {$save_json_file} \r\n";
-}
-echo "finish \r\n";
 
 /**
 * @note 获取详情页的数据信息
@@ -132,21 +145,6 @@ function getPageList($page= 1){
     $http = new HttpRequest;
     $data = StoreModel::traverseEncoding($item);
     return $data ?? [];
-    $returnList = [];
-    // if(!empty($data)){
-    //     foreach($data as $key =>$val){
-    //         if(!$val['detail_link']) continue;
-    //         $headers = get_headers($val['detail_link']);
-    //         if(isset($headers[0]) && preg_match('/200 OK/',$headers[0])){
-    //             $returnList[] = $val;
-    //         }
-    //     }
-    // }
-    // echo '<pre>';
-    // print_R($returnList);
-    // echo '</pre>';
-    // exit;
-    return $returnList ?? [];
 }
 
 ?>
