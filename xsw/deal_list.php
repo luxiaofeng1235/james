@@ -24,7 +24,7 @@ $download_path =Env::get('SAVE_CACHE_INFO_PATH');//下载路径;
 if(!is_dir($download_path)){
     createFolders($download_path);
 }
-for ($i=1; $i <=3 ; $i++) {
+for ($i=2000; $i <=2002 ; $i++) {
     $page = $i;
     $list = getPageList($page);
     if(!$list){
