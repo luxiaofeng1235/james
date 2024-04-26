@@ -19,8 +19,6 @@ $exec_start_time = microtime(true);
 $store_id = isset($argv[1])   ? $argv[1] : 0; //匹配对应的ID去关联
 $db_name = 'db_novel_pro';
 $redis_key = 'img_pic_id';//redis的对应可以设置
-// echo $redis_data->set_redis($redis_key,200000);
-// echo 333;exit;
 $id = $redis_data->get_redis($redis_key);
 
 $where_data = '  is_async = 1 and pic is not null ';
@@ -35,6 +33,7 @@ $sql = "select pro_book_id,i.title,m.author,cover_logo,story_link,m.pic from boo
 $sql .= $order_by;
 $sql .= " limit ".$limit;
 echo "sql : " .$sql ."\r\n";
+
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
 $diff_data = array();
@@ -53,18 +52,23 @@ if(!empty($info)){
         $img_name = $value['pic']; //用这个当图片名
         //保存的图片路径信息
         $save_img_path  =  $img_name;
-        // if(!file_exists($save_img_path)){
-        // }else{
+        if(file_exists($save_img_path)){
+            //获取图片尺寸
+             $imgSize =getImageSpace($save_img_path);
+             //如果小于10KB的话就直接拿出来重新下载
+             if($imgSize>0 && $imgSize < 3){
+                $diff_data[] =[
+                    'title' => $title,
+                    'author'    =>$author,
+                    'link'      =>  $value['story_link'],
+                    'save_img_path'   =>  $save_img_path,
+                    'pro_book_id'    =>  $pro_book_id,
+                    'cover_logo'    =>  $cover_logo,
+                    'size'  =>  $imgSize.'KB',
+                ];
+             }
+        }
 
-        // }
-        $diff_data[] =[
-            'title' => $title,
-            'author'    =>$author,
-            'link'      =>  $value['story_link'],
-            'save_img_path'   =>  $save_img_path,
-            'pro_book_id'    =>  $pro_book_id,
-            'cover_logo'    =>  $cover_logo,
-        ];
     }
 }else{
     echo "no data\r\n";
@@ -84,21 +88,25 @@ if(!empty($diff_data)){
         if(!$cover_logo) continue;
         //校验是否失败
         $v['mobile_url'] = $cover_logo;
-        if (!@getimagesize($save_img_path)) {
-            $o_data[] = $v;
-            //$t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
-            // echo "index:{$num} 【本地图片】 pro_book_id : {$book_id} 损坏图片已修复 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
-        }else{
-             echo "index:{$num} 【本地图片】 pro_book_id: {$book_id} 图片正常  title：{$title}  author:{$author}  path:{$save_img_path} \r\n";
-        }
+         $o_data[] = $v;
+        // if (!@getimagesize($save_img_path)) {
+
+        //     //$t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
+        //     // echo "index:{$num} 【本地图片】 pro_book_id : {$book_id} 损坏图片已修复 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
+        // }else{
+        //      echo "index:{$num} 【本地图片】 pro_book_id: {$book_id} 图片正常  title：{$title}  author:{$author}  path:{$save_img_path} \r\n";
+        // }
     }
     if(!empty($o_data)){
 
         //下面是处理对应的为空的数据请求
-        echo 'now is empty url init to async num = '.count($o_data).'...................'.PHP_EOL;
+        echo 'now is repeat image init to async num = '.count($o_data).'...................'.PHP_EOL;
+        // $o_data = array_slice($o_data,0,1);
         //启用多线程去保存处理先关的数据
         $img_list = array_column($o_data,'cover_logo');
-        $data  =curl_pic_multi::Curl_http($img_list);
+        $data  =curl_pic_multi::Curl_http($img_list,1);
+        //如果失败请求就重试
+        $data  = NovelModel::callRequests($data , $o_data,'curl',1);
         $t_num = 0;
         foreach($data as $gkey=> $img_con){
             $t_num++;
