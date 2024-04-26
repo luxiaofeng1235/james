@@ -127,7 +127,8 @@ if(!empty($diff_data)){
                   writeFileCombine($filename, $img_default);
                    echo "--下载后的图片在网站损坏,已用默认图替换\t";
              }
-            echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author} \t url: {$cover_logo} \tpath:{$filename}  \r\n";
+             $size =getImageSpace($filename);
+            echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author} \t url: {$cover_logo} \tpath:{$filename} \t size:{$size} KB \r\n";
             sleep(1);
 
         }
