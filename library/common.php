@@ -953,6 +953,10 @@ function getHtmlUrl($meta_data='',$href=''){
 	if(!$meta_data){
 		return false;
 	}
+	//如果没有解析到url=就用原来的做返回
+	if(!strpos($meta_data,'url=')){
+		return $meta_data;
+	}
 	// $meta_data = $meta;
 	$link_reg = '/url=(.*)/si'; //匹配含有url=的通配符preg_match($link_reg, $data , $matches);
 	preg_match($link_reg, $meta_data , $matches);
@@ -1260,4 +1264,34 @@ function removeTabEnter($str){
 	  return $td;
 }
 
+
+/**
+ * @note 获取图片尺寸信息
+ * @param   string  $filename 图片路径
+ * @return string
+ */
+function getImageSpace($imagePath=''){
+	if(!$imagePath){
+		return false;
+	}
+	 // 检查文件是否存在
+	if (file_exists($imagePath)) {
+	    // 获取文件大小，单位为字节
+	    $size = filesize($imagePath);
+
+	    // 转换为其他单位
+	    $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+	    $bytes = max($size, 0);
+	    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+	    $pow = min($pow, count($units) - 1);
+
+	    // 计算有效数字，并格式化
+	    $bytes /= (1 << (10 * $pow));
+	    $bytes = round($bytes, 2);
+	    // $str = "{$bytes} {$units[$pow]}";
+	    return $bytes; //返回实际的占用大小单位是KB
+	} else {
+	    return 0;
+	}
+}
 ?>

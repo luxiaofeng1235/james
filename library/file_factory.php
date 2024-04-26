@@ -174,7 +174,6 @@ class FileFactory{
                 NovelModel::killMasterProcess();//退出主程序
                 exit("*********************************title = {$info['title']} \t author = {$info['author']} \tstore_id = {$store_id}\t pro_book_id ={$info['pro_book_id']} \t已经爬取完毕 ，不需要重复操作了\r\n");
              }
-
             echo "\r\n\r\n";
             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
 
@@ -182,7 +181,7 @@ class FileFactory{
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
-            $limit_size =10;
+            $limit_size =3;
             $items = array_chunk($dataList,$limit_size); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
@@ -192,7 +191,10 @@ class FileFactory{
                 // $html_data = ClientModel::getClientContents($v,$store_id,$download_path);
                 // $html_data = getStoryCotents($v,0,$download_path);
                 $html_data= NovelModel::getDataListItem($v,$download_path);
-
+                echo '<pre>';
+                print_R($html_data);
+                echo '</pre>';
+                exit;
                 if($html_data){
                     $a_num =0;
                     foreach ($html_data as  $gvalue) {

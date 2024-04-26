@@ -76,7 +76,19 @@ return [
         ],
          //小说详情替换网站的采集方案
         'info_replace'  =>[
-            'cover_logo'       =>array('meta[property=og:image]','content'),//小说封面
+            'cover_logo'       =>array('meta[property=og:image]','content','',function($image){
+                $cover_logo = '';
+                if(strpos($image, 'otcwuxi')){
+                    //判断是否存在https中但是图片用的http保存会有问题
+                    if(!preg_match('/https/',$image)){
+                       $cover_logo = str_replace('http','https',$image);
+                    }
+                    $url = $cover_logo ?? $image;
+                }else{
+                    $url = $image;
+                }
+               return $url;
+            }),//小说封面
             'author'    => array('meta[property=og:novel:author]','content'),//小说作者
             'title'     =>array('meta[property=og:novel:book_name]','content'),//小说标题
             'cate_name' =>array('meta[property=og:novel:category]','content'),//分类
@@ -85,11 +97,16 @@ return [
             'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
             'intro' =>array('meta[property=og:description]','content'),
             'tag'   => array('meta[property=og:novel:category]','content'),
-            'location'  =>  array('.path .p','text' ,'', function($location){
-                $str = array_iconv($location);
-                $str = str_replace('加入书架','',$str);//替换调这个没啥用
+            // 'location'  =>  array('.path .p','text' ,'', function($location){
+            //     $str = array_iconv($location);
+            //     $str = str_replace('加入书架','',$str);//替换调这个没啥用
+            //     return $str;
+            // }),//小说的面包屑位置
+            'location'  =>['.con_top','text','',function($location){
+                $str = str_replace('最新章节列表','',$location);//
                 return $str;
-            }),//小说的面包屑位置
+
+            }],//面包屑
         ],
         //手机端的采集规则
         'mobile_content'   => [

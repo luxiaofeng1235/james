@@ -12,6 +12,34 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+$sql = ""
+
+$ret = getImageSpace('/mnt/book/pic/zgzb-jg.jpg');
+echo '<pre>';
+print_R($ret);
+echo '</pre>';
+exit;
+$exif = exif_read_data('/mnt/book/pic/hydt-sxd.jpg'); // 读取图像的 EXIF 数据
+echo '<pre>';
+dd($exif);
+echo '</pre>';
+exit;
+$space = $exif['FileSize']; // 获取文件大小
+
+
+ $imageSize = filesize('/mnt/book/pic/hydt-sxd.jpg');
+ echo '<pre>';
+ print_R($imageSize);
+ echo '</pre>';
+ exit;
+
+$url = 'https://www.otcwuxi.com/files/63907/63907319/63907319.jpg';
+$a =webRequest($url,'GET');
+echo '<pre>';
+print_R($a);
+echo '</pre>';
+exit;
+
 
 $text_with_entities = "&#160;&#160;&#160;&#160;陈铭也吃了不少这方面的亏。\n";
 $arr  =  preg_replace('/&[#\da-z]+;/i', '', $text_with_entities);

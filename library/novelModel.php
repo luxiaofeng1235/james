@@ -89,16 +89,15 @@ class NovelModel{
                     $status = '连载中';
                 }
                 $store_data['status'] = $status;
-         }else if(strpos($story_link,'mxgbqg')){
-                //完结 连载
-                //兼容老数据
-               if($store_data['status'] == '连载'){
-                    $store_data['status'] = '连载中';
-               }else if($store_data['status'] == '完结'){
-                    $store_data['status'] = '已经完本';
-               }else{
-                    $store_data['status'] = '未知';
-               }
+         }
+
+          //完结 连载
+         if($store_data['status'] == '连载'){
+              $store_data['status'] = '连载中';
+         }else if($store_data['status'] == '完结' || $store_data['status'] == '已完结'){
+              $store_data['status'] = '已经完本';
+         }else{
+              $store_data['status'] = '未知';
          }
          return $store_data;
     }
@@ -424,7 +423,8 @@ class NovelModel{
       //《我在古代办妇联》正文卷
       //《我的女装成长日常》正文卷
       //我的女装成长日常
-      preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
+      // preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
+      preg_match('/<div id=\"list\".*?>.*?<\/dl>/ism',$html ,$list);
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
            if($contents){
@@ -651,6 +651,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       //过滤实体标签，类似>&nbsp;&nbsp;&nbsp;&nbsp;这样子的过滤一下
      $str = preg_replace('/&[#\da-z]+;/i', '', $str);
 
+     //替换一些特殊的字符
+     $str = preg_replace('/<!--go-->/','',$str);
+
       //////////////////////////广告和标签相关
       //过滤具体的html标签
       $str = preg_replace('/<script.*?>.*?<\/script>/ism','',$str);
@@ -759,11 +762,32 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       //基准对比时间
       if(!file_exists($filename)){
           $res = webRequest($url  ,'GET'); //利用图片信息来下载
-          // $res = curl_pic_multi::Curl_http([$url]);//同步图片信息
           $img_con = $res ?? '';
-          @$t=file_put_contents($filename, $img_con);
+           @writeFileCombine($filename , $img_con);
+          // @$t=file_put_contents($filename, $img_con);
       }
       return $filename;
+    }
+
+     /**
+    * @note 获取网站的url的配对的源
+    *
+    * @param $story_link array  网站的源URL
+    * @return string
+    */
+    public static function getSourceUrl($story_link=''){
+        if(!$story_link){
+           return '';
+        }
+        $url= parse_url($story_link);
+        $source = '';
+        if(isset($url['host']) && !empty($url['host'])){
+            preg_match('/www\.(.*?)\./',$url['host'],$matrix);
+            if(isset($matrix[1])){
+                $source = trim($matrix[1]);
+            }
+        }
+        return $source;
     }
 
     /**
@@ -1112,12 +1136,38 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
     return $referer_url;
   }
 
-  /*
+  /**
+   * @note 自动补齐当前的buffer数据信息
+   * @param $detail array 抓取到的匹配数据
+   * @param $content string HMTL内容
+   * @return array
+   */
+  protected static function bufferMetaData($detail=[], $content=[]){
+      if(!$detail || !$content){
+          return false;
+      }
+      if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网
+            if(empty($detail['meta_data']) || empty($detail['href'])){
+                //通过正则取出来对应额连接
+                $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
+                $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
+                preg_match($meta_reg,$content,$meta_link);
+                preg_match($link_reg , $content,$href_link);
+                $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
+                $detail['href'] = $href_link[1] ?? '';
+            }
+      }
+      return $detail;
+
+  }
+
+  /**
+    *  @note 获取对应的请求数据信息
      * @param $txt_path string 存储的路径
      * @param $data array 需要处理的章节列表
      * @return array
      */
-  public  static  function getDataListItem($data,$txt_path){
+  public static  function getDataListItem($data,$txt_path){
         if(!$data)
           return false;
         // dd($txt_path);
@@ -1138,7 +1188,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $t_url[]=$referer_url. $val['link_url'];
           }
 
-
           global $urlRules;
           //获取采集的标识
           $valid_curl ='curl';
@@ -1157,23 +1206,28 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           if(!$list){
             $list = [];
           }
+
            //////////////////处理请求的链接end
-
-
           foreach($list as $gkey =>$gval){
-
-            $data = QueryList::html($gval)->rules($rules)->query()->getData();
+            $gval   = array_iconv($gval); //转码，处理
+            $data = QueryList::html($gval)
+                    ->rules($rules)
+                    ->query()
+                    ->getData();
             $html = $data->all();
 
+            //自动补全meta连接信息连接走下面的逻辑
+            $html  = NovelModel::bufferMetaData($html,$gval);
 
             $store_content = $html['content']  ?? '';// array_iconv($html['content']) : '';
-
             $meta_data = $html['meta_data']??'';
             $href = $html['href'];
-            //处理特殊的转码设置
-            if(preg_match('/mxgbqg/',$gval)){
-               $store_content = array_iconv($store_content) ;
-            }
+            // //处理特殊的转码设置
+            // if(preg_match('/mxgbqg/',$gval)){
+            //    $store_content = array_iconv($store_content) ;
+            // }
+
+
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
             //替换内容里的广告
@@ -1536,10 +1590,7 @@ public static function callRequests($contents_arr=[],$goods_list=[],$type='',$pr
                  if(empty($tval)){//为空的情况
                     echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
                     $temp_url[] =$urls[$tkey];
-                 }else if(!preg_match('/id="content"/',$tval) ){//断章处理，包含有502的未响应都会
-                    echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
-                    $temp_url[] =$urls[$tkey];
-                  }else{
+                 }else{
                       $repeat_data[] = $tval;
                       unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
                       unset($curl_contents1[$tkey]);
@@ -1760,8 +1811,6 @@ public static function getErrSucData($content,$data,$type='ghttp'){
           }else if($type =='curl'){ //采用curl来进行验证
           // if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde')){
               if(empty($val)){//如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
-                  $errData[] =$data[$key] ?? [];
-              }else if(!preg_match('/id="content"/',$val) ){//断章处理
                   $errData[] =$data[$key] ?? [];
               }else{
                   $sucData[] = $val;

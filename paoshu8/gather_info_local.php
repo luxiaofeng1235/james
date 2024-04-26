@@ -70,6 +70,8 @@ if($info){
         //如果当前文件不存在的话，直接从远端拉取数据，保留数据方便下次计算
         echo "now i will try get this contents : {$story_link}\r\n";
         $data = webRequest($story_link,'GET');
+        //转换一下编码如果是乱码
+        $data =  array_iconv($data);
         writeFileCombine($html_file ,$data);
         // NovelModel::killMasterProcess();//退出主程序
         // exit();
@@ -92,12 +94,23 @@ if($info){
         exit();
     }
 
+    // $arr =iconv('gbk', 'UTF-8', $html);
+    // echo '<pre>';
+    // print_R($arr);
+    // echo '</pre>';
+    // exit;
+
     //爬取相关规则下的类
     $info_data=QueryList::html($html)
                 ->rules($rules)
                 ->query()
                 ->getData();
     $store_data = $info_data->all();
+    // $arr = array_iconv($store_data['author']);
+    // echo '<pre>';
+    // print_R($arr);
+    // echo '</pre>';
+    // exit;
     if(!empty($store_data)){
 
 
@@ -114,7 +127,9 @@ if($info){
         $store_data['location'] = $location;
         $third_update_time = strtotime($store_data['third_update_time']);
         $store_data['third_update_time'] = $third_update_time;
-        $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
+
+        //需要根据对应的节点来判断
+        $store_data['source'] = NovelModel::getSourceUrl($store_data['story_link']);
         //转义标题
 
         $store_data['title'] = trimBlankSpace($store_data['title']); //过滤前后空格
@@ -134,7 +149,6 @@ if($info){
 
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
-
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
 
@@ -151,7 +165,6 @@ if($info){
 
         // //保存图片到本地==暂时屏蔽不需要
         $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
-        // $store_data['save_img'] = $t; //方便查看图片
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
