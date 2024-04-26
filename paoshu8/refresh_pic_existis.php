@@ -101,21 +101,21 @@ if(!empty($diff_data)){
 
         //下面是处理对应的为空的数据请求
         echo 'now is repeat image init to async num = '.count($o_data).'...................'.PHP_EOL;
-        // $o_data = array_slice($o_data,0,1);
         //启用多线程去保存处理先关的数据
-        $img_list = array_column($o_data,'cover_logo');
-        $data  =curl_pic_multi::Curl_http($img_list,1);
-        //如果失败请求就重试
-        $data  = NovelModel::callRequests($data , $o_data,'curl',1);
+        // $img_list = array_column($o_data,'cover_logo');
+        // $data  =curl_pic_multi::Curl_http($img_list,1);
         $t_num = 0;
-        foreach($data as $gkey=> $img_con){
+        foreach($o_data as $gkey=> $gval){
             $t_num++;
+
+
             $filename = $o_data[$gkey]['save_img_path'] ?? '';//保存的路径
             $img_link = $o_data[$gkey]['cover_logo'] ?? '';//小说封面
             $pro_book_id = $o_data[$gkey]['pro_book_id'] ?? 0;//第三方ID
             $title = $o_data[$gkey]['title'] ?? '';//小说标题
             $author = $o_data[$gkey]['author'] ?? ''; //小说作者
             $cover_logo = $o_data[$gkey]['cover_logo'] ?? ''; //小说封面
+            $img_con = webRequest($gval['cover_logo'],'GET');
             //写入文件信息 ,需要判断图片是否还是存坏的
             // if (!@getimagesize($save_img_path)) {
 
