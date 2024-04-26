@@ -45,11 +45,11 @@ if(empty($info)){
     $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 }
 $url = Env::get('APICONFIG.PAOSHU_API_URL'); //采集源配置的服务器地址
-
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     $hostData= parse_url($story_link);
     $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
+    $story_id = trim($info[0]['story_id']);
     if($info[0]['is_async'] == 1){
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
@@ -59,19 +59,21 @@ if($info){
 
     //定义小说信息的抓取规则
     $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info_replace'];
-    $files = Env::get('SAVE_HTML_PATH').DS.'detail_'.$info[0]['story_id'].'.'.NovelModel::$file_type;
-    echo "file_path = {$files} \r\n";
+    //网站的源文件夹
+    $html_file = Env::get('SAVE_HTML_PATH').DS.'detail_'.$story_id.'.'.NovelModel::$file_type;
+    echo "file_path = {$html_file} \r\n";
     $item_list  = [];
-    if(!$files){
+
+    if(!$html_file || !file_exists($html_file)){
         echo "no this story ---".$story_link."\r\n";
         NovelModel::killMasterProcess();//退出主程序
         exit();
     }
-    $html = readFileData($files);
+    $html = readFileData($html_file);
     $html = html_entity_decode($html);
 
 
-    if(!$html){
+    if(!$html ){
         //记录是否有相关的HTML的数据信息
         printlog('this novel：'.$story_link.' is no local html data');
         echo "no this story files： {$story_link}\r\n";
