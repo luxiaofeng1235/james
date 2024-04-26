@@ -67,6 +67,43 @@ class NovelModel{
     }
 
 
+  /**
+  * @note 初始化连载状态以及其他的字段信息
+  * @param $store_data array 抓取的数据信息
+  * @param array
+  *
+  */
+    public static function initStoreInfo($store_data=[]){
+        if(!$store_data){
+           return false;
+        }
+        $story_link = $store_data['story_link'];
+        ///判断是否为xs74w网站的数据，因为这个网站的数据没有连载状态给他默认一个
+         if(strpos($story_link,'xs74w')){
+                $diff_time = date('Y-m-d 00:00:00');
+                $unixtime = strtotime($diff_time);
+                //判断当前的时间是否大于最后更新的时间，如果大于就是说明已经完本了
+                if(strtotime($store_data['third_update_time']) &&   $unixtime > $store_data['third_update_time']){
+                    $status = '已经完本';
+                }else{
+                    $status = '连载中';
+                }
+                $store_data['status'] = $status;
+         }else if(strpos($story_link,'mxgbqg')){
+                //完结 连载
+                //兼容老数据
+               if($store_data['status'] == '连载'){
+                    $store_data['status'] = '连载中';
+               }else if($store_data['status'] == '完结'){
+                    $store_data['status'] = '已经完本';
+               }else{
+                    $store_data['status'] = '未知';
+               }
+         }
+         return $store_data;
+    }
+
+
 
     /**
   * @note 转换编码格式

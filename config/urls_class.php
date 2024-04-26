@@ -86,7 +86,8 @@ return [
             'intro' =>array('meta[property=og:description]','content'),
             'tag'   => array('meta[property=og:novel:category]','content'),
             'location'  =>  array('.path .p','text' ,'', function($location){
-                $str = iconv('gbk', 'utf-8' ,$location);
+                $str = array_iconv($location);
+                $str = str_replace('加入书架','',$str);//替换调这个没啥用
                 return $str;
             }),//小说的面包屑位置
         ],

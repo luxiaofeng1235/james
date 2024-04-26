@@ -67,7 +67,7 @@ if($info){
         echo "no this story ---".$story_link."\r\n";
 
         echo "**********************************\r\n";
-        //直接从远端拉取数据
+        //如果当前文件不存在的话，直接从远端拉取数据，保留数据方便下次计算
         echo "now i will try get this contents : {$story_link}\r\n";
         $data = webRequest($story_link,'GET');
         writeFileCombine($html_file ,$data);
@@ -121,28 +121,6 @@ if($info){
         $store_data['title'] = trimBlankSpace($store_data['title']);
         $author = isset($store_data['author']) ?  trimBlankSpace($store_data['author']) : '';
         $store_data['author']  = $author;
-        ///判断是否为xs74w网站的数据，因为这个网站的数据没有连载状态给他默认一个
-         if(strpos($story_link,'xs74w')){
-                $diff_time = date('Y-m-d 00:00:00');
-                $unixtime = strtotime($diff_time);
-                //判断当前的时间是否大于最后更新的时间，如果大于就是说明已经完本了
-                if(strtotime($store_data['third_update_time']) &&   $unixtime > $store_data['third_update_time']){
-                    $status = '已经完本';
-                }else{
-                    $status = '连载中';
-                }
-                $store_data['status'] = $status;
-         }else if(strpos($story_link,'mxgbqg')){
-                //完结 连载
-                //兼容老数据
-               if($store_data['status'] == '连载'){
-                    $store_data['status'] = '连载中';
-               }else if($store_data['status'] == '完结'){
-                    $store_data['status'] = '已经完本';
-               }else{
-                    $store_data['status'] = '未知';
-               }
-         }
 
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
@@ -154,6 +132,13 @@ if($info){
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
+
+        //替换兼容采集器的一些字段规则
+        $store_data = NovelModel::initStoreInfo($store_data);
+        echo '<pre>';
+        print_R($store_data);
+        echo '</pre>';
+        exit;
 
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
