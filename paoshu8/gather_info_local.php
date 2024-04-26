@@ -48,8 +48,14 @@ $url = Env::get('APICONFIG.PAOSHU_API_URL'); //采集源配置的服务器地址
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
     $hostData= parse_url($story_link);
+
     $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
+
     $story_id = trim($info[0]['story_id']);
+    if(!$story_id){
+       preg_match('/\d+/',$hostData['path'],$retMatch);
+       $story_id = $retMatch[0] ??'';
+    }
     if($info[0]['is_async'] == 1){
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";

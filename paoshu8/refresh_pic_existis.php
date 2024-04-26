@@ -22,7 +22,7 @@ $redis_key = 'img_pic_id';//redis的对应可以设置
 $id = $redis_data->get_redis($redis_key);
 
 $where_data = '  is_async = 1 and pic is not null ';
-$limit= 5000; //控制图片拉取的步长
+$limit= 10000; //控制图片拉取的步长
 $order_by =' order by pro_book_id desc';
 
 if($id){
@@ -56,7 +56,7 @@ if(!empty($info)){
             //获取图片尺寸
              $imgSize =getImageSpace($save_img_path);
              //如果小于10KB的话就直接拿出来重新下载
-             if($imgSize>0 && $imgSize < 3){
+             if($imgSize>0 && $imgSize > 3 && $imgSize<10){
                 $diff_data[] =[
                     'title' => $title,
                     'author'    =>$author,
