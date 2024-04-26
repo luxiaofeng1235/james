@@ -627,7 +627,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
    }
 
    /**
-  * @note 替换广告
+  * @note 替换广告和一些特殊字符
   * @param string $str 小说内容
   * @param $referer_url string 回调域名地址
   * @param $html_path  具体的章节目录，方便处理过滤
@@ -648,9 +648,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           }
       }
 
+      //过滤实体标签，类似>&nbsp;&nbsp;&nbsp;&nbsp;这样子的过滤一下
+     $str = preg_replace('/&[#\da-z]+;/i', '', $str);
 
       //////////////////////////广告和标签相关
-
       //过滤具体的html标签
       $str = preg_replace('/<script.*?>.*?<\/script>/ism','',$str);
       $str = preg_replace('/<br><br><br>/','',$str); //去除三个BR标签，没啥用
@@ -1169,38 +1170,12 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
             $meta_data = $html['meta_data']??'';
             $href = $html['href'];
-
+            //处理特殊的转码设置
             if(preg_match('/mxgbqg/',$gval)){
                $store_content = array_iconv($store_content) ;
             }
-
-            //format=html5; url=https://www.xs74w.com/info-69916372/  --xs74组装的数据
-            //format=html5; url=http://m.paoshu8.info/info-180703/ --paoshu8的数据
-            //说明是某个平台的数据没有取到，就用这个规则
-            if(preg_match('/xs74w/',$gval) &&  empty($meta_data)){
-                  //通过正则去校验下
-                  preg_match('/\"@id\"\:.+?\"(.+?)\"/', $gval,$matches);  //只取链接里的某部分的值
-                  $link = str_replace(array("",''),'',$matches[1]);
-
-                  $urlData = parse_url($link);
-                  $urlData= explode('/',$urlData['path']);
-                  $lastElement = array_slice($urlData, -1)[0];
-                  $cid = preg_replace('/\.html/','',$lastElement);
-                  //根据对应的数据返回拼接
-                  $mobile_data = "format=html5; url=".Env::get('APICONFIG.PAOSHU_NEW_HOST')."/info-{$cid}";
-                  $meta_data = $mobile_data;
-              }
-
-
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
-            if(empty($meta_data) || empty($href) || empty($gval)){
-                // echo "meta信息为空了 {$data[$gkey]['chapter_link']} \r\n";
-                // echo '<pre>';
-                // print_R($gval);
-                // echo '</pre>';
-                // echo "000000000000000000000000000000\r\n";
-            }
             //替换内容里的广告
             $store_content = NovelModel::replaceContent($store_content,$referer_url , $html_path);
             //如果确实没有返回数据信息，先给一个默认值
@@ -1218,11 +1193,11 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
               $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
               $store_content = preg_replace('/content1()/','',$store_content);
             }
-            $store_c[$html_path] = $store_content;
+            $store_detail[$html_path] = $store_content;
           }
           $allNovelList =[];
-          if(!empty($store_c)){
-              foreach($store_c as $gtkey=>$gtval){
+          if(!empty($store_detail)){
+              foreach($store_detail as $gtkey=>$gtval){
                 $allNovelList[$gtkey]['chapter_name'] = $chapetList[$gtkey]['chapter_name'] ?? '';//章节名称
                 $allNovelList[$gtkey]['chapter_mobile_link'] = $chapetList[$gtkey]['chapter_mobile_link'] ??'';
                 $allNovelList[$gtkey]['chapter_link'] = $chapetList[$gtkey]['chapter_link'] ?? ''; //章节链接

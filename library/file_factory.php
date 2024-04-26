@@ -182,7 +182,7 @@ class FileFactory{
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
-            $limit_size =1;
+            $limit_size =5;
             $items = array_chunk($dataList,$limit_size); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
@@ -195,10 +195,6 @@ class FileFactory{
                 $html_data= NovelModel::getDataListItem($v,$download_path);
                 if($html_data){
                     $a_num =0;
-                    echo '<pre>';
-                    dd($html_data);
-                    echo '</pre>';
-                    exit;
                     foreach ($html_data as  $gvalue) {
                         $a_num++;
                         if(!empty($gvalue['content'])){
