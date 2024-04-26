@@ -118,8 +118,9 @@ if($info){
         $store_data['third_update_time'] = $third_update_time;
         $store_data['source'] = Env::get('APICONFIG.PAOSHU_STR');
         //转义标题
-        $store_data['title'] = trimBlankSpace($store_data['title']);
-        $author = isset($store_data['author']) ?  trimBlankSpace($store_data['author']) : '';
+
+        $store_data['title'] = trimBlankSpace($store_data['title']); //过滤前后空格
+        $author = trimBlankSpace($store_data['author']); //过滤前后空格
         $store_data['author']  = $author;
 
         //章节也需要处理特殊的转义字符
@@ -135,13 +136,10 @@ if($info){
 
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
-        echo '<pre>';
-        print_R($store_data);
-        echo '</pre>';
-        exit;
 
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
+
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
             $where_condition = "story_id = '".$story_id."'";
             $no_chapter_data['syn_chapter_status'] = 1;
@@ -155,6 +153,10 @@ if($info){
 
         // //保存图片到本地==暂时屏蔽不需要
         $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+        echo '<pre>';
+        print_R($rt);
+        echo '</pre>';
+        exit;
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();

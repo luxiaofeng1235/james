@@ -399,20 +399,7 @@ class NovelModel{
       if(!$html || !$title){
         return '';
       }
-
-      $html = array_iconv($html);
-
-// $subject = '<a href="1233.php">abc
-// 测试</a>';   // 假设这是需要匹配的字符串
-
-// $pattern = '/<a href=".*>(.*)<\/a>/siU';    // 这是匹配的正则表达式
-
-// preg_match_all($pattern, $subject, $matches);
-// echo '<pre>';
-// print_R($matches);
-// echo '</pre>';
-// exit;
-
+      $html = array_iconv($html); //转换编码格式
       $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
@@ -441,11 +428,8 @@ class NovelModel{
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
            if($contents){
-
               ////替换style的样式标签，防止采集不到数据
-              // $contents = str_replace('style="" ','',$contents);
               $contents= str_replace('href =','href=',$contents);
-
               //处理中间的换行字符,不然匹配会出问题
               preg_match_all($link_reg,$contents,$link_href);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
