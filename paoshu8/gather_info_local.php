@@ -63,15 +63,20 @@ if($info){
     $html_file = Env::get('SAVE_HTML_PATH').DS.'detail_'.$story_id.'.'.NovelModel::$file_type;
     echo "file_path = {$html_file} \r\n";
     $item_list  = [];
-
     if(!$html_file || !file_exists($html_file)){
         echo "no this story ---".$story_link."\r\n";
-        NovelModel::killMasterProcess();//退出主程序
-        exit();
+
+        echo "**********************************\r\n";
+        //直接从远端拉取数据
+        echo "now i will try get this contents : {$story_link}\r\n";
+        $data = webRequest($story_link,'GET');
+        writeFileCombine($html_file ,$data);
+        $html_file = $data; //重新赋值计算
+        // NovelModel::killMasterProcess();//退出主程序
+        // exit();
     }
     $html = readFileData($html_file);
     $html = html_entity_decode($html);
-
 
     if(!$html ){
         //记录是否有相关的HTML的数据信息
