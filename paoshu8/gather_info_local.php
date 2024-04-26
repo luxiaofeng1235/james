@@ -71,7 +71,6 @@ if($info){
         echo "now i will try get this contents : {$story_link}\r\n";
         $data = webRequest($story_link,'GET');
         writeFileCombine($html_file ,$data);
-        $html_file = $data; //重新赋值计算
         // NovelModel::killMasterProcess();//退出主程序
         // exit();
     }
