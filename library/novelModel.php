@@ -92,7 +92,7 @@ class NovelModel{
          }
 
           //完结 连载
-         if($store_data['status'] == '连载'){
+         if($store_data['status'] == '连载' || $store_data['status'] == '连载中'){
               $store_data['status'] = '连载中';
          }else if($store_data['status'] == '完结' || $store_data['status'] == '已完结'){
               $store_data['status'] = '已经完本';
@@ -786,6 +786,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             if(isset($matrix[1])){
                 $source = trim($matrix[1]);
             }
+        }
+        if(!$source){
+          $source = 'unknow';//未定义的或者未知的
         }
         return $source;
     }
