@@ -152,6 +152,7 @@ if($info){
 
         // //保存图片到本地==暂时屏蔽不需要
         $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+        // $store_data['save_img'] = $t; //方便查看图片
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
@@ -220,7 +221,6 @@ if($info){
                 printlog('未发现线上数据信息');
                 exit();
             }
-
             //更新小说表的is_async为1，表示已经更新过了不需要重复更新
             //$store_data['is_async'] = 1;
             //对比新旧数据返回最新的更新
@@ -240,7 +240,8 @@ if($info){
             ],
             $store_data);
             //同步当前的章节的基础信息
-            $factory->synChapterInfo($story_id,$another_data);//同步章节内容
+            //同步章节内容
+            $factory->synChapterInfo($story_id,$another_data);
         }else{
 
             //主要需要更新线上的对应的ID

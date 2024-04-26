@@ -969,7 +969,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $infoArr = $return[0] ?? [];
           $info['update_chapter_id'] = $infoArr['id'] ?? 0; //最后一次更新的章节ID
           $info['update_chapter_title'] = $infoArr['chapter_name'] ?? '';//最后一次更新的章节名称
-          $info['update_chapter_time'] = time();
+          $info['update_chapter_time'] = time();//最后的更新时间
       }
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url not like "%biquge34%" limit 1';

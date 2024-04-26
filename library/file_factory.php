@@ -161,23 +161,9 @@ class FileFactory{
                 $val['file_path'] = $filename;
                 $content = readFileData($filename);
                 if(!$content ||$content =='从远端拉取内容失败，有可能是对方服务器响应超时，后续待更新'  || !file_exists($filename)){
-                     // if(!preg_match('/biquge5200/',$val['chapter_link'])){
-                     // }
-                     // $response = $http // 支持http、socks4、socks4a、socks5
-                     //        ->ua('YurunHttp')
-                     //        ->get($val['chapter_link']);
-                    // if( $response->getStatusCode() == 200){
-
-                     if(preg_match('/biquge5200/',$val['chapter_link'])){
-                           $chapter_link = trim($val['chapter_link']);
-                           $chapter_link = str_replace('http://www.paoshu8.infohttps://www.biquge5200.cc','http://www.biquge5200.net',$chapter_link);
-                          $val['chapter_link']  = $chapter_link;
-                     }
                     $val['link_url'] = $val['chapter_link'];
                     $dataList[] =   $val;
-                    // }
                 }else{
-                    // echo $val['id']."\r\n";
                     $sucNum++;
                 }
              }
