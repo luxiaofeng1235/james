@@ -150,6 +150,9 @@ if($info){
 
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
+        if(empty($info[0]['story_id'])){
+            $store_data['story_id']  = $story_id;
+        }
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
 
@@ -211,7 +214,7 @@ if($info){
          //执行相关的章节批处理程序
         $update_id = $store_id ?? 0;
         //更新的条件
-        $where_data = "story_id = '".$story_id."'";
+        $where_data = "store_id = '".$store_id."'";
         //只有获取到章节才去处理小说并且同步到mc_book表操作
         if($item_list){
             //同步小说的基础信息到线上mc_book表信息
@@ -223,7 +226,7 @@ if($info){
             $store_data['pro_book_id'] = $sync_pro_id;
             if(!$sync_pro_id){
 
-                $where_condition = "story_id = '".$story_id."'";
+                $where_condition = "store_id = '".$store_id."'";
                 $no_chapter_data['syn_chapter_status'] = 1;
                 $no_chapter_data['is_async'] = 1;
                 //对比新旧数据返回最新的更新
