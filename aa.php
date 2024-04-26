@@ -11,10 +11,27 @@ require_once($dirname.'/library/file_factory.php');
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
+use Yurun\Util\HttpRequest;
 
+$aa = webRequest('https://www.otcwuxi.com/chapter/14321353111/41889991111.html','GET');
+$res= iconv('gbk','utf-8//ignore', $aa);
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
+exit;
 
+  $http = new HttpRequest;
 
+$response = $http
+                ->acceptEncoding('gzip, deflate')
+                ->get('https://www.otcwuxi.com/chapter/14321353111/41933410111.html');
 
+$con = $response->body();
+echo '<pre>';
+print_R($con);
+echo '</pre>';
+exit;
 
 
 

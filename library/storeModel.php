@@ -175,8 +175,8 @@ class StoreModel{
                 Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
-                                     ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
-                                     ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
+                                     // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+                                     // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
                     $items[]=$response->body();

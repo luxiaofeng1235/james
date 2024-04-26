@@ -1217,7 +1217,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
            //////////////////处理请求的链接end
           foreach($list as $gkey =>$gval){
-            $gval   = array_iconv($gval); //转码，处理
+            @$gval= iconv('gbk','utf-8//ignore', $gval);
             $data = QueryList::html($gval)
                     ->rules($rules)
                     ->query()
@@ -1230,10 +1230,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $store_content = $html['content']  ?? '';// array_iconv($html['content']) : '';
             $meta_data = $html['meta_data']??'';
             $href = $html['href'];
-            // //处理特殊的转码设置
-            // if(preg_match('/mxgbqg/',$gval)){
-            //    $store_content = array_iconv($store_content) ;
-            // }
 
 
             //组装html_path的信息

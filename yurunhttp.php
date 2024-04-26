@@ -39,7 +39,7 @@ Co\run(function () {
             co::sleep(1);
             $http = new HttpRequest();
             $response = $http
-                        ->get('https://www.xsw.tw/book/3.html');
+                        ->get('https://www.otcwuxi.com/chapter/14321353111/41933410111.html');
             var_dump(strlen($response->body()),$response->getStatusCode());
 
             echo  "num ={$i} +++++++++++++++++++++++++++++++++++++++ \r\n";
