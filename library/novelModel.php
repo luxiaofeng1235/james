@@ -1142,7 +1142,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
   /**
    * @note 自动补齐当前的buffer数据信息
    * @param $detail array 抓取到的匹配数据
-   * @param $content string HMTL内容
+   * @param $content string HMTL内容返回的数据
    * @return array
    */
   protected static function bufferMetaData($detail=[], $content=[]){
@@ -1151,13 +1151,18 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       }
       if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网
             if(empty($detail['meta_data']) || empty($detail['href'])){
-                //通过正则取出来对应额连接
-                $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
-                $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
-                preg_match($meta_reg,$content,$meta_link);
-                preg_match($link_reg , $content,$href_link);
-                $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
-                $detail['href'] = $href_link[1] ?? '';
+
+               preg_match('/document\.onkeydown=jumpPage.*?<\/head>/ism',$content,$contentarr);
+               $html = $contentarr[0] ?? '';
+               if($html){
+                   //通过正则取出来对应额连接
+                    $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
+                    $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
+                    preg_match($meta_reg,$html,$meta_link);
+                    preg_match($link_reg , $html,$href_link);
+                    $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
+                    $detail['href'] = $href_link[1] ?? '';
+               }
             }
       }
       return $detail;

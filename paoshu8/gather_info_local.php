@@ -106,11 +106,6 @@ if($info){
                 ->query()
                 ->getData();
     $store_data = $info_data->all();
-    // $arr = array_iconv($store_data['author']);
-    // echo '<pre>';
-    // print_R($arr);
-    // echo '</pre>';
-    // exit;
     if(!empty($store_data)){
 
 
