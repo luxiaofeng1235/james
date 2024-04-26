@@ -12,6 +12,15 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+
+$text_with_entities = "&#160;&#160;&#160;&#160;陈铭也吃了不少这方面的亏。\n";
+$arr  =  preg_replace('/&[#\da-z]+;/i', '', $text_with_entities);
+echo '<pre>';
+dd($arr);
+echo '</pre>';
+exit;
+
+
 // $proxy_data  = StoreModel::getForeignProxy();
 
 // $curlStr= "curl -x socks5://{$proxy_data['ip']}:{$proxy_data['port']} -U \"{$proxy_data['username']}:{$proxy_data['password']}\"  https://www.mxgbqg.com/book/8259/468490317.html";

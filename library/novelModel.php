@@ -1153,8 +1153,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           //重试防止有错误的
           // $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
           $list = StoreModel::swooleCallRequest($list, $chapetList);
-          if(!$list)
-            return [];
+          if(!$list){
+            $list = [];
+          }
            //////////////////处理请求的链接end
 
 

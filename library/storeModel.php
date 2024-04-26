@@ -207,13 +207,13 @@ class StoreModel{
     *
     * @param $content_arr array  请求的HTML数据
     * @param $goods_list array 原始请求的校验数据
+    * @param $field_key string 配置需要从哪个里面获取url
     * @return unnkower
     */
-    public static function swooleCallRequest($contents_arr=[],$goods_list=[]){
+    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$filed_key= 'mobile_url'){
          if(!$contents_arr || !$goods_list){
             return [];
          }
-
         /***************判断是否有空的数据返回 start*****************************/
          $goods_list = array_values($goods_list);
          $errData  =  $sucData  = [];
@@ -232,7 +232,7 @@ class StoreModel{
             echo "有返回需要重新抓取的数据请求啊，会重新去进行请求返回\r\n";
             $successNum = 0;
             $old_num = count($errData);
-            $urls = array_column($errData, 'mobile_url'); //进来先取出来
+            $urls = array_column($errData, $filed_key); //进来先取出来
             while(true){
                 //通过说swoole来完成并发请求，采用协程
                 $curl_contents1 = StoreModel::swooleRquest($urls);
