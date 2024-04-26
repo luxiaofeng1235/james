@@ -83,7 +83,7 @@ if($info){
         printlog('this novel：'.$story_link.' is no local html data');
         echo "no this story files： {$story_link}\r\n";
         //更新为已同步防止重复同步
-        $where_condition = "story_id = '". $info[0]['story_id']."'";
+        $where_condition = "story_id = '". $story_id."'";
         $no_chapter_data['syn_chapter_status'] = 1;
         $no_chapter_data['is_async'] = 1;
         //对比新旧数据返回最新的更新
@@ -108,7 +108,6 @@ if($info){
         }
 
         $store_data['story_link'] = $story_link;
-        $story_id = trim($info[0]['story_id']); //小说的id
         echo "url:".$story_link."||| story_id：".$story_id .PHP_EOL;
         //处理空字符串
         $location = str_replace("\r\n",'',$store_data['location']);
@@ -153,10 +152,6 @@ if($info){
 
         // //保存图片到本地==暂时屏蔽不需要
         $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
-        echo '<pre>';
-        print_R($rt);
-        echo '</pre>';
-        exit;
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
@@ -213,6 +208,13 @@ if($info){
             }
             $store_data['pro_book_id'] = $sync_pro_id;
             if(!$sync_pro_id){
+
+                $where_condition = "story_id = '".$story_id."'";
+                $no_chapter_data['syn_chapter_status'] = 1;
+                $no_chapter_data['is_async'] = 1;
+                //对比新旧数据返回最新的更新
+                $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+
                 echo "未关联线上小说ID\r\n";
                 NovelModel::killMasterProcess();//退出主程序
                 printlog('未发现线上数据信息');
