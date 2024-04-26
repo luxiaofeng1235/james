@@ -131,17 +131,29 @@ public static function Rand_refer(){
       if(!$array)
         return false;
 
-      // $proxy_info = webRequest('https://www.iproyal.net/web_v1/ip/get-ip-v3?app_key=1f64ee4a81f8726bd51765c4748fd6d4&pt=9&num=1&cc=US&state=&city=&life=3&protocol=1&format=json&lb=%5Cr%5Cn','GET');
-      // sleep(1);//主要方式IP获取不到，每次获取都休息一秒
+      // $proxy_info = webRequest('https://api.wandouapp.com/?app_key=e890aa7191c00cd2f641060591c4f1d0&num=1&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
+
+      // // sleep(1);//主要方式IP获取不到，每次获取都休息一秒
       // $tdata = json_decode($proxy_info,true);
-      //  $proxy_data = [];
-      //  $cc = $tdata['data']['list'][0] ??[];
-      // if($cc){
-      //   $t = explode(':',$cc);
-      //   $proxy_data['ip'] = $t[0];
-      //   $proxy_data['port'] = $t[1];
-      // }
+
+      // $proxy_data =  $tdata['data'][0] ?? [];
+      // $proxy_data = [];
+    // echo '<pre>';
+      // print_R($proxy_data);
+      // echo '</pre>';
+      // exit;
       $proxy_data = [];
+
+      ///配置代理，因为其他网站不用代理会直接挂掉，需要加s5代理
+      // $session = StoreModel::createRandStr();
+      // $proxy_data = [
+      //   'ip'  =>  'gw.wandouapp.com',
+      //   'port'  =>  '1000',
+      //   'username'  =>  'r5l77sxt_session-'.$session.'_life-20_pid-0',
+      //   'password'  =>  'uwb5pffx',
+      // ];
+
+
       //随机获取一个代理配置信息
       //伪造referer地址方便去进行伪造
       $referer = self::Rand_refer();

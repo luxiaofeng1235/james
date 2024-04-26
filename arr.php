@@ -6,6 +6,11 @@ require_once(__DIR__.'/library/init.inc.php');
 use QL\QueryList;
 
 
+$str ='<a style="" href="/115/115674/69916409.html">第5章 成功进化成白僵</a>';
+$text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
+preg_match($text_reg, $str,$matches);
+dd($matches);
+
 // $html = QueryList::get('https://www.xsw.tw/book/230000/',null,[
 //             'cache' => '/tmp/',
 //             'cache_ttl' => 87600 // 缓存有效时间，单位：秒，可以不设置缓存有效时间

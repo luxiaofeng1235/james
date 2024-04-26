@@ -671,33 +671,11 @@ function getMobileEmptyProxy(){
  */
 function getProxyInfo(){
 
-	// $proxy = [
-	// 	'ip'        =>  Env::get('PROXY.URL_HOST'), //代理的IP
-	// 	'port'      =>  Env::get('PROXY.PORT'), //代理的端口号
-	// 	'username'  =>  Env::get('PROXY.username'), //用户名
-	// 	'password'  =>  Env::get('PROXY.password'), //密码
-	// ];
-	// return $proxy;
-	//取代理的配置信息
-	// global $redis_data;
-	// $redis_cache_key = getRedisProyKey();
-	// //默认先从配置去取
-	// $api_proxy_data = $redis_data->get_redis($redis_cache_key);
-	// $proxy_data = json_decode($api_proxy_data,true);
-	// return $proxy_data ?? [];
-	// if($api_proxy_data){
-	//      $proxy_data = json_decode($api_proxy_data,true);
-	//      return $proxy_data;
-	// }else{
 	    $url =Env::get('PROXY_GET_URL');
 	    $item = webRequest($url,'GET');
 	    $tscode  = json_decode($item,true);
 	    $proxy_data = $tscode['data']['list'][0] ?? [];
 	    return $proxy_data;
-	    // $redis_data->set_redis($redis_cache_key,json_encode($proxy_data),NovelModel::$redis_expire_time);
-
-	//     return $redis_data;
-	// }
 }
 
 
@@ -965,103 +943,29 @@ function getContenetNew($data){
 	return $arr_list;
 }
 
-/*
- * @param $str 需要处理的路径
- * @param $href 路径
- * @param $meta meta标记信息
- * @return mixed
- */
-function getHtmlUrl($meta,$href){
-	$meta_data = $meta;
-	$real_path = explode('/',$meta_data);
-	$str = $real_path[3] ?? '';
-	$c_data = explode('-',$str);
-	@$link = $href .$c_data[2].'.html';
-	return  $link;
-}
-
-/*
- *  @note 半角和全角转换函数
- *  @param $str 处理的字符串
- * @param $href 第二个参数如果是0,则是半角到全角；如果是1，则是全角到半角
- * @return mixed
- */
-function SBC_DBC($str,$args2=1) {
-	$DBC = Array(
-		'０' , '１' , '２' , '３' , '４' ,
-		'５' , '６' , '７' , '８' , '９' ,
-		'Ａ' , 'Ｂ' , 'Ｃ' , 'Ｄ' , 'Ｅ' ,
-		'Ｆ' , 'Ｇ' , 'Ｈ' , 'Ｉ' , 'Ｊ' ,
-		'Ｋ' , 'Ｌ' , 'Ｍ' , 'Ｎ' , 'Ｏ' ,
-		'Ｐ' , 'Ｑ' , 'Ｒ' , 'Ｓ' , 'Ｔ' ,
-		'Ｕ' , 'Ｖ' , 'Ｗ' , 'Ｘ' , 'Ｙ' ,
-		'Ｚ' , 'ａ' , 'ｂ' , 'ｃ' , 'ｄ' ,
-		'ｅ' , 'ｆ' , 'ｇ' , 'ｈ' , 'ｉ' ,
-		'ｊ' , 'ｋ' , 'ｌ' , 'ｍ' , 'ｎ' ,
-		'ｏ' , 'ｐ' , 'ｑ' , 'ｒ' , 'ｓ' ,
-		'ｔ' , 'ｕ' , 'ｖ' , 'ｗ' , 'ｘ' ,
-		'ｙ' , 'ｚ' , '－' , '　'  , '：' ,
-		'．' , '，' , '／' , '％' , '＃' ,
-		'！' , '＠' , '＆' , '（' , '）' ,
-		'＜' , '＞' , '＂' , '＇' , '？' ,
-		'［' , '］' , '｛' , '｝' , '＼' ,
-		'｜' , '＋' , '＝' , '＿' , '＾' ,
-		'￥' , '￣' , '｀'
-	);
-	$SBC = Array( //半角
-		'0', '1', '2', '3', '4',
-		'5', '6', '7', '8', '9',
-		'A', 'B', 'C', 'D', 'E',
-		'F', 'G', 'H', 'I', 'J',
-		'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y',
-		'Z', 'a', 'b', 'c', 'd',
-		'e', 'f', 'g', 'h', 'i',
-		'j', 'k', 'l', 'm', 'n',
-		'o', 'p', 'q', 'r', 's',
-		't', 'u', 'v', 'w', 'x',
-		'y', 'z', '-', ' ', ':',
-		'.', ',', '/', '%', '#',
-		'!', '@', '&', '(', ')',
-		'<', '>', '"', '\'','?',
-		'[', ']', '{', '}', '\\',
-		'|', '+', '=', '_', '^',
-		'$', '~', '`'
-	);
-	if($args2==0)
-		return str_replace($SBC,$DBC,$str);  //半角到全角
-	if($args2==1)
-		return str_replace($DBC,$SBC,$str);  //全角到半角
-	else
-		return false;
-}
-
 /**
- * @note 替换中文字符|||清洗不必要的特殊字符
- *
- * @param $str 需要处理的字符
- * @return  string
+ * @note 处理返回的路径信息
+ * @param $meta_meta html内容里的meta标签信息
+ * @param $href 具体的路径
+ * @return mixed
  */
-
-function replaceCnWords($str){
-	if(!$str)
+function getHtmlUrl($meta_data='',$href=''){
+	if(!$meta_data){
 		return false;
-	$newStr = preg_replace('/\*/','',$str);
-	$newStr =  preg_replace('/（/', '',$newStr);
-	$newStr =  preg_replace('/）/', '',$newStr);
-	$newStr =  preg_replace('/:/', '',$newStr);
-	$newStr =  preg_replace('/：/', '',$newStr);
-	$newStr =  preg_replace('/>/', '',$newStr);
-	$newStr =  preg_replace('/</', '',$newStr);
-	$newStr =  preg_replace('/？/', '',$newStr);
-	$newStr =  preg_replace('/"/', '',$newStr);
-	$newStr =  preg_replace('/\'/', '',$newStr);
-	$newStr =  preg_replace('/\|/', '',$newStr);
-	$newStr =  preg_replace('/\r\n/','',$newStr);
-	$newStr =SBC_DBC($newStr,1);
-	return $newStr;
+	}
+	// $meta_data = $meta;
+	$link_reg = '/url=(.*)/si'; //匹配含有url=的通配符preg_match($link_reg, $data , $matches);
+	preg_match($link_reg, $meta_data , $matches);
+	$chapterLink ='';
+	//如果匹配到就直接返回不需要任何处理
+	if(isset($matches[1]) && !empty($matches[1])){
+		$urlData = parse_url($matches[1]);
+		$chapterLink = $urlData['path'];
+	}
+	return $chapterLink;
 }
+
+
 
 /**
  * @note 去除首尾字符空格

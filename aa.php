@@ -12,6 +12,232 @@ use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 
+// $proxy_data  = StoreModel::getForeignProxy();
+
+// $curlStr= "curl -x socks5://{$proxy_data['ip']}:{$proxy_data['port']} -U \"{$proxy_data['username']}:{$proxy_data['password']}\"  https://www.mxgbqg.com/book/8259/468490317.html";
+// echo "curl = {$curlStr} \r\n";
+// exit;
+
+ $res = webRequest('https://www.mxgbqg.com/book/30443626/','GET');
+echo $res;
+exit;
+
+$ql = QueryList::get('https://www.27k.net/read/210133/70906298.html');
+$item = $ql->getHtml();
+echo '<pre>';
+print_R($item);
+echo '</pre>';
+exit;
+echo '<pre>';
+print_R($ql);
+echo '</pre>';
+exit;
+$aa = webRequest($urls[0] ,'GET');
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+
+$item = StoreModel::swooleRquest($urls);
+echo '<pre>';
+print_R($item);
+echo '</pre>';
+exit;
+
+$data ="format=html5; url=https://m.mxgbqg.com/book/8259/468490317.html";
+$link_reg = '/url=(.*)/si';
+preg_match($link_reg, $data , $matches);
+print_R($matches);
+exit;
+$data = ' <meta http-equiv="mobile-agent" content="format=xhtml; url=http://m.scccts.com/look/16350353105/192105.html" />';
+
+// $data = 'url=/look/16350353105/';
+$link_reg = '/url=(.*)\"/i';
+preg_match($link_reg, $data , $matches);
+// echo '<pre>';
+// print_R($matches);
+// echo '</pre>';
+// exit;
+// $url = $matches[1];
+// $dd = parse_url($url);
+// echo '<pre>';
+// print_R($dd);
+// echo '</pre>';
+// exit;
+
+
+$urls= [
+  'https://www.scccts.com/look/16350353105/192105.html',
+  'https://www.scccts.com/look/16350353105/34105.html',
+  'https://www.scccts.com/look/43780821105/101370105.html',
+  'https://www.scccts.com/look/15005161105/114900105.html',
+];
+
+$arr = curl_pic_multi::Curl_http($urls);
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
+
+$t = count($urls);
+
+foreach($urls as $key =>$val){
+    $cc = webRequest($val ,'GET');
+    echo '<pre>';
+    print_R($cc);
+    echo '</pre>';
+    exit;
+    echo "num = ".($key+1)." strlen =".strlen($cc)."\t status =".($t ? 'success' : 'error') .PHP_EOL;
+}
+exit;
+exit;
+
+
+$proxy = webRequest('https://api.wandouapp.com/?app_key=e890aa7191c00cd2f641060591c4f1d0&num=1&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
+
+$proxy_ret = json_decode($proxy, true);
+$data = $proxy_ret['data'][0];
+$str = 'curl -x socks5://'.$data['ip'].':'.$data['port'].'   http://www.baidu.com';
+echo $str;
+exit;
+$t = webRequest('https://www.mxgbqg.com/book/91090932/','GET');
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
+
+$str = '网页版章节内容慢，请下载好阅小说app阅读最新内容<br><br>请退出转码页面，请下载好阅小说app 阅读最新章节。<br><br>
+七四小说为你提供最快的假太监：开局被太后养尸更新，第1章 被太后娘娘养尸。https://www.xs74w.com';
+
+preg_match('/网页版章节内容慢，请下载好阅小说app阅读最新内容.*?https:\/\/www\.xs74w\.com/iUs',$str,$matches);
+dd($matches);
+
+$t = 'format=html5; url=http://m.paoshu8.info/info-180703/';
+$arr = explode('/',$t);
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
+preg_match('/url=(.+?).*/',$str,$matches);
+dd($matches);
+die;
+
+$link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
+$text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
+$contents = '<dd><a style="" href="/115/115674/69916372.html">第1章 被太后娘娘养尸</a></dd>';
+$contents = str_replace('style="" ','',$contents);
+preg_match_all($link_reg,$contents,$link_href);//匹配链接
+preg_match_all($text_reg,$contents,$link_text);//匹配文本
+dd($link_text);
+
+// $str= '<script type="application/ld+json">{
+//   "@context": "https://ziyuan.baidu.com/contexts/cambrian.jsonld",
+//   "@id": "https://www.xs74w.com/117/117401/71832525.html",
+//   "appid": "",
+//   "title": "寒门仕子免费阅读,第25章 渔网陷阱-七四小说",
+//   "images": ["https://www.xs74w.com/img/117/117401.jpg"],
+//   "description": "宋天明意外穿越到一个民不聊生，战乱不休，人命比纸轻，每日要为填饱肚子而奔波的大乾乱世。
+// 又阴差阳错被官府许配了三位美妻，乡里之中都以为宋天明会带着三个婆娘饿死街头，却不想，潜龙出于乡野，一发不可收拾，且看宋天明如何以一人之力，在这乱世翻手为云覆手为雨！",
+//   "pubDate": "2023-04-19T17:17:37",
+//   "upDate": "2022-10-18T00:14:52"
+// }
+// </script>';
+
+
+ $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content'];
+
+$html = webRequest('https://www.xs74w.com/17/17019/11331334.html','GET');
+$data = QueryList::html($html)->rules($rules)->query()->getData();
+$data = $data->all();
+
+
+
+if(empty($data['meta_data'])){
+    //通过正则去校验下
+    preg_match('/\"@id\"\:.+?\"(.+?)\"/', $html,$matches);  //只取链接里的某部分的值
+    $link = str_replace(array("",''),'',$matches[1]);
+    //format=html5; url=http://m.paoshu8.info/wapbook-214829-196695764/
+    $moile_data= 'format=html5; url='.$link.'/';
+    $data['meta_data'] = $moile_data;
+}
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+exit;
+//https://www.twking.cc/77_77788/
+// $t= webRequest('http://www.anshuge.com/','GET');
+
+// //237336
+// for ($i=237336; $i < 237336+30; $i++) {
+//   $urls[]= 'https://www.twking.cc/1234_'.$i.'/';
+//   // code...
+//   echo $i;
+//   echo "\r\n";
+// }
+// echo '<pre>';
+// print_R($urls);
+// echo '</pre>';
+// exit;
+// exit;
+
+// foreach(range(1,30) as $v){
+//     // $urls[]='http://www.baidu.com';
+//     $urls[] = 'http://www.twking.cc/quanben_'.$v.'.html';
+// }
+
+// $item = StoreModel::swooleRquest($urls);
+// echo 333;exit;
+
+
+// $aa = '==
+// ==';
+// $aa= preg_replace('/==*\r\n/','==',$aa);
+// dd($aa);
+// preg_match_all('/11*\r\n/',$aa,$matches);
+// dd($matches);
+
+
+// $t = preg_replace('/==[\s\S]*?/', '11', $aa);
+// $aa = preg_replace('/\r\n/','',$aa);
+// echo '<pre>';
+// print_R($aa);
+// echo '</pre>';
+// exit;
+// echo '<pre>';
+// var_dump($t);
+// echo '</pre>';
+// exit;
+// $t = preg_match('/==[\s\S]*?/',$aa,$matches);
+// echo '<pre>';
+// print_R($matches);
+// echo '</pre>';
+// exit;
+
+
+// $urls[]='https://www.twking.cc/237_237365/';
+// $item = StoreModel::swooleRquest($urls);
+
+
+// $html = $item[0] ?? '';
+$html = '<div class="info-chapters flex flex-wrap">
+<a href="https://www.twking.cc/237_237365/121509403.html" title="第1章 臨朝稱制">第1章 臨朝稱制</a><a href="https://www.twking.cc/237_237365/121509406.html" title="2.第2章 絕不辜負">2.第2章 絕不辜負</a><a href="https://www.twking.cc/237_237365/121509423.html" title="2.第2章 絕不辜負">3.第2章 絕不辜負</a></div>';
+$ql = QueryList::html($html);
+
+$list = $ql->find('.info-chapters');
+$contents= $list->html();
+
+
+// $link_reg = '/href=\"([^\"]+)/'; //匹配A连接
+$link_reg = '/<a.+?href=\"(.+?)\".*?>/si';
+$text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
+preg_match_all($link_reg,$contents,$link_href);//匹配链接
+preg_match_all($text_reg,$contents,$link_text);//匹配文本
+
+echo '<pre>';
+print_R($link_href);
+echo '</pre>';
+exit;
+
 
 $files = readFileData('/tmp/page.html');
 $range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range'];

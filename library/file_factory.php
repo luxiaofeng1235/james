@@ -105,7 +105,6 @@ class FileFactory{
             $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
             $info = $this->mysql_conf->fetch($sql,'db_slave');
         }
-
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']); //小说网站id
@@ -182,10 +181,6 @@ class FileFactory{
                     $sucNum++;
                 }
              }
-             // echo '<pre>';
-             // print_R($dataList);
-             // echo '</pre>';
-             // exit;
              if(!$dataList){
                 $this->updateStatusInfo($store_id); //更新状态信息
                 #$this->#$this->updateIndexStatus($store_id);($store_id);//更新首页是否运行的状态
@@ -201,7 +196,7 @@ class FileFactory{
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
-            $limit_size =200;
+            $limit_size =3;
             $items = array_chunk($dataList,$limit_size); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
@@ -235,9 +230,8 @@ class FileFactory{
                     }
                     //保存本地存储数据
                     $this->synLocalFile($download_path,$html_data);
-
+                    exit;
                     echo "\r\n|||||||||||||||| this current page =  (".($k+1)."/{$count_page})\t store_id = {$store_id} \tcomplate \r\n\r\n";
-                      // die;
                     sleep(1);//休息三秒不要立马去请求，防止空数据的发生
                 }else{
                     echo "num：{$a_num} 未获取到数据，有可能是代理过期\r\n";

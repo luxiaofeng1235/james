@@ -123,15 +123,15 @@ class StoreModel{
     */
      public static function getForeignProxy(){
 
-        // $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
-        // $proxy_data = [
-        //     'ip'    =>  'proxy.stormip.cn',//IP地址
-        //     'port'  =>  '1000', //端口
-        //     'username'  =>  'storm-jekines_area-TW_session-'.$rand_str.'_life-2' ,//用户名
-        //     'password'  =>  '123456', //密码
-        // ];
-        // return $proxy_data;
-        $proxy_info = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=TW&state=&city=&life=2&protocol=1&format=json&lb=%5Cr%5Cn','GET');
+        $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
+        $proxy_data = [
+            'ip'    =>  'gw.wandouapp.com',//IP地址
+            'port'  =>  '1000', //端口
+            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-5_pid-0' ,//用户名
+            'password'  =>  'fmkqrbh3', //密码
+        ];
+        return $proxy_data;
+        $proxy_info = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=US&state=&city=&life=2&protocol=1&format=json&lb=%5Cr%5Cn','GET');
         $tdata = json_decode($proxy_info,true);
         $proxy_data = [];
         $proxy_ret = $tdata['data']['list'][0] ??[];
@@ -147,7 +147,8 @@ class StoreModel{
     * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
     * @param $urls array  链接地址
-    * @return  object
+    * @param $tye intger 暂时还没用到 1：按照数据返回 2：返回状态信息
+    * @return  object|unknow
     */
      public static function swooleRquest($urls,$type = 1){
         if(!$urls){
@@ -156,7 +157,8 @@ class StoreModel{
         $urls = array_filter($urls); //防止有空的url存在
         $items = [];
         $exec_start_time = microtime(true);
-        $proxy_data = StoreModel::getForeignProxy();
+        // $proxy_data = StoreModel::getForeignProxy();
+        $proxy_data = [];
         ///开启协程访问
         run(function () use(&$items,$urls,$proxy_data){
             $barrier = Barrier::make();
@@ -171,7 +173,7 @@ class StoreModel{
                 Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
-                                     ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+                                     // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
                                      // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
@@ -230,7 +232,7 @@ class StoreModel{
             echo "有返回需要重新抓取的数据请求啊，会重新去进行请求返回\r\n";
             $successNum = 0;
             $old_num = count($errData);
-            $urls = array_column($errData, 'story_link'); //进来先取出来
+            $urls = array_column($errData, 'mobile_url'); //进来先取出来
             while(true){
                 //通过说swoole来完成并发请求，采用协程
                 $curl_contents1 = StoreModel::swooleRquest($urls);

@@ -74,6 +74,22 @@ return [
             'tag'   => array('meta[property=og:novel:category]','content'),
             'location'  =>  array('.con_top','text'),//小说的面包屑位置
         ],
+         //小说详情替换网站的采集方案
+        'info_replace'  =>[
+            'cover_logo'       =>array('meta[property=og:image]','content'),//小说封面
+            'author'    => array('meta[property=og:novel:author]','content'),//小说作者
+            'title'     =>array('meta[property=og:novel:book_name]','content'),//小说标题
+            'cate_name' =>array('meta[property=og:novel:category]','content'),//分类
+            'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
+            'third_update_time'    =>array('meta[property=og:novel:update_time]','content'), //最近的更新时间
+            'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
+            'intro' =>array('meta[property=og:description]','content'),
+            'tag'   => array('meta[property=og:novel:category]','content'),
+            'location'  =>  array('.path .p','text' ,'', function($location){
+                $str = iconv('gbk', 'utf-8' ,$location);
+                return $str;
+            }),//小说的面包屑位置
+        ],
         //手机端的采集规则
         'mobile_content'   => [
             'first_line'    =>['.body>.text p:eq(0)','text'], //获取第一行
@@ -83,9 +99,23 @@ return [
         ],
         //web采集文章的内容配置
         'content'   => [
-            'content'    =>['#content','html'],
+            'content'    =>['#content','html','-div'],
             'meta_data'       =>['meta[name=mobile-agent]','content'],
             'href'      =>['.con_top a:eq(2)','href'],
+        ],
+        'content_replace'   => [
+            'content'    =>['#content','html'],
+            'meta_data'       =>['meta[http-equiv="mobile-agent"]','content'],
+             'href'      =>['.page_chapter li:eq(0)','html','',function($content){
+                 //匹配正则
+                $link_reg = '/<a.+?href=\"(.+?)\".*>/i';
+                preg_match($link_reg, $content,$matches);
+                $url = '';
+                if(isset($matches[1])){
+                    $url = $matches[1] ??'';
+                }
+                return $url;
+             }],
         ],
     ],
     //台湾站的小说采集规则

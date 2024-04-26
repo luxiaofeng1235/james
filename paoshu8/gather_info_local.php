@@ -44,11 +44,12 @@ $info = NovelModel::getRedisBookDetail($store_id);
 if(empty($info)){
     $info = $mysql_obj->get_data_by_condition('store_id = \''.$store_id.'\'',$table_novel_name);
 }
-$url = Env::get('APICONFIG.PAOSHU_API_URL'); //获取配置的域名信息
-
+$url = Env::get('APICONFIG.PAOSHU_API_URL'); //采集源配置的服务器地址
 
 if($info){
     $story_link = trim($info[0]['story_link']);//小说地址
+    $hostData= parse_url($story_link);
+    $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
     if($info[0]['is_async'] == 1){
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
@@ -57,8 +58,9 @@ if($info){
     }
 
     //定义小说信息的抓取规则
-    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info'];
+    $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['info_replace'];
     $files = Env::get('SAVE_HTML_PATH').DS.'detail_'.$info[0]['story_id'].'.'.NovelModel::$file_type;
+    echo "file_path = {$files} \r\n";
     $item_list  = [];
     if(!$files){
         echo "no this story ---".$story_link."\r\n";
@@ -67,6 +69,8 @@ if($info){
     }
     $html = readFileData($files);
     $html = html_entity_decode($html);
+
+
     if(!$html){
         //记录是否有相关的HTML的数据信息
         printlog('this novel：'.$story_link.' is no local html data');
@@ -81,12 +85,20 @@ if($info){
         NovelModel::killMasterProcess();//退出主程序
         exit();
     }
+
     //爬取相关规则下的类
     $info_data=QueryList::html($html)
                 ->rules($rules)
-                ->query()->getData();
+                ->query()
+                ->getData();
     $store_data = $info_data->all();
     if(!empty($store_data)){
+
+
+        //判断是其他站过来的
+        if(strpos($story_link,'xs74w') &&  !strpos($store_data['cover_logo'] ,'https')){
+            $store_data['cover_logo'] = Env::get('APICONFIG.PAOSHU_NEW_HOST'). $store_data['cover_logo'];
+        }
 
         $store_data['story_link'] = $story_link;
         $story_id = trim($info[0]['story_id']); //小说的id
@@ -101,14 +113,35 @@ if($info){
         //转义标题
         $store_data['title'] = trimBlankSpace($store_data['title']);
         $author = isset($store_data['author']) ?  trimBlankSpace($store_data['author']) : '';
-
         $store_data['author']  = $author;
+        ///判断是否为xs74w网站的数据，因为这个网站的数据没有连载状态给他默认一个
+         if(strpos($story_link,'xs74w')){
+                $diff_time = date('Y-m-d 00:00:00');
+                $unixtime = strtotime($diff_time);
+                //判断当前的时间是否大于最后更新的时间，如果大于就是说明已经完本了
+                if(strtotime($store_data['third_update_time']) &&   $unixtime > $store_data['third_update_time']){
+                    $status = '已经完本';
+                }else{
+                    $status = '连载中';
+                }
+                $store_data['status'] = $status;
+         }else if(strpos($story_link,'mxgbqg')){
+                //完结 连载
+                //兼容老数据
+               if($store_data['status'] == '连载'){
+                    $store_data['status'] = '连载中';
+               }else if($store_data['status'] == '完结'){
+                    $store_data['status'] = '已经完本';
+               }else{
+                    $store_data['status'] = '未知';
+               }
+         }
 
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
         $intro = addslashes($store_data['intro']);//转义 特殊字符
         $intro = cut_str($intro,200); //切割字符串
-        $store_data['intro'] = $intro;
+        $store_data['intro'] = trimBlankLine($intro);
         $store_data['tag'] = str_replace('小说','',$store_data['tag']);
         //执行更新操作
         if($info[0]['createtime'] == 0){
@@ -130,7 +163,6 @@ if($info){
 
         // //保存图片到本地==暂时屏蔽不需要
         $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
-
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
             $now_time = time();
@@ -158,7 +190,7 @@ if($info){
             //清洗掉不需要的字段
             $item_list = NovelModel::cleanArrayData($item_list,['chapter_id']);
             //创建生成json目录结构
-            NovelModel::createJsonFile($store_data,$item_list,0);
+            NovelModel::createJsonFile($store_data,$item_list,0,$referer_url);
         }else{
             //如果没有章节，把对应的章节也改成已处理
             $where_condition = "story_id = '".$story_id."'";

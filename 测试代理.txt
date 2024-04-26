@@ -23,4 +23,4 @@ curl --socks5  43.243.171.202:8012 http://www.baidu.com
 密码: 123456
 
 ###测试台湾站
-curl -x socks5://84.17.37.52:1000 -U "storm-jekines_area-TW:123456" https://www.xsw.tw/book/230000/
+curl -x socks5://84.17.37.52:1000 -U "storm-jekines_area-TW:123456"  https://www.mxgbqg.com/book/91090932/22106863.html

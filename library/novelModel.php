@@ -51,10 +51,10 @@ class NovelModel{
     public static $filterContent = null; //过滤文本中的内容
 
 
-      /**
-    * @note 检测redis代理IP是否可用
-    *
-    */
+    /**
+  * @note 检测redis代理IP是否可用
+  *
+  */
     public static function checkProxyExpire(){
         global $redis_data;
         $redis_key = Env::get('ZHIMA_REDIS_KEY');
@@ -64,6 +64,33 @@ class NovelModel{
             return 1; //代理可用
         }
         $content = $redis_data->get_redis($tag);
+    }
+
+
+
+    /**
+  * @note 转换编码格式
+  *
+  */
+    public static function iconv_utf8($data){
+         if(!$data){
+            return false;
+        }
+        if(count($data) == count($data,1)){
+            foreach($data as &$val){
+                //转换数组对象
+                $val =iconv('gbk','utf-8',$val);
+            }
+        }else{
+            //处理二维数组的转换处理
+            foreach($data as $key =>$val){
+                 foreach($val as &$v){
+                    $v = $val =iconv('gbk','utf-8',$v);
+                 }
+                 $data[$key] = $val; //需要赋值一下，才能生效
+            }
+        }
+        return $data;
     }
 
 
@@ -336,6 +363,7 @@ class NovelModel{
         return '';
       }
 
+      $html = array_iconv($html);
 
 // $subject = '<a href="1233.php">abc
 // 测试</a>';   // 假设这是需要匹配的字符串
@@ -369,11 +397,18 @@ class NovelModel{
       $title = str_replace('$','\$',$title);
       $title = str_replace('^','\^',$title);
       $title = str_replace('|','\|',$title);
-
+      //《我在古代办妇联》正文卷
+      //《我的女装成长日常》正文卷
+      //我的女装成长日常
       preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if(isset($list[0]) && !empty($list)){
            $contents = $list[0] ?? [];
            if($contents){
+
+              ////替换style的样式标签，防止采集不到数据
+              // $contents = str_replace('style="" ','',$contents);
+              $contents= str_replace('href =','href=',$contents);
+
               //处理中间的换行字符,不然匹配会出问题
               preg_match_all($link_reg,$contents,$link_href);//匹配链接
               preg_match_all($text_reg,$contents,$link_text);//匹配文本
@@ -571,11 +606,13 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
    }
 
    /**
-  * 替换广告
-  * @param string $str
+  * @note 替换广告
+  * @param string $str 小说内容
+  * @param $referer_url string 回调域名地址
+  * @param $html_path  具体的章节目录，方便处理过滤
   * @return $string
   */
-   public static function  replaceContent($str){
+   public static function replaceContent($str,$referer_url,$html_path){
     if(!$str)
       return false;
      global $advertisement;
@@ -589,6 +626,28 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
               $str= str_replace($matches[0],'',$str);
           }
       }
+
+
+      //////////////////////////广告和标签相关
+
+      //过滤具体的html标签
+      $str = preg_replace('/<script.*?>.*?<\/script>/ism','',$str);
+      $str = preg_replace('/<br><br><br>/','',$str); //去除三个BR标签，没啥用
+      //过滤网站中存在的广告
+
+      $hostUrl = parse_url($referer_url);
+      $url = trim($hostUrl['host']); //只需要不带https或者http域名的
+      $url = preg_replace('/\//','\/',$url) ;
+      $url = preg_replace('/\./','\.',$url);
+      $mobile_url = str_replace('www','m',$url); //移动端的地址
+      $text_reg="/请记住本书首发域名：{$url}.*?{$mobile_url}/iUs";
+      # $text_reg1 ='/请记住本书首发域名.*?https:\/\/www\.xs74w\.com/iUs'
+      // $str='请记住本书首发域名：www.mxgbqg.com。梦想文学网手机版阅读网址：m.mxgbqg.com';
+      $str = preg_replace($text_reg, '', $str);
+
+      $chapter_link = $referer_url . $html_path; //拼接对应的文章连
+       //去除广告中的网页链接 -- (https://www.mxgbqg.com/book/91090932/22106863.html) ,每个章节里都有这样的一段话
+      $str = str_replace("({$chapter_link})",'',$str);
       return $str;
    }
 
@@ -677,8 +736,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       }
       //基准对比时间
       if(!file_exists($filename)){
-          $res = curl_pic_multi::Curl_http([$url]);//同步图片信息
-          $img_con = $res[0] ?? '';
+          $res = webRequest($url  ,'GET'); //利用图片信息来下载
+          // $res = curl_pic_multi::Curl_http([$url]);//同步图片信息
+          $img_con = $res ?? '';
           @$t=file_put_contents($filename, $img_con);
       }
       return $filename;
@@ -725,51 +785,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           }
       }
       return $novelList;
-    }
-
-
-    /**
-    * @note 通过curl下载图片
-    *
-    * @param $title string  小说名称
-    * @param $author string 作者名称
-    * @param $url string URL图片信息
-    * @param $mysql_obj string 连接句柄
-    * @return string
-    */
-    public static function saveImgByCurl($url,$title ='',$author=''){
-        if(!$url){
-            return false;
-        }
-      $save_img_path = Env::get('SAVE_IMG_PATH');
-      if(!is_dir($save_img_path)){
-          createFolders($save_img_path);
-      }
-      //转换标题和作者名称按照第一个英文首字母保存
-      if($title && $author){
-          $imgFileName = self::getFirstImgePath($title,$author ,$url);
-      }else{
-          //默认从规则里url取
-          $t= explode('/',$url);
-          $imgFileName = end($t);
-      }
-      //实际保存的图片地址
-      $filename = $save_img_path . DS . $imgFileName;
-      $proxy_server = self::getProxyItem();//获取代理配置、
-      //  $res = MultiHttp::curlGet([$url],null,true);
-      // $img_con = $res[0] ?? '';
-      // header("Content-type: application/octet-stream");
-      // header("Accept-Ranges: bytes");
-      // header("Accept-Length: 348");
-      // header("Content-Disposition: attachment; filename=".$imgFileName);
-      // $shell_cmd ='curl  -H "Accept: image/jpeg"  -H Accept-Encoding:gzip,defalte -o image.jpg  --socks5 '.$proxy_server.' '.$url;
-      // echo '<pre>';
-      // print_R($shell_cmd);
-      // echo '</pre>';
-      // exit;
-      // shell_exec($shell_cmd);
-      // echo 1;die;
-      return 1;
     }
 
 
@@ -1010,9 +1025,11 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
     *
     * @param $data 预处理的数据
     * @param $mysql_obj string 连接句柄
+    * @param $pro_book_id int 线上小说ID
+    * @param $referer_url string 回调地址
     * @return string
     */
-  public static function createJsonFile($info=[],$data=[],$pro_book_id = 0){
+  public static function createJsonFile($info=[],$data=[],$pro_book_id = 0,$referer_url=''){
     if(!$data || !$info){
       return false;
     }
@@ -1038,7 +1055,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
          $json_list[] = [
                 'id'    =>$key+1 ,
                 'sort'  =>$key+1,
-                'chapter_link'  =>Env::get('APICONFIG.PAOSHU_HOST') . $val['link_url'],
+                'chapter_link'  =>$referer_url . $val['link_url'],
                 'chapter_name'  =>$val['link_name'],
                 'vip'   =>  0,
                 'cion'  =>  0,
@@ -1060,6 +1077,19 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       return $json_list;
   }
 
+    /**
+     * @note 解析当前url的域名
+     * @param $url string url地址
+     * @return array
+     */
+  public static function urlHostData($url){
+     if(!$url)
+      return false;
+    $hostData= parse_url($url);
+    $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
+    return $referer_url;
+  }
+
   /*
      * @param $txt_path string 存储的路径
      * @param $data array 需要处理的章节列表
@@ -1071,7 +1101,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
         // dd($txt_path);
           $chapter_list=[];
           foreach($data as $key =>$val){
-             //章节的连接
+            //获取请求的域名
+            $referer_url = self::urlHostData($val['chapter_link']);
+              //章节的连接
             $mobilePath = $val['link_url'] ??'';
             $chapetList[$mobilePath] = [
                 //拼装移动端的地址
@@ -1081,26 +1113,28 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
                 'mobile_url'  => $val['chapter_link'], //兼容老数据
                 'chapter_mobile_link' => $val['chapter_link'],
              ];
-            $t_url[]=Env::get('APICONFIG.PAOSHU_HOST'). $val['link_url'];
+            $t_url[]=$referer_url. $val['link_url'];
           }
+
+
           global $urlRules;
           //获取采集的标识
           $valid_curl ='curl';
-          $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content'];
+          $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['content_replace'];
           //开启多线程请求,使用当前代理IP去请求，牵扯到部署需要再境外服务器
-
-
           //////////////////处理请求的链接start
-          $detail_proxy_type =ClientModel::getCurlRandProxy();//基础小说的代理IP
-          $list = curl_pic_multi::Curl_http($t_url,$detail_proxy_type);
+          // $detail_proxy_type =ClientModel::getCurlRandProxy();//基础小说的代理IP
+          $list= StoreModel::swooleRquest($t_url);
+          // $list = curl_pic_multi::Curl_http($t_url,$detail_proxy_type);
+
           //获取随机的代理IP
-          $rand_str = ClientModel::getCurlRandProxy();
+          // $rand_str = ClientModel::getCurlRandProxy();
           //重试防止有错误的
-          $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
+          // $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
+          $list = StoreModel::swooleCallRequest($list, $chapetList);
           if(!$list)
             return [];
            //////////////////处理请求的链接end
-
 
 
           foreach($list as $gkey =>$gval){
@@ -1108,9 +1142,34 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $data = QueryList::html($gval)->rules($rules)->query()->getData();
             $html = $data->all();
 
-            $store_content = $html['content'] ?? '';
+
+            $store_content = $html['content']  ?? '';// array_iconv($html['content']) : '';
+
             $meta_data = $html['meta_data']??'';
             $href = $html['href'];
+
+            if(preg_match('/mxgbqg/',$gval)){
+               $store_content = array_iconv($store_content) ;
+            }
+
+            //format=html5; url=https://www.xs74w.com/info-69916372/  --xs74组装的数据
+            //format=html5; url=http://m.paoshu8.info/info-180703/ --paoshu8的数据
+            //说明是某个平台的数据没有取到，就用这个规则
+            if(preg_match('/xs74w/',$gval) &&  empty($meta_data)){
+                  //通过正则去校验下
+                  preg_match('/\"@id\"\:.+?\"(.+?)\"/', $gval,$matches);  //只取链接里的某部分的值
+                  $link = str_replace(array("",''),'',$matches[1]);
+
+                  $urlData = parse_url($link);
+                  $urlData= explode('/',$urlData['path']);
+                  $lastElement = array_slice($urlData, -1)[0];
+                  $cid = preg_replace('/\.html/','',$lastElement);
+                  //根据对应的数据返回拼接
+                  $mobile_data = "format=html5; url=".Env::get('APICONFIG.PAOSHU_NEW_HOST')."/info-{$cid}";
+                  $meta_data = $mobile_data;
+              }
+
+
             //组装html_path的信息
             $html_path = getHtmlUrl($meta_data,$href);
             if(empty($meta_data) || empty($href) || empty($gval)){
@@ -1119,10 +1178,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
                 // print_R($gval);
                 // echo '</pre>';
                 // echo "000000000000000000000000000000\r\n";
-          }
-
+            }
             //替换内容里的广告
-            $store_content = NovelModel::replaceContent($store_content);
+            $store_content = NovelModel::replaceContent($store_content,$referer_url , $html_path);
             //如果确实没有返回数据信息，先给一个默认值
             if(!$store_content || empty($store_content)){
                 $store_content ='未完待续...';
@@ -1131,7 +1189,8 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
               $store_content = str_replace(array("\r\n","\r","\n"),"",$store_content);
               //替换文本中的P标签
               $store_content = str_replace("<p>",'',$store_content);
-              $store_content = str_replace("</p>","\n\n",$store_content);
+              $store_content = str_replace("</p>","\n\n",$store_content); //如果内容是P标签，用P来替换
+              $store_content = str_replace("<br>","\n",$store_content);//如果内容是br标签用br来进行替换
               //替换try{.....}cache的一段话JS这个不需要了,还有一些特殊字符
               $store_content = preg_replace('/{([\s\S]*?)}/','',$store_content);
               $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
