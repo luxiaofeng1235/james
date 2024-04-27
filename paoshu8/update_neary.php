@@ -38,10 +38,6 @@ $update_list = QueryList::html($pageList)
                 ->range($range_update)
                 ->query()
                 ->getData();
-echo '<pre>';
-print_R($update_list);
-echo '</pre>';
-exit;
 $update_list = $update_list->all();
 
 //最新入库的列表
@@ -51,6 +47,10 @@ $ruku_list = QueryList::html($pageList)
                 ->query()
                 ->getData();
 $ruku_list = $ruku_list->all();
+echo '<pre>';
+print_R($ruku_list);
+echo '</pre>';
+exit;
 
 //合并数据
 $novelList = array_merge($update_list , $ruku_list) ;

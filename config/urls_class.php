@@ -42,8 +42,9 @@ return [
             'author'    =>  ['.s5','text'],//作者名称
              //存储对应的story_id
             'story_id'  =>['.s2 a','href' , '',function($item){
-                $res = substr($item ,1,-1);
-                return $res;
+                preg_match('/\d+/', $item,$matches);
+                $story_id = $matches[0] ?? 0;
+                return $story_id;
             }], //存一下对应的连接
              'nearby_chapter'  =>['.s30','text'],
 
