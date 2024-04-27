@@ -1214,12 +1214,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           }
 
 
-
-
-          // 自定义回调函数（只移除空字符串和null值）
-          $t_url = array_filter($t_url, function($value) {
-              return ($value !== null && $value !== '');
-          });
+          // // 自定义回调函数（只移除空字符串和null值）
+          // $t_url = array_filter($t_url, function($value) {
+          //     return ($value !== null && $value !== '');
+          // });
 
 
 

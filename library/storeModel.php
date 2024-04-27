@@ -128,7 +128,7 @@ class StoreModel{
         $proxy_data = [
             'ip'    =>  'gw.wandouapp.com',//IP地址
             'port'  =>  '1000', //端口
-            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-2_pid-0' ,//用户名
+            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-5_pid-0' ,//用户名-让代理存活5分钟
             'password'  =>  'fmkqrbh3', //密码
         ];
 
@@ -185,7 +185,7 @@ class StoreModel{
                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
                                      ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
-                    $hostData = parse_url($urls[$i]);
+                    $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
                     $items[$hostData['path']]=$response->body();
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
@@ -217,7 +217,7 @@ class StoreModel{
     * @param $field_key string 配置需要从哪个里面获取url
     * @return unnkower
     */
-    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$filed_key= 'mobile_url'){
+    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$field_key= 'mobile_url'){
          if(!$contents_arr || !$goods_list){
             return [];
          }
@@ -244,18 +244,27 @@ class StoreModel{
             echo "有返回为空或者异常数据的数据请求，会重新去进行请求返回\r\n";
             $successNum = 0;
             $old_num = count($errData);
-            $urls = array_column($errData, $filed_key); //进来先取出来
+            $urls = array_column($errData, $field_key); //进来先取出来,根据上面的取出来
             while(true){
+
                 //通过说swoole来完成并发请求，采用协程
                 $curl_contents1 = StoreModel::swooleRquest($urls);
+                // echo '<pre>';
+                // print_R($curl_contents1);
+                // echo '</pre>';
+                // echo '<pre>';
+                // print_R($goods_list);
+                // echo '</pre>';
+                // exit;
+                // exit;
                 $temp_url =[];//设置中间变量
                 foreach($curl_contents1 as $tkey=> $tval){
                     if(empty($tval) || $tval == ''){//为空的情况
-                        echo "获取数据为空，会重新抓取======================{$urls[$tkey]}\r\n";
-                        $temp_url[] =$urls[$tkey];
+                        echo "获取数据为空，会重新抓取======================\r\n";
+                        $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //取出来当前的连接
                      }else if(!preg_match('/id="content"/',$tval)) {//是否存在502的情况
-                        echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
-                        $temp_url[] =$urls[$tkey];
+                        echo "有断章，会重新抓取======================\r\n";
+                        $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //直接取出来当前的连接
                      }else{//正常的返回
                         $repeat_data[$tkey] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
