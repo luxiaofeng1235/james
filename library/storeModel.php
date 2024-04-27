@@ -225,12 +225,10 @@ class StoreModel{
          $errData  =  $sucData  = [];
          foreach($contents_arr as $key => $val){
             if(empty($val) || $val == ''){//空数据返回
-                 echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
                 $errData[] =$goods_list[$key] ?? [];
             }else if(!preg_match('/id="content"/',$val) ){//断章处理，包含有502的未响应都会
-                echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
-                $temp_url[] =$urls[$tkey];
-            }else{
+                $errData[] =$goods_list[$key] ?? [];
+            }else{//正常的数据返回
                 $sucData[] = $val;
             }
          }
