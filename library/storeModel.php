@@ -274,6 +274,10 @@ class StoreModel{
         echo "repeat_data-num = ".count($repeat_data).PHP_EOL;
         $returnList = array_merge($sucData , $repeat_data);
         echo "all-return-num = ".count($returnList).PHP_EOL;
+        if(count($sucData) +count($repeat_data) != count($returnList) ){
+            echo "数组返回数量不对，请检车代码逻辑";
+            exit();
+        }
         return $returnList;
     }
 
