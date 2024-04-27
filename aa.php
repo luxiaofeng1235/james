@@ -13,6 +13,26 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
+$str = '<script>lastread.set(mybookid, zzid, \'同时2穿越，铸就真理之门 第59章 系统，翼（求收藏）\', \'看书的龙\', 7, bookid,"/chapter/66246161111/","/chapter/66246161111/59123211.html");</script>
+<div class="footer">
+  <div class="footer_cont">
+  <a href="/sitemap.xml">sitemap</a>
+  <p>本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
+  <p>Copyright &copy; 2012 笔趣阁 All Rig3hts Reserved.11</p>
+  <br /><br />
+  </div>
+</div>';
+$reg = '/lastread\.set.*<\/script>/';
+preg_match($reg,$str,$matches);
+if(isset($matches[0])){
+  $list = $matches[0] ?? '';
+  preg_match('/\"\,\"\/chapter\/.*\.html/',$list,$dd);
+  $aa = $dd[0] ?? '';
+  $aa = str_replace('"','',$aa);
+  $aa = str_replace(',','',$aa);
+  dd($aa);
+}
+
 $aa = webRequest('https://www.otcwuxi.com/chapter/14321353111/41889991111.html','GET');
 $res= iconv('gbk','utf-8//ignore', $aa);
 echo '<pre>';

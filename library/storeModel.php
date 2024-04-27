@@ -185,8 +185,9 @@ class StoreModel{
                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
                                      ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
+                    $hostData = parse_url($urls[$i]);
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
-                    $items[]=$response->body();
+                    $items[$hostData['path']]=$response->body();
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
                     $str ="async child-fork-process num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
                     echo $str ."\r\n";
@@ -197,7 +198,7 @@ class StoreModel{
                         echo '</pre>';
                         echo "\r\n";
                     }
-                    System::sleep(2);
+                    System::sleep(1);
                     $count++;
                 });
             }
@@ -220,8 +221,9 @@ class StoreModel{
          if(!$contents_arr || !$goods_list){
             return [];
          }
+
         /***************判断是否有空的数据返回 start*****************************/
-         $goods_list = array_values($goods_list);
+         // $goods_list = array_values($goods_list);
          $errData  =  $sucData  = [];
          foreach($contents_arr as $key => $val){
             if(empty($val) || $val == ''){//空数据返回
@@ -229,7 +231,7 @@ class StoreModel{
             }else if(!preg_match('/id="content"/',$val) ){//断章处理，包含有502的未响应都会
                 $errData[] =$goods_list[$key] ?? [];
             }else{//正常的数据返回
-                $sucData[] = $val;
+                $sucData[$key] = $val; //需要保存对应的key
             }
          }
         /***************判断是否有空的数据返回 end*****************************/
@@ -255,7 +257,7 @@ class StoreModel{
                         echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
                         $temp_url[] =$urls[$tkey];
                      }else{//正常的返回
-                        $repeat_data[] = $tval;
+                        $repeat_data[$tkey] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
                         unset($curl_contents1[$tkey]);
                         $successNum++;
@@ -263,7 +265,7 @@ class StoreModel{
                 }
                 $urls = $temp_url; //起到指针的作用，每次只存失败的连接
                 $urls = array_values($urls);//重置键值，方便查找
-                $curl_contents1 =array_values($curl_contents1);//获取最新的数组
+                // $curl_contents1 =array_values($curl_contents1);//获取最新的数组
                 if($old_num == $successNum){
                     echo "数据清洗完毕等待入库\r\n";
                     break;

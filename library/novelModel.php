@@ -634,8 +634,9 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
   * @return $string
   */
    public static function replaceContent($str,$referer_url,$html_path){
-    if(!$str)
-      return false;
+      if(!$str){
+        $str = '';
+      }
      global $advertisement;
       self::$filterContent = $advertisement['content'] ?? [];
       if(!self::$filterContent)
@@ -1150,22 +1151,35 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       if(!$detail &&  !$content){
           return false;
       }
-      if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网
-            if(empty($detail['meta_data']) || empty($detail['href'])){
+      // if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网
+      //       if(empty($detail['meta_data']) || empty($detail['href'])){
+      //         //匹配这一段开头的数据jumppage到</heade>中间的内容
+      //          preg_match('/document\.onkeydown=jumpPage.*?<\/head>/ism',$content,$contentarr);
+      //          $html = $contentarr[0] ?? '';
+      //          if($html){
+      //              //通过正则取出来对应额连接
+      //               $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
+      //               $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
+      //               preg_match($meta_reg,$html,$meta_link);
+      //               preg_match($link_reg , $html,$href_link);
+      //               $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
+      //               $detail['href'] = $href_link[1] ?? '';
+      //          }
+      //       }
+      // }
+      $reg = '/lastread\.set.*<\/script>/';
+      preg_match($reg,$content,$matches);
+      $results ='';
+      if(isset($matches[0])){
+          $list = $matches[0] ?? '';
+          preg_match('/\"\,\"\/chapter\/.*\.html/',$list,$chapterMatches);
+          $results = $chapterMatches[0] ?? '';
 
-               preg_match('/document\.onkeydown=jumpPage.*?<\/head>/ism',$content,$contentarr);
-               $html = $contentarr[0] ?? '';
-               if($html){
-                   //通过正则取出来对应额连接
-                    $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
-                    $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
-                    preg_match($meta_reg,$html,$meta_link);
-                    preg_match($link_reg , $html,$href_link);
-                    $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
-                    $detail['href'] = $href_link[1] ?? '';
-               }
-            }
+          $results = str_replace('"','',$results);
+          $results = str_replace(',','',$results);
       }
+      $detail['meta_data'] = $results;
+
       return $detail;
 
   }
@@ -1194,8 +1208,14 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
                 'mobile_url'  => $val['chapter_link'], //兼容老数据
                 'chapter_mobile_link' => $val['chapter_link'],
              ];
-            $t_url[]=$referer_url. $val['link_url'];
+            // $t_url[]=$referer_url. $val['link_url'];
           }
+          $t_url = array_keys($chapetList);
+
+          foreach($t_url as &$urlval){
+              $urlval = $referer_url . $urlval;
+          }
+          $t_url =array_unique($t_url);
 
           global $urlRules;
           //获取采集的标识
@@ -1205,34 +1225,49 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           //////////////////处理请求的链接start
           // $detail_proxy_type =ClientModel::getCurlRandProxy();//基础小说的代理IP
           $list= StoreModel::swooleRquest($t_url);
+
           // $list = curl_pic_multi::Curl_http($t_url,$detail_proxy_type);
           //获取随机的代理IP
           // $rand_str = ClientModel::getCurlRandProxy();
           //重试防止有错误的
           // $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
           $list = StoreModel::swooleCallRequest($list, $chapetList);
-
+          // echo '<pre>';
+          // print_R($list);
+          // echo '</pre>';
+          // echo "num = ".count($list).PHP_EOL;
+          // exit;
+          // echo "===== count:".count($list).PHP_EOL;
+          // exit;
            //////////////////处理请求的链接end
+          $allnum = 0;
           foreach($list as $gkey =>$gval){
-            @$gval= iconv('gbk','utf-8//ignore', $gval);
+            $gval= iconv('gbk','utf-8//ignore', $gval);
             $data = QueryList::html($gval)
                     ->rules($rules)
                     ->query()
                     ->getData();
+
             $html = $data->all();
 
-            //自动补全meta连接信息连接走下面的逻辑
-            $html  = NovelModel::bufferMetaData($html,$gval);
+            // //自动补全meta连接信息连接走下面的逻辑
+            // $html  = NovelModel::bufferMetaData($html,$gval);
+           $store_content = $html['content']  ?? '';// array_iconv($html['content']) : '';
+            // $meta_data = $html['meta_data']??'';
+            // $href = $html['href'];
+            // if(!empty($meta_data)){
+            //   $allnum++;
+            // }
+            // echo "gkey =".($gkey+1)."\t meta_data = {$meta_data}  \t len = ".strlen($gval)."\r\n";
 
-            $store_content = $html['content']  ?? '';// array_iconv($html['content']) : '';
-            $meta_data = $html['meta_data']??'';
-            $href = $html['href'];
 
 
             //组装html_path的信息
-            $html_path = getHtmlUrl($meta_data,$href);
+            // $html_path = getHtmlUrl($meta_data,$gval);
+            // $html_path = $meta_data ;
             //替换内容里的广告
-            $store_content = NovelModel::replaceContent($store_content,$referer_url , $html_path);
+            $store_content = NovelModel::replaceContent($store_content,$referer_url , $gkey);
+
             //如果确实没有返回数据信息，先给一个默认值
             if(!$store_content || empty($store_content)){
                 $store_content ='未完待续...';
@@ -1248,8 +1283,15 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
               $store_content = preg_replace('/try\scatch\(ex\)/','',$store_content);
               $store_content = preg_replace('/content1()/','',$store_content);
             }
-            $store_detail[$html_path] = $store_content;
+            // $store_detail[$html_path] = $store_content;
+            $store_detail[$gkey] = $store_content;
           }
+          // echo '<pre>';
+          // print_R($store_detail);
+          // echo '</pre>';
+          // echo "store_detail = ".count($store_detail). PHP_EOL;
+          // exit;
+          // exit;
           $allNovelList =[];
           if(!empty($store_detail)){
               foreach($store_detail as $gtkey=>$gtval){

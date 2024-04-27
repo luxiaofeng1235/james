@@ -946,20 +946,38 @@ function getContenetNew($data){
 /**
  * @note 处理返回的路径信息
  * @param $meta_meta html内容里的meta标签信息
- * @param $href 具体的路径
+ * @param  $html_contents string html页面信息
  * @return mixed
  */
-function getHtmlUrl($meta_data='',$href=''){
+function getHtmlUrl($meta_data='',$html_contents=''){
 	if(!$meta_data){
+		echo "1111111111111111111\r\n";
 		return false;
 	}
 	//如果没有解析到url=就用原来的做返回
-	if(!strpos($meta_data,'url=')){
-		return $meta_data;
-	}
+	// if(!strpos($meta_data,'url=')){
+	// 	echo '<pre>';
+	// 	print_R($html_contents);
+	// 	echo '</pre>';
+	// 	echo "**************************************\r\n";
+	// 	echo '<pre>';
+	// 	print_R('ccc' . $meta_data);
+	// 	echo '</pre>';
+
+	// 	echo "2222222222222222222\r\n";
+	// 	exit;
+	// 	return $meta_data;
+	// }
 	// $meta_data = $meta;
-	$link_reg = '/url=(.*)/si'; //匹配含有url=的通配符preg_match($link_reg, $data , $matches);
+	echo '<pre>';
+	print_R($meta_data);
+	echo '</pre>';
+	$link_reg = '/zzurl=(.*)/si'; //匹配含有url=的通配符preg_match($link_reg, $data , $matches);
 	preg_match($link_reg, $meta_data , $matches);
+	echo '<pre>';
+	print_R($matches);
+	echo '</pre>';
+	exit;
 	$chapterLink ='';
 	//如果匹配到就直接返回不需要任何处理
 	if(isset($matches[1]) && !empty($matches[1])){
