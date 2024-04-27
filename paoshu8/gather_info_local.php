@@ -50,10 +50,15 @@ if($info){
     $hostData= parse_url($story_link);
 
     $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
-
     $story_id = trim($info[0]['story_id']);
     $ret_story_id = '';
-    preg_match('/\d+/',$hostData['path'],$retMatch);
+
+     if(strpos($hostData['path'], '_')){
+         $retMatch[] = substr($hostData['path'], 1,-1);
+     }else{
+        preg_match('/\d+/',$hostData['path'],$retMatch);
+     }
+
     $url_story_id = $retMatch[0] ??'';
     //防止story_id不一致，重新覆盖
     if(empty($story_id) || $story_id!= $url_story_id){
@@ -90,7 +95,6 @@ if($info){
     }
     $html = readFileData($html_file);
     $html = html_entity_decode($html);
-
     if(!$html ){
         //记录是否有相关的HTML的数据信息
         printlog('this novel：'.$story_link.' is no local html data');

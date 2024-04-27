@@ -399,6 +399,7 @@ class NovelModel{
         return '';
       }
       $html = array_iconv($html); //转换编码格式
+
       $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
@@ -420,13 +421,21 @@ class NovelModel{
       $title = str_replace('$','\$',$title);
       $title = str_replace('^','\^',$title);
       $title = str_replace('|','\|',$title);
+
+      $contents = '';
+      //<dt>《毒誓一九四一》正文</dt>
+      //兼容这种带正文的正则
+      if(preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$with_content)){
+          $contents = $with_content[0] ?? [];
+      }else if(preg_match('/<div id=\"list\".*?>.*?<\/dl>/ism',$html ,$list)){
+          $contents = $list[0] ?? [];
+      }
       //《我在古代办妇联》正文卷
       //《我的女装成长日常》正文卷
       //我的女装成长日常
       // preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
-      preg_match('/<div id=\"list\".*?>.*?<\/dl>/ism',$html ,$list);
-      if(isset($list[0]) && !empty($list)){
-           $contents = $list[0] ?? [];
+      if($contents){
+           // $contents = $list[0] ?? [];
            if($contents){
               ////替换style的样式标签，防止采集不到数据
               $contents= str_replace('href =','href=',$contents);
@@ -1213,7 +1222,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
              $t_url[]=$val['chapter_link'];
           }
 
-
           // // 自定义回调函数（只移除空字符串和null值）
           // $t_url = array_filter($t_url, function($value) {
           //     return ($value !== null && $value !== '');
@@ -1229,7 +1237,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           //////////////////处理请求的链接start
           // $detail_proxy_type =ClientModel::getCurlRandProxy();//基础小说的代理IP
           $list= StoreModel::swooleRquest($t_url);
-
           // $list = curl_pic_multi::Curl_http($t_url,$detail_proxy_type);
           //获取随机的代理IP
           // $rand_str = ClientModel::getCurlRandProxy();
@@ -1245,13 +1252,13 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           // exit;
            //////////////////处理请求的链接end
           $allnum = 0;
+
           foreach($list as $gkey =>$gval){
             $gval= iconv('gbk','utf-8//ignore', $gval);
             $data = QueryList::html($gval)
                     ->rules($rules)
                     ->query()
                     ->getData();
-
             $html = $data->all();
 
             // //自动补全meta连接信息连接走下面的逻辑
@@ -1290,11 +1297,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             // $store_detail[$html_path] = $store_content;
             $store_detail[$gkey] = $store_content;
           }
-          // echo '<pre>';
-          // print_R($store_detail);
-          // echo '</pre>';
-          // echo "store_detail = ".count($store_detail). PHP_EOL;
-          // exit;
           // exit;
           $allNovelList =[];
           if(!empty($store_detail)){
