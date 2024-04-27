@@ -47,10 +47,6 @@ $ruku_list = QueryList::html($pageList)
                 ->query()
                 ->getData();
 $ruku_list = $ruku_list->all();
-echo '<pre>';
-print_R($ruku_list);
-echo '</pre>';
-exit;
 
 //合并数据
 $novelList = array_merge($update_list , $ruku_list) ;
@@ -58,6 +54,10 @@ $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
+echo '<pre>';
+print_R($novelList);
+echo '</pre>';
+exit;
 // $novelList = array_slice($novelList, 1, 1); //测试
 
 //同步小说目录详情到本地
