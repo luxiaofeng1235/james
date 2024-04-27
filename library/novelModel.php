@@ -1147,7 +1147,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
    * @return array
    */
   protected static function bufferMetaData($detail=[], $content=[]){
-      if(!$detail || !$content){
+      if(!$detail &&  !$content){
           return false;
       }
       if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网

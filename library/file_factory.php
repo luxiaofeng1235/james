@@ -191,6 +191,11 @@ class FileFactory{
                 // $html_data = ClientModel::getClientContents($v,$store_id,$download_path);
                 // $html_data = getStoryCotents($v,0,$download_path);
                 $html_data= NovelModel::getDataListItem($v,$download_path);
+
+                $aa = array_values($html_data);
+                echo '<pre>';
+                print_R($aa);
+                echo '</pre>';
                 echo count($html_data);
                 die;
                 // echo '<pre>';
