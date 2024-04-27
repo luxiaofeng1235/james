@@ -76,9 +76,9 @@ if($info){
         echo "**********************************\r\n";
         //如果当前文件不存在的话，直接从远端拉取数据，保留数据方便下次计算
         echo "now i will try get this contents : {$story_link}\r\n";
-        $html_datas = StoreModel::swooleRquest($story_link);
-        $data = $html_datas[0] ?? '';
-        // $data = webRequest($story_link,'GET');
+        // $html_datas = StoreModel::swooleRquest($story_link);
+        // $data = $html_datas[0] ?? '';
+        $data = webRequest($story_link,'GET');
         //转换一下编码如果是乱码
         $data =  array_iconv($data);
         writeFileCombine($html_file ,$data);
@@ -126,8 +126,7 @@ if($info){
         //转义标题
 
         $store_data['title'] = trimBlankSpace($store_data['title']); //过滤前后空格
-        $author = trimBlankSpace($store_data['author']); //过滤前后空格
-        $store_data['author']  = $author;
+        $store_data['author']  = trimBlankSpace($store_data['author']); //过滤前后空格
 
         //章节也需要处理特殊的转义字符
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);

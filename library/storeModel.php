@@ -224,13 +224,19 @@ class StoreModel{
          $goods_list = array_values($goods_list);
          $errData  =  $sucData  = [];
          foreach($contents_arr as $key => $val){
-            if(empty($val) || preg_match('/502 Bad Gateway/',$val)){
+            if(empty($val) || $val == ''){//空数据返回
+                 echo "章节数据内容为空，会重新抓取======================{$urls[$tkey]}\r\n";
                 $errData[] =$goods_list[$key] ?? [];
+            }else if(!preg_match('/id="content"/',$val) ){//断章处理，包含有502的未响应都会
+                echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
+                $temp_url[] =$urls[$tkey];
             }else{
                 $sucData[] = $val;
             }
          }
         /***************判断是否有空的数据返回 end*****************************/
+
+
 
          $repeat_data = $curl_contents1 =[];
          //数据为空的情况判断
@@ -244,13 +250,13 @@ class StoreModel{
                 $curl_contents1 = StoreModel::swooleRquest($urls);
                 $temp_url =[];//设置中间变量
                 foreach($curl_contents1 as $tkey=> $tval){
-                    if(empty($tval)){//为空的情况
+                    if(empty($tval) || $tval == ''){//为空的情况
                         echo "获取数据为空，会重新抓取======================{$urls[$tkey]}\r\n";
                         $temp_url[] =$urls[$tkey];
-                     }else if(preg_match('/502 Bad Gateway/' , $tval)) {
-                        echo "有502报错，会重新抓取======================{$urls[$tkey]}\r\n";
+                     }else if(!preg_match('/id="content"/',$tval)) {//是否存在502的情况
+                        echo "有断章，会重新抓取======================{$urls[$tkey]}\r\n";
                         $temp_url[] =$urls[$tkey];
-                     }else{
+                     }else{//正常的返回
                         $repeat_data[] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
                         unset($curl_contents1[$tkey]);
@@ -266,8 +272,11 @@ class StoreModel{
                 }
             }
         }
-        $retuernList = array_merge($sucData , $repeat_data);
-        return $retuernList;
+        echo "success-num =".count($sucData).PHP_EOL;
+        echo "repeat_data-num = ".count($repeat_data).PHP_EOL;
+        $returnList = array_merge($sucData , $repeat_data);
+        echo "all-return-num = ".count($returnList).PHP_EOL;
+        return $returnList;
     }
 
 
