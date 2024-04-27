@@ -76,7 +76,9 @@ if($info){
         echo "**********************************\r\n";
         //如果当前文件不存在的话，直接从远端拉取数据，保留数据方便下次计算
         echo "now i will try get this contents : {$story_link}\r\n";
-        $data = webRequest($story_link,'GET');
+        $html_datas = StoreModel::swooleRquest($story_link);
+        $data = $html_datas[0] ?? '';
+        // $data = webRequest($story_link,'GET');
         //转换一下编码如果是乱码
         $data =  array_iconv($data);
         writeFileCombine($html_file ,$data);
@@ -145,7 +147,6 @@ if($info){
         }
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
-
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
             $where_condition = "story_id = '".$story_id."'";
             $no_chapter_data['syn_chapter_status'] = 1;

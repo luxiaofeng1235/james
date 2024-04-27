@@ -128,9 +128,10 @@ class StoreModel{
         $proxy_data = [
             'ip'    =>  'gw.wandouapp.com',//IP地址
             'port'  =>  '1000', //端口
-            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-5_pid-0' ,//用户名
+            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-2_pid-0' ,//用户名
             'password'  =>  'fmkqrbh3', //密码
         ];
+
         return $proxy_data;
         // $proxy_info = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=US&state=&city=&life=2&protocol=1&format=json&lb=%5Cr%5Cn','GET');
         // $proxy_info = webRequest('https://api.wandouapp.com/?app_key=e890aa7191c00cd2f641060591c4f1d0&num=1&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
@@ -155,6 +156,12 @@ class StoreModel{
      public static function swooleRquest($urls,$type = 1){
         if(!$urls){
             return false;
+        }
+        //判断是否为单个传入
+        if(!is_array($urls) || !isset($urls[0])){
+            $urlArr[] = $urls;
+            $urls = $urlArr;
+
         }
         $urls = array_filter($urls); //防止有空的url存在
         $items = [];
