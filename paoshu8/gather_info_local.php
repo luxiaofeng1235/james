@@ -52,9 +52,12 @@ if($info){
     $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
 
     $story_id = trim($info[0]['story_id']);
-    if(!$story_id){
-       preg_match('/\d+/',$hostData['path'],$retMatch);
-       $story_id = $retMatch[0] ??'';
+    $ret_story_id = '';
+    preg_match('/\d+/',$hostData['path'],$retMatch);
+    $url_story_id = $retMatch[0] ??'';
+    //防止story_id不一致，重新覆盖
+    if(empty($story_id) || $story_id!= $url_story_id){
+        $story_id = $url_story_id;
     }
 
     if($info[0]['is_async'] == 1){
@@ -141,9 +144,7 @@ if($info){
 
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
-        if(empty($info[0]['story_id'])){
-            $store_data['story_id']  = $story_id;
-        }
+        $store_data['story_id']  = $story_id; //重新覆盖story_id为当前的
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
