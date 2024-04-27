@@ -9,7 +9,7 @@ return [
         'update_list'  =>  [
             'story_link'       => ['.s2 a','href','',function($content){
                  //利用回调函数补全相对链接
-                $baseUrl = Env::get('APICONFIG.PAOSHU_HOST');
+                $baseUrl = Env::get('APICONFIG.PAOSHU_NEW_HOST');
                 return $baseUrl.$content;
             }],//链接地址
             'title'     =>  ['.s2 a','text'],//标题
@@ -20,8 +20,9 @@ return [
             'author'    =>  ['.s4','text'],//作者名称
             //存储对应的story_id
             'story_id'  =>['.s2 a','href' , '',function($item){
-                $res = substr($item ,1,-1);
-                return $res;
+                preg_match('/\d+/', $item,$matches);
+                $story_id = $matches[0] ?? 0;
+                return $story_id;
             }], //存一下对应的连接
             'nearby_chapter'    =>['.s3','text'],//最新更新的章节
         ],
@@ -29,7 +30,7 @@ return [
         'ruku_list' =>[
             'story_link'       => ['.s2 a','href','',function($content){//链接地址
                   //利用回调函数补全相对链接
-                $baseUrl = Env::get('APICONFIG.PAOSHU_HOST');
+                $baseUrl = Env::get('APICONFIG.PAOSHU_NEW_HOST');
                 return $baseUrl.$content;
             }],
             'title'     =>  ['.s2 a','text'],//标题

@@ -1171,7 +1171,7 @@ function array_iconv($arr, $in_charset="gbk", $out_charset="utf-8")
 {
 
 	$encode = mb_detect_encoding($arr,array("ASCII","GB2312","GBK",'BIG5','UTF-8'));
-	return iconv($encode, "UTF-8",$arr);
+	return iconv($encode, "utf-8//ignore",$arr);
 	$ret =iconv($in_charset, $out_charset, $arr) ;
  	// $ret = eval('return '.iconv($in_charset,$out_charset,var_export($arr,true).';'));
  	return $ret;

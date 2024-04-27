@@ -141,7 +141,9 @@ class NovelModel{
         if(!$url){
             return false;
         }
-        $redis_key = 'paoshu8_home_list';
+        //获取网站来源
+        $source = NovelModel::getSourceUrl($url);
+        $redis_key = $source . '_home_list';
         global $redis_data;
         $data = $redis_data->get_redis($redis_key);
         if(!$data){

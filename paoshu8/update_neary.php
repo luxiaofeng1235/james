@@ -10,13 +10,15 @@
  */
 require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
-$url = Env::get('APICONFIG.PAOSHU_HOST');
-
+$url = Env::get('APICONFIG.PAOSHU_NEW_HOST');
 ##获取首页的基础信息
 $pageList = NovelModel::cacheHomeList($url);
 if(!$pageList){
     exit("获取页面内容为空，请稍后重试\r\n");
 }
+
+$pageList = array_iconv($pageList);
+
 
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 $db_conn = 'db_master';
@@ -36,6 +38,10 @@ $update_list = QueryList::html($pageList)
                 ->range($range_update)
                 ->query()
                 ->getData();
+echo '<pre>';
+print_R($update_list);
+echo '</pre>';
+exit;
 $update_list = $update_list->all();
 
 //最新入库的列表
