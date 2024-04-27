@@ -56,6 +56,7 @@ if($info){
        preg_match('/\d+/',$hostData['path'],$retMatch);
        $story_id = $retMatch[0] ??'';
     }
+
     if($info[0]['is_async'] == 1){
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
@@ -100,11 +101,6 @@ if($info){
         exit();
     }
 
-    // $arr =iconv('gbk', 'UTF-8', $html);
-    // echo '<pre>';
-    // print_R($arr);
-    // echo '</pre>';
-    // exit;
 
     //爬取相关规则下的类
     $info_data=QueryList::html($html)

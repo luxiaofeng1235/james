@@ -123,8 +123,8 @@ class StoreModel{
     */
      public static function getForeignProxy(){
 
-        // // $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
-        $rand_str  = 'wandou_proxy_'.date('YmdH');
+        $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
+        // $rand_str  = 'wandou_proxy_'.date('YmdH');
         $proxy_data = [
             'ip'    =>  'gw.wandouapp.com',//IP地址
             'port'  =>  '1000', //端口

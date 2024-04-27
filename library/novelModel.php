@@ -45,7 +45,7 @@ class NovelModel{
    //过滤不必要的广告章节
     public static $filterWords = null;
     private static $db_conn = 'db_novel_pro';
-    private static $table_name = 'mc_book';
+    private static $table_name = null ;
 
     //过滤文本需要用的配置
     public static $filterContent = null; //过滤文本中的内容
@@ -1001,6 +1001,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       }
       //根据书籍名称和坐着来进行匹配
       $where_data = 'book_name ="'.$info['book_name'].'" and author ="'.$info['author'].'"  and source_url not like "%biquge34%" limit 1';
+      self::$table_name = Env::get('TABLE_MC_BOOK'); //获取配置信息
       $novelInfo = $mysql_obj->get_data_by_condition($where_data,self::$table_name,'id',false,self::$db_conn);
 
       if(empty($novelInfo)){
