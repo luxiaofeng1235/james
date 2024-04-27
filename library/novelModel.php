@@ -783,6 +783,8 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
         $url= parse_url($story_link);
         $source = '';
         if(isset($url['host']) && !empty($url['host'])){
+          //匹配以www.开头的到.结束的为当前的来源
+          //比如www.baidu.com 只取baidu为当前的标识来源
             preg_match('/www\.(.*?)\./',$url['host'],$matrix);
             if(isset($matrix[1])){
                 $source = trim($matrix[1]);
@@ -1208,14 +1210,18 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
                 'mobile_url'  => $val['chapter_link'], //兼容老数据
                 'chapter_mobile_link' => $val['chapter_link'],
              ];
-            // $t_url[]=$referer_url. $val['link_url'];
+             $t_url[]=$val['chapter_link'];
           }
-          $t_url = array_keys($chapetList);
 
-          foreach($t_url as &$urlval){
-              $urlval = $referer_url . $urlval;
-          }
-          $t_url =array_unique($t_url);
+
+
+
+          // 自定义回调函数（只移除空字符串和null值）
+          $t_url = array_filter($t_url, function($value) {
+              return ($value !== null && $value !== '');
+          });
+
+
 
           global $urlRules;
           //获取采集的标识
