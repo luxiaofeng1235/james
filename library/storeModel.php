@@ -198,7 +198,7 @@ class StoreModel{
                         echo '</pre>';
                         echo "\r\n";
                     }
-                    System::sleep(1);
+                    System::sleep(2);
                     $count++;
                 });
             }
