@@ -110,12 +110,6 @@ if($info){
     $store_data = $info_data->all();
     if(!empty($store_data)){
 
-
-        //判断是其他站过来的
-        if(strpos($story_link,'xs74w') &&  !strpos($store_data['cover_logo'] ,'https')){
-            $store_data['cover_logo'] = Env::get('APICONFIG.PAOSHU_NEW_HOST'). $store_data['cover_logo'];
-        }
-
         $store_data['story_link'] = $story_link;
         echo "url:".$story_link."||| story_id：".$story_id .PHP_EOL;
         //处理空字符串
