@@ -1223,13 +1223,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
              $t_url[]=$val['chapter_link'];
           }
 
-          // // 自定义回调函数（只移除空字符串和null值）
-          // $t_url = array_filter($t_url, function($value) {
-          //     return ($value !== null && $value !== '');
-          // });
-
-
-
           global $urlRules;
           //获取采集的标识
           $valid_curl ='curl';
@@ -1244,12 +1237,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           //重试防止有错误的
           // $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
           $list = StoreModel::swooleCallRequest($list, $chapterList);
-          // echo "===== count:".count($list).PHP_EOL;
-          // exit;
-           //////////////////处理请求的链接end
-          $allnum = 0;
+          if(!$list){
+              return false;
+          }
 
-          //移除html里的注释部分
 
           foreach($list as $gkey =>$gval){
             $gval= iconv('gbk','utf-8//ignore', $gval);
