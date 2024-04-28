@@ -128,7 +128,7 @@ class StoreModel{
         $proxy_data = [
             'ip'    =>  'gw.wandouapp.com',//IP地址
             'port'  =>  '1000', //端口
-            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-5_pid-0' ,//用户名-让代理存活5分钟
+            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-2_pid-0' ,//用户名-让代理存活5分钟
             'password'  =>  'fmkqrbh3', //密码
         ];
 
