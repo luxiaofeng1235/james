@@ -1119,13 +1119,13 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
          $json_list[] = [
                 'id'    =>$key+1 ,
                 'sort'  =>$key+1,
-                'chapter_link'  =>$referer_url . $val['link_url'],
-                'chapter_name'  =>$val['link_name'],
+                'chapter_link'  =>$referer_url . $val['link_url'], //抓取的地址信息
+                'chapter_name'  =>$val['link_name'], //文件名称
                 'vip'   =>  0,
                 'cion'  =>  0,
                 'is_first' =>   0,
                 'is_last'   => 0,
-                'text_num'  => rand(2000,7000),//随机生成文本字数统计
+                'text_num'  => rand(3000,10000),//随机生成文本字数统计
                 'addtime'   =>(int) $val['createtime'],
           ];
       }
