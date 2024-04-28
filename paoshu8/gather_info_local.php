@@ -52,13 +52,12 @@ if($info){
     $referer_url = $hostData['scheme']  . '://' . $hostData['host'];
     $story_id = trim($info[0]['story_id']);
     $ret_story_id = '';
-
+    //判断是否匹配对应的含有_的path
      if(strpos($hostData['path'], '_')){
          $retMatch[] = substr($hostData['path'], 1,-1);
      }else{
         preg_match('/\d+/',$hostData['path'],$retMatch);
      }
-
     $url_story_id = $retMatch[0] ??'';
     //防止story_id不一致，重新覆盖
     if(empty($story_id) || $story_id!= $url_story_id){
