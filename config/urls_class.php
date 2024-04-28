@@ -97,7 +97,8 @@ return [
             'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
             'third_update_time'    =>array('meta[property=og:novel:update_time]','content'), //最近的更新时间
             'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
-            'intro' =>array('meta[property=og:description]','content'),
+            // 'intro' =>array('meta[property=og:description]','content'),
+            'intro' =>  ['#intro','text'],//简介
             'tag'   => array('meta[property=og:novel:category]','content'),
             // 'location'  =>  array('.path .p','text' ,'', function($location){
             //     $str = array_iconv($location);

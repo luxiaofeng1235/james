@@ -134,13 +134,13 @@ if($info){
         $store_data['nearby_chapter'] = addslashes($store_data['nearby_chapter']);
         $intro = addslashes($store_data['intro']);//转义 特殊字符
         $intro = cut_str($intro,200); //切割字符串
+        $intro = trimBlankSpace($intro);
         $store_data['intro'] = trimBlankLine($intro);
         $store_data['tag'] = str_replace('小说','',$store_data['tag']);
         //执行更新操作
         if($info[0]['createtime'] == 0){
             $store_data['createtime']  = time();
         }
-
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
         $store_data['story_id']  = $story_id; //重新覆盖story_id为当前的
