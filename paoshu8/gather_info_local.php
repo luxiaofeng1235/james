@@ -99,11 +99,7 @@ if($info){
         printlog('this novel：'.$story_link.' is no local html data');
         echo "no this story files： {$story_link}\r\n";
         //更新为已同步防止重复同步
-        $where_condition = "story_id = '". $story_id."'";
-        $no_chapter_data['syn_chapter_status'] = 1;
-        $no_chapter_data['is_async'] = 1;
-        //对比新旧数据返回最新的更新
-        $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+        $factory->updateStatusInfo($store_id);
         $factory->updateDownStatus($info[0]['pro_book_id']);
         NovelModel::killMasterProcess();//退出主程序
         exit();
@@ -152,11 +148,8 @@ if($info){
 
         //判断如果作者没有就直接退出
         if(empty($store_data['author'])){
-            $where_condition = "story_id = '".$story_id."'";
-            $no_chapter_data['syn_chapter_status'] = 1;
-            $no_chapter_data['is_async'] = 1;
-            //对比新旧数据返回最新的更新
-            $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+            //更新小说的当前状态
+            $factory->updateStatusInfo($store_id);
             echo "当前小说没有作者，此小说{$store_data['author']} 不需要去同步了\r\n";
             NovelModel::killMasterProcess();//退出主程序
             exit();
@@ -165,17 +158,13 @@ if($info){
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
-            $where_condition = "story_id = '".$story_id."'";
-            $no_chapter_data['syn_chapter_status'] = 1;
-            $no_chapter_data['is_async'] = 1;
-            //对比新旧数据返回最新的更新
-            $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+            $factory->updateStatusInfo($store_id);
             echo "当前小说章节过少，请等待下次完善后再进行采集\r\n";
             NovelModel::killMasterProcess();//退出主程序
             exit();
         }
 
-        // //保存图片到本地==暂时屏蔽不需要
+        //保存图片到本地==暂时屏蔽不需要
         $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
         $item_list = $chapter_ids = $items= [];
         if(!empty($rt)){
@@ -207,11 +196,7 @@ if($info){
             NovelModel::createJsonFile($store_data,$item_list,0,$referer_url);
         }else{
             //如果没有章节，把对应的章节也改成已处理
-            $where_condition = "story_id = '".$story_id."'";
-            $no_chapter_data['syn_chapter_status'] = 1;
-            $no_chapter_data['is_async'] = 1;
-            //对比新旧数据返回最新的更新
-            $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+            $factory->updateStatusInfo($store_id);
             //更新首页的标记状态
             $factory->updateDownStatus($info[0]['pro_book_id']);
             printlog('未匹配到相关章节数据');
@@ -233,13 +218,8 @@ if($info){
             }
             $store_data['pro_book_id'] = $sync_pro_id;
             if(!$sync_pro_id){
-
-                $where_condition = "store_id = '".$store_id."'";
-                $no_chapter_data['syn_chapter_status'] = 1;
-                $no_chapter_data['is_async'] = 1;
-                //对比新旧数据返回最新的更新
-                $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
-
+                //更新小说同步状态
+                $factory->updateStatusInfo($store_id);
                 echo "未关联线上小说ID\r\n";
                 NovelModel::killMasterProcess();//退出主程序
                 printlog('未发现线上数据信息');
@@ -255,26 +235,21 @@ if($info){
                 $mysql_obj->update_data($diff_data,$where_data,$table_novel_name);
             }
 
-            $another_data = array_merge(
-            [
-                'pro_book_id'=>$sync_pro_id,//线上书籍ID
-                'story_id'=>$story_id,//小说ID
-                'store_id'  => $info[0]['store_id'],
-                'syn_chapter_status'    =>$info[0]['syn_chapter_status'] ?? 0,//章节状态
-            ],
+            $novelData = array_merge([
+                    'pro_book_id'=>$sync_pro_id,//线上书籍ID
+                    'story_id'=>$story_id,//小说ID
+                    'store_id'  => $info[0]['store_id'],
+                    'syn_chapter_status'    =>$info[0]['syn_chapter_status'] ?? 0,//章节状态
+                ],
             $store_data);
             //同步当前的章节的基础信息
             //同步章节内容
-            $factory->synChapterInfo($story_id,$another_data);
+            $factory->synChapterInfo($story_id,$novelData);
         }else{
 
             //主要需要更新线上的对应的ID
-            $storeInfo = $mysql_obj->fetch("select pro_book_id from ".$table_novel_name." where store_id ={$store_id}",'db_slave');
-            $pro_book_id = intval($storeInfo['pro_book_id']);
-            //这里面防止解析为空去更新对应的状态
-            $where_condition = "story_id = '".$story_id."'";
-            $no_chapter_data['syn_chapter_status'] = 1;
-            $no_chapter_data['is_async'] = 1;
+            //更新小说同步状态
+            $factory->updateStatusInfo($store_id);
             //更新is_down的状态
             $pro_book_id>0 && $factory->updateDownStatus($pro_book_id);
             //对比新旧数据返回最新的更新
