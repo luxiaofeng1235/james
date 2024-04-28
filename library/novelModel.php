@@ -1214,7 +1214,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             $mobilePath = $val['link_url'] ??'';
             $chapterList[$mobilePath] = [
                 //拼装移动端的地址
-                'path'  =>  $txt_path.DS.md5($val['link_name']).'.'.NovelModel::$file_type,
+                'save_path'  =>  $txt_path.DS.md5($val['link_name']).'.'.NovelModel::$file_type,
                 'chapter_name'  =>  $val['chapter_name'],
                 'chapter_link'  =>  $val['chapter_link'],
                 'mobile_url'  => $val['chapter_link'], //兼容老数据
