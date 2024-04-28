@@ -1198,22 +1198,21 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
   }
 
   /**
-    *  @note 获取对应的请求数据信息
-     * @param $txt_path string 存储的路径
-     * @param $data array 需要处理的章节列表
-     * @return array
-     */
-  public static  function getDataListItem($data,$txt_path){
+  *  @note 获取对应的请求数据信息
+  * @param $txt_path string 存储的路径
+  * @param $data array 需要处理的章节列表
+  * @return array
+  */
+  public static function getDataListItem($data,$txt_path){
         if(!$data)
           return false;
-        // dd($txt_path);
-          $chapter_list=[];
+          $chapterList=[];
           foreach($data as $key =>$val){
             //获取请求的域名
             $referer_url = self::urlHostData($val['chapter_link']);
               //章节的连接
             $mobilePath = $val['link_url'] ??'';
-            $chapetList[$mobilePath] = [
+            $chapterList[$mobilePath] = [
                 //拼装移动端的地址
                 'path'  =>  $txt_path.DS.md5($val['link_name']).'.'.NovelModel::$file_type,
                 'chapter_name'  =>  $val['chapter_name'],
@@ -1244,7 +1243,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           // $rand_str = ClientModel::getCurlRandProxy();
           //重试防止有错误的
           // $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
-          $list = StoreModel::swooleCallRequest($list, $chapetList);
+          $list = StoreModel::swooleCallRequest($list, $chapterList);
           // echo "===== count:".count($list).PHP_EOL;
           // exit;
            //////////////////处理请求的链接end
@@ -1297,14 +1296,14 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             // $store_detail[$html_path] = $store_content;
             $store_detail[$gkey] = $store_content;
           }
+
           $allNovelList =[];
           if(!empty($store_detail)){
               foreach($store_detail as $gtkey=>$gtval){
-                $allNovelList[$gtkey]['chapter_name'] = $chapetList[$gtkey]['chapter_name'] ?? '';//章节名称
-                $allNovelList[$gtkey]['chapter_mobile_link'] = $chapetList[$gtkey]['chapter_mobile_link'] ??'';
-                $allNovelList[$gtkey]['chapter_link'] = $chapetList[$gtkey]['chapter_link'] ?? ''; //章节链接
-                $allNovelList[$gtkey]['save_path'] = $chapetList[$gtkey]['path']??''; //保存的文件路径
-                $allNovelList[$gtkey]['content'] = $gtval; //获取内容信息
+                //获取对应的键值数据信息
+                $chapter_info = isset($chapterList[$gtkey]) ? $chapterList[$gtkey] : '';
+                $results =array_merge($chapter_info,['content'=>$gtval ?? '']);
+                $allNovelList[$gtkey] = $results ?? [];
               }
         }
         return $allNovelList;
