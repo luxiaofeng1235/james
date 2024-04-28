@@ -78,6 +78,8 @@ return [
         ],
          //小说详情替换网站的采集方案
         'info_replace'  =>[
+            'title'     =>['meta[property=og:novel:book_name]','content'],//小说标题
+            'author'    =>['meta[property=og:novel:author]','content'],//小说作者
             'cover_logo'       =>['meta[property=og:image]','content','',function($image){
                 $cover_logo = '';
                 if(strpos($image, 'otcwuxi')){
@@ -91,8 +93,6 @@ return [
                 }
                return $url;
             }],//小说封面
-            'author'    =>['meta[property=og:novel:author]','content'],//小说作者
-            'title'     =>['meta[property=og:novel:book_name]','content'],//小说标题
             'cate_name' =>['meta[property=og:novel:category]','content'],//分类
             'status'    =>['meta[property=og:novel:status]','content'],//小说的状态
             'third_update_time'    =>['meta[property=og:novel:update_time]','content'], //最近的更新时间
