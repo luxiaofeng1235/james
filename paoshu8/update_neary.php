@@ -84,6 +84,7 @@ foreach($novelList as $key =>$val){
     }else{
         //更新对应的状态信息，需要改成is_async 0,方便进行同步
         echo "exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} \r\n";
+        $factory->updateUnRunInfo($storyInfo['store_id']);//更新当前的小说状态为同步
     }
 }
 echo "===========实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
