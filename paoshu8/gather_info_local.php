@@ -155,6 +155,7 @@ if($info){
             exit();
         }
 
+
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了

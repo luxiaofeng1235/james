@@ -425,11 +425,14 @@ class NovelModel{
       $title = str_replace('|','\|',$title);
 
       $contents = '';
+
+
+
       //<dt>《毒誓一九四一》正文</dt>
       //兼容这种带正文的正则
       if(preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$with_content)){
           $contents = $with_content[0] ?? [];
-      }else if(preg_match('/<div id=\"list\".*?>.*?<\/dl>/ism',$html ,$list)){
+      }else if(preg_match('/<div id=\"list\".*?>.*<\/dl>/ism',$html ,$list)){
           $contents = $list[0] ?? [];
       }
       //《我在古代办妇联》正文卷
