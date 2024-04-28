@@ -18,6 +18,7 @@ class FileFactory{
     private $where_data ='1 and syn_chapter_status =  ';//默认搜索的条件
     private $table_novel_name = null;
     private $syn_success_status = 1 ;//更新章节成功的状态
+    private $syn_wait_chapter_status = 0;//待处理的章节同步状态
     private $syn_wait_status = 0; //待处理的同步状态
 
     public function __construct($mysql_obj  , $redis_obj){
@@ -88,11 +89,8 @@ class FileFactory{
             return false;
         }
         global $mysql_obj;
-        $where_condition = "store_id = '".$store_id."'";
-        $no_chapter_data['syn_chapter_status'] = 0;
-        $no_chapter_data['is_async'] = 0;
-        //对比新旧数据返回最新的更新
-        $mysql_obj->update_data($no_chapter_data,$where_condition,$this->table_novel_name);
+        $sql = "update {$this->table_novel_name} set syn_chapter_status = {$this->syn_wait_chapter_status} ,is_async ={$this->syn_wait_status} where store_id = '{$store_id}' limit 1";
+        $result = $mysql_obj->query($sql , 'db_master');
     }
 
 

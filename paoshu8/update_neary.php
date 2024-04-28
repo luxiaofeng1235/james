@@ -69,10 +69,13 @@ echo "====================插入/更新同步网站数据,共" . count($novelLis
 $insertData = [];
 //获取网站来源
 $source = NovelModel::getSourceUrl($url);
+$num = 0;
 foreach($novelList as $key =>$val){
+    $num++;
     $val['tag'] = $val['cate_name']??'';
     //查询是否存在次本小说
     $storyInfo = NovelModel::getNovelInfoById($val['story_id'],$source);
+
     if(empty($storyInfo)){
         $val['title'] = trimBlankSpace($val['title']);//小说名称
         $val['author'] = $val['author'] ? trimBlankSpace($val['author']) :'未知';//小说作何
@@ -81,11 +84,13 @@ foreach($novelList as $key =>$val){
         $val['source'] = $source; //来源
         $val['createtime'] = time(); //时间
         $insertData[] = $val;
+        echo "num = {$num} title={$val['title']}\t author = {$val['author']} is to insert this data\r\n";
     }else{
         //更新对应的状态信息，需要改成is_async 0,方便进行同步
-        echo "exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} \r\n";
+        echo "num = {$num} exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} ，status is update,next to run\r\n";
         $factory->updateUnRunInfo($storyInfo['store_id']);//更新当前的小说状态为同步
-    }
+
+     }
 }
 echo "===========实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
 if($insertData){
@@ -96,7 +101,7 @@ if($insertData){
     }
     echo "同步小说列表成功 \r\n";
 }else{
-    echo "暂无小说需要同步\r\n";
+    echo "暂无小说需要插入的数据同步\r\n";
 }
 
 echo "finish\r\n";
