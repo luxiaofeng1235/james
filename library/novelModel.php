@@ -1729,7 +1729,7 @@ public static function saveDetailHtml($novelList=[]){
       writeFileCombine($k,$content);//自动写入追加文件的HTML页面
 
   }
-  return 1;
+  return true;
  }
 
 
