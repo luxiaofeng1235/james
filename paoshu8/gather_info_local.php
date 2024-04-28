@@ -148,6 +148,20 @@ if($info){
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
         $store_data['story_id']  = $story_id; //重新覆盖story_id为当前的
+
+
+        //判断如果作者没有就直接退出
+        if(empty($store_data['author'])){
+            $where_condition = "story_id = '".$story_id."'";
+            $no_chapter_data['syn_chapter_status'] = 1;
+            $no_chapter_data['is_async'] = 1;
+            //对比新旧数据返回最新的更新
+            $mysql_obj->update_data($no_chapter_data,$where_condition,$table_novel_name);
+            echo "当前小说没有作者，此小说{$store_data['author']} 不需要去同步了\r\n";
+            NovelModel::killMasterProcess();//退出主程序
+            exit();
+        }
+
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了

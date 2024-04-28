@@ -663,8 +663,8 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       //过滤实体标签，类似>&nbsp;&nbsp;&nbsp;&nbsp;这样子的过滤一下
      $str = preg_replace('/&[#\da-z]+;/i', '', $str);
 
-     //替换一些特殊的字符
-     $str = preg_replace('/<!--go-->/','',$str);
+     //替换注释部分的信息
+     $str = preg_replace('/<!--(.*?)-->/','',$str);
 
       //////////////////////////广告和标签相关
       //过滤具体的html标签
@@ -1245,21 +1245,19 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           //重试防止有错误的
           // $list  = NovelModel::callRequests($list , $chapetList,$valid_curl,$rand_str);
           $list = StoreModel::swooleCallRequest($list, $chapetList);
-          // echo '<pre>';
-          // print_R($list);
-          // echo '</pre>';
-          // echo "num = ".count($list).PHP_EOL;
-          // exit;
           // echo "===== count:".count($list).PHP_EOL;
           // exit;
            //////////////////处理请求的链接end
           $allnum = 0;
+
+          //移除html里的注释部分
 
           foreach($list as $gkey =>$gval){
             $gval= iconv('gbk','utf-8//ignore', $gval);
             $data = QueryList::html($gval)
                     ->rules($rules)
                     ->query()
+                    ->removeHead()
                     ->getData();
             $html = $data->all();
 
@@ -1299,7 +1297,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
             // $store_detail[$html_path] = $store_content;
             $store_detail[$gkey] = $store_content;
           }
-          // exit;
           $allNovelList =[];
           if(!empty($store_detail)){
               foreach($store_detail as $gtkey=>$gtval){

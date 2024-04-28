@@ -105,6 +105,7 @@ class FileFactory{
             $sql = "select story_id,story_link,pro_book_id,title from ims_novel_info where $where";
             $info = $this->mysql_conf->fetch($sql,'db_slave');
         }
+
         if(!empty($info)){
             $pro_book_id = intval($info['pro_book_id']); //线上的对应的小说id
             $story_id = trim($info['story_id']); //小说网站id
@@ -182,7 +183,7 @@ class FileFactory{
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
-            $limit_size =100;
+            $limit_size =30;
             $items = array_chunk($dataList,$limit_size); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
