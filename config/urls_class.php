@@ -65,20 +65,20 @@ return [
         ],
         //小说详情
         'info'  =>[
-            'cover_logo'       =>array('#fmimg img','src'),//小说封面
-            'author'    => array('meta[property=og:novel:author]','content'),//小说作者
-            'title'     =>array('#info>h1','text'),//小说标题
-            'cate_name' =>array('meta[property=og:novel:category]','content'),//分类
-            'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
-            'third_update_time'    =>array('meta[property=og:novel:update_time]','content'), //最近的更新时间
-            'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
-            'intro' =>array('meta[property=og:description]','content'),
-            'tag'   => array('meta[property=og:novel:category]','content'),
-            'location'  =>  array('.con_top','text'),//小说的面包屑位置
+            'cover_logo'       =>['#fmimg img','src'],//小说封面
+            'author'    => ['meta[property=og:novel:author]','content'],//小说作者
+            'title'     =>['#info>h1','text'],//小说标题
+            'cate_name' =>['meta[property=og:novel:category]','content'],//分类
+            'status'    =>['meta[property=og:novel:status]','content'],//小说的状态
+            'third_update_time'    =>['meta[property=og:novel:update_time]','content'], //最近的更新时间
+            'nearby_chapter'    =>['meta[property=og:novel:latest_chapter_name]','content'], //最近的文章
+            'intro' =>['meta[property=og:description]','content'],
+            'tag'   => ['meta[property=og:novel:category]','content'],
+            'location'  =>  ['.con_top','text'],//小说的面包屑位置
         ],
          //小说详情替换网站的采集方案
         'info_replace'  =>[
-            'cover_logo'       =>array('meta[property=og:image]','content','',function($image){
+            'cover_logo'       =>['meta[property=og:image]','content','',function($image){
                 $cover_logo = '';
                 if(strpos($image, 'otcwuxi')){
                     //判断是否存在https中但是图片用的http保存会有问题
@@ -90,16 +90,16 @@ return [
                     $url = $image;
                 }
                return $url;
-            }),//小说封面
-            'author'    => array('meta[property=og:novel:author]','content'),//小说作者
-            'title'     =>array('meta[property=og:novel:book_name]','content'),//小说标题
-            'cate_name' =>array('meta[property=og:novel:category]','content'),//分类
-            'status'    =>array('meta[property=og:novel:status]','content'),//小说的状态
-            'third_update_time'    =>array('meta[property=og:novel:update_time]','content'), //最近的更新时间
-            'nearby_chapter'    =>array('meta[property=og:novel:latest_chapter_name]','content'), //最近的文章
+            }],//小说封面
+            'author'    =>['meta[property=og:novel:author]','content'],//小说作者
+            'title'     =>['meta[property=og:novel:book_name]','content'],//小说标题
+            'cate_name' =>['meta[property=og:novel:category]','content'],//分类
+            'status'    =>['meta[property=og:novel:status]','content'],//小说的状态
+            'third_update_time'    =>['meta[property=og:novel:update_time]','content'], //最近的更新时间
+            'nearby_chapter'    =>['meta[property=og:novel:latest_chapter_name]','content'], //最近的文章
             // 'intro' =>array('meta[property=og:description]','content'),
             'intro' =>  ['#intro','text'],//简介
-            'tag'   => array('meta[property=og:novel:category]','content'),
+            'tag'   => ['meta[property=og:novel:category]','content'],
             // 'location'  =>  array('.path .p','text' ,'', function($location){
             //     $str = array_iconv($location);
             //     $str = str_replace('加入书架','',$str);//替换调这个没啥用
