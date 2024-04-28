@@ -78,6 +78,23 @@ class FileFactory{
         $mysql_obj->update_data($no_chapter_data,$where_condition,$this->table_novel_name);
     }
 
+    /**
+    * @note  更新当前状态为待同步
+    * @param string $story_id 小说ID
+    * @return string
+    */
+    public function updateUnRunInfo($store_id= 0){
+        if(!$store_id){
+            return false;
+        }
+        global $mysql_obj;
+        $where_condition = "store_id = '".$store_id."'";
+        $no_chapter_data['syn_chapter_status'] = 0;
+        $no_chapter_data['is_async'] = 0;
+        //对比新旧数据返回最新的更新
+        $mysql_obj->update_data($no_chapter_data,$where_condition,$this->table_novel_name);
+    }
+
 
      /**
      * @note  同步章节信息

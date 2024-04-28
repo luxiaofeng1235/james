@@ -9,6 +9,11 @@
  *
  */
 require_once dirname(__DIR__).'/library/init.inc.php';
+require_once dirname(__DIR__).'/library/file_factory.php';
+
+$factory = new FileFactory($mysql_obj,$redis_data);
+
+
 use QL\QueryList;
 $url = Env::get('APICONFIG.PAOSHU_NEW_HOST');
 ##获取首页的基础信息
@@ -53,19 +58,17 @@ $novelList = array_filter($novelList);
 if(!$novelList){
     exit("暂无可用章节信息");
 }
-echo '<pre>';
-print_R($novelList);
-echo '</pre>';
-exit;
+
 // $novelList = array_slice($novelList, 1, 1); //测试
 
 //同步小说目录详情到本地
-NovelModel::saveDetailHtml($novelList);
+// NovelModel::saveDetailHtml($novelList);
 
 echo "====================插入/更新同步网站数据,共" . count($novelList) ."本小说\r\n";
 
 $insertData = [];
-$source = Env::get('APICONFIG.PAOSHU_STR');//同步的来源
+//获取网站来源
+$source = NovelModel::getSourceUrl($url);
 foreach($novelList as $key =>$val){
     $val['tag'] = $val['cate_name']??'';
     //查询是否存在次本小说

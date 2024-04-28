@@ -13,6 +13,18 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
+$aaa =QueryList::get('https://www.27k.net/read/210133/76702049.html');
+$list = $aaa->getHtml();
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
+$aa = webRequest('https://www.27k.net/read/210133/76702049.html','GET');
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+
 $res = StoreModel::downloadLocalFile('https://www.otcwuxi.com/files/30555/30555646/30555646.jpg');
 echo 3;die;
 
