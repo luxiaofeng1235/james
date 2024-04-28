@@ -69,7 +69,7 @@ echo "====================插入/更新同步网站数据,共" . count($novelLis
 $insertData = [];
 //获取网站来源
 $source = NovelModel::getSourceUrl($url);
-$num = 0;
+$num = $i_num = 0;
 foreach($novelList as $key =>$val){
     $num++;
     $val['tag'] = $val['cate_name']??'';
@@ -86,6 +86,7 @@ foreach($novelList as $key =>$val){
         $insertData[] = $val;
         echo "num = {$num} title={$val['title']}\t author = {$val['author']} is to insert this data\r\n";
     }else{
+        $i_num++;
         //更新对应的状态信息，需要改成is_async 0,方便进行同步
         echo "num = {$num} exists store_id = {$storyInfo['store_id']} \t title={$storyInfo['title']}\t author = {$storyInfo['author']} ，status is update,next to run\r\n";
         $factory->updateUnRunInfo($storyInfo['store_id']);//更新当前的小说状态为同步
@@ -93,6 +94,7 @@ foreach($novelList as $key =>$val){
      }
 }
 echo "===========实际待需要插入的小说有 ".count($insertData) . "本，会自动同步\r\n";
+echo "******************已存在的小说有 {$i_num}本，状态会自动处理为待同步\r\n";
 if($insertData){
     //同步数据
     $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
