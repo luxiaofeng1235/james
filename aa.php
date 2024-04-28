@@ -13,6 +13,9 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
+$res = StoreModel::downloadLocalFile('https://www.otcwuxi.com/files/30555/30555646/30555646.jpg');
+echo 3;die;
+
 $str = '<script>lastread.set(mybookid, zzid, \'同时2穿越，铸就真理之门 第59章 系统，翼（求收藏）\', \'看书的龙\', 7, bookid,"/chapter/66246161111/","/chapter/66246161111/59123211.html");</script>
 <div class="footer">
   <div class="footer_cont">

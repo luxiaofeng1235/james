@@ -146,6 +146,23 @@ class StoreModel{
         return $proxy_ret;
      }
 
+
+    /**
+    * @note 下载文件
+    *
+    * @param $urls array  链接地址
+    * @param $tye intger 暂时还没用到 1：按照数据返回 2：返回状态信息
+    * @return  object|unknow
+    */
+     public static function downloadLocalFile($url){
+        if(!$url){
+            return false;
+        }
+        $http = HttpRequest::newSession();
+        $http->download(__DIR__ . '/123456.*', $url);
+        return 1;
+     }
+
     /**
     * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
