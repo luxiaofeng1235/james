@@ -19,9 +19,9 @@ $exec_start_time = microtime(true);
 $store_id = isset($argv[1])   ? $argv[1] : 0; //匹配对应的ID去关联
 $db_name = 'db_novel_pro';
 $redis_key = 'img_pic_id';//redis的对应可以设置
-$id = $redis_data->get_redis($redis_key);
 
-$where_data = '  is_async = 1 and pic is not null ';
+$id = $redis_data->get_redis($redis_key);
+$where_data = '  is_async = 1 and pic is not null';
 $limit= 10000; //控制图片拉取的步长
 $order_by =' order by pro_book_id desc';
 
@@ -33,6 +33,7 @@ $sql = "select pro_book_id,i.title,m.author,cover_logo,story_link,m.pic from boo
 $sql .= $order_by;
 $sql .= " limit ".$limit;
 echo "sql : " .$sql ."\r\n";
+
 
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
@@ -55,8 +56,8 @@ if(!empty($info)){
         if(file_exists($save_img_path)){
             //获取图片尺寸
              $imgSize =getImageSpace($save_img_path);
-             //如果小于10KB的话就直接拿出来重新下载
-             if($imgSize>0 && $imgSize > 3 && $imgSize<10){
+             //如果大于3KB小于5KB就重新下载的话就直接拿出来重新下载
+             if($imgSize>0 && $imgSize > 3 && $imgSize<5){
                 $diff_data[] =[
                     'title' => $title,
                     'author'    =>$author,

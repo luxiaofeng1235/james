@@ -16,9 +16,8 @@ $pageList = NovelModel::cacheHomeList($url);
 if(!$pageList){
     exit("获取页面内容为空，请稍后重试\r\n");
 }
-
+//转换编码，有乱码
 $pageList = array_iconv($pageList);
-
 
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 $db_conn = 'db_master';
