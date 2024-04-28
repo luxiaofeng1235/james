@@ -13,6 +13,12 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
+$res = webRequest('https://www.otcwuxi.com/chapter/25483374111/540651326111.html','GET');
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
+
 $aaa =QueryList::get('https://www.27k.net/read/210133/76702049.html');
 $list = $aaa->getHtml();
 echo '<pre>';
