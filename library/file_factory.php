@@ -155,7 +155,6 @@ class FileFactory{
             echo "JSON文件里的总章节总数：".count($chapter_item).PHP_EOL;
             $dataList = [];
             $sucNum = 0;
-
             $http = new \Yurun\Util\HttpRequest;
             foreach($chapter_item as &$val){
                 $filename =$download_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
