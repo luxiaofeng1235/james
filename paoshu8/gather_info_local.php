@@ -79,22 +79,29 @@ if($info){
     $html_file = Env::get('SAVE_HTML_PATH').DS.'detail_'.$story_id.'.'.NovelModel::$file_type;
     echo "file_path = {$html_file} \r\n";
     $item_list  = [];
-    if(!$html_file || !file_exists($html_file)){
-        echo "no this story ---".$story_link."\r\n";
+    if(!preg_match('/paoshu8/',$story_link)){
+        if(!$html_file || !file_exists($html_file)){
+            echo "no this story ---".$story_link."\r\n";
 
-        echo "**********************************\r\n";
-        //如果当前文件不存在的话，直接从远端拉取数据，保留数据方便下次计算
-        echo "now i will try get this contents : {$story_link}\r\n";
-        // $html_datas = StoreModel::swooleRquest($story_link);
-        // $data = $html_datas[0] ?? '';
-        $data = webRequest($story_link,'GET');
-        //转换一下编码如果是乱码
-        $data =  array_iconv($data);
-        writeFileCombine($html_file ,$data);
-        // NovelModel::killMasterProcess();//退出主程序
-        // exit();
+            echo "**********************************\r\n";
+            //如果当前文件不存在的话，直接从远端拉取数据，保留数据方便下次计算
+            echo "now i will try get this contents : {$story_link}\r\n";
+            // $html_datas = StoreModel::swooleRquest($story_link);
+            // $data = $html_datas[0] ?? '';
+            $data = webRequest($story_link,'GET');
+            //转换一下编码如果是乱码
+            $data =  array_iconv($data);
+            writeFileCombine($html_file ,$data);
+        }
+        $html = readFileData($html_file);
+    }else{
+        $ret_link = substr($story_link,-1,1);
+        if($ret_link!='/'){
+            $story_link .='/';
+        }
+        //paoshu8直接curl请求为了方便洗数据
+        $html = webRequest($story_link,'GET');
     }
-    $html = readFileData($html_file);
     $html = html_entity_decode($html);
     if(!$html ){
         //记录是否有相关的HTML的数据信息
@@ -106,7 +113,6 @@ if($info){
         NovelModel::killMasterProcess();//退出主程序
         exit();
     }
-
 
     //爬取相关规则下的类
     $info_data=QueryList::html($html)
@@ -159,6 +165,7 @@ if($info){
 
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
+
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
             $factory->updateStatusInfo($store_id);
             echo "当前小说章节过少，请等待下次完善后再进行采集\r\n";

@@ -1137,7 +1137,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       $filename = $save_path . DS . $md5_str.'.'.self::$json_file_type;
       //保存对应的数据到文件中方便后期读取
       $json_data = json_encode($json_list ,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-      file_put_contents($filename,$json_data);//把json信息存储为对应的目录中去
+      writeFileCombine($filename,$json_data);//把json信息存储为对应的目录中去
       return $json_list;
   }
 
