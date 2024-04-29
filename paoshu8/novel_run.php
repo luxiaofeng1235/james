@@ -57,7 +57,6 @@ for ($i=0; $i <$pages ; $i++) {
             echo '<pre>';
             var_dump($res);
             echo '</pre>';
-            exit;
         }else{
             echo "no ids to update \r\n";
         }
