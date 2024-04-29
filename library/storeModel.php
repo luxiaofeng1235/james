@@ -200,7 +200,7 @@ class StoreModel{
                                      ->get($urls[$i]);
                     $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
-                    $items[$hostData['path']]=$response->getStatusCode();
+                    $items[$hostData['path']]=$response->body();
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
                     $str ="async child-fork-process num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
                     echo $str ."\r\n";
