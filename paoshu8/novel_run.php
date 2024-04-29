@@ -3,9 +3,9 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 
-$limit =100;
+$limit =200;
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
-$where_condition= "is_async = 1 and pro_book_id>3000 and source ='paoshu8' and (author!='' or author!='未知') and title is not null";
+$where_condition= "is_async = 1 and source ='paoshu8' and (author!='' or author!='未知') and title is not null";
 $order_by  = 'store_id asc';
 $count = $mysql_obj->get_data_by_condition($where_condition , $novel_table_name,'count(store_id) as num');
 $ts_count  = $count[0]['num'] ??0;
@@ -17,7 +17,7 @@ echo "all-nums：{$ts_count} ,all-pages：{$pages}\r\n";
 
 for ($i=0; $i <$pages ; $i++) {
     $page = $i+1;
-    echo "current page = {$page} \r\n";
+    echo "//////////////////////current page = {$page} \r\n";
     $sql = "select store_id,story_link,title,author from {$novel_table_name} where {$where_condition}";
     $sql .=' order by '.$order_by;
     // $sql .=" limit 1";
@@ -39,7 +39,6 @@ for ($i=0; $i <$pages ; $i++) {
                 echo "this data is no json dat \r\n";
             }else{
                 $itemList = parse_url($value['story_link']);
-
                 $value['title'] = $title; //去除空格后的标题
                 $value['author'] = $author;//去除空格后的作者
                 $value['json_count'] = count($chapter_item);
@@ -54,11 +53,18 @@ for ($i=0; $i <$pages ; $i++) {
             //待更新的数据信息
             $up_sql = "update {$novel_table_name} set is_resource = 1 where store_id in (".implode(',', $ids).")";
             echo "sql = {$up_sql} \r\n";
+            $res   =        $mysql_obj->query($up_sql,'db_master');
+            echo '<pre>';
+            var_dump($res);
+            echo '</pre>';
+
         }else{
             echo "no ids to update \r\n";
         }
     }
 }
+echo  "finish\r\n";
+
 
 /**
 * @note 获取url的列表信息
@@ -96,13 +102,13 @@ function asyncUrlList($item=[]){
         }
         if($curl_num>0 && $curl_num != $json_count){
             $x++;
-            echo "url = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 本地json文件解析的总数：{$baseArr['json_count']} \t 远程章节总数：{$curl_num} \r\n";
+            echo "store_id ={$baseArr['store_id']} \turl = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 本地json文件解析的总数：{$baseArr['json_count']} \t 远程章节总数：{$curl_num} \r\n";
             $baseArr['url_count'] = $curl_num;
             $returnList[]=$baseArr;
         }else{
             //local_num = {$json_count} curl_num={$curl_num}
             $y++;
-            echo "url = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 章节数量一致，不需要重复采集  \r\n";
+            echo "store_id ={$baseArr['store_id']} \turl = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 章节数量一致，不需要重复采集  \r\n";
         }
 
 
