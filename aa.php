@@ -13,7 +13,7 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
-$res = webRequest('https://www.otcwuxi.com/chapter/25483374111/540651326111.html','GET');
+$res = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=us&protocol=socks5','GET');
 echo '<pre>';
 print_R($res);
 echo '</pre>';

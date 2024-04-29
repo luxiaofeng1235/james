@@ -126,24 +126,22 @@ class StoreModel{
         $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
         // $rand_str  = 'wandou_proxy_'.date('YmdH');
         $proxy_data = [
-            'ip'    =>  'gw.wandouapp.com',//IP地址
-            'port'  =>  '1000', //端口
-            'username'  =>  'g5jpdc6m_session-'.$rand_str.'_life-5_pid-0' ,//用户名-让代理存活5分钟
-            'password'  =>  'fmkqrbh3', //密码
+            'ip'    =>  'global.ipdodo.cloud',//IP地址
+            'port'  =>  '10801', //端口
+            'username'  =>  'n1_1712733036-dh-2-region-us' ,//用户名-让代理存活5分钟
+            'password'  =>  '11e475e0', //密码
         ];
 
         return $proxy_data;
-        // $proxy_info = webRequest('https://api.stormproxies.cn/web_v1/ip/get-ip-v3?app_key=6dd6f7b2ff738c58b27cd17c9c58fe01&pt=9&num=1&ep=&cc=US&state=&city=&life=2&protocol=1&format=json&lb=%5Cr%5Cn','GET');
-        // $proxy_info = webRequest('https://api.wandouapp.com/?app_key=e890aa7191c00cd2f641060591c4f1d0&num=1&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&','GET');
-        // $tdata = json_decode($proxy_info,true);
-        // $proxy_data = [];
-        // $proxy_ret = $tdata['data'][0] ??[];
+        $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=us&protocol=socks5','GET');
+        $tdata = json_decode($proxy_info,true);
+        $proxy_data = $tdata['data'][0] ??[];
         // if($proxy_ret){
         //     $results = explode(':',$proxy_ret);
         //     $proxy_data['ip'] = $results[0];
         //     $proxy_data['port'] = $results[1];
         // }
-        return $proxy_ret;
+        return $proxy_data;
      }
 
 
@@ -186,10 +184,6 @@ class StoreModel{
         $proxy_data = StoreModel::getForeignProxy();
         // $proxy_data = [];
         ///开启协程访问
-        // echo '<pre>';
-        // print_R($proxy_data);
-        // echo '</pre>';
-        // exit;
         run(function () use(&$items,$urls,$proxy_data){
             $barrier = Barrier::make();
             $count = 0;
@@ -203,8 +197,8 @@ class StoreModel{
                 Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
-                                     // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
-                                     // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
+                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+                                     ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
                     $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
