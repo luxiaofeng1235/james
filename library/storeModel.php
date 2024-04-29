@@ -229,12 +229,14 @@ class StoreModel{
     * @param $content_arr array  请求的HTML数据
     * @param $goods_list array 原始请求的校验数据
     * @param $field_key string 配置需要从哪个里面获取url
+    * @param $type 1 :判断章节内容页 2：判断列表页
     * @return unnkower
     */
-    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$field_key= 'mobile_url'){
+    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$field_key= 'mobile_url',$type = 1){
          if(!$contents_arr || !$goods_list){
             return [];
          }
+         $contnet_reg = $type!=1 ?  '/<div id="list">/' : '/id="content"/';
 
         /***************判断是否有空的数据返回 start*****************************/
          // $goods_list = array_values($goods_list);
@@ -242,13 +244,9 @@ class StoreModel{
          foreach($contents_arr as $key => $val){
             if(empty($val) || $val == ''){//空数据返回
                 $errData[] =$goods_list[$key] ?? [];
-            }else if(!preg_match('/id="content"/',$val) ){//断章处理，包含有502的未响应都会
+            }else if(!preg_match($contnet_reg,$val) ){//断章处理，包含有502的未响应都会
                 $errData[] =$goods_list[$key] ?? [];
-            }
-            // else if(!preg_match('/<div id="list">/',$val)){ //兼容列表处理
-            //      $errData[] =$goods_list[$key] ?? [];
-            // }
-            else{//正常的数据返回
+            }else{//正常的数据返回
                 $sucData[$key] = $val; //需要保存对应的key
             }
          }
@@ -280,14 +278,10 @@ class StoreModel{
                     if(empty($tval) || $tval == ''){//为空的情况
                         echo "获取数据为空，会重新抓取======================\r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //取出来当前的连接
-                     }else if(!preg_match('/id="content"/',$tval)) {//是否存在502的情况
+                     }else if(!preg_match($contnet_reg,$tval)) {//是否存在502的情况
                         echo "有断章，会重新抓取======================\r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //直接取出来当前的连接
-                     }
-                    //  else if(!preg_match('/<div id="list">/',$val)){ //兼容列表处理
-                    //     $temp_url[] =$goods_list[$tkey][$field_key] ?? '';   //直接取出来当前的连接
-                    // }
-                    else{//正常的返回
+                     }else{//正常的返回
                         $repeat_data[$tkey] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
                         unset($curl_contents1[$tkey]);
