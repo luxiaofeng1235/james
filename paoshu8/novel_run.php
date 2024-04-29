@@ -5,8 +5,8 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 
 $limit =200;
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
-$where_condition= "is_async = 1 and source ='paoshu8' and (author!='' or author!='未知') and title is not null and store_id>120000";
-$order_by  = 'store_id asc';
+$where_condition= "is_async = 1 and source ='paoshu8' and (author!='' or author!='未知') and title is not null and store_id>174762";
+$order_by  = 'store_id desc';
 $count = $mysql_obj->get_data_by_condition($where_condition , $novel_table_name,'count(store_id) as num');
 $ts_count  = $count[0]['num'] ??0;
 if(!$ts_count){

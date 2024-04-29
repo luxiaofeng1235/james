@@ -273,6 +273,9 @@ class StoreModel{
                 // exit;
                 // exit;
                 $temp_url =[];//设置中间变量
+                if(!$curl_contents1){
+                    $curl_contents1 = [];
+                }
                 foreach($curl_contents1 as $tkey=> $tval){
                     if(empty($tval) || $tval == ''){//为空的情况
                         echo "获取数据为空，会重新抓取======================\r\n";

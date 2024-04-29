@@ -195,7 +195,7 @@ class FileFactory{
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
-            $limit_size =200;
+            $limit_size =100;
             $items = array_chunk($dataList,$limit_size); //默认每一页300个请求，到详情页最多300*3=900个URL 这个是因为移动端的原因造成
             $i_num = 0;
             $count_page= count($items); //总分页数
@@ -258,7 +258,7 @@ class FileFactory{
             unset($chapter_item);
             //更细对应的状态信息
             //更新对应的is_async和syn_success_status状态
-            // $this->updateStatusInfo($store_id);//更新对应的状态，暂时不用，根据是否爬取完毕判断
+            $this->updateStatusInfo($store_id);//更新对应的状态，暂时不用，根据是否爬取完毕判断
             #$this->#$this->updateIndexStatus($store_id);($store_id);//更新首页是否运行的状态
             // $this->updateDownStatus($pro_book_id); //更新对应的状态信息
             printlog('小说（'.$info['title'].'）|pro_book_id='.$pro_book_id.'|story_id='.$story_id.'同步章节完成');
