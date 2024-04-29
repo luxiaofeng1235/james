@@ -164,10 +164,9 @@ class StoreModel{
     * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
     * @param $urls array  链接地址
-    * @param $tye intger 暂时还没用到 1：按照数据返回 2：返回状态信息
     * @return  object|unknow
     */
-     public static function swooleRquest($urls,$type = 1){
+     public static function swooleRquest($urls=[]){
         if(!$urls){
             return false;
         }
@@ -201,7 +200,7 @@ class StoreModel{
                                      ->get($urls[$i]);
                     $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
-                    $items[$hostData['path']]=$response->body();
+                    $items[$hostData['path']]=$response->getStatusCode();
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
                     $str ="async child-fork-process num = {$i} url = {$urls[$i]} \t strlen =" . strlen($response->body()) . "\t code = " . $response->getStatusCode();
                     echo $str ."\r\n";

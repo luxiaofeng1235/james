@@ -12,7 +12,7 @@ $ts_count  = $count[0]['num'] ??0;
 if(!$ts_count){
     exit("no data to run \r\n");
 }
-
+echo "all-nums：{$ts_count} \r\n";
 $pages = ceil($ts_count/$limit);
 
 for ($i=0; $i <$pages ; $i++) {
