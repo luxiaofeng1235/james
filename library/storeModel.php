@@ -126,12 +126,11 @@ class StoreModel{
         $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
         // $rand_str  = 'wandou_proxy_'.date('YmdH');
         $proxy_data = [
-            'ip'    =>  'global.ipdodo.cloud',//IP地址
-            'port'  =>  '10801', //端口
-            'username'  =>  'n1_1712733036-dh-2-region-us' ,//用户名-让代理存活5分钟
-            'password'  =>  '11e475e0', //密码
+            'ip'    =>  '154.195.49.21',//IP地址
+            'port'  =>  '2333', //端口
+            'username'  =>  'xJHc5WbhKFq5' ,//用户名-让代理存活5分钟
+            'password'  =>  'me4gxaXv6ZSzwn7r', //密码
         ];
-
         return $proxy_data;
         $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=us&protocol=socks5','GET');
         $tdata = json_decode($proxy_info,true);
