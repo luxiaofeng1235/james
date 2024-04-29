@@ -3,17 +3,17 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 
-$limit =50;
+$limit =100;
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
 $where_condition= "is_async = 1 and pro_book_id>3000 and source ='paoshu8' and (author!='' or author!='未知') and title is not null";
-$order_by  = 'store_id desc';
+$order_by  = 'store_id asc';
 $count = $mysql_obj->get_data_by_condition($where_condition , $novel_table_name,'count(store_id) as num');
 $ts_count  = $count[0]['num'] ??0;
 if(!$ts_count){
     exit("no data to run \r\n");
 }
-echo "all-nums：{$ts_count} \r\n";
 $pages = ceil($ts_count/$limit);
+echo "all-nums：{$ts_count} ,all-pages：{$pages}\r\n";
 
 for ($i=0; $i <$pages ; $i++) {
     $page = $i+1;
@@ -22,6 +22,7 @@ for ($i=0; $i <$pages ; $i++) {
     $sql .=' order by '.$order_by;
     // $sql .=" limit 1";
     $sql .=" limit ".($i*$limit).','.$limit;
+
     $list = $mysql_obj->fetchAll($sql , 'db_slave');
     if(!empty($list)){
         $dataList = [];
@@ -48,10 +49,14 @@ for ($i=0; $i <$pages ; $i++) {
         }
         //通过URL去同步相关的列表
         $t= asyncUrlList($dataList);
-        echo '<pre>';
-        print_R($t);
-        echo '</pre>';
-        exit;
+        if($t){
+              $ids= array_column($t, 'store_id');
+            //待更新的数据信息
+            $up_sql = "update {$novel_table_name} set is_resource = 1 where store_id in (".implode(',', $ids).")";
+            echo "sql = {$up_sql} \r\n";
+        }else{
+            echo "no ids to update \r\n";
+        }
     }
 }
 
@@ -92,16 +97,18 @@ function asyncUrlList($item=[]){
         if($curl_num>0 && $curl_num != $json_count){
             $x++;
             echo "url = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 本地json文件解析的总数：{$baseArr['json_count']} \t 远程章节总数：{$curl_num} \r\n";
+            $baseArr['url_count'] = $curl_num;
+            $returnList[]=$baseArr;
         }else{
+            //local_num = {$json_count} curl_num={$curl_num}
             $y++;
-            echo "url = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 章节数量一致，不需要重复采集\r\n";
+            echo "url = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 章节数量一致，不需要重复采集  \r\n";
         }
-        $baseArr['url_count'] = $curl_num;
-        $returnList[]=$baseArr;
+
+
     }
     echo "*********************************************\r\n";
     echo "需要重新拉去目录的小说有：{$x} 本，正常不需要更新的有：{$y}本 \r\n";
-    exit;
     return $returnList;
 }
 
