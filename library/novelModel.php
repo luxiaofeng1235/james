@@ -440,29 +440,26 @@ class NovelModel{
       //我的女装成长日常
       // preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$list);
       if($contents){
-           // $contents = $list[0] ?? [];
-           if($contents){
               ////替换style的样式标签，防止采集不到数据
-              $contents= str_replace('href =','href=',$contents);
-              //处理中间的换行字符,不然匹配会出问题
-              preg_match_all($link_reg,$contents,$link_href);//匹配链接
-              preg_match_all($text_reg,$contents,$link_text);//匹配文本
-              $len = count($link_href[1]);
-              $chapter_list = [];
-              //回调函数处理去除换行
-              $link_text = array_map('trimBlankLine',$link_text);
-              for ($i=0; $i <$len ; $i++) {
-                 $chapter_list[] =[
-                    'link_name' => $link_text[1][$i] ?? '',
-                    'link_url'  => $link_href[1][$i] ?? '',
-                 ];
-              }
-              return $chapter_list;
-           }
-      }else{
-        //如果上面的没有匹配出来直接从dd里获取对应的连接
-        //直接暴力一点
-        //直接从链接里开始遍历得了
+            $contents= str_replace('href =','href=',$contents);
+            //处理中间的换行字符,不然匹配会出问题
+            preg_match_all($link_reg,$contents,$link_href);//匹配链接
+            preg_match_all($text_reg,$contents,$link_text);//匹配文本;
+            $len = count($link_href[1]);
+            $chapter_list = [];
+            //回调函数处理去除换行
+            $link_text = array_map('trimBlankLine',$link_text);
+            for ($i=0; $i <$len ; $i++) {
+               $chapter_list[] =[
+                  'link_name' => $link_text[1][$i] ?? '',
+                  'link_url'  => $link_href[1][$i] ?? '',
+               ];
+            }
+            return $chapter_list;
+        }else{
+          //如果上面的没有匹配出来直接从dd里获取对应的连接
+          //直接暴力一点
+          //直接从链接里开始遍历得了
           preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$urls);
           $chapter_list = [];
           if(isset($urls[0])){

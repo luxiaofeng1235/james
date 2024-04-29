@@ -196,8 +196,8 @@ class StoreModel{
                 Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
-                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
-                                     ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
+                                     //  ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+                                     // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
                     $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
@@ -228,7 +228,7 @@ class StoreModel{
     *
     * @param $content_arr array  请求的HTML数据
     * @param $goods_list array 原始请求的校验数据
-    * @param $field_key string 配置需要从哪个里面获取url
+    * @param $field_key string 配置需要从哪个字段里面获取url
     * @param $type 1 :判断章节内容页 2：判断列表页
     * @return unnkower
     */
@@ -236,15 +236,15 @@ class StoreModel{
          if(!$contents_arr || !$goods_list){
             return [];
          }
-         $contnet_reg = $type!=1 ?  '/<div id="list">/' : '/id="content"/';
-
+         $urls = array_column($goods_list, $field_key);
+         $content_reg = $type!=1 ?  '/<div id="list">/' : '/id="content"/';
         /***************判断是否有空的数据返回 start*****************************/
          // $goods_list = array_values($goods_list);
          $errData  =  $sucData  = [];
          foreach($contents_arr as $key => $val){
             if(empty($val) || $val == ''){//空数据返回
                 $errData[] =$goods_list[$key] ?? [];
-            }else if(!preg_match($contnet_reg,$val) ){//断章处理，包含有502的未响应都会
+            }else if(!preg_match($content_reg,$val) ){//断章处理，包含有502的未响应都会
                 $errData[] =$goods_list[$key] ?? [];
             }else{//正常的数据返回
                 $sucData[$key] = $val; //需要保存对应的key
@@ -278,7 +278,7 @@ class StoreModel{
                     if(empty($tval) || $tval == ''){//为空的情况
                         echo "获取数据为空，会重新抓取======================\r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //取出来当前的连接
-                     }else if(!preg_match($contnet_reg,$tval)) {//是否存在502的情况
+                     }else if(!preg_match($content_reg,$tval)) {//是否存在502的情况
                         echo "有断章，会重新抓取======================\r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //直接取出来当前的连接
                      }else{//正常的返回
