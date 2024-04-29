@@ -244,7 +244,11 @@ class StoreModel{
                 $errData[] =$goods_list[$key] ?? [];
             }else if(!preg_match('/id="content"/',$val) ){//断章处理，包含有502的未响应都会
                 $errData[] =$goods_list[$key] ?? [];
-            }else{//正常的数据返回
+            }
+            // else if(!preg_match('/<div id="list">/',$val)){ //兼容列表处理
+            //      $errData[] =$goods_list[$key] ?? [];
+            // }
+            else{//正常的数据返回
                 $sucData[$key] = $val; //需要保存对应的key
             }
          }
@@ -279,7 +283,11 @@ class StoreModel{
                      }else if(!preg_match('/id="content"/',$tval)) {//是否存在502的情况
                         echo "有断章，会重新抓取======================\r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //直接取出来当前的连接
-                     }else{//正常的返回
+                     }
+                    //  else if(!preg_match('/<div id="list">/',$val)){ //兼容列表处理
+                    //     $temp_url[] =$goods_list[$tkey][$field_key] ?? '';   //直接取出来当前的连接
+                    // }
+                    else{//正常的返回
                         $repeat_data[$tkey] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
                         unset($curl_contents1[$tkey]);
