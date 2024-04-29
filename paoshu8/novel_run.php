@@ -17,7 +17,7 @@ echo "all-nums：{$ts_count} ,all-pages：{$pages}\r\n";
 
 for ($i=0; $i <$pages ; $i++) {
     $page = $i+1;
-    echo "//////////////////////current page = {$page} \r\n";
+    echo "current page = {$page} \r\n";
     $sql = "select store_id,story_link,title,author from {$novel_table_name} where {$where_condition}";
     $sql .=' order by '.$order_by;
     // $sql .=" limit 1";
@@ -47,7 +47,7 @@ for ($i=0; $i <$pages ; $i++) {
             }
         }
         //通过URL去同步相关的列表
-        $t= asyncUrlList($dataList);
+        $t= asyncUrlList($dataList,$pages,$page);
         if($t){
               $ids= array_column($t, 'store_id');
             //待更新的数据信息
@@ -57,7 +57,7 @@ for ($i=0; $i <$pages ; $i++) {
             echo '<pre>';
             var_dump($res);
             echo '</pre>';
-
+            exit;
         }else{
             echo "no ids to update \r\n";
         }
@@ -70,9 +70,11 @@ echo  "finish\r\n";
 * @note 获取url的列表信息
 *
 * @param  $item array 列表信息
+* @param $count_page int 总分页数
+* @param $page int 页码
 * @return  array
 */
-function asyncUrlList($item=[]){
+function asyncUrlList($item=[],$count_page =0,$page=0){
     if(!$item){
         return $item;
     }
@@ -110,9 +112,8 @@ function asyncUrlList($item=[]){
             $y++;
             echo "store_id ={$baseArr['store_id']} \turl = {$baseArr['story_link']}  \t path = {$baseArr['path']} \t 章节数量一致，不需要重复采集  \r\n";
         }
-
-
     }
+    echo "\r\n|||||||||||||||| this current page =  (".($page)."/{$count_page})\t  \tcomplate \r\n\r\n";
     echo "*********************************************\r\n";
     echo "需要重新拉去目录的小说有：{$x} 本，正常不需要更新的有：{$y}本 \r\n";
     return $returnList;
