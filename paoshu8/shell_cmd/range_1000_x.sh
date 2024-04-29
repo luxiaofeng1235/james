@@ -1,30 +1,24 @@
 #bin/bash
 i=10
-host="127.0.01"
+host="192.168.10.15"
 port="3306"
 user="root"
 password="HM9GO3JH3XrLoouh"
 database="book_center"
 #echo "$query"
 query="SELECT
-i.store_id,
-mc.book_name AS title,
-mc.id AS pro_book_id,
-mc.author,
-mc.source_url,
-is_less,
-less_count
+store_id,
+title,
+pro_book_id,
+author
 FROM
-book_center.ims_novel_info AS i
-INNER JOIN novel.mc_book AS mc ON i.pro_book_id = mc.id
+ims_novel_info AS i
 WHERE
-mc.is_less = 1
-AND source_url REGEXP 'paoshu8'
-AND less_count > 0
-AND  mc.chapter_num>700
+is_async =0
+and  source ='paoshu8'
 ORDER BY
-less_count ASC
-LIMIT 500"
+store_id asc 
+LIMIT 100"
 result=$(mysql -h $host -u $user -p$password $database -s -e "$query")
 
 
