@@ -1243,7 +1243,10 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
 
 
           foreach($list as $gkey =>$gval){
-            $gval= iconv('gbk','utf-8//ignore', $gval);
+            //非跑书8需要做转换
+            if(!preg_match('/paoshu8/',$gval)){
+               $gval= iconv('gbk','utf-8//ignore', $gval);
+            }
             $data = QueryList::html($gval)
                     ->rules($rules)
                     ->query()

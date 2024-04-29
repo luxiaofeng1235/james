@@ -64,6 +64,8 @@ if($info){
         $story_id = $url_story_id;
     }
 
+
+
     if($info[0]['is_async'] == 1){
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
@@ -144,7 +146,6 @@ if($info){
         //替换兼容采集器的一些字段规则
         $store_data = NovelModel::initStoreInfo($store_data);
         $store_data['story_id']  = $story_id; //重新覆盖story_id为当前的
-
 
         //判断如果作者没有就直接退出
         if(empty($store_data['author'])){
