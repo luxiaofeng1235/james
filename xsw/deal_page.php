@@ -28,6 +28,8 @@ if(!is_dir($download_path)){
     createFolders($download_path);
 }
 
+$cateId = isset($argv[1]) ? $argv[1] : 1;
+
 
 $size  = explode(',',$limit);
 $pages = range($size[0] , $size[1]);
@@ -59,9 +61,10 @@ $urls=[];
 foreach($pages as $page){
     $save_file = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
     $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
+    $url = StoreModel::replaceParam($url,'cateId',$cateId);
     $httpData = parse_url($url);
     $urlPath = $httpData['path']  ?? '';
-     $dataList[$urlPath]=[
+    $dataList[$urlPath]=[
         'page'  => $page,
         'url_path'  => $urlPath ,
         'story_link' =>$url
@@ -77,14 +80,9 @@ $referer_url = $urlArr['scheme']  . '://' .  $urlArr['host'];
 $item = StoreModel::swooleRquest($urls);
 $item = StoreModel::swooleCallRequest($item,$dataList,'story_link',2);
 $successNum = 0;
-
 if(!empty($item)){
     $i = 0;
     foreach($item as $key =>$val){
-        echo '<pre>';
-        print_R($val);
-        echo '</pre>';
-        exit;
         $i++;
         $page = str_replace('/list/','',$key);
         $page = str_replace('.html','',$page);
@@ -94,43 +92,10 @@ if(!empty($item)){
             $successNum++;
         }
         //每次覆盖不追加文件
-        // writeFileCombine($save_path, $val);
-        echo "num = {$i} \t page = {$page}\t url = {$referer_url}{$key} \t save_path = {$save_path} compelte\r\n";
+        writeFileCombine($save_path, $val);
+        echo "num = {$i} \t page = {$page}\t strlen = ".strlen($val)."\t url = {$referer_url}{$key} \t save_path = {$save_path} compelte\r\n";
     }
 }
-
-// $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_ret'];
-
-
-// $storeArr;
-// if(!empty($item)){
-//     foreach($item as $key => $val){
-//         //获取当前的连接分页信息
-//         $pageArr = getCurrentPage($val);
-//         if(!empty($pageArr)){
-//             $pageArr['content'] = $val;
-//             //保存对应的数组信息
-//             $storeArr[] = $pageArr;
-//         }
-//     }
-//     $successNum = 0;
-//     //保存对应的路径信息
-//     if(!empty($storeArr)){
-//         $i = 0;
-//         foreach($storeArr as $gkey => $gval){
-//             $i++;
-//             $content = $gval['content'] ?? '';//获取的内容
-//             $save_path = $gval['save_path'] ?? '';//文本文件
-//             if(!$save_path || !$content) continue;
-//             if(!empty($content)){
-//                 $successNum++;
-//             }
-//             //每次覆盖不追加文件
-//             writeFileCombine($save_path, $content);
-//             echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
-//         }
-//     }
-// }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time; //执行时间
 echo "共爬取下来的页面总数量为：{$successNum} \r\n";
