@@ -21,6 +21,8 @@ if(!$cateId){
   exit("请输入要处理的分类ID\r\n");
 }
 
+$novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
+$db_conn = 'db_master';
 
 echo "current page is page = {$page} \r\n";
 echo "*******************************************************\r\n";
@@ -65,4 +67,16 @@ echo "\r\n";
 echo "*******************************************************\r\n";
 echo "\r\n";
 
+if($insertData){
+    //同步数据
+    $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
+    if(!$ret){
+        echo "数据库数据同步失败\r\n";
+    }
+    echo "同步小说列表成功 \r\n";
+}else{
+    echo "暂无小说需要插入的数据同步\r\n";
+}
+
+echo "finish\r\n";
 ?>
