@@ -58,63 +58,67 @@ $pages = range($size[0] , $size[1]);
 $urls=[];
 foreach($pages as $page){
     $save_file = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
-    if(!file_exists($save_file)){
-         $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
-         $httpData = parse_url($url);
-        $urlPath = $httpData['path']  ?? '';
-         $dataList[$urlPath]=[
-            'page'  => $page,
-            'url_path'  => $urlPath ,
-            'story_link' =>$url
-        ];
-    }
+    $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
+    $httpData = parse_url($url);
+    $urlPath = $httpData['path']  ?? '';
+     $dataList[$urlPath]=[
+        'page'  => $page,
+        'url_path'  => $urlPath ,
+        'story_link' =>$url
+    ];
 }
-
 $urls = array_column($dataList,'story_link');
 
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
 $item = StoreModel::swooleCallRequest($item,$dataList,'story_link',2);
-echo '<pre>';
-print_R($item);
-echo '</pre>';
-exit;
+$successNum = 0;
+if(!empty($item)){
+    foreach($item as $key =>$val){
+        $page = str_replace('/list/','',$key);
+        $page = str_replace('.html','',$page);
+        $save_path  = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
+        echo $save_path."\r\n";
+        if(!empty($content)){
+            $successNum++;
+        }
+    }
+}
 
 // $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_ret'];
 
 
-$storeArr;
-if(!empty($item)){
-    foreach($item as $key => $val){
-        //获取当前的连接分页信息
-        $pageArr = getCurrentPage($val);
-        if(!empty($pageArr)){
-            $pageArr['content'] = $val;
-            //保存对应的数组信息
-            $storeArr[] = $pageArr;
-        }
-    }
-    $successNum = 0;
-    //保存对应的路径信息
-    if(!empty($storeArr)){
-        $i = 0;
-        foreach($storeArr as $gkey => $gval){
-            $i++;
-            $content = $gval['content'] ?? '';//获取的内容
-            $save_path = $gval['save_path'] ?? '';//文本文件
-            if(!$save_path || !$content) continue;
-            if(!empty($content)){
-                $successNum++;
-            }
-            //每次覆盖不追加文件
-            writeFileCombine($save_path, $content);
-            echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
-        }
-    }
-}
+// $storeArr;
+// if(!empty($item)){
+//     foreach($item as $key => $val){
+//         //获取当前的连接分页信息
+//         $pageArr = getCurrentPage($val);
+//         if(!empty($pageArr)){
+//             $pageArr['content'] = $val;
+//             //保存对应的数组信息
+//             $storeArr[] = $pageArr;
+//         }
+//     }
+//     $successNum = 0;
+//     //保存对应的路径信息
+//     if(!empty($storeArr)){
+//         $i = 0;
+//         foreach($storeArr as $gkey => $gval){
+//             $i++;
+//             $content = $gval['content'] ?? '';//获取的内容
+//             $save_path = $gval['save_path'] ?? '';//文本文件
+//             if(!$save_path || !$content) continue;
+//             if(!empty($content)){
+//                 $successNum++;
+//             }
+//             //每次覆盖不追加文件
+//             writeFileCombine($save_path, $content);
+//             echo "num = {$i} \t page = {$gval['page']}\t url = {$gval['url']} \t save_path = {$gval['save_path']} compelte\r\n";
+//         }
+//     }
+// }
 $exec_end_time = microtime(true);
 $executionTime = $exec_end_time - $exec_start_time; //执行时间
-echo "本地寻址的数据长度范围为：{$start} - {$end} \r\n";
 echo "共爬取下来的页面总数量为：{$successNum} \r\n";
 echo "run execution time: ".round(($executionTime/60),2)." minutes \r\n";
 echo "finish\r\n";
@@ -131,28 +135,28 @@ function getCurrentPage($html){
     if(!$html){
         return false;
     }
-    $content =QueryList::html($html)
-                ->rules($rules)
-                ->query()
-                ->getData();
-    $content = $content->all();
-    $pageStr  = $content['currentPage'] ?? '';
-    //转换成简体
-    $pageStr = traditionalCovert($pageStr);
-    $pageRet = explode('/',$pageStr);
-    $page = 0;
-    if(!empty($pageRet) && isset($pageRet[0])){
-        $numData  = $pageRet[0] ?? '';
-        preg_match('/\d+/',$numData , $matches);
-       if(isset($matches[0])){
-          $page = $matches[0] ?? 0;
-       }
-    }
-    // echo "-----{$pageStr} \t{$page}\r\n";
-    //获取生成的连接信息
-    $link_url  = $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
-    $info['page'] = $page;
-    $info['url'] = $link_url;
+    // $content =QueryList::html($html)
+    //             ->rules($rules)
+    //             ->query()
+    //             ->getData();
+    // $content = $content->all();
+    // $pageStr  = $content['currentPage'] ?? '';
+    // //转换成简体
+    // $pageStr = traditionalCovert($pageStr);
+    // $pageRet = explode('/',$pageStr);
+    // $page = 0;
+    // if(!empty($pageRet) && isset($pageRet[0])){
+    //     $numData  = $pageRet[0] ?? '';
+    //     preg_match('/\d+/',$numData , $matches);
+    //    if(isset($matches[0])){
+    //       $page = $matches[0] ?? 0;
+    //    }
+    // }
+    // // echo "-----{$pageStr} \t{$page}\r\n";
+    // //获取生成的连接信息
+    // $link_url  = $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
+    // $info['page'] = $page;
+    // $info['url'] = $link_url;
     $info['save_path'] = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
     return $info;
 }
