@@ -25,7 +25,7 @@ if(!is_dir($download_path)){
     createFolders($download_path);
 }
 $cateId = 1;
-for ($i=1; $i <=50 ; $i++) {
+for ($i=1; $i <=500 ; $i++) {
     $page = $i;
     $list = getPageList($cateId,$page);
     if(!$list){
