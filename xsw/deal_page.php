@@ -60,32 +60,27 @@ foreach($pages as $page){
     $save_file = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
     if(!file_exists($save_file)){
          $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
-        $dataList[]=['story_link' =>$url];
+         $httpData = parse_url($url);
+        $urlPath = $httpData['path']  ?? '';
+         $dataList[$urlPath]=[
+            'page'  => $page,
+            'url_path'  => $urlPath ,
+            'story_link' =>$url
+        ];
     }
 }
 
-// $start =isset($argv[1]) ? trim($argv[1]) : 0; //开始的长度
-// $end = 100; //最终的尺寸
-// $pages = array_slice($pages,$start , $end);
-// echo '<pre>';
-// print_R($pages);
-// echo '</pre>';
-// exit;
-// $dataList =$urls= [];
-// //生成页面链接方便进行爬取
-// foreach($pages as $page){
-//    //替换相关的关联参数信息
-//     // $url ='http://www.baidu.com';
-//     $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
-//     $dataList[]= [
-//         'story_link'    =>  $url,
-//     ];
-// }
-
 $urls = array_column($dataList,'story_link');
+
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
-$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_ret'];
+$item = StoreModel::swooleCallRequest($item,$dataList,'story_link',2);
+echo '<pre>';
+print_R($item);
+echo '</pre>';
+exit;
+
+// $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_ret'];
 
 
 $storeArr;
