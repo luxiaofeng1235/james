@@ -228,7 +228,7 @@ class StoreModel{
     * @param $content_arr array  请求的HTML数据
     * @param $goods_list array 原始请求的校验数据
     * @param $field_key string 配置需要从哪个字段里面获取url
-    * @param $type 1 :判断章节内容页 2：判断列表页
+    * @param $type 1 :判断章节内容页 2：判断列表页(可以根据需要进行调整)
     * @return unnkower
     */
     public static function swooleCallRequest($contents_arr=[],$goods_list=[],$field_key= 'mobile_url',$type = 1){
@@ -277,11 +277,15 @@ class StoreModel{
                 }
                 foreach($curl_contents1 as $tkey=> $tval){
                     if(empty($tval) || $tval == ''){//为空的情况
-                        echo "获取数据为空，会重新抓取======================\r\n";
-                        $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //取出来当前的连接
+                        //当前需要抓取的url连接诶
+                        $t_url = $goods_list[$tkey][$field_key] ?? '';
+                        echo "获取数据为空，会重新抓取====================== {$t_url}\r\n";
+                        $temp_url[] = $t_url; //取出来当前的连接
                      }else if(!preg_match($content_reg,$tval)) {//是否存在502的情况
-                        echo "有断章，会重新抓取====================== \r\n";
-                        $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //直接取出来当前的连接
+                        //当前需要去抓取的url
+                        $s_url = $goods_list[$tkey][$field_key] ?? '';
+                        echo "有断章，会重新抓取====================== {$s_url}\r\n";
+                        $temp_url[] =$s_url; //直接取出来当前的连接
                      }else{//正常的返回
                         $repeat_data[$tkey] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
