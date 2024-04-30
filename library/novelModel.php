@@ -1740,6 +1740,24 @@ public static function saveDetailHtml($novelList=[]){
     return !empty($info) ? $info : [];
  }
 
+  /**
+* @note 根据小说名+作者获取详情信息
+*
+* @param $title string  标题
+* @param $author stirng 作者
+* @param $field string  指定字段信息
+* @return unnkower
+*/
+ public static function getNovelByName($title='',$author='',$field ='store_id,title,author,story_link'){
+    if(!$title || !$author){
+      return false;
+    }
+    $sql = "select {$field} from ".Env::get('APICONFIG.TABLE_NOVEL')." where title='{$title}' and author='{$author}'";
+    global $mysql_obj;
+    $info = $mysql_obj->fetch($sql,'db_slave');
+    return !empty($info) ? $info : [];
+ }
+
 /**
 * @note 重复调用请求，防止有空数据返回做特殊调用--小说章节详情页检测
 *
