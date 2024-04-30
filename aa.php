@@ -18,15 +18,23 @@ $goodsList= [];
 foreach(range(1, 50) as $key =>$val){
     $url = 'https://www.twking.cc/list/1_'.$val.'.html';
     $httpData = parse_url($url);
-    $goodsList[] = [
+    $urlPath = $httpData['path']  ?? '';
+    if(!$urlPath) continue;
+    $goodsList[$urlPath] = [
         'page'  => $val,
         'url_path'  => $httpData['path'] ,
-        'mobile_url' =>  'https://www.twking.cc/list/1_'.$val.'.html',
+        'story_link' =>  'https://www.twking.cc/list/1_'.$val.'.html',
     ];
 }
 
-$urls= array_column($goodsList, 'mobile_url');
-$aa = StoreModel::swooleRquest($urls);
+$urls= array_column($goodsList, 'story_link');
+$list = StoreModel::swooleRquest($urls);
+//重试获取数据
+$list = StoreModel::swooleCallRequest($list,$goodsList,'story_link',2);
+echo '<pre>';
+print_R($list);
+echo '</pre>';
+exit;
 echo '<pre>';
 print_R($aa);
 echo '</pre>';

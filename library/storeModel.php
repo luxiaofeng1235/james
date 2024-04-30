@@ -235,8 +235,8 @@ class StoreModel{
          if(!$contents_arr || !$goods_list){
             return [];
          }
-         $urls = array_column($goods_list, $field_key);
-         $content_reg = $type!=1 ?  '/<div id="list">/' : '/id="content"/';
+         //type = 2的时候，一般都是可以自动配置的，根据需要自行调整
+         $content_reg = $type!=1 ?  '/class="list-out"/' : '/id="content"/';
         /***************判断是否有空的数据返回 start*****************************/
          // $goods_list = array_values($goods_list);
          $errData  =  $sucData  = [];
@@ -252,16 +252,15 @@ class StoreModel{
         /***************判断是否有空的数据返回 end*****************************/
 
 
-
          $repeat_data = $curl_contents1 =[];
          //数据为空的情况判断
          if(!empty($errData)){
             echo "有返回为空或者异常数据的数据请求，会重新去进行请求返回\r\n";
             $successNum = 0;
+
             $old_num = count($errData);
             $urls = array_column($errData, $field_key); //进来先取出来,根据上面的取出来
             while(true){
-
                 //通过说swoole来完成并发请求，采用协程
                 $curl_contents1 = StoreModel::swooleRquest($urls);
                 // echo '<pre>';
@@ -281,7 +280,7 @@ class StoreModel{
                         echo "获取数据为空，会重新抓取======================\r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //取出来当前的连接
                      }else if(!preg_match($content_reg,$tval)) {//是否存在502的情况
-                        echo "有断章，会重新抓取======================\r\n";
+                        echo "有断章，会重新抓取====================== \r\n";
                         $temp_url[] =$goods_list[$tkey][$field_key] ?? ''; //直接取出来当前的连接
                      }else{//正常的返回
                         $repeat_data[$tkey] = $tval;
