@@ -24,9 +24,10 @@ $download_path =Env::get('SAVE_CACHE_INFO_PATH');//下载路径;
 if(!is_dir($download_path)){
     createFolders($download_path);
 }
-for ($i=2000; $i <=2002 ; $i++) {
+$cateId = 1;
+for ($i=1; $i <=50 ; $i++) {
     $page = $i;
-    $list = getPageList($page);
+    $list = getPageList($cateId,$page);
     if(!$list){
         return '数据为空不需要处理';
     }
@@ -124,20 +125,52 @@ function getDetailList($item = []){
 * @return
 */
 
-function getPageList($page= 1){
+function getPageList($cateId=1,$page= 1){
     if(!$page) return false;
+    global $urlRules;
     //获取分页的列表文件信息
-    $pageFile = Env::get('SAVE_PAGE_PATH').DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
+    $pageFile = Env::get('SAVE_PAGE_PATH').DS. StoreModel::$page_name.$cateId.'_'.$page.'.'.StoreModel::$file_type;
     echo "page = {$page} of html path ----{$pageFile} \r\n";
     $files  =  readFileData($pageFile);
     if(!$files){
         echo "this story files is no data\r\n";
         return ;
     }
-    $ql = QueryList::html($files);
-    global $urlRules;
+
+    // echo '<pre>';
+    // print_R($files);
+    // echo '</pre>';
+    // exit;
     $range = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_range']; //循环的列表范围
     $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['page_list']; //获取分页的具体明细
+
+//     $files= '<div class="list-out">
+// <span class="flex w80"><em><a href="https://www.twking.cc/237_237328/" target="xs">星海最強暴力輔助</a></em><em><a href="https://www.twking.cc/237_237328/125490766.html" target="zj">443.第424章 少年遊</a></em></span>
+// <span class="gray">隐藏的狼人&nbsp;04-30</span>
+// </div>';
+
+    // $ql = QueryList::html($files);
+    // echo '<pre>';
+    // print_R($rules);
+    // echo '</pre>';
+
+    // $item = $ql->rules($rules)
+    //             ->query()
+    //             ->getData();
+    // echo '<pre>';
+    // print_R($item);
+    // echo '</pre>';
+    // exit;
+
+
+
+    // echo '<pre>';
+    // print_R($range);
+    // echo '</pre>';
+    // echo '<pre>';
+    // print_R($rules);
+    // echo '</pre>';
+    // exit;
     $ql = QueryList::html($files);
     $item = $ql->rules($rules)
                 ->range($range)
@@ -146,6 +179,10 @@ function getPageList($page= 1){
     $item = $item->all();
     $http = new HttpRequest;
     $data = StoreModel::traverseEncoding($item);
+    echo '<pre>';
+    var_dump($data);
+    echo '</pre>';
+    exit;
     return $data ?? [];
 }
 

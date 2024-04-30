@@ -140,70 +140,19 @@ return [
         ],
     ],
     //台湾站的小说采集规则
-    'xsw'   =>[
+    'twking'   =>[
         /////////////////////////完本类型排行榜
-        'page_range'    =>  '#alistbox',//分页循环的PC的列表范围
-        'page_range_mobile' =>'.bookbox',//分页循环的移动段列表范围
-        //移动端分页列表
-        'page_list_mobile' =>[
-            'title' =>  ['.iTit a','text'],//小说标题
-            'author'    =>  ['.author','text'], //作者
-            'cover_logo' => ['.bookimg img','src','',function($img_url){ //图片信息
-                if(!preg_match('/https\:\/\//',$img_url)){
-                    //自动补齐封面
-                    $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
-                 }
-                return $img_url;
-            }],
-            'nearby_chapter'   =>['.update a','text'], //最近的章节状态
-            'intro' =>['.intro_line','text'],   //小说简介
-            'detail_link'  =>  ['.iTit a','href','',function($url){ //小说的详情页链接
-                return Env::get('TWCONFIG.API_HOST_URL').$url;
-            }],
-            'story_link'  =>['.iTit a','href', '',function($item){//小说的章节链接
-                $url = preg_replace('/\.html/','/',$item);
-                $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
-                return $url;
-            }],
-            'story_id'  => ['.iTit a','href', '',function($results){ //存一下story_方便到时候去存取
-                 preg_match('/\d+/',$results, $matches);
-                 $story_id = 0;
-                 if(isset($matches[0])){
-                    $story_id = $matches[0];
-                 }
-                 return $story_id;
-            }],
-        ],
+        'page_range'    =>  '.lastupdate .list-out',//分页循环的PC的列表范围
         //PC端分页列表
         'page_list' =>[
-            'title' =>['.title a','text'],  //小说名
-            'author'    =>  ['.title span','text'], //作者
-             'cover_logo' =>['.pic img','src','',function($img_url){//图片信息
-                 if(!preg_match('/https\:\/\//',$img_url)){
-                    //自动补齐封面
-                    $img_url = Env::get('TWCONFIG.API_HOST_URL') . $img_url;
-                 }
-                return $img_url;
+            'title' =>['.w80 em:eq(0) a','text'],  //小说名
+            'author'    => ['.gray','text','',function($item){//小说作者处理
+                $author_reg = '/[0-9]{1,}-[0-9]{1,}/';
+                $str  = preg_replace($author_reg, '',$item);
+                $str = trimBlankSpace($str);//去除首尾空格
+                return $str;
             }],
-            'nearby_chapter'   =>['.sys a','text'],//最近的章节状态
-            'intro' =>['.intro','text'],  //小说简介
-            'detail_link'  =>  ['.pic a','href','',function($url){//详情页链接
-                // $url =
-                return Env::get('TWCONFIG.API_HOST_URL').$url;
-            }],
-            'story_link'  =>['.title a','href', '',function($item){//章节链接
-                $url = preg_replace('/\.html/','/',$item);
-                $url = Env::get('TWCONFIG.API_HOST_URL') . $url;
-                return $url;
-            }],
-            'story_id'  => ['.title a','href', '',function($results){//存一下story_方便到时候去存取
-                 preg_match('/\d+/',$results, $matches);
-                 $story_id = 0;
-                 if(isset($matches[0])){
-                    $story_id = $matches[0];
-                 }
-                 return $story_id;
-            }],
+            'story_link'    =>['.w80 em:eq(0) a','href'],//小说链接
         ],
         ///////////////获取每个分页的页码
         'page_ret'  =>  [
