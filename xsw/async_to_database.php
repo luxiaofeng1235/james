@@ -15,7 +15,7 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
 use Yurun\Util\HttpRequest;
 
-$page = 5;
+$page = 1;
 $cateId = isset($argv[1]) ? $argv[1] : '';
 if(!$cateId){
   exit("请输入要处理的分类ID\r\n");
@@ -26,11 +26,19 @@ echo "*******************************************************\r\n";
 echo "page = {$page} cateId = {$cateId} \r\n";
 saveNovelData($cateId , $page); //同步数据
 
+/**
+* @note 保存小说数据到库里
+*
+* @param  $cateId int 分类id
+* @param $page int 分页
+* @return array
+*/
+
 function saveNovelData($cateId , $page){
     $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
     $db_conn = 'db_master';
     $json_file = Env::get('SAVE_CACHE_INFO_PATH') .DS .StoreModel::$detail_page . $cateId . '_'. $page.'.json';
-    echo "json_file = $json_file\r\n";
+     echo "json_file = $json_file\r\n";
     if(!file_exists($json_file)){
         return '当前文件不存在，请稍后重试'.PHP_EOL;
     }
@@ -64,6 +72,8 @@ function saveNovelData($cateId , $page){
        }
     }
   echo "\r\n===========共计小说".count($storyList)."本 ，待插入同步的有 (".count($insertData) . ")本，已存在的有 ( {$i_num} )本\r\n";
+  $repeat_rate = sprintf('%.2f',$i_num / count($storyList) * 100) .'%';
+  echo "每30本的小说的重复率为：" . $repeat_rate .PHP_EOL;
   echo "\r\n";
   echo "*******************************************************\r\n";
   echo "\r\n";

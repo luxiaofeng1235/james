@@ -58,6 +58,16 @@ $pages = range($size[0] , $size[1]);
 2100
  */
 $urls=[];
+$pages = array_slice($pages ,400, 1); //按照数据进行分割
+
+/*
+0 -100 --处理中 --已完成
+100 -100 -处理中 --已完成
+200 -100 -处理中 --已完成
+300 -100 -处理中 --已完成
+400 -100
+
+ */
 foreach($pages as $page){
     $save_file = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
     $url = StoreModel::replaceParam(Env::get('TWCONFIG.API_HOST_COMPLATE'),'pages',$page);
@@ -70,6 +80,7 @@ foreach($pages as $page){
         'story_link' =>$url
     ];
 }
+
 $urls = array_column($dataList,'story_link');
 $get_url = reset($dataList);
 $urlArr = parse_url($get_url['story_link']);
