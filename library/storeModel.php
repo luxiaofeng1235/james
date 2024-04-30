@@ -87,11 +87,6 @@ class StoreModel{
         }
         //繁简体转换
         $chapter_list = StoreModel::traverseEncoding($chapter_list);
-        $arr = reset($chapter_list);
-        echo '<pre>';
-        print_R($arr);
-        echo '</pre>';
-        exit;
         return $chapter_list;
    }
 
