@@ -3,7 +3,7 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 
-$limit =100;
+$limit =200;
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
 $where_condition= "1
 and is_async = 1
