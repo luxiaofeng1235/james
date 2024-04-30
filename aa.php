@@ -16,32 +16,8 @@ use Yurun\Util\HttpRequest;
 $list = StoreModel::swooleRquest('https://www.twking.cc/240_240053/');
 $content = array_values($list);
 $s_contents = $content[0] ?? '';
-$arr = StoreModel::novelChapterList($s_contents);
-echo '<pre>';
-print_R($arr);
-echo '</pre>';
-exit;
 
-preg_match('/<div class=\"info-chapters flex flex-wrap\">.*?<\/div>/ism',$s_contents ,$matches);
-$cc = $matches[0] ?? '';
-$link_reg = '/<a href=\"([^"]+)\".*?>/'; //匹配A连接
-$text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
-preg_match_all($link_reg,$cc,$link_href);//匹配链接
-preg_match_all($text_reg,$cc,$link_text);//匹配文本;
-$len = count($link_href[1]);
-$chapter_list = [];
-//回调函数处理去除换行
-$link_text = array_map('trimBlankLine',$link_text);
-for ($i=0; $i <$len ; $i++) {
-   $chapter_list[] =[
-      'link_name' => $link_text[1][$i] ?? '',
-      'link_url'  => $link_href[1][$i] ?? '',
-   ];
-}
-echo '<pre>';
-print_R($chapter_list);
-echo '</pre>';
-exit;
+
 
 
 $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
@@ -50,10 +26,11 @@ $eles  = QueryList::html($s_contents)
       ->rules($rules)
       ->query()
       ->getData();
-$newResponse = $eles->all();
-dd($newResponse);
+$store_data = $eles->all();
+
+$list = NovelModel::getCharaList($s_contents,$store_data['title'],true);
 echo '<pre>';
-print_R($newResponse);
+print_R($list);
 echo '</pre>';
 exit;
 

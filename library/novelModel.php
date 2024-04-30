@@ -393,16 +393,20 @@ class NovelModel{
     /**
     * @note 从特定的url中获取对应的数据信息
     * @param $html string 文本内容
+    * @param $is_fanti_ex bool 是否为繁简体转换 默认false不转换 true：转换
     * @return array
     *
     */
-   public static function getCharaList($html,$title=''){
+   public static function getCharaList($html,$title='',$is_fanti_ex=false){
       if(!$html || !$title){
         return '';
       }
       $html = array_iconv($html); //转换编码格式
 
-      $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
+      //处理繁简体的转换文字
+
+      # $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
+      $link_reg ='/<a href=\"([^"]+)\".*?>/';
       $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
       //只取正文里的内容信息，其他的更新的简介不要
       //匹配正文章节内容
@@ -430,10 +434,12 @@ class NovelModel{
 
       //<dt>《毒誓一九四一》正文</dt>
       //兼容这种带正文的正则
-      if(preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$with_content)){
+      if(preg_match('/《'.$title.'》正文.*<\/dl>/ism',$html,$with_content)){//带有正文的匹配
           $contents = $with_content[0] ?? [];
-      }else if(preg_match('/<div id=\"list\".*?>.*<\/dl>/ism',$html ,$list)){
+      }else if(preg_match('/<div id=\"list\".*?>.*<\/dl>/ism',$html ,$list)){//带有id="list"的规则
           $contents = $list[0] ?? [];
+      }else if(preg_match('/<div class=\"info-chapters flex flex-wrap\">.*?<\/div>/ism',$html,$list)){//匹配台湾网站
+          $contents = $list[0] ?? '';
       }
       //《我在古代办妇联》正文卷
       //《我的女装成长日常》正文卷
@@ -454,6 +460,10 @@ class NovelModel{
                   'link_name' => $link_text[1][$i] ?? '',
                   'link_url'  => $link_href[1][$i] ?? '',
                ];
+            }
+            //处理繁简体转换
+            if($is_fanti_ex){
+              $chapter_list =  StoreModel::traverseEncoding($chapter_list);
             }
             return $chapter_list;
         }else{
