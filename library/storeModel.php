@@ -126,10 +126,10 @@ class StoreModel{
         $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
         // $rand_str  = 'wandou_proxy_'.date('YmdH');
         $proxy_data = [
-            'ip'    =>  '154.195.49.21',//IP地址
-            'port'  =>  '2333', //端口
-            'username'  =>  'xJHc5WbhKFq5' ,//用户名-让代理存活5分钟
-            'password'  =>  'me4gxaXv6ZSzwn7r', //密码
+            'ip'    =>  'global.ipdodo.cloud',//IP地址
+            'port'  =>  '10801', //端口
+            'username'  =>  'n1_1712733036-dh-2-region-us' ,//用户名-让代理存活5分钟
+            'password'  =>  '11e475e0', //密码
         ];
         return $proxy_data;
         $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=us&protocol=socks5','GET');
@@ -195,8 +195,8 @@ class StoreModel{
                 Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
                     $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
                                      ->rawHeader('ddd:value4')
-                                     //  ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
-                                     // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
+                                      ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+                                     ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
                                      ->get($urls[$i]);
                     $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了

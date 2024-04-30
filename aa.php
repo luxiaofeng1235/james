@@ -13,23 +13,10 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
-$od = opencc_open("tw2sp.json");
-$text = opencc_convert("網遊倒退一分鍾
- 第4章王者獎勵
-尊敬的黑暗殿下，能見證您的裝備強化到+10，是我最大的榮欣，但是如果您要繼續強化下去的話，我不得不提醒您一句。”
-
-“本次活動強化增加20%強化概率，隻針對于+10以内的裝備，如果您要強化+11的話，将不能享受20%成功率的活動
- " , $od);
-
-
-opencc_close($od);
-
-dd($text);
-exit;
 
 $url= 'https://www.twking.cc/244_244251/125484103.html';
 foreach(range(1, 20) as $key =>$val){
-    $urls[] = $url;
+    $urls[] = 'https://www.twking.cc/list/1_'.$val.'.html';
 }
 
 $aa = StoreModel::swooleRquest($urls);
