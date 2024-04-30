@@ -64,8 +64,6 @@ if($info){
         $story_id = $url_story_id;
     }
 
-
-
     if($info[0]['is_async'] == 1){
         $factory->updateDownStatus($info[0]['pro_book_id']);
         echo "url：---".$story_link."---当前数据已同步，请勿重复同步11\r\n";
@@ -161,7 +159,6 @@ if($info){
             NovelModel::killMasterProcess();//退出主程序
             exit();
         }
-
 
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);

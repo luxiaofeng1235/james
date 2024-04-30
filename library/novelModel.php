@@ -402,7 +402,6 @@ class NovelModel{
         return '';
       }
       $html = array_iconv($html); //转换编码格式
-
       //处理繁简体的转换文字
 
       # $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
