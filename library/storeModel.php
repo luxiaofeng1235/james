@@ -55,6 +55,39 @@ class StoreModel{
         return $host_url;
     }
 
+     /**
+    * @note 从特定的url中获取对应的数据信息
+    * @return array
+    *
+    */
+   public static function novelChapterList($html){
+      if(!$html){
+        return '';
+      }
+      $contents = '';
+      $chapter_list = [];
+      preg_match('/<div class=\"info-chapters flex flex-wrap\">.*?<\/div>/ism',$html,$list);
+      $contents = $list[0] ?? '';
+      if($contents){
+            $link_reg = '/<a href=\"([^"]+)\".*?>/'; //匹配A连接
+            $text_reg ='/<a href=\"[^\"]*\"[^>]*>(.*?)<\/a>/si';//匹配链接里的文本
+            //处理中间的换行字符,不然匹配会出问题
+            preg_match_all($link_reg,$contents,$link_href);//匹配链接
+            preg_match_all($text_reg,$contents,$link_text);//匹配文本;
+            $len = count($link_href[1]);
+
+            //回调函数处理去除换行
+            $link_text = array_map('trimBlankLine',$link_text);
+            for ($i=0; $i <$len ; $i++) {
+               $chapter_list[] =[
+                  'link_name' => $link_text[1][$i] ?? '',
+                  'link_url'  => $link_href[1][$i] ?? '',
+               ];
+            }
+        }
+        return $chapter_list;
+   }
+
 
     /**
     * @note 统一处理小说信息的返回
