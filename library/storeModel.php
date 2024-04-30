@@ -275,6 +275,7 @@ class StoreModel{
                 if(!$curl_contents1){
                     $curl_contents1 = [];
                 }
+                $len = 50 ;//至少要保持页面有数据，防止数据为空
                 foreach($curl_contents1 as $tkey=> $tval){
                     if(empty($tval) || $tval == ''){//为空的情况
                         //当前需要抓取的url连接诶
