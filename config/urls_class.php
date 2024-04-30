@@ -153,6 +153,11 @@ return [
                 return $str;
             }],
             'story_link'    =>['.w80 em:eq(0) a','href'],//小说链接
+             'story_id'  =>['.w80 em:eq(0) a','href' , '',function($item){//小说网站ID
+                $urlData = parse_url($item);
+                $story_id = str_replace('/', '',  $urlData['path']);
+                return $story_id ?? '';
+            }], //存一下对应的
         ],
         ///////////////获取每个分页的页码
         'page_ret'  =>  [

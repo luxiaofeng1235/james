@@ -32,8 +32,8 @@ for ($i=1; $i <=50 ; $i++) {
         return '数据为空不需要处理';
     }
     ////按照对应的可以去分割数据
-    $ret = asyncJsonFile($list , $page);
-    sleep(3); //没戏休息三秒钟
+    $ret = asyncJsonFile($list ,$cateId,$page);
+    sleep(1); //没戏休息三秒钟
 }
 echo "================================================\r\n";
 echo "over\r\n";
@@ -44,35 +44,23 @@ echo "over\r\n";
 * @param $item array 需要处理的数据
 * @return array
 */
-function asyncJsonFile($list , $page= 1){
+function asyncJsonFile($list , $cateId, $page= 1){
     if(!$list){
         return [];
     }
     global $pinyin,$download_path;
     $list = double_array_exchange_by_field($list ,'story_id');
-    $urls = array_column($list , 'detail_link');
-    //设置配置细腻
-    $item = StoreModel::swooleRquest($urls);
-    if(empty($item)){
-        echo "数据有问题，请检查\r\n";
-        return false;
-    }
-    //组装获取分类和连载的小说状态信息
-    $arrList = getDetailList($item);
-    //最终需要更新的章节信息去变更处理
-    $returnList = [];
+
+    $returnList= [];
     ///合并两部分的数据信息
     foreach($list as $key =>$val){
-        if(isset($arrList[$key])){
-            $ext_data =$pinyin->name($val['title'] , PINYIN_KEEP_NUMBER);
-            $val['english_name'] = $ext_data ? implode('',$ext_data) : '';
-            $val = array_merge($val , $arrList[$key]);
-        }
+        $ext_data =$pinyin->name($val['title'] , PINYIN_KEEP_NUMBER);
+        $val['english_name'] = $ext_data ? implode('',$ext_data) : '';
         $returnList[] = $val;
     }
 
     //保存的json文件信息的路径
-    $save_json_file = $download_path . DS . StoreModel::$detail_page .$page.'.json';
+    $save_json_file = $download_path . DS . StoreModel::$detail_page .$cateId .'_'.$page.'.json';
     if(empty($returnList)){
         return "数据为空不需要处理\r\n";
     }
@@ -179,10 +167,6 @@ function getPageList($cateId=1,$page= 1){
     $item = $item->all();
     $http = new HttpRequest;
     $data = StoreModel::traverseEncoding($item);
-    echo '<pre>';
-    var_dump($data);
-    echo '</pre>';
-    exit;
     return $data ?? [];
 }
 
