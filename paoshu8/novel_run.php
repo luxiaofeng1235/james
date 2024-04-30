@@ -10,7 +10,7 @@ and is_async = 1
 and source ='paoshu8'
 and (author!='' or author!='未知')
 and  (title!='' or title is not null)
-and pro_book_id>3000
+and store_id<174775
 and is_resource = 0";
 $order_by  = 'store_id desc';
 $count = $mysql_obj->get_data_by_condition($where_condition , $novel_table_name,'count(store_id) as num');
