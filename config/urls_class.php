@@ -173,25 +173,20 @@ return [
         /////////////小说详情页的获取分类和连载状态
          //分类和连载的状态信息
         'detail_info'   =>  [
-            'location'  =>  ['.bread-crumbs','text','',function($location){
-                //更新对应的章节信息
-                $brandStr  = trimBlankLine($location);
-                $brandStr =preg_replace('/\s+/',' &gt; ',$brandStr); //转成面包屑的对应的提示
-                return $brandStr;
-            }],//面包屑
-            'cate_name' =>  ['.box_info tr:eq(4) td:eq(0)','text'], //小说分类
-            'status' =>  ['.box_info tr:eq(4) td:eq(2)','text'], //小说分类
-            'third_update_time'   =>  ['.box_info tr:eq(5) td:eq(3)','text'],//小说的更新时间
-            'story_id'    =>  ['.bread-crumbs li:eq(2) a','href','',function($item){
-                // $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A链接
-                // preg_match($link_reg , $item , $matches);
-                // $source_url = $matches[1] ?? 0;
-                $story_id = str_replace('/book/','',$item);
-                $story_id = str_replace('/','',$story_id);
-                return $story_id;
-
-            }],//获取面包屑里的连接信息
-            'link_url'  =>  ['.bread-crumbs li:eq(2) a','href'],
+            'cover_logo' =>  ['meta[property=og:image]','content'],//小说封面
+            'title' =>  ['meta[property=og:novel:book_name]','content'],//小说标题
+            'author' => ['meta[property=og:novel:author]','content'], //作者
+            'cate_name' =>  ['meta[property=og:novel:category]','content'],//分类名称
+            'status'  =>  ['meta[property=og:novel:status]','content'],//连载状态
+            'third_update_time' =>  ['meta[property=og:novel:update_time]','content'],//小说更新时间
+            'story_link'  =>   ['meta[property=og:novel:read_url]','content'],//当前的URL
+            'nearby_chapter'    =>['meta[property=og:novel:lastest_chapter_name]','content'], //最近的文章
+            'intro' =>['meta[name=description]','content','',function($content){ //小说简介
+                $content = filterHtml($content); //过滤字符
+                return $content;
+             }],
+             'tag'   => ['meta[property=og:novel:category]','content'],//tag标签
+             'location'  =>  ['.info-title','text'],//小说的面包屑位置
         ],
         /////////////////////////文章内容相关
          //采集文章内容的规则

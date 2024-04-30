@@ -13,6 +13,22 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
+$list = StoreModel::swooleRquest('https://www.twking.cc/238_238017/');
+$content = array_values($list);
+$s_contents = $content[0] ?? '';
+
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
+
+$eles  = QueryList::html($s_contents)
+      ->rules($rules)
+      ->query()
+      ->getData();
+$newResponse = $eles->all();
+dd($newResponse);
+echo '<pre>';
+print_R($newResponse);
+echo '</pre>';
+exit;
 
 $goodsList= [];
 foreach(range(1, 50) as $key =>$val){

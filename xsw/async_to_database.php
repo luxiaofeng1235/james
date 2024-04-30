@@ -62,21 +62,26 @@ foreach($storyList as $value){
       echo "num = {$num} \t title={$value['title']}\t author = {$value['author']} is to insert this data\r\n";
    }
 }
+
+echo '<pre>';
+print_R($insertData);
+echo '</pre>';
+exit;
 echo "\r\n===========共计小说".count($storyList)."本 ，待插入同步的有 (".count($insertData) . ")本，已存在的有 ( {$i_num} )本\r\n";
 echo "\r\n";
 echo "*******************************************************\r\n";
 echo "\r\n";
 
-if($insertData){
-    //同步数据
-    $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
-    if(!$ret){
-        echo "数据库数据同步失败\r\n";
-    }
-    echo "同步小说列表成功 \r\n";
-}else{
-    echo "暂无小说需要插入的数据同步\r\n";
-}
+// if($insertData){
+//     //同步数据
+//     $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
+//     if(!$ret){
+//         echo "数据库数据同步失败\r\n";
+//     }
+//     echo "同步小说列表成功 \r\n";
+// }else{
+//     echo "暂无小说需要插入的数据同步\r\n";
+// }
 
 echo "finish\r\n";
 ?>
