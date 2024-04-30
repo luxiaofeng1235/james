@@ -68,25 +68,34 @@ foreach($pages as $page){
     ];
 }
 $urls = array_column($dataList,'story_link');
+$get_url = reset($dataList);
+$urlArr = parse_url($get_url['story_link']);
+$referer_url = $urlArr['scheme']  . '://' .  $urlArr['host'];
+
 
 //设置配置细腻
 $item = StoreModel::swooleRquest($urls);
 $item = StoreModel::swooleCallRequest($item,$dataList,'story_link',2);
 $successNum = 0;
+
 if(!empty($item)){
     $i = 0;
     foreach($item as $key =>$val){
+        echo '<pre>';
+        print_R($val);
+        echo '</pre>';
+        exit;
         $i++;
         $page = str_replace('/list/','',$key);
         $page = str_replace('.html','',$page);
         $save_path  = $download_path.DS. StoreModel::$page_name.$page.'.'.StoreModel::$file_type;
-        echo $save_path."\r\n";
+        // echo $save_path."\r\n";
         if(!empty($val)){
             $successNum++;
         }
         //每次覆盖不追加文件
         // writeFileCombine($save_path, $val);
-        echo "num = {$i} \t page = {$page}\t url = {$key} \t save_path = {$save_path} compelte\r\n";
+        echo "num = {$i} \t page = {$page}\t url = {$referer_url}{$key} \t save_path = {$save_path} compelte\r\n";
     }
 }
 
