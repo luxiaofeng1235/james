@@ -13,6 +13,24 @@ use Overtrue\Pinyin\Pinyin;
 use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
+$url= 'https://www.twking.cc/244_244251/125484103.html';
+foreach(range(1, 20) as $key =>$val){
+    $urls[] = $url;
+}
+
+$aa = StoreModel::swooleRquest($urls);
+echo 33;exit;
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+
+$aa  = StoreModel::swooleRquest('http://www.paoshu8.info/0_353/24718333333333333333333333337.html');
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
+
 $res = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=us&protocol=socks5','GET');
 echo '<pre>';
 print_R($res);

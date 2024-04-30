@@ -3,9 +3,15 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 
-$limit =200;
+$limit =50;
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
-$where_condition= "is_async = 1 and source ='paoshu8' and (author!='' or author!='未知') and title is not null and store_id>174762";
+$where_condition= "1
+and is_async = 1
+and source ='paoshu8'
+and (author!='' or author!='未知')
+and  (title!='' or title is not null)
+and pro_book_id>3000
+and is_resource = 0";
 $order_by  = 'store_id desc';
 $count = $mysql_obj->get_data_by_condition($where_condition , $novel_table_name,'count(store_id) as num');
 $ts_count  = $count[0]['num'] ??0;
