@@ -31,7 +31,7 @@ for ($i=1; $i <=50 ; $i++) {
     if(!$list){
         return '数据为空不需要处理';
     }
-    ////按照对应的可以去分割数据
+    ////同步到特定的JSON文件中去
     $ret = asyncJsonFile($list ,$cateId,$page);
     sleep(1); //没戏休息三秒钟
 }

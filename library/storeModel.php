@@ -72,18 +72,26 @@ class StoreModel{
         //处理小说标题的收尾空格
         $title = trimBlankSpace($info['title']); //去除标题中首尾空格
         //处理时间戳问题并转换
-        $third_update_time = trim($info['third_update_time']);
-        $third_update_time = str_replace('更新时间：', '',$third_update_time);
-        $third_update_time = strtotime($third_update_time);
+        if(isset($info['third_update_time'])){
+            $third_update_time = trim($info['third_update_time']);
+            $third_update_time = str_replace('更新时间：', '',$third_update_time);
+            $third_update_time = strtotime($third_update_time);
+            $info['third_update_time'] = $third_update_time;
+        }
         //小说状态
-        $status = str_replace('小说状态：', '' , $info['status']);
+        if(isset($info['status'])){
+            //小说状态
+            $status = str_replace('小说状态：', '' , $info['status']);
+            $info['status']  = $status;
+        }
         //小说分类
-        $cate_name = str_replace('小说分类：','',$info['cate_name']);
+        if(isset($info['cate_name'])){
+             $cate_name = str_replace('小说分类：','',$info['cate_name']);
+               $info['cate_name'] = $cate_name;
+        }
         $info['title'] = $title;
         $info['author']   = $author;
-        $info['status']  = $status;
-        $info['cate_name'] = $cate_name;
-        $info['third_update_time'] = $third_update_time;
+        $info['source']  = NovelModel::getSourceUrl($info['story_link']); //获取网站来源
         return $info;
     }
 
