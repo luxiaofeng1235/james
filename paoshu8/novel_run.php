@@ -3,7 +3,7 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 
-$limit =50;
+$limit =100;
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');
 $where_condition= "1
 and is_async = 1
@@ -88,9 +88,9 @@ function asyncUrlList($item=[],$count_page =0,$page=0){
         $link_arr = parse_url($key);
         $newList[$link_arr['path']] = $val;
     }
-    $urls = array_keys($item);
+    $urls = array_column($newList, 'story_link');//请求的URL
     $list= StoreModel::swooleRquest($urls);//请求数据
-    $list = StoreModel::swooleCallRequest($list, $item ,'story_link',2);
+    $list = StoreModel::swooleCallRequest($list, $newList ,'story_link',2);
     $x = $y = 0;
     foreach($list as $key =>$val){
 
