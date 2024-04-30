@@ -178,7 +178,13 @@ class FileFactory{
                 $val['file_path'] = $filename;
                 $content = readFileData($filename);
                 if(!$content ||$content =='从远端拉取内容失败，有可能是对方服务器响应超时，后续待更新'  || !file_exists($filename)){
-                    $val['link_url'] = $val['chapter_link'];
+                    $chapter_link = $val['chapter_link'] ?? '';
+                    //如果存在biquge5200的连接就替换
+                    if(preg_match('/biquge5200/',$chapter_link)){
+                        $chapter_link = str_replace('http://www.paoshu8.info','',$chapter_link);
+                        $val['chapter_link'] = $chapter_link;
+                    }
+                    $val['link_url'] = $chapter_link;
                     $dataList[] =   $val;
                 }else{
                     $sucNum++;
@@ -193,7 +199,6 @@ class FileFactory{
              }
             echo "\r\n\r\n";
             echo "共需要补的章节总数量： num = ".count($dataList)."\r\n";
-
             //转换数据字典用业务里的字段，不和字典里的冲突
             $dataList = NovelModel::changeChapterInfo($dataList);
             //按照长度进行切割轮询处理数据
