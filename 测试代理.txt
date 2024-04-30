@@ -30,4 +30,4 @@ curl --socks5 jp.ipdodo.cloud:10801   https://www.otcwuxi.com/chapter/8481492611
 
 
 ###台湾小说网请求美国的代理
-curl -x socks5://154.195.49.21:2333 -U "xJHc5WbhKFq5:me4gxaXv6ZSzwn7r"  https://www.twking.cc/list/5_1.html
+curl -x socks5://154.195.49.21:2333 -U "xJHc5WbhKFq5:me4gxaXv6ZSzwn7r"  https://www.twking.cc/167_167283/

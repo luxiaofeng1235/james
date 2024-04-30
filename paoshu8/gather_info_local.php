@@ -53,11 +53,11 @@ if($info){
     $story_id = trim($info[0]['story_id']);
     $ret_story_id = '';
     //判断是否匹配对应的含有_的path
-     if(strpos($hostData['path'], '_')){
+    if(strpos($hostData['path'], '_')){
          $retMatch[] = substr($hostData['path'], 1,-1);
-     }else{
+    }else{
         preg_match('/\d+/',$hostData['path'],$retMatch);
-     }
+    }
     $url_story_id = $retMatch[0] ??'';
     //防止story_id不一致，重新覆盖
     if(empty($story_id) || $story_id!= $url_story_id){
@@ -165,7 +165,6 @@ if($info){
 
         //获取相关的列表数据
         $rt = NovelModel::getCharaList($html,$store_data['title']);
-
         if(count($rt)<=20){ //章节如果过少，就不需要去同步了
             $factory->updateStatusInfo($store_id);
             echo "当前小说章节过少，请等待下次完善后再进行采集\r\n";

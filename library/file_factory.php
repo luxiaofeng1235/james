@@ -151,7 +151,9 @@ class FileFactory{
                 NovelModel::killMasterProcess();//退出主程序
                 return false;
             }
+
             $chapter_item = json_decode($json_data,true);
+
             if(!$chapter_item)
                 return false;
             if(!$chapter_item){
