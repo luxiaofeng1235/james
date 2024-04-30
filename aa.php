@@ -14,12 +14,23 @@ use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
 
-$url= 'https://www.twking.cc/244_244251/125484103.html';
-foreach(range(1, 20) as $key =>$val){
-    $urls[] = 'https://www.twking.cc/list/1_'.$val.'.html';
+$goodsList= [];
+foreach(range(1, 50) as $key =>$val){
+    $url = 'https://www.twking.cc/list/1_'.$val.'.html';
+    $httpData = parse_url($url);
+    $goodsList[] = [
+        'page'  => $val,
+        'url_path'  => $httpData['path'] ,
+        'mobile_url' =>  'https://www.twking.cc/list/1_'.$val.'.html',
+    ];
 }
 
+$urls= array_column($goodsList, 'mobile_url');
 $aa = StoreModel::swooleRquest($urls);
+echo '<pre>';
+print_R($aa);
+echo '</pre>';
+exit;
 echo 33;exit;
 echo '<pre>';
 print_R($aa);
