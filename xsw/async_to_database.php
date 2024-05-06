@@ -15,7 +15,7 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 use QL\QueryList;
 use Yurun\Util\HttpRequest;
 
- $limit = Env::get('TWCONFIG.RUN_LIST_PAGE');
+$limit = Env::get('TWCONFIG.RUN_LIST_PAGE');
 if(!$limit){
     exit("请输入完本的起止页码数");
 }
@@ -23,12 +23,11 @@ $size  = explode(',',$limit);
 $pages = range($size[0] , $size[1]);
 
 
-
 $cateId = isset($argv[1]) ? $argv[1] : '';
 if(!$cateId){
   exit("请输入要处理的分类ID\r\n");
 }
-$page =296;
+$page =350;
 echo "current page is page = {$page} \r\n";
 echo "*******************************************************\r\n";
 echo "page = {$page} cateId = {$cateId} \r\n";
@@ -43,6 +42,7 @@ saveNovelData($cateId , $page); //同步数据
 */
 
 function saveNovelData($cateId , $page){
+     $exists = [];
     $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
     $db_conn = 'db_master';
     $json_file = Env::get('SAVE_CACHE_INFO_PATH') .DS .StoreModel::$detail_page . $cateId . '_'. $page.'.json';
@@ -72,6 +72,7 @@ function saveNovelData($cateId , $page){
        //查询是否存在已经同步的小说信息
        $results  = NovelModel::getNovelByName($info['title'] , $info['author']);
        if($results){
+            $exists[] = $results['title'];
            $i_num++;
            echo "num = {$num} \t title={$results['title']}\t author = {$results['author']} \t url = {$results['story_link']}  \texists store_id = {$results['store_id']}  no to run\r\n";
        }else{
@@ -79,7 +80,7 @@ function saveNovelData($cateId , $page){
           echo "num = {$num} \t title={$value['title']}\t author = {$value['author']}\turl = {$value['story_link']} \tis to insert this data\r\n";
        }
     }
-  echo "\r\n===========共计小说".count($storyList)."本 ，待插入同步的有 (".count($insertData) . ")本，已存在的有 ( {$i_num} )本\r\n";
+  echo "\r\n===========共计小说".count($storyList)."本 ，待插入同步的有 (".count($insertData) . ")本，已存在的有 ( {$i_num} )本 -- ".var_export($exists,true)."\r\n";
   $repeat_rate = sprintf('%.2f',$i_num / 100 * 100) .'%';
   echo "每30本的小说的重复率为：" . $repeat_rate .PHP_EOL;
   echo "\r\n";

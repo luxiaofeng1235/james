@@ -1749,7 +1749,7 @@ public static function saveDetailHtml($novelList=[]){
     return !empty($info) ? $info : [];
  }
 
-  /**
+/**
 * @note 根据小说名+作者获取详情信息
 *
 * @param $title string  标题
