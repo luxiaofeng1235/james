@@ -755,7 +755,7 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
     * @param $url string  图片地址的url
     * @param $title string 小说标题
     * @param $author string 作者
-    * @param $pinnyin_class object 拼音转英文翻译类
+    * @param $pinyin_class object 拼音转英文翻译类
     * @return string
     */
     public static function saveImgToLocal($url,$title='',$author='',$pinyin_class=''){
@@ -771,6 +771,8 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
           $t= explode('/',$url);
           $imgFileName = end($t);
       }
+
+
       // header("Content-type: application/octet-stream");
       // header("Accept-Ranges: bytes");
       // header("Accept-Length: 348");
@@ -783,8 +785,17 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
       }
       //基准对比时间
       if(!file_exists($filename)){
-          $res = webRequest($url  ,'GET'); //利用图片信息来下载
-          $img_con = $res ?? '';
+          //匹配台湾的网站，用挂代理的方式进行访问
+          if(preg_match('/twking/', $url)){
+             //利用挂代理的方式来实现
+              $imgList = StoreModel::swooleRquest($url);
+              $res = array_values($imgList);
+              $img_con = $res[0] ?? '';
+          }else{
+            //正常的请求url
+            $res = webRequest($url  ,'GET'); //利用图片信息来下载
+            $img_con = $res ?? '';
+          }
            @writeFileCombine($filename , $img_con);
           // @$t=file_put_contents($filename, $img_con);
       }

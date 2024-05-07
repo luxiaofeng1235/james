@@ -34,6 +34,13 @@ $eles  = QueryList::html($s_contents)
       ->query()
       ->getData();
 $store_data = $eles->all();
+ $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+ echo '<pre>';
+ print_R($t);
+ echo '</pre>';
+ exit;
+
+
 $list = NovelModel::getCharaList($s_contents,$store_data['title'],true);
 echo '<pre>';
 print_R($list);
