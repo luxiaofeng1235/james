@@ -47,13 +47,13 @@ exit;
 */
 
 function saveNovelData($cateId , $page){
-     $exists = [];
+    $exists = [];
     $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
     $db_conn = 'db_master';
     $json_file = Env::get('SAVE_CACHE_INFO_PATH') .DS .StoreModel::$detail_page . $cateId . '_'. $page.'.json';
     echo "json_file = $json_file\r\n";
     if(!file_exists($json_file)){
-        return '当前文件不存在，请稍后重试'.PHP_EOL;
+      return '当前文件不存在，请稍后重试'.PHP_EOL;
     }
     $json_data = readFileData($json_file);
     if(!$json_data) {
