@@ -26,7 +26,7 @@ curl --socks5  43.243.171.202:8012 http://www.baidu.com
 curl -x socks5://84.17.37.52:1000 -U "storm-jekines_area-TW:123456"  https://www.mxgbqg.com/book/91090932/22106863.html
 
 
-curl --socks5 43.152.113.72:11028  https://www.twking.cc/242_242218/124554986.html
+curl --socks5 43.152.113.72:11066  https://www.twking.cc/243_243794/125318602.html
 
 
 ###台湾小说网请求美国的代理

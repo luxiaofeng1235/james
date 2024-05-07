@@ -28,8 +28,7 @@ if(!$cateId){
   exit("请输入要处理的分类ID\r\n");
 }
 
-
-$page =3;
+$page =56;
 echo "current page is page = {$page} \r\n";
 echo "*******************************************************\r\n";
 echo "page = {$page} cateId = {$cateId} \r\n";
