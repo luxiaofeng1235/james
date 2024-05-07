@@ -1231,7 +1231,6 @@ public static function  getChapterPages($meta_data='' , $first_line='',$num = 1)
              ];
              $t_url[]=$val['chapter_link'];
           }
-
           global $urlRules;
           //获取采集的标识
           $valid_curl ='curl';
@@ -1759,12 +1758,23 @@ public static function saveDetailHtml($novelList=[]){
 */
  public static function getNovelByName($title='',$author='',$field ='store_id,title,author,story_link'){
     if(!$title || !$author){
-      return false;
+      return  false;
     }
+    //整体思路：先从book_cener表中去搜索是否存在有此本小说
+    //假如book_center表中存在此本小说就返回
+    //如果条件2中的不满足，还需要从mc_book表中去检索，根据对应的状态去进行返回:
+    //判断第三条里的数据是否满足，如果存在了就直接返回，不存在就说明是新书
     $sql = "select {$field} from ".Env::get('APICONFIG.TABLE_NOVEL')." where title='{$title}' and author='{$author}'";
     global $mysql_obj;
     $info = $mysql_obj->fetch($sql,'db_slave');
-    return !empty($info) ? $info : [];
+    if(empty($info)){
+        //查询是否在mc_book表里有相关的数据信息
+        $sql = "select id as store_id ,book_name as title,author from ".Env::get('TABLE_MC_BOOK')." where book_name='{$title}' and author='{$author}'";
+        $results= $mysql_obj->fetch($sql ,self::$db_conn);
+        return !empty($results) ? $results : [];
+    }else{
+        return !empty($info) ? $info : [];
+    }
  }
 
 /**
