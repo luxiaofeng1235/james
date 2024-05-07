@@ -60,6 +60,7 @@ function saveNovelData($cateId , $page){
         echo "获取小说分页信息失败\r\n";
         return false;
     }
+    //测试哈哈
     $storyList= json_decode($json_data,true);
     if(!$storyList){
       echo "暂无小说数据，请稍后重试\r\n";
