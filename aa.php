@@ -14,17 +14,16 @@ use sqhlib\Hanzi\HanziConvert;
 use Yurun\Util\HttpRequest;
 
 
-$res = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
-$d = json_decode($res,true);
-$info = $d['data'][0] ??[];
-echo '<pre>';
-print_R($info);
-echo '</pre>';
-exit;
+// $res = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
+// $d = json_decode($res,true);
+// $info = $d['data'][0] ??[];
+// echo '<pre>';
+// print_R($info);
+// echo '</pre>';
+// exit;
 $list = StoreModel::swooleRquest('https://www.twking.cc/240_240053/');
 $content = array_values($list);
 $s_contents = $content[0] ?? '';
-
 
 
 
@@ -35,7 +34,6 @@ $eles  = QueryList::html($s_contents)
       ->query()
       ->getData();
 $store_data = $eles->all();
-
 $list = NovelModel::getCharaList($s_contents,$store_data['title'],true);
 echo '<pre>';
 print_R($list);

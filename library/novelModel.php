@@ -392,7 +392,8 @@ class NovelModel{
 
     /**
     * @note 从特定的url中获取对应的数据信息
-    * @param $html string 文本内容
+    * @param $html string 小说的详情内容信息
+    * @param $title string 小说标题
     * @param $is_fanti_ex bool 是否为繁简体转换 默认false不转换 true：转换
     * @return array
     *
