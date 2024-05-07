@@ -191,7 +191,7 @@ return [
         /////////////////////////文章内容相关
          //采集文章内容的规则
         'content'   =>  [
-            'content'   =>['#article','html','-script -ins'], //内容主体
+            'content'   =>['#article','html','-script -ins -p:last' ], //内容主体解析,去除一些笔不要的元素，和一些过多的标签对
         ],
     ],
 ];

@@ -188,10 +188,9 @@ class StoreModel{
 
 
     /**
-    * @note 下载文件
+    * @note 下载文件/图片等等
     *
     * @param $urls array  链接地址
-    * @param $tye intger 暂时还没用到 1：按照数据返回 2：返回状态信息
     * @return  object|unknow
     */
      public static function downloadLocalFile($url){
@@ -261,7 +260,7 @@ class StoreModel{
             Barrier::wait($barrier);
             assert($count == $N);
         });
-        echo "====================swoole worker finish \r\n";
+        echo "====================== swoole worker finish \r\n";
         return $items;
     }
 
