@@ -1769,7 +1769,7 @@ public static function saveDetailHtml($novelList=[]){
     $info = $mysql_obj->fetch($sql,'db_slave');
     if(empty($info)){
         //查询是否在mc_book表里有相关的数据信息
-        $sql = "select id as store_id ,book_name as title,author from ".Env::get('TABLE_MC_BOOK')." where book_name='{$title}' and author='{$author}'";
+        $sql = "select id as store_id ,book_name as title,author,source_url as story_link from ".Env::get('TABLE_MC_BOOK')." where book_name='{$title}' and author='{$author}'";
         $results= $mysql_obj->fetch($sql ,self::$db_conn);
         return !empty($results) ? $results : [];
     }else{

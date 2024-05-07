@@ -27,7 +27,9 @@ $cateId = isset($argv[1]) ? $argv[1] : '';
 if(!$cateId){
   exit("请输入要处理的分类ID\r\n");
 }
-$page =350;
+
+
+$page =3;
 echo "current page is page = {$page} \r\n";
 echo "*******************************************************\r\n";
 echo "page = {$page} cateId = {$cateId} \r\n";
