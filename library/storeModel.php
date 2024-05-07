@@ -176,8 +176,8 @@ class StoreModel{
         // ];
         // return $proxy_data;
         $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
-        $tdata = json_decode($proxy_info,true);
-        $proxy_data = $tdata['data'][0] ??[];
+        $ret_data = json_decode($proxy_info,true);
+        $proxy_data = $ret_data['data'][0] ??[];
         // if($proxy_ret){
         //     $results = explode(':',$proxy_ret);
         //     $proxy_data['ip'] = $results[0];
