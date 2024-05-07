@@ -21,31 +21,41 @@ use Yurun\Util\HttpRequest;
 // print_R($info);
 // echo '</pre>';
 // exit;
-$list = StoreModel::swooleRquest('https://www.twking.cc/240_240053/');
-$content = array_values($list);
-$s_contents = $content[0] ?? '';
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];
+$list = StoreModel::swooleRquest('https://www.twking.cc/244_244417/125511458.html');
+foreach($list as $val){
+     $data = QueryList::html($val)
+                ->rules($rules)
+                ->query()
+                ->getData();
+     $data = $data->all();
+     echo '<pre>';
+     var_dump($data);
+     echo '</pre>';
+     exit;
+}
 
 
 
-$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
+// $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
 
-$eles  = QueryList::html($s_contents)
-      ->rules($rules)
-      ->query()
-      ->getData();
-$store_data = $eles->all();
- $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
- echo '<pre>';
- print_R($t);
- echo '</pre>';
- exit;
+// $eles  = QueryList::html($s_contents)
+//       ->rules($rules)
+//       ->query()
+//       ->getData();
+// $store_data = $eles->all();
+//  $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+//  echo '<pre>';
+//  print_R($t);
+//  echo '</pre>';
+//  exit;
 
 
-$list = NovelModel::getCharaList($s_contents,$store_data['title'],true);
-echo '<pre>';
-print_R($list);
-echo '</pre>';
-exit;
+// $list = NovelModel::getCharaList($s_contents,$store_data['title'],true);
+// echo '<pre>';
+// print_R($list);
+// echo '</pre>';
+// exit;
 
 $goodsList= [];
 foreach(range(1, 50) as $key =>$val){

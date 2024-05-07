@@ -191,9 +191,7 @@ return [
         /////////////////////////文章内容相关
          //采集文章内容的规则
         'content'   =>  [
-            'content'   =>['#content','html'], //内容主体
-            'meta_data'    =>['.bread-crumbs li:eq(3)','text'],//当前页面的对应的ID
-            'href'      =>['meta[http-equiv="mobile-agent"]','content'], //页面链接
+            'content'   =>['#article','html','-script -ins'], //内容主体
         ],
     ],
 ];
