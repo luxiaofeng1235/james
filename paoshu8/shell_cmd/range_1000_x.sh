@@ -15,10 +15,9 @@ FROM
 ims_novel_info AS i
 WHERE
 is_async =0
-and  source ='paoshu8'
 ORDER BY
 store_id asc 
-LIMIT 100"
+LIMIT 50"
 result=$(mysql -h $host -u $user -p$password $database -s -e "$query")
 
 
