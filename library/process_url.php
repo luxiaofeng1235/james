@@ -10,86 +10,87 @@
 // 摘 要:处理进程的有问题未拉取下来的章节去同步
 // ///////////////////////////////////////////////////
 
-class ProcessUrl{
+class ProcessUrl
+{
 
 
-  /**
-  * @note 自动计算有问题的url从远端进行抓取
-  *
-  * @param  $info string 小说基本信息
-  * @return unknow
-  */
-    public static function selfRunUrls($info){
-        if(!$info)
+    /**
+     * @note 自动计算有问题的url从远端进行抓取
+     *
+     * @param  $info string 小说基本信息
+     * @return unknow
+     */
+    public static function selfRunUrls($info)
+    {
+        if (!$info)
             return false;
         global $mysql_obj;
 
         $title = $info['title'];
         $author = $info['author'];
 
-        $md5_str= NovelModel::getAuthorFoleder($title,$author);
+        $md5_str = NovelModel::getAuthorFoleder($title, $author);
         //echo 'md5：'.$md5_str.PHP_EOL;
-        $json_path = Env::get('SAVE_JSON_PATH').DS.$md5_str.'.'.NovelModel::$json_file_type;
-        $urls = $run_list=[];
+        $json_path = Env::get('SAVE_JSON_PATH') . DS . $md5_str . '.' . NovelModel::$json_file_type;
+        $urls = $run_list = [];
         $list = readFileData($json_path);
-        if($list){
-            $log_path  = Env::get('SAVE_NOVEL_PATH').DS.$md5_str;
-            $arr = json_decode($list,true);
-            foreach($arr as $val){
-                $filename =$log_path .DS . md5($val['chapter_name']).'.'.NovelModel::$file_type;
+        if ($list) {
+            $log_path  = Env::get('SAVE_NOVEL_PATH') . DS . $md5_str;
+            $arr = json_decode($list, true);
+            foreach ($arr as $val) {
+                $filename = $log_path . DS . md5($val['chapter_name']) . '.' . NovelModel::$file_type;
                 $content = readFileData($filename);
-                if(!$content || $content =='从远端拉取内容失败，有可能是对方服务器响应超时，后续待更新' || !file_exists($filename)){
-                    $run_list[]=array(
-                        'file_path' =>$filename,
-                       'link_name'  =>$val['chapter_name'],
-                       'link_url'   =>  str_replace('http://www.paoshu8.info','',$val['chapter_link'])
+                if (!$content || $content == '从远端拉取内容失败，有可能是对方服务器响应超时，后续待更新' || !file_exists($filename)) {
+                    $run_list[] = array(
+                        'file_path' => $filename,
+                        'link_name'  => $val['chapter_name'],
+                        'link_url'   =>  str_replace('http://www.paoshu8.info', '', $val['chapter_link'])
                     );
                 }
             }
         }
-        if(!$run_list){
-          echo "不需要轮询抓取了，章节已经全部抓取下来了\r\n";
-          exit();
+        if (!$run_list) {
+            echo "不需要轮询抓取了，章节已经全部抓取下来了\r\n";
+            exit();
         }
-        $success_num=0;
+        $success_num = 0;
         $insert_data = [];
         $len = count($run_list); //需要跑的总数
-        echo "需要处理同步的章节总数：".$len.PHP_EOL;
+        echo "需要处理同步的章节总数：" . $len . PHP_EOL;
         $run_times = 0;
-        if($len>0){
-             do{
+        if ($len > 0) {
+            do {
                 $run_times++;
                 //整体轮询五次
-                if($run_times>5){
-                   break;
+                if ($run_times > 5) {
+                    break;
                 }
-                echo "repeat-next-num：".$run_times.PHP_EOL;
-                $arr =array_chunk($run_list,200);
-                foreach($arr as $key =>$val){
+                echo "repeat-next-num：" . $run_times . PHP_EOL;
+                $arr = array_chunk($run_list, 200);
+                foreach ($arr as $key => $val) {
                     //获取最新的数据信息
-                     $content = getContenetNew($val);
-                     if($content && is_array($content)){
-                        foreach($content as $k =>$v){
-                            if(!empty($v['content'])){
+                    $content = getContenetNew($val);
+                    if ($content && is_array($content)) {
+                        foreach ($content as $k => $v) {
+                            if (!empty($v['content'])) {
                                 $success_num++;
-                                $insert_data[]=$v;
+                                $insert_data[] = $v;
                             }
                         }
-                     }
-                 }
-                 //只有为待采集和新的数据为空蔡旭哟啊进行处理
-                 if($len>0 && $len == $success_num){
-                      foreach($insert_data as $gval){
-                          file_put_contents($gval['file_path'],$gval['content']);
-                          echo '重新抓取的小说章节的path：'. $gval['file_path'].PHP_EOL;
-                      }
-                      break;
-                 }
-            }while(true);
-        }else{
-          echo "不需要再轮训抓取了，因为都已经抓取下来了\r\n";
-          exit();
+                    }
+                }
+                //只有为待采集和新的数据为空蔡旭哟啊进行处理
+                if ($len > 0 && $len == $success_num) {
+                    foreach ($insert_data as $gval) {
+                        file_put_contents($gval['file_path'], $gval['content']);
+                        echo '重新抓取的小说章节的path：' . $gval['file_path'] . PHP_EOL;
+                    }
+                    break;
+                }
+            } while (true);
+        } else {
+            echo "不需要再轮训抓取了，因为都已经抓取下来了\r\n";
+            exit();
         }
     }
 }
-?>

@@ -13,6 +13,7 @@ class  Mysql_class{
 	public $db_slave='db_slave'; //从库
 	public $db_master='db_master'; //主库
 	public $db_novel_pro = 'db_novel_pro';//线上小说库
+	public $db = null;
 
 	//连接mysql的列表
 	private function mysqlList()
@@ -62,13 +63,13 @@ class  Mysql_class{
 			    //測試連接應用
 				try {
 					//根据PDO来进行连接，主要用于进行PDO连接
-					@$db = new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
+					$this->db = new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
 				   	//主要用来设置POD链接失败会抛出来一个异常
-				    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				    $db->query("set names utf8");
-					return $db;
-				} catch (PDOException $e) {
-				    echo 'Connection failed: ' . $e->getMessage();
+				    $this->db ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				    $this->db ->query("set names utf8");
+					return $this->db ;
+				} catch (\PDOException  $e) {
+				     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 				}
 			}
 		}
@@ -85,11 +86,13 @@ class  Mysql_class{
 	{
 		$db_obj = $this->getMysqlInfo($db_name);
 		$date=$db_obj->query($sql)->fetch();
+		$ret = [];
 		if(isset($date) && !empty($date))
 		{
-			return $date;
+			$ret = $date;
 		}
-		return false;
+		$this->db = null;
+		return $ret;
 	}
 
 
@@ -199,6 +202,7 @@ class  Mysql_class{
 		// return $sql;
 	    //查询所有的数据进行解析
 	    $result = $this->fetchAll($sql,$db_name);
+	    $this->db = null; //关闭连接及时释放
 	    if($result && is_array($result)){
 	    	if($debug){
 	    		return [
@@ -222,11 +226,13 @@ class  Mysql_class{
 	{
 		$db_obj = $this->getMysqlInfo($db_name);
 		$date=$db_obj->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		$list = [];
 		if(isset($date) && !empty($date))
 		{
-			return $date;
+			$list = $date;
 		}
-		return false;
+		$this->db = null; //释放连接
+		return $list;
 	}
 
 	/**
@@ -361,6 +367,7 @@ class  Mysql_class{
 	    	}
 	    	$db_obj = $this->getMysqlInfo($db_name);
 	    	if($db_obj->query($sql)){
+	    		$this->db = null;//释放数据库操作
 	    		return 1;
 	    	}
 	    	return false;
@@ -389,6 +396,7 @@ class  Mysql_class{
 		$sql ="delete from ".$table_name." where ".$where;
 
 		$res = $db_obj->query($sql);
+		$this->db = null ;//释放句柄
 		if($res){
 			return 1;
 		}else{

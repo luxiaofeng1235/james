@@ -31,7 +31,11 @@
         "yurunsoft/yurun-http": "~5.0",
 		"sqhlib/hanzi-convert": "^1.1",
 		"jaeger/querylist-curl-multi": "^4.0",
-		"qiniu/php-sdk": "^7.12"
+		"qiniu/php-sdk": "^7.12",
+		"tencentcloud/sms": "^3.0",
+		"aws/aws-sdk-php": "^3.312",
+		"phpoffice/phpword": "dev-master",
+		"hightman/xunsearch": "*@beta"
   },
 	"config": {
 		"secure-http": false

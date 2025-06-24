@@ -1,5 +1,5 @@
 <?php
-//验证一个字符中只能包含大于0的对应数字
+//验证一个字符中只能包含大于0的对应数字222
 class regGx{
 	public static function checkEmail($str){
 		if(!$str)

@@ -19,24 +19,37 @@ $limit = Env::get('TWCONFIG.RUN_LIST_PAGE');
 if(!$limit){
     exit("请输入完本的起止页码数");
 }
-$size  = explode(',',$limit);
-$pages = range($size[0] , $size[1]);
 
-
+//分类的取值范围1-7这样子去取 方便进行计算。
 $cateId = isset($argv[1]) ? $argv[1] : '';
 if(!$cateId){
-  exit("请输入要处理的分类ID\r\n");
+  exit("请输入要处理的分类ID\r\n")
+  ;
 }
 
-$page =56;
-echo "current page is page = {$page} \r\n";
-echo "*******************************************************\r\n";
-echo "page = {$page} cateId = {$cateId} \r\n";
-$t = saveNovelData($cateId , $page); //同步数据
-echo '<pre>';
-print_R($t);
-echo '</pre>';
-exit;
+$size  = explode(',',$limit);
+if($cateId == 6){
+  $size[0] = 401;
+}else if($cateId == 7){
+  $size[0] = 292;
+}
+$pages = range($size[0] , $size[1]);
+//cateId =2  同步中
+//cateId = 3 同步中
+//cateId = 4 同步中
+//cateId = 534
+//cateId = 6343
+//cateId = 7 33
+
+
+//批量写入数据信息
+foreach($pages as $page){
+  echo "current page is page = {$page} \r\n";
+  echo "*******************************************************\r\n";
+  echo "page = {$page} cateId = {$cateId} \r\n";
+  $t = saveNovelData($cateId , $page); //同步数据
+}
+
 
 /**
 * @note 保存小说数据到库里
@@ -47,7 +60,12 @@ exit;
 */
 
 function saveNovelData($cateId , $page){
+    if(!$cateId || !$page){
+      return "参数无效\r\n";
+    }
+    global $mysql_obj;
     $exists = [];
+
     $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
     $db_conn = 'db_master';
     $json_file = Env::get('SAVE_CACHE_INFO_PATH') .DS .StoreModel::$detail_page . $cateId . '_'. $page.'.json';
@@ -78,7 +96,7 @@ function saveNovelData($cateId , $page){
        //查询是否存在已经同步的小说信息
        $results  = NovelModel::getNovelByName($info['title'] , $info['author']);
        if($results){
-            $exists[] = $results['title'];
+            $exists[] = $results['title'] .'--'.$results['story_link'];
            $i_num++;
            echo "num = {$num} \t title={$results['title']}\t author = {$results['author']} \t url = {$results['story_link']}  \texists store_id = {$results['store_id']}  no to run\r\n";
        }else{
@@ -92,16 +110,16 @@ function saveNovelData($cateId , $page){
   echo "\r\n";
   echo "*******************************************************\r\n";
   echo "\r\n";
-  // if($insertData){
-  //     //同步数据
-  //     $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
-  //     if(!$ret){
-  //         echo "数据库数据同步失败\r\n";
-  //     }
-  //     echo "同步小说列表成功 \r\n";
-  // }else{
-  //     echo "暂无小说需要插入的数据同步\r\n";
-  // }
+  if($insertData){
+      //同步数据
+      $ret= $mysql_obj->add_data($insertData,$novel_table_name,$db_conn);
+      if(!$ret){
+          echo "数据库数据同步失败\r\n";
+      }
+      echo "同步小说列表成功 \r\n";
+  }else{
+      echo "暂无小说需要插入的数据同步\r\n";
+  }
 
 }
 echo "finish\r\n";

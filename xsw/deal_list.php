@@ -24,8 +24,16 @@ $download_path =Env::get('SAVE_CACHE_INFO_PATH');//下载路径;
 if(!is_dir($download_path)){
     createFolders($download_path);
 }
-$cateId = 1;
-for ($i=1; $i <=500 ; $i++) {
+$cateId = isset($argv[1]) ? $argv[1] : 1;
+$limit = Env::get('TWCONFIG.RUN_LIST_PAGE');
+if(!$limit){
+    exit("请输入完本的起止页码数");
+}
+$size  = explode(',',$limit);
+$start = $size[0] ?? 0;
+$end = $size[1] ?? 0;
+
+for ($i=277; $i <=$end ; $i++) {
     $page = $i;
     $list = getPageList($cateId,$page);
     if(!$list){
@@ -76,40 +84,12 @@ function asyncJsonFile($list , $cateId, $page= 1){
     echo "finish \r\n";
 }
 
-/**
-* @note 获取详情页的数据信息
-*
-* @param $item array 获取的基础数据信息
-* @return  array
-*/
-function getDetailList($item = []){
-    if(!$item){
-        return [];
-    }
-    global $urlRules,$pinyin;
-    $arrList = [];
-    //如果存在有数据就返回，否则不要这些数据了
-    foreach($item as $key =>$val){
-        if(!empty($val) || $val){
-             $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
-            $item = QueryList::html($val)
-                            ->rules($rules)
-                            ->query()
-                            ->getData();
-            $item = $item->all();
-            if(!empty($item)){
-                $detailInfo = StoreModel::traverseEncoding($item);
-                $arrList[$detailInfo['story_id']] = $detailInfo;
-            }
-        }
-    }
-    return $arrList;
-}
 
 /**
 * @note 获取DOM结构中的query字符串长度
 *
 * @param $page int 1 分页列表
+* @param $cateId int 分类ID
 * @return
 */
 
@@ -122,7 +102,7 @@ function getPageList($cateId=1,$page= 1){
     $files  =  readFileData($pageFile);
     if(!$files){
         echo "this story files is no data\r\n";
-        return ;
+        return false ;
     }
 
     // echo '<pre>';
@@ -164,6 +144,10 @@ function getPageList($cateId=1,$page= 1){
                 ->range($range)
                 ->query()
                 ->getData();
+    echo '<pre>';
+    print_R($item);
+    echo '</pre>';
+    exit;
     $item = $item->all();
     $http = new HttpRequest;
     $data = StoreModel::traverseEncoding($item);

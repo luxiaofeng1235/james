@@ -137,13 +137,13 @@ class StoreModel{
     * @param $type string 类型
     * @return string
     */
-    public static function createRandStr($type = 'proxy_website')
+    public static function createRandString($type = 'wandou_proxy_website')
     {
         $code = '';
         global $redis_data;
         do {
 
-            $code = getMixedChars(1,10);
+            $code = getMixedChars(1,20);
             $redisOrderKey = $type . ':detail:' . $code;//先监测订单是否重复生成了
             #获取是否存在redis中的缓存
             $order_sn = $redis_data->get_redis($redisOrderKey);
@@ -164,27 +164,20 @@ class StoreModel{
     *
     * @return array|unknow
     */
-     public static function getForeignProxy(){
-
-        $rand_str = self::createRandStr();//随机生成API的数据-不会重复在库里
-        // // $rand_str  = 'wandou_proxy_'.date('YmdH');
-        // $proxy_data = [
-        //     'ip'    =>  'global.ipdodo.cloud',//IP地址
-        //     'port'  =>  '10801', //端口
-        //     'username'  =>  'n1_1712733036-dh-2-region-us' ,//用户名-让代理存活5分钟
-        //     'password'  =>  '11e475e0', //密码
-        // ];
-        // return $proxy_data;
-        $proxy_info = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
-        $ret_data = json_decode($proxy_info,true);
-        $proxy_data = $ret_data['data'][0] ??[];
-        // if($proxy_ret){
-        //     $results = explode(':',$proxy_ret);
-        //     $proxy_data['ip'] = $results[0];
-        //     $proxy_data['port'] = $results[1];
-        // }
+     private static function getForeignProxy(){
+        $rand_str = self::createRandString();//随机生成API的数据-不会重复在库里
+        $proxy_data = [
+            'ip'    =>  'gw.wandouapp.com',//IP地址
+            'port'  =>  '1000', //端口
+            'username'  =>  "hw1oll1y_session-{$rand_str}_life-5_pid-0" ,//用户名-让代理存活5分钟
+            'password'  =>  'wd97zgis', //密码
+        ];
+        // $url = 'https://api.wandouapp.com/?app_key=e890aa7191c00cd2f641060591c4f1d0&num=1&xy=3&type=2&lb=\r\n&nr=99&area_id=&isp=0&';
+        // $res = webRequest($url,'GET');
+        // $data = json_decode($res,true);
+        // $proxy_data = $data['data'][0] ?? '';       
         return $proxy_data;
-     }
+    }
 
 
     /**
@@ -202,13 +195,15 @@ class StoreModel{
         return 1;
      }
 
+
     /**
     * @note 通过swoole中的request请求去获取数据信息,可以批量去进行请求处理
     *
-    * @param $urls array  链接地址
+    * @param $urls array  请求链接地址
+    * @param $method 请求方式 get post
     * @return  object|unknow
     */
-     public static function swooleRquest($urls=[]){
+     public static function swooleRquest($urls=[],$method='get'){
         if(!$urls){
             return false;
         }
@@ -216,44 +211,102 @@ class StoreModel{
         if(!is_array($urls) || !isset($urls[0])){
             $urlArr[] = $urls;
             $urls = $urlArr;
-
         }
+        #设置请求方式
+        if(!in_array($method, array('get','post'))){
+            $method  ='get';
+        }
+            
         $urls = array_filter($urls); //防止有空的url存在
         $items = [];
         $exec_start_time = microtime(true);
         $proxy_data = StoreModel::getForeignProxy();
         // $proxy_data = [];
         ///开启协程访问
-        run(function () use(&$items,$urls,$proxy_data){
+        // echo 3;exit;
+        echo "swoole队列 **** 当前请求方式 method = {$method} \r\n";
+        run(function () use(&$items,$urls,$proxy_data,$method){
             $barrier = Barrier::make();
             $count = 0;
             $N = count($urls);
             $t_url =$urls;
             echo "swoole urls requests num (".$N.")\r\n";
             $http = new HttpRequest;
+            $num = 0;
             foreach (range(0, $N-1) as $i) {
+                $num++;
                 $link = $urls[$i];
                 //利用屏障的create来开启对应的配置信息
-                Coroutine::create(function () use ($http,$barrier, &$count,$i,&$items,$urls ,$proxy_data) {
-                    $response = $http->ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0')
-                                    ->rawHeader('ddd:value4')
-                                    ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
+
+                #苹果的UA-设置后访问具体的内容页面
+                //Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1
+
+                #360的浏览器
+                #Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+                Coroutine::create(function () use (
+                    $http,
+                    $barrier,
+                    &$count,
+                    $i,
+                    &$items,
+                    $urls ,
+                    $proxy_data,
+                    $num,
+                    $method
+                    ) {
+                    #设置苹果浏览器的请求ua
+                    $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+                    $cookie = 'ddd:value4';
+                    if($method == 'get'){
+                         $response = $http
+                                    ->ua($user_agent)
+                                    ->rawHeader($cookie)
+                                    // ->proxy($proxy_data['ip'], $proxy_data['port'], 'socks5') //认证类型设置
                                     // ->proxyAuth($proxy_data['username'],$proxy_data['password']) //认证账密
-                                     ->get($urls[$i]);
+                                    ->get($urls[$i]);
+                        }else{
+                            $response = $http
+                                    ->ua($user_agent)
+                                    ->rawHeader($cookie)
+                                    ->post($urls[$i]);
+                        }
+
                     $hostData = parse_url($urls[$i]??'');
                     //只要不是404页面的就直接返回，进行组装数据，其他的返回就不需要管了
-                    $items[$hostData['path']]=$response->body();
+                    //判断当前是否存在这些源并转换编码
+                    $charaset_urls = [
+                            'xuges',
+                            'bqg24',
+                            'siluke520',
+                            'bqwxg8',
+                    ];
+                    $soruce_ref = NovelModel::getSourceUrl($urls[$i]);
+                    if(in_array($soruce_ref, $charaset_urls)){
+                        //特殊的网站需要特殊处理下
+                        $items[$hostData['path']]=$response->body('gb2312','UTF-8');
+                    }else{
+                        $items[$hostData['path']]=$response->body();
+                    }
                     // var_dump("strlen =" . strlen($response->body()),"code = " . $response->getStatusCode());
-                    $str ="async child-fork-process \tnum = {$i} \turl = {$urls[$i]} \tstrlen =" . strlen($response->body()) . " \tcode = " . $response->getStatusCode();
+                    $str ="async child-fork-process \tnum = {$num} \turl = {$urls[$i]} \tstrlen =" . strlen($response->body()) . " \tcode = " . $response->getStatusCode();
                     echo $str ."\r\n";
                     //判断如果不是200的返回长什么样子
                     if($response->getStatusCode() != 200){
-                        echo '<pre>';
-                        var_dump($response->body());
-                        echo '</pre>';
-                        echo "\r\n";
+                        //判断如果是404给一个默认的
+                        if($response->getStatusCode() == 404){
+                            //获取未发现的页面的链接
+                            $notFoundStr=  StoreModel::getNofFoundStr();
+                            echo $notFoundStr."\r\n";
+                            //这里需要赋值下，不然伦旭哪里跳不出去
+                            $items[$hostData['path']] = $notFoundStr;
+                        }else{
+                            echo '<pre>';
+                            var_dump($response->body());
+                            echo '</pre>';
+                            echo "\r\n";
+                        }
                     }
-                    System::sleep(2);
+                    System::sleep(1);
                     $count++;
                 });
             }
@@ -264,55 +317,88 @@ class StoreModel{
         return $items;
     }
 
+
+
+
+    /**
+    * @note 获取404的页面地址信息，防止跳不出去
+    *
+    * @return unknow
+    */
+    public static function getNofFoundStr(){
+                $str = '{
+            "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+            "title": "Not Found",
+            "status": 404,
+            "traceId": "00-2eeb3f62c0bf6d8487f8d4b236a96d79-ed98f8bf5769dc23-00"
+        }';
+            return $str;
+    }
+
     /**
     * @note swoole请求重复调用请求，防止有空数据返回做特殊调用--根据情况来进行调整
     *
     * @param $content_arr array  请求的HTML数据
     * @param $goods_list array 原始请求的校验数据
+    * @param $referer_url string 回调地址，用于判断用什么页面的元素来判断
     * @param $field_key string 配置需要从哪个字段里面获取url
     * @param $type 1 :判断章节内容页 2：判断列表页(可以根据需要进行调整)
-    * @return unnkower
+    * @return unknow
     */
-    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$field_key= 'mobile_url',$type = 1){
-         if(!$contents_arr || !$goods_list){
+    public static function swooleCallRequest($contents_arr=[],$goods_list=[],$referer_url='',$method='get',$field_key= 'mobile_url',$type = 1){
+        if(!$contents_arr || !$goods_list){
             return [];
-         }
+        }
+        // echo '<pre>';
+        // var_dump(count($contents_arr));
+        // echo '<pre>';
+        // var_dump($goods_list);
+        // echo '</pre>';
+        // exit;
+        // echo '</pre>';
+        // exit;
+        //获取网站的来源
+        $source_url = NovelModel::getSourceUrl($referer_url);
         //id="list"
          //type = 2的时候，一般都是可以自动配置的，根据需要自行调整
-         $content_reg = $type!=1 ?  '/class="list-out"/' : '/id="content"/';
+        if($type!=1){
+            $content_reg =  '/class="list-out"/';//列表判断
+        }else{
+            //导入校验的标签
+            $content_reg = CommonService::importCollectTagId($referer_url);
+        }
         /***************判断是否有空的数据返回 start*****************************/
-         // $goods_list = array_values($goods_list);
-         $errData  =  $sucData  = [];
-         foreach($contents_arr as $key => $val){
-            if(empty($val) || $val == ''){//空数据返回
-                $errData[] =$goods_list[$key] ?? [];
-            }else if(!preg_match($content_reg,$val) ){//断章处理，包含有502的未响应都会
-                $errData[] =$goods_list[$key] ?? [];
-            }else{//正常的数据返回
-                $sucData[$key] = $val; //需要保存对应的key
+        $errData  =  $sucData  = [];
+        foreach($contents_arr as $key => $val){
+            if(strstr($val, 'DMCA和内容违规原因')){//404的话直接跳出去不然会死循环
+                 $sucData[$key] ='页面不存在，稍后更新后查看';
+            }else{
+                if(empty($val) || $val == ''){//空数据返回
+                    $errData[] =$goods_list[$key] ?? [];
+                }else if(!preg_match($content_reg,$val) ){//断章处理，包含有502的未响应都会
+                    $errData[] =$goods_list[$key] ?? [];
+                }else{//正常的数据返回
+                     $sucData[$key] = $val;
+                }
             }
-         }
+        }
         /***************判断是否有空的数据返回 end*****************************/
 
-         $repeat_data = $curl_contents1 =[];
+        $repeat_data = $curl_contents1 =[];
          //数据为空的情况判断
-         if(!empty($errData)){
-            echo "有返回为空或者异常数据的数据请求，会重新去进行请求返回\r\n";
+        if(!empty($errData)){
+            echo "有返回为空或者异常数据的数据请求，会重新去进行请求返回111\r\n";
             $successNum = 0;
 
             $old_num = count($errData);
             $urls = array_column($errData, $field_key); //进来先取出来,根据上面的取出来
+            echo "待需要重新抓取的处理的url数据:\r\n";
+            echo '<pre>';
+            var_dump($urls);
+            echo '</pre>';
             while(true){
                 //通过说swoole来完成并发请求，采用协程
-                $curl_contents1 = StoreModel::swooleRquest($urls);
-                // echo '<pre>';
-                // print_R($curl_contents1);
-                // echo '</pre>';
-                // echo '<pre>';
-                // print_R($goods_list);
-                // echo '</pre>';
-                // exit;
-                // exit;
+                $curl_contents1 = StoreModel::swooleRquest($urls,$method);
                 $temp_url =[];//设置中间变量
                 if(!$curl_contents1){
                     $curl_contents1 = [];
@@ -324,12 +410,12 @@ class StoreModel{
                         $t_url = $goods_list[$tkey][$field_key] ?? '';
                         echo "获取数据为空，会重新抓取====================== {$t_url}\r\n";
                         $temp_url[] = $t_url; //取出来当前的连接
-                     }else if( !preg_match($content_reg,$tval)) {//是否存在502的情况
+                    }else if( !preg_match($content_reg,$tval)) {//是否存在502的情况
                         //当前需要去抓取的url
                         $s_url = $goods_list[$tkey][$field_key] ?? '';
                         echo "有断章，会重新抓取====================== {$s_url}\r\n";
                         $temp_url[] =$s_url; //直接取出来当前的连接
-                     }else{//正常的返回
+                    }else{//正常的返回
                         $repeat_data[$tkey] = $tval;
                         unset($urls[$tkey]); //已经请求成功就踢出去，下次就不用重复请求了
                         unset($curl_contents1[$tkey]);
@@ -338,7 +424,6 @@ class StoreModel{
                 }
                 $urls = $temp_url; //起到指针的作用，每次只存失败的连接
                 $urls = array_values($urls);//重置键值，方便查找
-                // $curl_contents1 =array_values($curl_contents1);//获取最新的数组
                 if($old_num == $successNum){
                     echo "数据清洗完毕等待入库\r\n";
                     break;
@@ -358,7 +443,7 @@ class StoreModel{
 
 
     /**
-    * @note 处理转换的编码数据信息
+    * @note 处理转换的繁简体转换
     *
     * @param $data array 待需要处理的数据
     * @return  array|unkinow
@@ -375,9 +460,9 @@ class StoreModel{
         }else{
             //处理二维数组的转换处理
             foreach($data as $key =>$val){
-                 foreach($val as &$v){
+                foreach($val as &$v){
                     $v = traditionalCovert($v);
-                 }
+                }
                  $data[$key] = $val; //需要赋值一下，才能生效
             }
         }

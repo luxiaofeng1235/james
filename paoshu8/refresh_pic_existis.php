@@ -34,7 +34,7 @@ $sql .= $order_by;
 $sql .= " limit ".$limit;
 echo "sql : " .$sql ."\r\n";
 
-
+//获取当前的所有数据配置信息
 $info = $mysql_obj->fetchAll($sql,'db_slave');
 if(!$info) $info = array();
 $diff_data = array();
@@ -69,7 +69,6 @@ if(!empty($info)){
                 ];
              }
         }
-
     }
 }else{
     echo "no data\r\n";
@@ -91,7 +90,6 @@ if(!empty($diff_data)){
         $v['mobile_url'] = $cover_logo;
          $o_data[] = $v;
         // if (!@getimagesize($save_img_path)) {
-
         //     //$t = NovelModel::saveImgToLocal($cover_logo , $title , $author,$pinyin);
         //     // echo "index:{$num} 【本地图片】 pro_book_id : {$book_id} 损坏图片已修复 url: {$cover_logo} title：{$title}  author:{$author} path:{$save_img_path} \r\n";
         // }else{
@@ -108,8 +106,7 @@ if(!empty($diff_data)){
         $t_num = 0;
         foreach($o_data as $gkey=> $gval){
             $t_num++;
-
-
+            //配置文件信息，对当前额信息做修改设置配置
             $filename = $o_data[$gkey]['save_img_path'] ?? '';//保存的路径
             $img_link = $o_data[$gkey]['cover_logo'] ?? '';//小说封面
             $pro_book_id = $o_data[$gkey]['pro_book_id'] ?? 0;//第三方ID
@@ -124,9 +121,9 @@ if(!empty($diff_data)){
             $rk = file_put_contents($filename , $img_con);
             //同步下来如果还是损坏的的说明网站的图已经坏了。
             if ( !@getimagesize($filename)) {
-                  $img_default = readFileData(Env::get('NO_COVER_IMG_PATH'));
-                  writeFileCombine($filename, $img_default);
-                   echo "--下载后的图片在网站损坏,已用默认图替换\t";
+                $img_default = readFileData(Env::get('NO_COVER_IMG_PATH'));
+                writeFileCombine($filename, $img_default);
+                echo "--下载后的图片在网站损坏,已用默认图替换\t";
              }
              $size =getImageSpace($filename);
             echo "index:{$t_num} 【本地图片】 pro_book_id : {$pro_book_id} 损坏图片已修复 title：{$title}  author:{$author} \t url: {$cover_logo} \tpath:{$filename} \t size:{$size} KB \r\n";

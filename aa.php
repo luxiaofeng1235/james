@@ -1,5 +1,5 @@
 <?php
-
+// ///////////////////////////////////////////////////
 //Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0
 //Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
 $dirname = dirname(__FILE__);
@@ -10,9 +10,158 @@ require_once($dirname.'/library/file_factory.php');
 // require_once($dirname.'/library/Ares333.php');//代理IP使用
 use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
-use sqhlib\Hanzi\HanziConvert;
-use Yurun\Util\HttpRequest;
+use sqhlib\Hanzi\HanziConvert;// ///////////////////////////////////////////////////
 
+$gofound = new GoFound();
+$sourceList = $gofound->query('包头');
+echo "<pre>";
+var_dump($sourceList);
+echo "</pre>";
+exit();
+
+echo "<pre>";
+var_dump($gofound);
+echo "</pre>";
+exit();
+
+
+$server_name = Env::get('GOFOUND.HOST_NAME');
+dd($server_name);die;
+$aa = StoreModel::swooleRquest("http://www.paoshu8.info/61_61812/141918937.html");
+echo "<pre>";
+var_dump($aa);
+echo "</pre>";
+exit();
+    
+$res = webRequest("https://www.xingyueboke.com/dongbeifuzi/",'GET');
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
+
+// $list = StoreModel::swooleRquest('https://www.xuges.com/zj/jl/cz/0000.htm');
+// $html = array_values($list);
+// $chtml = $html[0] ?? '';
+// $chtml = readFileData('./detail_xuges.html');
+$list = StoreModel::swooleRquest('https://www.xuges.com/zj/jl/cz/003.htm');
+$html = array_values($list);
+$contents = $html[0];
+
+//<script type="text/javascript" src="/41/bt.js">  //<tr><td><hr />
+preg_match('/<tr><td>.*?<tr><td class=\"zhx\">/ism', $contents, $matches);
+$contents = $matches[0];
+// dd($contents);
+$contents = preg_replace('/<span class=\"zs\">/ism', '',$contents);
+$contents = preg_replace('/<\/span>/ism', '',$contents);
+dd($contents);
+
+
+
+// $chtml = array_iconv($chtml);
+// $filePath = "/tmp/new_test.html";
+// $html = readFileData( $filePath);
+// // $res = QueryList::html($html);
+
+$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['xuges_info'];
+$data = QueryList::html($chtml)
+				->rules($rules)
+				->query()
+				->removeHead()
+				->getData();
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+exit;
+
+echo '<pre>';
+print_R($data);
+echo '</pre>';
+exit;
+
+$data = $data->all();
+$contents = $data['content']?? '';
+
+
+$aa =  iconv('GB2312', 'UTF-8', $contents);
+echo '<pre>';
+dd($aa);
+echo '</pre>';
+exit;
+echo '<pre>';
+print_R($contents);
+echo '</pre>';
+exit;
+
+
+$html = iconv("gb2312","utf-8", $html);
+$preg = '/<td class=\"tdw3\".*?<\/table>/ism';
+preg_match($preg, $html , $list);
+$contents = $list[0] ?? '';
+
+$contents = str_replace('href =', 'href=', $contents);
+//处理中间的换行字符,不然匹配会出问题
+$link_reg = '/<a.*href=\"([^"]+)\".*?>/';
+//这个地方因为A链接有可能是多个的形式展示，导致取不出来A标签，用一个万能的表达式来根据当前的配置取相关的连接信息
+$text_reg = '/<a.*?href=\"[^\"]*\".*?>(.*?)<\/a>/ims'; //匹配链接里的文本(zhge)
+preg_match_all($link_reg, $contents, $link_href); //匹配链接
+preg_match_all($text_reg, $contents, $link_text); //匹配文本;
+echo '<pre>';
+print_R($link_text);
+echo '</pre>';
+exit;
+
+$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['xuges_replace'];
+$info_data=QueryList::html($html)
+        ->rules($rules)
+        ->query()
+        ->getData();
+$info_data = $info_data->all();
+
+$aa = NovelModel::parseXugesData($info_data,'http://www.baidu.com/');
+
+$range = ".tbw3 tr:neq(0)";
+
+
+// ///////////////////////////////////////////////////
+use Yurun\Util\HttpRequest;
+/**
+ * /<a.*?>(.*)<\/a>/i
+ */
+echo '<pre>';
+print_R(phpinfo());
+echo '</pre>';
+exit;
+//测试代码配置嘻嘻
+for ($num = 100; $num < 10000; $num++) {
+    $hundreds = floor($num / 100); // 计算百位上的数字
+    $tens = floor($num / 10) % 10; // 计算十位上的数字
+    $ones = $num % 10; // 计算个位上的数字
+
+    if ($num == pow($hundreds, 3) + pow($tens, 3) + pow($ones, 3)) {
+        echo $num . "是一个水仙花数\n";
+    }
+}
+exit;
+
+$res = webRequest('https://www.mxgbqg.com/book/91090932/22106863.html','GET');
+echo '<pre>';
+print_R($res);
+echo '</pre>';
+exit;
+
+$arr = traditionalCovert($str);
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
+$arr = html_entity_decode($str);
+echo '<pre>';
+print_R($arr);
+echo '</pre>';
+exit;
+//测试大声道
+// dd($_SERVER);
+// echo 333;exit;
 
 // $res = webRequest('http://api.tq.roxlabs.cn/getProxyIp?num=1&return_type=json&lb=1&sb=&flow=1&regions=tw&protocol=socks5','GET');
 // $d = json_decode($res,true);
@@ -21,34 +170,34 @@ use Yurun\Util\HttpRequest;
 // print_R($info);
 // echo '</pre>';
 // exit;
-$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];
-$list = StoreModel::swooleRquest('https://www.twking.cc/244_244417/125511458.html');
-foreach($list as $val){
-     $data = QueryList::html($val)
-                ->rules($rules)
-                ->query()
-                ->getData();
-     $data = $data->all();
-     echo '<pre>';
-     var_dump($data);
-     echo '</pre>';
-     exit;
-}
+// $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['content'];
+// $list = StoreModel::swooleRquest('https://www.twking.cc/244_244417/125511458.html');
+// foreach($list as $val){
+//      $data = QueryList::html($val)
+//                 ->rules($rules)
+//                 ->query()
+//                 ->getData();
+//      $data = $data->all();
+//      echo '<pre>';
+//      var_dump($data);
+//      echo '</pre>';
+//      exit;
+// }
 
 
 
-// $rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
+$rules = $urlRules[Env::get('TWCONFIG.XSW_SOURCE')]['detail_info'];
 
-// $eles  = QueryList::html($s_contents)
-//       ->rules($rules)
-//       ->query()
-//       ->getData();
-// $store_data = $eles->all();
-//  $t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
-//  echo '<pre>';
-//  print_R($t);
-//  echo '</pre>';
-//  exit;
+$eles  = QueryList::html($s_contents)
+      ->rules($rules)
+      ->query()
+      ->getData();
+$store_data = $eles->all();
+$t= NovelModel::saveImgToLocal($store_data['cover_logo'],$store_data['title'],$store_data['author']);
+echo '<pre>';
+print_R($t);
+echo '</pre>';
+exit;
 
 
 // $list = NovelModel::getCharaList($s_contents,$store_data['title'],true);
@@ -143,7 +292,7 @@ echo '</pre>';
 exit;
 exit;
 
-  $http = new HttpRequest;
+$http = new HttpRequest;
 
 $response = $http
                 ->acceptEncoding('gzip, deflate')
@@ -523,7 +672,7 @@ die;
  // exit;
 
 $exec_start_time = microtime(true);
-$file = readFileData('/mnt/book/chapter/9a7819bc9a00853972f2d6a985310647.json');
+$file = readFileData('/data/chapter/9a7819bc9a00853972f2d6a985310647.json');
 $t = json_decode($file,true);
 $arr = array_chunk($t,300);
 echo "共需要 ".count($arr)."页\r\n";
@@ -631,7 +780,7 @@ $items = array_slice($items , 0,200);
 
 
 
-///mnt/book/txt/a1cc13dfb7f54f7df320821cbacbaae4
+///data/txt/a1cc13dfb7f54f7df320821cbacbaae4
 $urls = array_column($items , 'mobile_url');
 
 */

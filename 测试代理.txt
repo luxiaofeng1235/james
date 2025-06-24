@@ -6,7 +6,7 @@ curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http:
 ##标准的代理模式
 curl -x socks5://119.96.237.247:45601 -U "lady1235:F24865A4F2EE1B8EC41696C1AC69015E" http://www.baidu.com
 
-curl -x socks5://84.17.37.52:1000   http://www.baidu.com
+curl -x socks5://27.128.225.176:45601  https://www.otcwuxi.com/chapter/97877806111/47172111.html
 
 
 curl --socks5 180.112.239.244:54105  -U "lady1235:F24865A4F2EE1B8EC41696C1AC69015E"  http://www.163.com
@@ -17,17 +17,21 @@ curl --socks5 n1_1712733036-dh-2:11e475e0111222@global.ipdodo.cloud:10801  http:
 curl --socks5  43.243.171.202:8012 http://www.baidu.com
 
 
-代理网络: proxy.stormip.cn
-端口: 1000
-账户名: storm-jekines_area-TW_session-123456
-密码: 123456
-
 ###测试台湾站
 curl -x socks5://84.17.37.52:1000 -U "storm-jekines_area-TW:123456"  https://www.mxgbqg.com/book/91090932/22106863.html
 
-
-curl --socks5 43.152.113.72:11066  https://www.twking.cc/243_243794/125318602.html
-
-
+ 
 ###台湾小说网请求美国的代理
-curl -x socks5://154.195.49.21:2333 -U "xJHc5WbhKFq5:me4gxaXv6ZSzwn7r"  https://www.twking.cc/167_167283/
+curl -x socks5://154.195.49.21
+
+
+curl --socks5 206.206.91.70:6001  -U "client-lucky1235:123456abc"  https://www.otcwuxi.com/chapter/20116798111/
+
+ 
+
+curl -x http_proxy://206.206.91.70:6001 http://aiezu.com/test.php
+
+curl --http "206.206.91.70:6001" "http://httpbin.org/ip"
+
+########http协议的请求模式
+curl -x socks5://206.206.91.70:6001  -U "client-lucky1235:123456abc" https://www.xuges.com/zj/wgmr/lzsy/index.htm

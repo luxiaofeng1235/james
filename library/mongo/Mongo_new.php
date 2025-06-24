@@ -188,7 +188,7 @@ class Mongo_new {
      * @return boolean
      */
     public function save($colName, $sets, $safe=false, $fsync=false){
-        // 处理 '_id' 字段
+        //处理 '_id' 字段
         $sets = $this->_parseId($sets);
         $ret = $this->_getCol($colName)->save($sets,array('w'=>$safe,'fsync'=>$fsync));
         return $ret;
@@ -350,7 +350,7 @@ class Mongo_new {
         $col = $this->_getCol($colName);
         // 自动处理 '_id' 字段
         $query = $this->_parseId($query);
-        
+            
         // 结果集偏历
         $cursor  = $col->find($query,$fields);
         // 排序
@@ -453,7 +453,7 @@ class Mongo_new {
      * @return array
      */
     
-     public function select($colName,$fields=array(),$query=array(),$sort=array(),$skip=0,$limit=0,$is_distinct=false,$key=""){
+    public function select($colName,$fields=array(),$query=array(),$sort=array(),$skip=0,$limit=0,$is_distinct=false,$key=""){
         // 得到集合
         $col = $this->_getCol($colName);
         // 自动处理 '_id' 字段

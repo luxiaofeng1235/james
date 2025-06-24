@@ -37,7 +37,7 @@ class Ares333{
         return $callback;
     }
 
-     /**
+    /**
     * @note 实现文件的下载
     *
     * @param $url strsing 获取的url
@@ -78,7 +78,7 @@ class Ares333{
     */
 
     private static function getProxyData($pro_type){
-         $proxy_conf = [];
+        $proxy_conf = [];
         // try{
         switch ($pro_type) {
             case 'story':
@@ -189,7 +189,7 @@ class Ares333{
         };
         $curl->start();
         return $response ?? [];
-     }
+    }
 
 }
 ?>

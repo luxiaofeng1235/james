@@ -22,7 +22,7 @@ class MultiHttp
     * @param int $is_proxy 是否启用代理
     * @return string
     */
-   public static function curlGet($urls,$custom_options = null,$is_proxy =false){//多个url访问
+    public static function curlGet($urls,$custom_options = null,$is_proxy =false){//多个url访问
         if (sizeof($urls)==0) return;
         // make sure the rolling window isn't greater than the # of urls
         $rolling_window = 8;
