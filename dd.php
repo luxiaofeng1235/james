@@ -1,5 +1,5 @@
 <?php
-
+//测试文档代码机构的集合。
 $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
