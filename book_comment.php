@@ -10,7 +10,7 @@
 // 摘 要:创建并同步书评信息
 // ///////////////////////////////////////////////////
 ini_set("memory_limit", "8000M");
-set_time_limit(0);
+set_time_limit(500);
 require_once __DIR__ . '/library/init.inc.php';
 
 use QL\QueryList;
