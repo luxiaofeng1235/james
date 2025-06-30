@@ -1,4 +1,6 @@
 <?php
+phpinfo();
+exit;
 $a="123ab "+5;
 echo "<pre>";
 var_dump($a);
