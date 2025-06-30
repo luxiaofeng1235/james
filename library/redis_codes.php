@@ -8,19 +8,37 @@
 class redis_codes {
 
     public $redis;
+    private $connected = false;
+    private $host;
+    private $port;
+    private $pass;
 
     function __construct()
     {
-        $host   = Env::get('REDIS.HOST_NAME'); //主机IP
-        $port   =  Env::get('REDIS.PORT'); ; //端口号
-        $pass   =  Env::get('REDIS.PASSWORD');  //密码设置
-        $this->redis = new Redis();//实例化redis
-        // echo "我是redis实例化进来的\r\n";
-        $this->redis->connect($host, $port);
-        if(!empty($pass)){
-            $this->redis->auth($pass);
+        $this->host = Env::get('REDIS.HOST_NAME'); //主机IP
+        $this->port = Env::get('REDIS.PORT'); //端口号
+        $this->pass = Env::get('REDIS.PASSWORD');  //密码设置
+        // 延迟连接，只在需要时连接
+    }
+
+    private function connect()
+    {
+        if (!$this->connected) {
+            try {
+                $this->redis = new Redis();//实例化redis
+                // echo "我是redis实例化进来的\r\n";
+                $this->redis->connect($this->host, $this->port);
+                if(!empty($this->pass)){
+                    $this->redis->auth($this->pass);
+                }
+                $this->redis->select(10);
+                $this->connected = true;
+            } catch (Exception $e) {
+                // 连接失败时不抛出异常，只记录错误
+                error_log("Redis connection failed: " . $e->getMessage());
+                $this->connected = false;
+            }
         }
-        $this->redis->select(10);
     }
 
     /**
@@ -28,6 +46,10 @@ class redis_codes {
      * @param string $dbindex
      */
     public function sAdd($index, $value){
+        $this->connect();
+        if (!$this->connected) {
+            return false;
+        }
         $ret = $this->redis->sadd($index,$value);
         return $ret;
     }

@@ -2,7 +2,7 @@
 require_once __DIR__.'/library/init.inc.php';
 require_once __DIR__.'/library/R3ClientObject.class.php';
 use QL\QueryList;
-
+echo 333;exit;
 
 $score = getScoreRandom();
 

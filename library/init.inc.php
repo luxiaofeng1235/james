@@ -62,8 +62,8 @@ require_once ROOT.'library/DouyinModel.php'; //抖音业小说模型类
 
 require_once ROOT.'library/GoFound.php'; //gofound搜索
 require_once ROOT.'library/XunSearch.class.php'; //迅搜全文检索
-require_once ROOT.'collect_tool/CommonService.php';
-require_once ROOT.'collect_tool/BiqugeService.php'; //笔趣阁的线上接口拉取接口
+require_once ROOT.'biqugeService/CommonService.php';
+require_once ROOT.'biqugeService/BiqugeService.php'; //笔趣阁的线上接口拉取接口
 require_once ROOT.'library/ChapterAes.class.php'; //笔趣阁章节目录内容解码
 require_once ROOT.'library/BiqugeModel.php'; //笔趣阁的主要核心业务
 
@@ -87,7 +87,7 @@ if (is_file(dirname(__DIR__) . '/config/advert.php')) {
 
 
 $mysql_obj =new ConnectionPool(); //mysql连接
-$redis_data = new redis_codes(); //redis类
+// $redis_data = new redis_codes(); //redis类 - 延迟初始化，避免在测试时连接失败
 
 
 
