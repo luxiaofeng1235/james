@@ -48,7 +48,6 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'T' => 
         array (
             'Tightenco\\Collect\\' => 18,
-            'Tests\\PhpOffice\\Math\\' => 21,
             'TencentCloud\\' => 13,
         ),
         'S' => 
@@ -158,10 +157,6 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         'Tightenco\\Collect\\' => 
         array (
             0 => __DIR__ . '/..' . '/tightenco/collect/src/Collect',
-        ),
-        'Tests\\PhpOffice\\Math\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpoffice/math/tests/Math',
         ),
         'TencentCloud\\' => 
         array (

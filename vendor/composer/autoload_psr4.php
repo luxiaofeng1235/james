@@ -13,7 +13,6 @@ return array(
     'hightman\\xunsearch\\' => array($vendorDir . '/hightman/xunsearch/wrapper/yii2-ext'),
     'Yurun\\Util\\' => array($vendorDir . '/yurunsoft/yurun-http/src'),
     'Tightenco\\Collect\\' => array($vendorDir . '/tightenco/collect/src/Collect'),
-    'Tests\\PhpOffice\\Math\\' => array($vendorDir . '/phpoffice/math/tests/Math'),
     'TencentCloud\\' => array($vendorDir . '/tencentcloud/sms/src/TencentCloud', $vendorDir . '/tencentcloud/common/src/TencentCloud'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
