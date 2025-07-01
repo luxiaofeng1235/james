@@ -6,10 +6,10 @@ require_once($dirname.'/library/init.inc.php');
 $res = Env::get('DATABASE.USERNAME');
 $res1 = Env::get('DATABASE.HOST_NAME');
 $res2 = Env::get('SOURCE_LIST');
-// $res2 = Env::get('APICONFIG.API_HOST');
+$res2 = Env::get('APICONFIG.API_HOST');
 // $list = $mysql_obj->fetchAll("select * from mc_city",'db_novel_pro');
 // echo "<pre>";
-// var_dump($redis_data);
+// var_dump($list);
 // echo "</pre>";
 // exit();
 
