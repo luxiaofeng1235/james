@@ -1,5 +1,13 @@
 <?php
-
+/*
+ * 加载配置文件，初始化线上和线下配置信息 
+ *
+ * Copyright (c) 2017 - Linktone
+ * @author xiaofeng.lu <xiaofeng.200@163.com>
+ * @version 2.1
+ *
+ */
+    
 class Env
 {
     private static $loaded = false;
