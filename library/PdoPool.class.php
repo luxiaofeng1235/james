@@ -18,9 +18,6 @@ class ConnectionPool {
     public static $use_db_name = null;
     public $db_slave='db_slave'; //从库
     public $db_master='db_master'; //主库
-    public $db_novel_pro = 'db_novel_pro';//线上小说库
-    public $db_bqg_source = 'db_bqg_source'; //笔趣阁线上总库
-    public $db_bqg_collect = 'db_bqg_collect';//笔趣阁的线上采集库
 
 
     //连接mysql的列表
@@ -43,35 +40,10 @@ class ConnectionPool {
             'db_name'   =>Env::get('DATABASE_PRO.DBNAME'),//数据库名称
             'port'  =>  Env::get('DATABASE_PRO.PORT')//数据库的端口
         ];
-
-        //查询笔趣阁的线上数据
-        $config_bqg_source = [
-            'host'  =>Env::get('BQG_SOURCE.HOST_NAME'),//数据库的主机地址
-            'username'  =>Env::get('BQG_SOURCE.USERNAME'), //数据库的用户
-            'password'  =>Env::get('BQG_SOURCE.PASSWORD'),//数据库的密码
-            'db_name'   =>Env::get('BQG_SOURCE.DBNAME'),//数据库名称
-            'port'  =>  Env::get('BQG_SOURCE.PORT')//数据库的端口
-        ];
-
-        //查询笔趣阁的采集库数据
-        $config_bqg_collect = [
-            'host'  =>Env::get('BQG_COLLECT.HOST_NAME'),//数据库的主机地址
-            'username'  =>Env::get('BQG_COLLECT.USERNAME'), //数据库的用户
-            'password'  =>Env::get('BQG_COLLECT.PASSWORD'),//数据库的密码
-            'db_name'   =>Env::get('BQG_COLLECT.DBNAME'),//数据库名称
-            'port'  =>  Env::get('BQG_COLLECT.PORT')//数据库的端口
-        ];
-
         //本地localhost的master
         $list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
         //本地本地localhost的slave库
         $list['db_master']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
-        //线上小说库
-        $list['db_novel_pro']=array('dsn'=>'mysql:host='.$config_pro['host'].';port='.$config_pro['port'].';dbname='.$config_pro['db_name'],'user'=> $config_pro['username'],'password'=> $config_pro['password']);
-        //笔趣阁线上总库
-        $list['db_bqg_source']=array('dsn'=>'mysql:host='.$config_bqg_source['host'].';port='.$config_bqg_source['port'].';dbname='.$config_bqg_source['db_name'],'user'=> $config_bqg_source['username'],'password'=> $config_bqg_source['password']);
-          //笔趣阁的线上采集库
-        $list['db_bqg_collect']=array('dsn'=>'mysql:host='.$config_bqg_collect['host'].';port='.$config_bqg_collect['port'].';dbname='.$config_bqg_collect['db_name'],'user'=> $config_bqg_collect['username'],'password'=> $config_bqg_collect['password']);
         return $list;
     }
 
