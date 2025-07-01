@@ -26,7 +26,7 @@
 		"overtrue/pinyin": "^4.1",
 		"clue/buzz-react": "^0.4.2",
 		"react/event-loop": "^0.4.3",
-         "mpdf/mpdf": "*",
+         "mpdf/mpdf": "^8.2",
 		"ares333/php-curl": "^4.6",
         "yurunsoft/yurun-http": "~5.0",
 		"sqhlib/hanzi-convert": "^1.1",

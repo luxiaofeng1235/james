@@ -174,8 +174,8 @@ class ComposerStaticInit6e97d1e6456c5c5ed2f06f48078badf8
         ),
         'TencentCloud\\' => 
         array (
-            0 => __DIR__ . '/..' . '/tencentcloud/common/src/TencentCloud',
-            1 => __DIR__ . '/..' . '/tencentcloud/sms/src/TencentCloud',
+            0 => __DIR__ . '/..' . '/tencentcloud/sms/src/TencentCloud',
+            1 => __DIR__ . '/..' . '/tencentcloud/common/src/TencentCloud',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
