@@ -6,6 +6,12 @@ require_once($dirname.'/library/init.inc.php');
 $res = Env::get('REDIS.HOST_NAME');
 $res1 = Env::get('TEST_NAME');
 $res2 = Env::get('GOFOUND.HOST_NAME');
+$list = $mysql_obj->fetchAll("select * from mc_city",'db_novel_pro');
+echo "<pre>";
+var_dump($list);
+echo "</pre>";
+exit();
+
 
 echo "<pre>";
 var_dump($res,$res1,$res2);

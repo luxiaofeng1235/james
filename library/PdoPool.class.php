@@ -67,16 +67,7 @@ class ConnectionPool {
                 //測試連接應用
                 try {
                     //根据PDO来进行连接，主要用于进行PDO连接
-                    echo "<pre>";
-                    var_dump($info);
-                    echo "</pre>";
-                        
                     $db = new PDO($info[$db_name]['dsn'],$info[$db_name]['user'],$info[$db_name]['password'],array(PDO::ATTR_PERSISTENT => true));
-                    echo "<pre>";
-                    var_dump($db);
-                    echo "</pre>";
-                    exit();
-                        
                     //主要用来设置POD链接失败会抛出来一个异常
                     $db ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     $db ->query("set names utf8");
