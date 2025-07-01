@@ -3,9 +3,9 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
-$res = Env::get('REDIS.HOST_NAME');
-$res1 = Env::get('COMMENT_WEB_URL');
-$res2 = Env::get('APICONFIG.API_HOST');
+$res = Env::get('DATABASE.HOST_NAME');
+$res1 = Env::get('TWCONFIG.XSW_SOURCE');
+// $res2 = Env::get('APICONFIG.API_HOST');
 // $list = $mysql_obj->fetchAll("select * from mc_city",'db_novel_pro');
 // echo "<pre>";
 // var_dump($redis_data);
@@ -13,8 +13,13 @@ $res2 = Env::get('APICONFIG.API_HOST');
 // exit();
 
 echo "<pre>";
-var_dump($res,$res1,$res2);
+var_dump($res);
 echo "</pre>";
+echo "<pre>";
+var_dump($res1);
+echo "</pre>";
+exit();
+
 exit();
 
 
