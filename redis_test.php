@@ -6,7 +6,7 @@ $redis->connect("127.0.0.1","6379");
 $redis->select(0);
 
 $cacheKey = "angle_class";
-$redis->set($cacheKey , "222334343");
+// $redis->set($cacheKey , "222334343");
 $dt = $redis->get($cacheKey);
 echo '<pre>';
 var_dump($dt);
