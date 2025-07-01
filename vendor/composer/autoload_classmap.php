@@ -42,7 +42,7 @@ return array(
     'EXunSearch' => $vendorDir . '/hightman/xunsearch/wrapper/yii-ext/EXunSearch.php',
     'ICallbackNamed' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
     'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
-    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+    'Stringable' => $vendorDir . '/myclabs/php-enum/stubs/Stringable.php',
     'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     'XS' => $vendorDir . '/hightman/xunsearch/lib/XS.class.php',
