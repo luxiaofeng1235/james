@@ -7,7 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Monolog' => array($vendorDir . '/monolog/monolog/src'),
-    'ML\\IRI' => array($vendorDir . '/ml/iri'),
-    'Guzzle\\Parser' => array($vendorDir . '/guzzle/parser'),
-    'Evenement' => array($vendorDir . '/evenement/evenement/src'),
 );

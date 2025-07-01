@@ -9,13 +9,17 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Utils;
 
 
-$proxy_server = NovelModel::getProxyItem();
 $client = new Client([
     'verify' => false,//配置认证
     'timeout'  => 15,//设置超时时间
     'proxy'=>'socks5://'.$proxy_server,//设置代理
 ]);
 
+echo "<pre>";
+var_dump($client);
+echo "</pre>";
+exit();
+    
 $list  =[
     'http://www.paoshu8.info/212_212110/196085968.html',
     'http://www.paoshu8.info/210_210232/196086130.html',

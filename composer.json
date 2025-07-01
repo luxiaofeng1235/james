@@ -24,7 +24,6 @@
 		"jaeger/querylist": "^4.2",
 		"jaeger/curlmulti": "^1.0",
 		"overtrue/pinyin": "^4.1",
-		"clue/buzz-react": "^0.4.2",
 		"react/event-loop": "^0.4.3",
          "mpdf/mpdf": "^8.2",
 		"ares333/php-curl": "^4.6",
@@ -35,7 +34,8 @@
 		"tencentcloud/sms": "^3.0",
 		"aws/aws-sdk-php": "^3.312",
 		"phpoffice/phpword": "dev-master",
-		"hightman/xunsearch": "*@beta"
+		"hightman/xunsearch": "*@beta",
+		"guzzlehttp/guzzle": "^7.0"
   },
 	"config": {
 		"secure-http": false

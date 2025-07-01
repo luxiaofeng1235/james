@@ -2,7 +2,7 @@
 //显示配置文件信息
 $redis = new Redis();
 //配置文件信息
-$redis->connect("127.0.0.1","6379");
+$redis->connect("localhost","6379");
 $redis->select(0);
 
 $cacheKey = "angle_class";

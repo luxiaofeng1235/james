@@ -87,7 +87,7 @@ if (is_file(dirname(__DIR__) . '/config/advert.php')) {
 
 
 $mysql_obj =new ConnectionPool(); //mysql连接
-// $redis_data = new redis_codes(); //redis类 - 延迟初始化，避免在测试时连接失败
+$redis_data = new redis_codes(); //redis类 - 延迟初始化，避免在测试时连接失败
 
 
 

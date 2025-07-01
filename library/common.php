@@ -627,6 +627,11 @@ function getZhimaProxy()
 	//获取对应的缓存key的信息
 	$redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
 	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
+	echo "<pre>";
+	var_dump($api_proxy_data);
+	echo "</pre>";
+	exit();
+	    
 	$proxy_conf = json_decode($api_proxy_data, true);
 	return $proxy_conf ?? [];
 }
