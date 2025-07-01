@@ -3,11 +3,8 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
-$res = Env::get('DATABASE.HOST_NAME');
-echo "<pre>";
-var_dump($mysql_obj);
-echo "</pre>";
-exit();
+$res = Env::get('REDIS.HOST_NAME');
+
 
 echo "<pre>";
 var_dump($res);

@@ -40,6 +40,16 @@ class ConnectionPool {
             'db_name'   =>Env::get('DATABASE_PRO.DBNAME'),//数据库名称
             'port'  =>  Env::get('DATABASE_PRO.PORT')//数据库的端口
         ];
+        echo "<pre>";
+        var_dump($config);
+        echo "</pre>";
+        echo "<pre>";
+        var_dump($config_pro);
+        echo "</pre>";
+        exit();
+            
+        exit();
+            
         //本地localhost的master
         $list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
         //本地本地localhost的slave库
