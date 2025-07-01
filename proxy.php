@@ -3,6 +3,13 @@ $dirname = dirname(__FILE__);
 $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
+$res = Env::get('DATABASE.DBNAME');
+echo "<pre>";
+var_dump($res);
+echo "</pre>";
+exit();
+
+echo 333;exit;
 //http://webapi.http.zhimacangku.com/getip?neek=321a408a&num=1&type=1&time=3&pro=0&city=0&yys=0&port=2&pack=0&ts=0&ys=0&cs=0&lb=1&sb=&pb=4&mr=1&regions=
 $proxyInfo = getZhimaProxy();
 $url ='http://www.baidu.com/';
