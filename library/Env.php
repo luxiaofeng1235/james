@@ -85,7 +85,7 @@ class Env
                     self::loadFile(dirname(__DIR__) . '/.env_prod');
                 }
                 //这里统一加载业务端的配置
-                self::loadFile(dirname(__DIR__) . '/.env_config');
+                self::loadFile(dirname(__DIR__) . '/.business_config');
             } catch (\Exception $e) {
                 return $default;
             }

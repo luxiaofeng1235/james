@@ -5,7 +5,7 @@ ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 $res = Env::get('REDIS.HOST_NAME');
 $res1 = Env::get('COMMENT_WEB_URL');
-$res2 = Env::get('GOFOUND.HOST_NAME');
+$res2 = Env::get('APICONFIG.API_HOST');
 // $list = $mysql_obj->fetchAll("select * from mc_city",'db_novel_pro');
 // echo "<pre>";
 // var_dump($redis_data);
