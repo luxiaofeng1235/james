@@ -17,11 +17,11 @@ class Env
     // 配置文件映射
     private const CONFIG_FILES = [
         'env' => [
-            'prod' => '/.env_prod',
-            'dev' => '/.env_dev',
-            'test' => '/.env_test',
+            'prod' => '/.env_prod',//线上配置
+            'dev' => '/.env_dev', //线下配置
+            'test' => '/.env_test', //测试配置
         ],
-        'business' => '/.business_config',
+        'business' => '/.business_config', //通用业务配置
     ];
 
     public static function get($name, $default = null)
