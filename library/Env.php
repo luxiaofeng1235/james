@@ -84,6 +84,8 @@ class Env
                 }else{//下载线上环境配置
                     self::loadFile(dirname(__DIR__) . '/.env_prod');
                 }
+                //这里统一加载业务端的配置
+                self::loadFile(dirname(__DIR__) . '/.env_config');
             } catch (\Exception $e) {
                 return $default;
             }

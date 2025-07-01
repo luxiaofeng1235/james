@@ -4,10 +4,11 @@ $dirname =str_replace("\\", "/", $dirname) ;
 ini_set('memory_limit','9000M');
 require_once($dirname.'/library/init.inc.php');
 $res = Env::get('REDIS.HOST_NAME');
-
+$res1 = Env::get('TEST_NAME');
+$res2 = Env::get('GOFOUND.HOST_NAME');
 
 echo "<pre>";
-var_dump($res);
+var_dump($res,$res1,$res2);
 echo "</pre>";
 exit();
 
