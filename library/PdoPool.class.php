@@ -44,6 +44,8 @@ class ConnectionPool {
         $list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
         //本地本地localhost的slave库
         $list['db_master']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
+        //小说库
+        $list['db_novel_pro']=array('dsn'=>'mysql:host='.$config_pro['host'].';port='.$config_pro['port'].';dbname='.$config_pro['db_name'],'user'=> $config_pro['username'],'password'=> $config_pro['password']);
         return $list;
     }
 
