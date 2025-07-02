@@ -62,32 +62,33 @@ class NovelModel
 
 	//检查当前是否有
 	/**
-	* @note 检查当前是否有下架的书籍，并进行删除
-	* @param  $where string 查询条件
-	* @param $table_name string 表名 
-	* @param $status int 显示状态
-	* @return array
-	*/
-	public static function checkSearchBookClosed($where,$table_name,$status=0){
-		if(!$where || !$table_name){
+	 * @note 检查当前是否有下架的书籍，并进行删除
+	 * @param  $where string 查询条件
+	 * @param $table_name string 表名 
+	 * @param $status int 显示状态
+	 * @return array
+	 */
+	public static function checkSearchBookClosed($where, $table_name, $status = 0)
+	{
+		if (!$where || !$table_name) {
 			return false;
 		}
 		global $mysql_obj;
-		    
+
 		$sql = "select * from {$table_name} where {$where}";
-		$list = $mysql_obj->fetchAll($sql,self::$db_conn);
-		if($list && is_array($list)){
+		$list = $mysql_obj->fetchAll($sql, self::$db_conn);
+		if ($list && is_array($list)) {
 			$book_table_name  = Env::get('TABLE_MC_BOOK');
 			$bookIds = array_column($list, 'bid');
-			$sql  = "select id from ".$book_table_name. " where id in (".implode(',',$bookIds).") and status = {$status}";
-			$bookRes = $mysql_obj->fetchAll($sql ,self::$db_conn);
-			if($bookRes){
-				$delIds=  array_column($bookRes ,'id');
+			$sql  = "select id from " . $book_table_name . " where id in (" . implode(',', $bookIds) . ") and status = {$status}";
+			$bookRes = $mysql_obj->fetchAll($sql, self::$db_conn);
+			if ($bookRes) {
+				$delIds =  array_column($bookRes, 'id');
 				//如果存在就删掉
-				$sql = "delete from {$table_name} where bid in (".implode(',',$delIds).")";
+				$sql = "delete from {$table_name} where bid in (" . implode(',', $delIds) . ")";
 				echo "online-delete-sql = {$sql} \r\n";
-				$mysql_obj->query($sql,self::$db_conn);			
-			}else{
+				$mysql_obj->query($sql, self::$db_conn);
+			} else {
 				echo "暂未发现待删除的{$table_name}表的的下架的书籍数据\r\n";
 			}
 		}
@@ -96,69 +97,72 @@ class NovelModel
 
 
 	/**
-	* @note 自动粉刺
-	* @param word_frequency 分词检索
-	* @return array
-	*/
-	public static function cutChineseWords($text=''){
-		if(!$text){
+	 * @note 自动粉刺
+	 * @param word_frequency 分词检索
+	 * @return array
+	 */
+	public static function cutChineseWords($text = '')
+	{
+		if (!$text) {
 			return [];
 		}
-		$dict = array("都", "重","谁");
+		$dict = array("都", "重", "谁");
 		$word_frequency = array();
 		$length = strlen($text);
 		$start = 0;
 		for ($i = 0; $i < $length; $i++) {
-		    $word = substr($text, $start, $i - $start + 1);
-		    if (in_array($word, $dict)) {
-		        if (!isset($word_frequency[$word])) {
-		            $word_frequency[$word] = 0;
-		        }
-		        $word_frequency[$word]++;
-		        $start = $i + 1;
-		    }
+			$word = substr($text, $start, $i - $start + 1);
+			if (in_array($word, $dict)) {
+				if (!isset($word_frequency[$word])) {
+					$word_frequency[$word] = 0;
+				}
+				$word_frequency[$word]++;
+				$start = $i + 1;
+			}
 		}
 		return $word_frequency;
 	}
 
 	/**
-	* @note 交换元素第N个和第一个的位置
-	* @param array array交换的数组
-	* @param $position int 数组位置信息
-	* @return condition
-	*/
-	public static function  swapFirstWithAny($array, $position) {
+	 * @note 交换元素第N个和第一个的位置
+	 * @param array array交换的数组
+	 * @param $position int 数组位置信息
+	 * @return condition
+	 */
+	public static function  swapFirstWithAny($array, $position)
+	{
 		//异常处理
-		if($position<0){
+		if ($position < 0) {
 			$position = 0;
 		}
-	    // 检查位置是否有效
-	    if ($position < 0 || $position >= count($array)) {
-		        echo "位置无效";
-		        return;
-		    }
-	    // 交换元素
-	    $temp = $array[0];
-	    $array[0] = $array[$position];
-	    $array[$position] = $temp;
-	    return $array;
+		// 检查位置是否有效
+		if ($position < 0 || $position >= count($array)) {
+			echo "位置无效";
+			return;
+		}
+		// 交换元素
+		$temp = $array[0];
+		$array[0] = $array[$position];
+		$array[$position] = $temp;
+		return $array;
 	}
 
 	/**
 	 * @note 获取断章采集的来源
 	 * @return condition
 	 */
-	public static function getDuanUrlReferCondition(){
+	public static function getDuanUrlReferCondition()
+	{
 		$referList = Env::get('SOURCE_LIST');
-		if($referList){
-			$refererArr = explode(',',$referList);
-			$refererArr = array_unique($refererArr);// 去重
+		if ($referList) {
+			$refererArr = explode(',', $referList);
+			$refererArr = array_unique($refererArr); // 去重
 			$condition = '';
-			foreach($refererArr as $v){
-				if(!$v) continue;
-				$where_data[]= 'instr(source_url,\''.$v.'\')>0';
+			foreach ($refererArr as $v) {
+				if (!$v) continue;
+				$where_data[] = 'instr(source_url,\'' . $v . '\')>0';
 			}
-			$condition = '( ' .implode(' OR ', $where_data).' )';
+			$condition = '( ' . implode(' OR ', $where_data) . ' )';
 			return $condition;
 		}
 	}
@@ -313,7 +317,7 @@ class NovelModel
 			}
 			$info_data = $info_data->all();
 			//只有标题为空需要统一处理下
-			if(empty($store_data['title'])){
+			if (empty($store_data['title'])) {
 				$title = trimBlankSpace($info_data['title']);
 				$title = addslashes($title);
 				//转义特殊字符 双引号等
@@ -322,21 +326,21 @@ class NovelModel
 			$store_data['status'] = $info_data['status'];
 			$store_data['text_num'] = $info_data['text_num'] ?? 0; //总字数
 			$store_data['third_update_time'] = strtotime($info_data['third_update_time']);
-		}else if($store_data['source'] =='xiaoshubao' && !$store_data['intro']){
-			 $html = webRequest($store_data['story_link'],'GET');
-			 global $urlRules;
-			 $rules= $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['xiaoshubao_append'];
-			 $info = QueryList::html($html)
-			 				->rules($rules)
-			 				->query()
-			 				->getData();
-			 $info = $info->all();
-			 $store_data['intro'] = $info['intro'];
+		} else if ($store_data['source'] == 'xiaoshubao' && !$store_data['intro']) {
+			$html = webRequest($store_data['story_link'], 'GET');
+			global $urlRules;
+			$rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['xiaoshubao_append'];
+			$info = QueryList::html($html)
+				->rules($rules)
+				->query()
+				->getData();
+			$info = $info->all();
+			$store_data['intro'] = $info['intro'];
 		}
 		//去掉分页，不然保存会出问题
-		if(isset($store_data['chapter_pages'])){
-            unset($store_data['chapter_pages']);
-        }
+		if (isset($store_data['chapter_pages'])) {
+			unset($store_data['chapter_pages']);
+		}
 		return $store_data;
 	}
 
@@ -536,7 +540,7 @@ class NovelModel
 		if (!$old || !$new) {
 			return false;
 		}
-		if(isset($new['text_num'])){
+		if (isset($new['text_num'])) {
 			unset($new['text_num']);
 		}
 		$diff_filed = array_diff_assoc($new, $old);
@@ -726,10 +730,10 @@ class NovelModel
 		if ($is_exchange) {
 			$html = array_iconv($html); //转换编码格式
 		}
-		if($source_ref == 'bqwxg8'){
+		if ($source_ref == 'bqwxg8') {
 			$html = iconv('gbk', 'utf-8//ignore', $html);
 		}
-		    
+
 		//处理繁简体的转换文字
 		# $link_reg = '/<a.+?href=\"(.+?)\".*>/i'; //匹配A连接
 		$link_reg = '/<a.*?href="(.*?)".*?>/';
@@ -738,23 +742,23 @@ class NovelModel
 		//只取正文里的内容信息，其他的更新的简介不要
 		//匹配正文章节内容
 
-		    
+
 		//标题处理正则转义字符
 		$title = self::exchangePregStr($title); //小说转义字符
 		$contents = '';
 
 		//特殊的标记需要自动过滤掉，这个网站有点问题
-		if($source_ref == 'ipaoshuba'){
-			$html = str_replace('","copyright":"','',$html);//替换调一些特殊标记防止采集有问题
+		if ($source_ref == 'ipaoshuba') {
+			$html = str_replace('","copyright":"', '', $html); //替换调一些特殊标记防止采集有问题
 		}
-		    
+
 
 		//<dt>《毒誓一九四一》正文</dt>
 		//兼容这种带正文的正则
 		//《雾乡猎梦人》正文
 		if (preg_match('/《' . $title . '》正文.*<\/dl>/ism', $html, $with_content)) { //带有正文的匹配
 			$contents = $with_content[0] ?? '';
-		}else if (preg_match('/章节列表.*<\/dl>/ism', $html, $with_content)) { //带有正文的匹配
+		} else if (preg_match('/章节列表.*<\/dl>/ism', $html, $with_content)) { //带有正文的匹配
 			$contents = $with_content[0] ?? [];
 		} else if (preg_match('/<div id=\"list\".*?>.*<\/dl>/ism', $html, $list)) { //带有id="list"的规则
 			$contents = $list[0] ?? [];
@@ -762,18 +766,18 @@ class NovelModel
 			$contents = $list[0] ?? '';
 		} else if (preg_match('/<div class=\"book-list clearfix\">.*?<\/div>/ism', $html, $matches)) { //兼容xuges网站的格式1
 			$contents = $matches[0] ?? '';
-		} else if (preg_match('/<td class=\"tdw3\".*?<\/table>/ism', $html, $list)) {//处理xudes的另外一种样式
+		} else if (preg_match('/<td class=\"tdw3\".*?<\/table>/ism', $html, $list)) { //处理xudes的另外一种样式
 			$contents = $list[0] ?? '';
 		} else if (preg_match('/<table class=\"tbw3\".*?<\/table>/ism', $html, $list)) {
 			//兼容xuges网站的格式2，这个网站有两个样式
 			$contents = $list[0] ?? '';
-		} else if(preg_match('/<ul class=\"chaw_c\".*?>.*<div class=\"setbox\">/ism', $html, $list)){
+		} else if (preg_match('/<ul class=\"chaw_c\".*?>.*<div class=\"setbox\">/ism', $html, $list)) {
 			//处理27k的导入配置
 			$contents = $list[0] ?? '';
-		}else if(preg_match('/《'.$title.'》正文.*?>.*<p class=\"articles\">/ism', $html, $list)){//兼容含有正文开头的
+		} else if (preg_match('/《' . $title . '》正文.*?>.*<p class=\"articles\">/ism', $html, $list)) { //兼容含有正文开头的
 			$contents = $list[0] ?? '';
 		}
-		    
+
 		if ($contents) {
 			////替换style的样式标签，防止采集不到数据
 			$contents = str_replace('href =', 'href=', $contents);
@@ -862,11 +866,11 @@ class NovelModel
 	 * @param $tiemout int 过期时间
 	 * @return array
 	 */
-	public static function initTagList($redis_key = 'tag_list',$timeout = 86400)
+	public static function initTagList($redis_key = 'tag_list', $timeout = 86400)
 	{
 		global $redis_data, $mysql_obj;
 		//删除redis的主要信息配置修改
-		 $redis_data->del_redis($redis_key);
+		$redis_data->del_redis($redis_key);
 		if (!$redis_data->get_redis($redis_key)) {
 			$sql = "select id ,tag_name,column_type from mc_tag";
 			$info = $mysql_obj->fetchAll($sql, 'db_novel_pro');
@@ -1180,7 +1184,7 @@ class NovelModel
 		if (!$cate_list)
 			return false;
 		$cate_id = 0;
-		    
+
 		foreach ($cate_list as $key => $category_id) {
 			//根据标签的关键字来进行匹配分类
 			if (strstr($cate_name, $key)) {
@@ -1270,19 +1274,19 @@ class NovelModel
 		if (!is_dir($save_img_path)) {
 			createFolders($save_img_path);
 		}
-		    
+
 		//判断文件是否存在或者文件损坏
 		if (!file_exists($filename)  || !@getimagesize($filename)) {
 			//先判断远程文件是否存在，如果不存在给一个默认的
-			if(!check_url($url)){
+			if (!check_url($url)) {
 				$url = Env::get('APICONFIG.DEFAULT_PIC');
 			}
 			//匹配台湾的网站，用挂代理的方式进行访问
 			//正常的请求url
 			$res = webRequest($url, 'GET'); //利用图片信息来下载
-		    if(strstr($res, 'File or directory not found') || $res == ""){
-		    	$res = webRequest(Env::get('APICONFIG.DEFAULT_PIC'),'GET');
-		    }
+			if (strstr($res, 'File or directory not found') || $res == "") {
+				$res = webRequest(Env::get('APICONFIG.DEFAULT_PIC'), 'GET');
+			}
 			$img_con = $res ?? '';
 			@writeFileCombine($filename, $img_con);
 		}
@@ -1433,7 +1437,7 @@ class NovelModel
 
 			//替换空白字符
 			$arr = trimAllSpace($arr);
-			    
+
 			//保留数字的转换方式
 			$ext_data = $pinyin->name($arr, PINYIN_KEEP_NUMBER); //利用多音字来进行转换标题
 			$str = '';
@@ -1452,19 +1456,18 @@ class NovelModel
 		};
 
 
-		    
+
 		$cover_logo = '';
 		if (!empty($url)) {
-			    
+
 			$title_string = $trimBlank($title);
 			$author_string = $trimBlank($author);
 			$imgInfo = pathinfo($url);
 			$extension = $imgInfo['extension'] ?? self::$imageType;
-			    
+
 			if (!empty($author_string)) {
 				//如果作者不为空，进行作者和标题链接
 				$cover_logo =  $title_string . '-' . $author_string . '.' . $extension;
-
 			} else {
 				//如果作者为空，只计算标题
 				$cover_logo =  $title_string . '.' . $extension;
@@ -1509,10 +1512,10 @@ class NovelModel
 		$s_tag_id = 0;
 		//按照正常的键值交换数据请求
 		$tagsArr = double_array_exchange_by_field($tagList, 'id');
-		    
+
 		foreach ($tagsArr as $tag_id => $value) {
 			//根据标签的关键字来进行匹配分类
-			if (strstr($value['tag_name'],$tag_name)) {
+			if (strstr($value['tag_name'], $tag_name)) {
 				$s_tag_id = $value['id'] ?? 0;
 				break;
 			}
@@ -1553,15 +1556,16 @@ class NovelModel
 	 * @param $url string 连接地址
 	 * @return string
 	 */
-	public static function  handleCollectUrl($url=""){
-		if(!$url){
+	public static function  handleCollectUrl($url = "")
+	{
+		if (!$url) {
 			return false;
 		}
-		if(strstr($url, 'ipaoshuba')){
+		if (strstr($url, 'ipaoshuba')) {
 			$url = str_replace('Book', 'Partlist', $url);
-		}else if(strstr($url, 'banjiashi') && strstr($ur,'xiaoshuo')){//存在佳士而且是首页的时候做替换
+		} else if (strstr($url, 'banjiashi') && strstr($ur, 'xiaoshuo')) { //存在佳士而且是首页的时候做替换
 			$url = str_replace('xiaoshuo', 'index', $url);
-			$url.='1/';
+			$url .= '1/';
 		}
 		return $url;
 	}
@@ -1601,7 +1605,7 @@ class NovelModel
 	{
 		if (!$data)
 			return false;
-		    
+
 		//先按照源数据进行判断
 		$ex_key = [];
 		foreach (self::$dict_exchange as $key  => $val) {
@@ -1609,9 +1613,9 @@ class NovelModel
 				continue;
 			$ex_key[$key] = 1;
 		}
-		    
 
-		    
+
+
 		foreach ($data as $key => $val) {
 			if (isset($ex_key[$key])) {
 				$info[self::$dict_exchange[$key]] = trim($val);
@@ -1651,7 +1655,7 @@ class NovelModel
 		if (($info['last_chapter_time'] > 0 &&  $info['last_chapter_time'] > strtotime($now_time)) || $data['status'] == '新书上传') {
 			$info['is_new'] = 1; //判断是否为新书
 		}
-		if(!isset($info['text_num'])){
+		if (!isset($info['text_num'])) {
 			$info['text_num'] = self::getTextNum($info['book_name'], $info['author']); //小说字数
 		}
 		$info['serialize'] = $serialize;
@@ -1705,7 +1709,7 @@ class NovelModel
 		// $md5_str = NovelModel::getAuthorFoleder($info['book_name'], $info['author']);
 		// $json_file = Env::get('SAVE_JSON_PATH') . DS .substr($md5_str, 0,2).DS. $md5_str .  '.' . NovelModel::$json_file_type;
 		$json_file = NovelModel::getBookFilePath($info['book_name'], $info['author']);
-		
+
 		$json_data = readFileData($json_file);
 		$chapter_item = json_decode($json_data, true);
 		$info['chapter_num'] = count($chapter_item);
@@ -1721,14 +1725,14 @@ class NovelModel
 		$where_data = 'book_name ="' . $info['book_name'] . '" and author ="' . $info['author'] . '" limit 1';
 		$sql = "select id from " . self::$table_name . " where {$where_data}";
 		$novelInfo = $mysql_obj->fetchAll($sql, self::$db_conn);
-		    
+
 		if (empty($novelInfo)) {
 			//插入入库
 			$data =  handleArrayKey($info);
 			$id =  $mysql_obj->add_data($data, self::$table_name, self::$db_conn);
 		} else {
 			//如果是这本书存在了，就不更新图片了，防止编辑上传了图片又被覆盖掉了。
-			if(isset($info['pic'])){
+			if (isset($info['pic'])) {
 				unset($info['pic']);
 			}
 			//更新书籍的主要信息
@@ -1738,7 +1742,7 @@ class NovelModel
 			// $t = $mysql_obj->update_data($info, $update_where, self::$table_name, false, 0, self::$db_conn);
 			$id = intval($novelInfo[0]['id']);
 		}
-		    
+
 		return $id;
 	}
 
@@ -1750,17 +1754,18 @@ class NovelModel
 	 * @param $source_url sring 目标来源
 	 * @return object
 	 */
-	public static function getOnlineBookInfo($source_url){
-		if(!$source_url){
+	public static function getOnlineBookInfo($source_url)
+	{
+		if (!$source_url) {
 			return false;
 		}
 		global $mysql_obj;
 		$urlData = parse_url($source_url);
 		$path = $urlData['path'] ?? '';
-		if($path){
-			$path = str_replace('Partlist','Book',$path);
+		if ($path) {
+			$path = str_replace('Partlist', 'Book', $path);
 			$sql = "select id ,book_name,author from " . Env::get('TABLE_MC_BOOK') . " where instr(source_url,'{$path}')>0";
-			$info = $mysql_obj->fetch($sql,self::$db_conn);
+			$info = $mysql_obj->fetch($sql, self::$db_conn);
 			return $info;
 		}
 	}
@@ -1792,7 +1797,7 @@ class NovelModel
 		if (!$title || !$author) {
 			return 0;
 		}
-	 	$json_path = NovelModel::getBookFilePath($title, $author);
+		$json_path = NovelModel::getBookFilePath($title, $author);
 		$info = readFileData($json_path);
 		$num = 0;
 		if ($info) {
@@ -1836,7 +1841,7 @@ class NovelModel
 	 * @param $url string url信息 带全路径的信息
 	 * @return string
 	 */
-	public static function createJsonFile($info = [], $data = [], $pro_book_id = 0, $referer_url = '',$url)
+	public static function createJsonFile($info = [], $data = [], $pro_book_id = 0, $referer_url = '', $url)
 	{
 		if (!$data || !$info) {
 			return false;
@@ -1847,7 +1852,7 @@ class NovelModel
 		// echo "</pre>";
 		// echo md5('小蘑菇'.'一十四洲');
 		// exit();
-		    
+
 		//获取标题+文字的md5串
 		$md5_str = self::getAuthorFoleder($info['title'], $info['author']);
 		if (!$md5_str) {
@@ -1869,12 +1874,12 @@ class NovelModel
 
      */
 		$json_list = [];
-		    
+
 		foreach ($data as $key => $val) {
 			//特殊判断下,由于这个站采集没有/前面的路由
-			if(strstr($url,'siluke520')){
-				$chapter_link = sprintf("%s%s",$url , $val['link_url']);
-			}else{
+			if (strstr($url, 'siluke520')) {
+				$chapter_link = sprintf("%s%s", $url, $val['link_url']);
+			} else {
 				//判断是否以http开头的，如果不是就需要拼接后缀
 				if (!preg_match('/http.*:\/\//', $val['link_url'])) {
 					$chapter_link = $referer_url . $val['link_url'];
@@ -1896,17 +1901,17 @@ class NovelModel
 				'addtime'   => (int) $val['createtime'], //添加时间
 			];
 		}
-		    
-		    
+
+
 		$save_path = Env::get('SAVE_JSON_PATH') . DS . substr($md5_str, 0, 2); //保存json的路径
-		    
+
 		//获取对应的json目录信息
 		if (!is_dir($save_path)) {
 			createFolders($save_path);
 		}
-	
+
 		$filename = NovelModel::getBookFilePath($info['title'], $info['author']);
-		echo $filename."\r\n";
+		echo $filename . "\r\n";
 		// $filename = $save_path . DS . $md5_str . '.' . self::$json_file_type;
 		//保存对应的数据到文件中方便后期读取
 		$json_data = json_encode($json_list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -2014,14 +2019,14 @@ class NovelModel
 		global $urlRules;
 		//获取采集的标识
 
-		$is_fanti_ex = $source_ref != 'twking' ? false: true;
+		$is_fanti_ex = $source_ref != 'twking' ? false : true;
 		#获取采集规则
 		$rules = CommonService::collectContentRule($chapter_link_ref);
-		    
+
 		//开启多线程请求,使用当前代理IP去请求，牵扯到部署需要再境外服务器
 		//////////////////处理请求的链接start
 		$list = StoreModel::swooleRquest($t_url);
-		    
+
 		//重试防止有错误的
 		$list = StoreModel::swooleCallRequest($list, $chapterList, $referer_url);
 		if (!$list) {
@@ -2031,7 +2036,7 @@ class NovelModel
 			'otcwuxi',
 			'biquge5200',
 		]; //配置需要转换的URL
-		
+
 		foreach ($list as $gkey => $gval) {
 			//非跑书8需要做转换
 			if ($source_ref == 'xuges') {
@@ -2055,7 +2060,7 @@ class NovelModel
 				}
 				$store_content = $html['content']  ?? '';
 				//判断来源是否转换
-				if ($source_ref!='paoshu8' && in_array($source_ref, $exchagne_arr)) {
+				if ($source_ref != 'paoshu8' && in_array($source_ref, $exchagne_arr)) {
 					// $store_content = iconv('gb2312', 'utf-8//ignore', $store_content);
 					$store_content = array_iconv($store_content); //转换编码，牵扯到转换编码的统一调用array_iconv函数，方便进行管理，修改也容易更好找到地方
 				}
@@ -2084,7 +2089,7 @@ class NovelModel
 			// $store_detail[$html_path] = $store_content;
 			$store_detail[$gkey] = $store_content;
 		}
-		    
+
 		$allNovelList = [];
 		if (!empty($store_detail)) {
 			foreach ($store_detail as $gtkey => $gtval) {
@@ -2747,8 +2752,9 @@ class NovelModel
 	 * @param  $value array 小说信息
 	 * @return array
 	 */
-	public static function buildCombindData($value = []){
-		if(!$value)
+	public static function buildCombindData($value = [])
+	{
+		if (!$value)
 			return false;
 		$id = intval($value['id']);
 		$book_name = trim($value['book_name']);
@@ -2760,14 +2766,14 @@ class NovelModel
 		// 	$data['text'] = sprintf("%s",$book_name);
 		// }
 		$data['text'] = $book_name;
-		$document= [
+		$document = [
 			'book_id'	=> $id,
 			'book_name' => $book_name,
 			'author'	=> $author,
 		];
 		$data['document'] = $document;
 		// $json_data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-		return $data;	    
+		return $data;
 	}
 
 	//
@@ -2777,15 +2783,16 @@ class NovelModel
 	 * @param  $value array 小说信息
 	 * @return array
 	 */
-	public static function synGofundAdd($gofound,$val){
-		if(!$val || !$gofound){
+	public static function synGofundAdd($gofound, $val)
+	{
+		if (!$val || !$gofound) {
 			return false;
 		}
 		//处理需要同步索引的请求数据信息
 		$post_data = NovelModel::buildCombindData($val);
-		if($post_data){
+		if ($post_data) {
 			$res = $gofound->add(
-				$post_data['id'], 
+				$post_data['id'],
 				$post_data['text'],
 				$post_data['document']
 			);
@@ -2798,13 +2805,14 @@ class NovelModel
 	 * @param $book_id  int  小说ID
 	 * @return string
 	 */
-	public static function getSearchBookData($bookKey = 0){
-		if(!$bookKey){
+	public static function getSearchBookData($bookKey = 0)
+	{
+		if (!$bookKey) {
 			return false;
 		}
 		global $redis_data;
-		if($bookKey){
-			$bookData = $redis_data->get_redis($bookKey);//检查当前文件是否已经同步了
+		if ($bookKey) {
+			$bookData = $redis_data->get_redis($bookKey); //检查当前文件是否已经同步了
 			return $bookData;
 		}
 		return null;
@@ -2816,39 +2824,41 @@ class NovelModel
 	 * @param $book_id  int  小说ID
 	 * @return string
 	 */
-	public static function getGofoundKey($book_id){
-		if(!$book_id){
+	public static function getGofoundKey($book_id)
+	{
+		if (!$book_id) {
 			return false;
 		}
-		$bookKey = sprintf("xunsearch_book:%s",$book_id);
+		$bookKey = sprintf("xunsearch_book:%s", $book_id);
 		return $bookKey;
 	}
 
 	/**
-	* @note 获取搜索引擎的索引
-	* @param $book_id  int  小说ID
-	* @return string
-	*/
-	public static function synsearchData($list = []){
-		if($list){
+	 * @note 获取搜索引擎的索引
+	 * @param $book_id  int  小说ID
+	 * @return string
+	 */
+	public static function synsearchData($list = [])
+	{
+		if ($list) {
 			global $redis_data;
 			$gofound = new GoFound();
-			foreach($list as $key =>$val){
-				if(!$val) continue;
+			foreach ($list as $key => $val) {
+				if (!$val) continue;
 				//先判断文件中是否有对应的key信息
 				$bookKey  = NovelModel::getGofoundKey($val['id']); //获取对应的缓存key
 				// $redis_data->del_redis($bookKey);
 				// echo 3;die;
 				// $bookInfo = NovelModel::getSearchBookData($bookKey); //取出来对应的缓存数据
 				// if(!$bookInfo){
-					//同步添加res数据信息
-				$res = NovelModel::synGofundAdd($gofound,$val);
+				//同步添加res数据信息
+				$res = NovelModel::synGofundAdd($gofound, $val);
 				//同步数据信息
-				if(isset($res['state']) && $res['state'] == true){
+				if (isset($res['state']) && $res['state'] == true) {
 					echo "index = {$key}\t  id = {$val['id']}\ttitle = {$val['book_name']}\t author={$val['author']}\tgofondRes: status :{$res['state']} -----message：{$res['message']}\r\n";
-				}else{
+				} else {
 					dd($res);
-					echo "index = {$key}\t id = {$val['id']}\ttitle = {$val['book_name']}\t author={$val['author']} \t gofondRes: ".var_export($res,true)."\r\n";
+					echo "index = {$key}\t id = {$val['id']}\ttitle = {$val['book_name']}\t author={$val['author']} \t gofondRes: " . var_export($res, true) . "\r\n";
 				}
 				// 	$redis_data->set_redis($bookKey,1); //同步对应的索引文件更新
 				// }else{
@@ -2856,10 +2866,9 @@ class NovelModel
 				// 	echo "index = {$key}\t id = {$val['id']}\ttitle = {$val['book_name']}\t author={$val['author']} \t gofondRes: has syn data !!!\r\n";
 				// }
 			}
-		}else{
+		} else {
 			echo "no data\r\n";
 			return false;
 		}
 	}
 }
-
