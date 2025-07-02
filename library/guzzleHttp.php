@@ -9,13 +9,6 @@
 // 编 码：UTF-8
 // 摘 要:利用guzzle处理抓取网络请求-效率高
 // ///////////////////////////////////////////////////
-// use GuzzleHttp\Pool;
-// use GuzzleHttp\Client;
-// use GuzzleHttp\Psr7\Request;
-// use GuzzleHttp\Promise\Utils;
-// use GuzzleHttp\Exception\BadResponseException;
-
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
@@ -85,32 +78,6 @@ class guzzleHttp
         if (!is_array($reqs)) {
             $reqs = array($reqs);
         }
-        // $proxy_conf = [];
-        // // try{
-        // switch ($pro_type) {
-        //     case 'story':
-        //         $proxy_conf= getZhimaProxy();//获取同步小说的基础章节
-        //         break;
-        //     case 'count':
-        //         $proxy_conf = getMobileProxy();//获取移动端的统计章节的新的代理
-        //         break;
-        //     case 'empty':
-        //         $proxy_conf = getMobileEmptyProxy();//获取移动端的数据为空爬取新的代理
-        //         break;
-        //     case 'image':
-        //         $proxy_conf = getImgProxy();//获取下载图片使用的代理
-        //         break;
-        // }
-        // if(!$proxy_conf){
-        //     echo '【调用位置：guzzleHttp类】 当前代理IP已经过期了，重新获取吧--------！'.PHP_EOL;
-        //     NovelModel::killMasterProcess(); //结束当前进程
-        //     exit(1);
-        // }
-        // extract($proxy_conf);
-        // $proxy_server =$ip .':'.$port;
-        // if(!$proxy_server)
-        //     return false;
-
         $proxy_data = getQyZhimaRand();
         // //转换字段
         $proxy_data = combineProxyParam($proxy_data);
