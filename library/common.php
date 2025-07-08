@@ -626,12 +626,7 @@ function getZhimaProxy()
 	global $redis_data;
 	//获取对应的缓存key的信息
 	$redis_cache_key = Env::get('ZHIMA_REDIS_KEY');
-	$api_proxy_data = $redis_data->get_redis($redis_cache_key);
-	echo "<pre>";
-	var_dump($api_proxy_data);
-	echo "</pre>";
-	exit();
-	    
+	$api_proxy_data =  $redis_data->get_redis($redis_cache_key);
 	$proxy_conf = json_decode($api_proxy_data, true);
 	return $proxy_conf ?? [];
 }
@@ -707,7 +702,6 @@ function getMobileEmptyProxy()
  */
 function getProxyInfo()
 {
-
 	$url = Env::get('PROXY_GET_URL');
 	$item = webRequest($url, 'GET');
 	$tscode  = json_decode($item, true);
