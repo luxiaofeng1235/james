@@ -18,7 +18,9 @@ class OpenCC
         $binPath = 'F:\OpenCC\build\bin\opencc.exe', // opencc.exe 路径
         $configPath = 'F:\OpenCC\build\share\opencc\\' // opencc 配置文件路径
     ) {
+        //opencc的主路径
         $this->binPath = $binPath;
+        //opencc的配置文件路径
         $this->configPath = $configPath;
     }
 
