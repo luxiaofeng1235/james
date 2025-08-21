@@ -1,4 +1,20 @@
 <?php
+
+/**
+ * note 生成验证码
+ * @param int $length 验证码长度
+ * @return string
+ */
+function create_sms_code($length = 4)
+{
+    $code = '';
+    for ($i = 0; $i < $length; $i++) {
+        $code .= rand(0, 9);
+    }
+    return $code;
+}
+
+
 phpinfo();
 exit;
 $a="123ab "+5;

@@ -20,12 +20,15 @@ curl --socks5  43.243.171.202:8012 http://www.baidu.com
 ###测试台湾站
 curl -x socks5://84.17.37.52:1000 -U "storm-jekines_area-TW:123456"  https://www.mxgbqg.com/book/91090932/22106863.html
 
+##测试豌豆代理
+curl -x socks5://proxy.wandouip.com:2080  https://image.baidu.com/
+ 
  
 ###台湾小说网请求美国的代理
 curl -x socks5://154.195.49.21
 
-
-curl --socks5 206.206.91.70:6001  -U "client-lucky1235:123456abc"  https://www.otcwuxi.com/chapter/20116798111/
+##采集图片的
+curl --socks5 proxy.wandouip.com:2080  https://image.baidu.com/search/acjson?tn=resultjson_com&word=%E6%AC%A7%E5%86%A0&pn=0&z=4&rn=30
 
  
 
