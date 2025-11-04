@@ -40,8 +40,8 @@ class XunSearch{
 	* @note 通过Cli的方式来添加索引
 	* @param $id int 小说ID
 	* @param  $subject string 书名
-	* @param  $message 作者
-	* @return array
+	* @param  $message string 消息
+	* @return array |bool
 	*/
 	public static function addDocumentCli($id,$subject ,$message){
 		if(!$id || !$subject || !$message){
@@ -71,7 +71,7 @@ class XunSearch{
 	* @note 添加索引-普通同步
 	* @param $id int 小说ID
 	* @param  $subject string 书名
-	* @param  $message 作者
+	* @param  $message string 消息
 	* @return array
 	*/
 	public static function addDocument($id,$subject ,$message){
@@ -100,7 +100,7 @@ class XunSearch{
 	* @note 保存索引
 	* @param $id int 小说ID
 	* @param  $subject string 书名
-	* @param  $message 作者
+	* @param  $message  string 消息内容
 	* @return array
 	*/
 	public static function saveDocument($id,$subject ,$message){
@@ -127,8 +127,6 @@ class XunSearch{
 	/**
 	* @note 删除索引
 	* @param $id int 小说ID
-	* @param  $subject string 书名
-	* @param  $message 作者
 	* @return array
 	*/
 	public static function delDocument($id){
@@ -184,7 +182,7 @@ class XunSearch{
 	* @param $keyword string 搜索关键字
 	* @param $limit int 限制搜索条数
 	* @param $str_set int 设定纯数字的切割长度信息
-	* @return array
+	* @return array |bool
 	*/
 	public static function handleErrorText($xs,$text=''){
 		if(!$text){
