@@ -1,4 +1,5 @@
 <?php
+//二叉树的链表
 class TreeNode {
     public $val;
     public $left;
