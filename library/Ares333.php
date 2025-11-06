@@ -1,6 +1,8 @@
 <?php
-use Ares333\Curl\Toolkit;
+
 use Ares333\Curl\Curl;
+use Ares333\Curl\Toolkit;
+
 class Ares333{
 
     protected static $maxThread   =70 ; //最大线程数配置
@@ -10,7 +12,7 @@ class Ares333{
     * @note 获取基本的请求-一般适用于单个URL获取
     *
     * @param $url strsing 获取的url
-    * @return array
+    * @return array|false
     */
     public static function getBaseCurl($url){
         if(!$url)
@@ -41,7 +43,7 @@ class Ares333{
     * @note 实现文件的下载
     *
     * @param $url strsing 获取的url
-    * @return array
+    * @return array|string
     */
     public static function downloadFile($url){
         $curl = new Curl();
@@ -68,33 +70,6 @@ class Ares333{
                 }
             })->start();
         return $file;
-    }
-
-    /**
-    * @note 获取当前的代理IP配置信息
-    *
-    * @param
-    * @return
-    */
-
-    private static function getProxyData($pro_type){
-        $proxy_conf = [];
-        // try{
-        switch ($pro_type) {
-            case 'story':
-                $proxy_conf= getZhimaProxy();//获取同步小说的基础章节
-                break;
-            case 'count':
-                $proxy_conf = getMobileProxy();//获取移动端的统计章节的新的代理
-                break;
-            case 'empty':
-                $proxy_conf = getMobileEmptyProxy();//获取移动端的数据为空爬取新的代理
-                break;
-            case 'image':
-                $proxy_conf = getImgProxy();//获取下载图片使用的代理
-                break;
-        }
-        return $proxy_conf;
     }
 
     /**
@@ -189,6 +164,33 @@ class Ares333{
         };
         $curl->start();
         return $response ?? [];
+    }
+
+    /**
+    * @note 获取当前的代理IP配置信息
+    *
+    * @param
+    * @return
+    */
+
+    private static function getProxyData($pro_type){
+        $proxy_conf = [];
+        // try{
+        switch ($pro_type) {
+            case 'story':
+                $proxy_conf= getZhimaProxy();//获取同步小说的基础章节
+                break;
+            case 'count':
+                $proxy_conf = getMobileProxy();//获取移动端的统计章节的新的代理
+                break;
+            case 'empty':
+                $proxy_conf = getMobileEmptyProxy();//获取移动端的数据为空爬取新的代理
+                break;
+            case 'image':
+                $proxy_conf = getImgProxy();//获取下载图片使用的代理
+                break;
+        }
+        return $proxy_conf;
     }
 
 }
