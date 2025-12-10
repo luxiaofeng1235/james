@@ -68,7 +68,6 @@ function synComments($link_url)
     // $base_url = Env::get('COMMENT_WEB_URL');
     // echo $base_url . 'book/'.$bid;die;
     $html_datas = StoreModel::swooleRquest([$link_url], "post");
-    dd($html_datas);
     $tdata = array_values($html_datas);
     $rules = [
         "title" => ['.book-info h1', 'text'],
