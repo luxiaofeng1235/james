@@ -32,13 +32,13 @@ class ConnectionPool {
             'db_name'   =>Env::get('DATABASE.DBNAME'),//数据库名称
             'port'  =>  Env::get('DATABASE.PORT')//数据库的端口
         ];
-        //线上小说配置
+        // 线上/主库配置，如未设置 DATABASE_PRO 则复用 DATABASE
         $config_pro = [
-            'host'  =>Env::get('DATABASE_PRO.HOST_NAME'),//数据库的主机地址
-            'username'  =>Env::get('DATABASE_PRO.USERNAME'), //数据库的用户
-            'password'  =>Env::get('DATABASE_PRO.PASSWORD'),//数据库的密码
-            'db_name'   =>Env::get('DATABASE_PRO.DBNAME'),//数据库名称
-            'port'  =>  Env::get('DATABASE_PRO.PORT')//数据库的端口
+            'host'  =>Env::get('DATABASE_PRO.HOST_NAME', $config['host']),
+            'username'  =>Env::get('DATABASE_PRO.USERNAME', $config['username']),
+            'password'  =>Env::get('DATABASE_PRO.PASSWORD', $config['password']),
+            'db_name'   =>Env::get('DATABASE_PRO.DBNAME', $config['db_name']),
+            'port'  =>Env::get('DATABASE_PRO.PORT', $config['port'])
         ]; 
         //本地localhost的master
         $list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);

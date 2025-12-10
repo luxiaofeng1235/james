@@ -26,7 +26,6 @@ $requiredTop = [
 
 $requiredSections = [
     'DATABASE' => ['HOST_NAME', 'PORT', 'USERNAME', 'PASSWORD', 'DBNAME'],
-    'DATABASE_PRO' => ['HOST_NAME', 'PORT', 'USERNAME', 'PASSWORD', 'DBNAME'],
     'REDIS' => ['HOST_NAME', 'PORT'],
     'APICONFIG' => ['TABLE_NOVEL', 'TABLE_CHAPTER', 'TABLE_CATE', 'PAOSHU_STR'],
     'SEARCH' => ['API_URL'],
@@ -45,6 +44,19 @@ foreach ($requiredSections as $section => $keys) {
             $errors[] = "缺少必填配置: {$full}";
         }
     }
+}
+
+// Optional: DATABASE_PRO overrides; warn if partial
+$proKeys = ['HOST_NAME','PORT','USERNAME','PASSWORD','DBNAME'];
+$proMissing = 0;
+foreach ($proKeys as $key) {
+    $val = Env::get("DATABASE_PRO.{$key}", '');
+    if ($val === '' || $val === false) {
+        $proMissing++;
+    }
+}
+if ($proMissing > 0) {
+    $warnings[] = "DATABASE_PRO 未配置，db_novel_pro 将复用 DATABASE";
 }
 
 $pathKeys = ['SAVE_JSON_PATH', 'SAVE_NOVEL_PATH', 'SAVE_IMG_PATH', 'SAVE_BOOK_COMMENT', 'SAVE_HTML_PATH'];
