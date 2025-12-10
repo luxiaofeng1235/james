@@ -13,6 +13,7 @@
 ini_set('memory_limit','9000M');
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
+
 use QL\QueryList;
 
 echo "\r\n";
@@ -83,7 +84,7 @@ echo "\r\n";
 *
 * @param  $info array 当前的列表信息
 * @param $redis_data object Redis连接句柄
-* @return  array
+* @return array|string
 */
 
 function ayncCountItem($info,$redis_data){
