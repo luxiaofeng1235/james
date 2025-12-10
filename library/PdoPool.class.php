@@ -12,15 +12,67 @@
 
 class ConnectionPool {
     private static $instance = null;
-    private $connections = [];
-    private $maxConnections = 10;
     private static $hahh = [];
-    public static $use_db_name = null;
-    public $db_slave='db_slave'; //从库
-    public $db_master='db_master'; //主库
+public $db_slave='db_slave';
+public $db_master='db_master';
+        private $connections = []; //从库
+        private $maxConnections = 10; //主库
 
 
     //连接mysql的列表
+
+    /**
+     * 获取条记录，并返回数组
+     * @param string $sql
+     * @param string $db_name
+     * @return array()
+     */
+    public  function fetch($sql,$db_name)
+    {
+         //获取连接
+        self::getInstance($db_name);
+        $connection = $this->getConnection();
+        $date=$connection->query($sql)->fetch();
+        $ret = [];
+        if(isset($date) && !empty($date))
+        {
+            $ret = $date;
+        }
+        $this->closePdoConnection($connection); //关闭连接
+        return $ret;
+    }
+
+    public static function getInstance($db_name="")
+    {
+
+        // echo "iiiiiiiiiiiiiiiiiiiiiiiiiii -{$db_name}\r\n";
+        self::$instance = self::getProRes($db_name);
+        return self::$instance;
+    }
+
+
+
+    //获取链接
+
+    public static function getProRes($db_name){
+        if($db_name){
+            $GLOBALS['db_name'] = $db_name; //存储全局变量
+            // echo "gggggggggggggggggggggggggggggggggggggggg*".$GLOBALS['db_name']."\r\n";
+            // 在这里设置数据库连接参数
+            $dsn = self::myPdoList()[$db_name];
+             // 创建初始连接
+            for ($i = 0; $i < 10; $i++) {
+                //初始化实例化PDO连接类
+                 self::$hahh[] = self::myProConnectionInfo($db_name);
+            }
+            return self::$hahh;
+        }else{
+            return null;
+        }
+    }
+
+    //实例化并获取请求连接
+
     private static  function myPdoList()
     {
         $list=array();
@@ -39,6 +91,8 @@ class ConnectionPool {
         $list['db_novel_pro']=array('dsn'=>$dsn,'user'=> $config['username'],'password'=> $config['password']);
         return $list;
     }
+
+    //获取链接
 
     /**
     * @note 返回mysql的句柄并进行连接PDO操作
@@ -71,36 +125,32 @@ class ConnectionPool {
         return null;
     }
 
+    //释放连接
 
-
-    //获取链接
-    public static function getProRes($db_name){
-        if($db_name){
-            $GLOBALS['db_name'] = $db_name; //存储全局变量
-            // echo "gggggggggggggggggggggggggggggggggggggggg*".$GLOBALS['db_name']."\r\n";
-            // 在这里设置数据库连接参数
-            $dsn = self::myPdoList()[$db_name];
-             // 创建初始连接
-            for ($i = 0; $i < 10; $i++) {
-                //初始化实例化PDO连接类
-                 self::$hahh[] = self::myProConnectionInfo($db_name);
-            }
-            return self::$hahh;
-        }else{
-            return null;
-        }
-    }
-
-    //实例化并获取请求连接
-    public static function getInstance($db_name="")
+        /**
+     * 执行一个sql,成功返回sql语句,失败返回空
+     * @param string $sql
+     * @param string $db_name
+     * @return string or  false
+     */
+    public  function query($sql,$db_name)
     {
-
-        // echo "iiiiiiiiiiiiiiiiiiiiiiiiiii -{$db_name}\r\n";
-        self::$instance = self::getProRes($db_name);
-        return self::$instance;
+        //获取连接
+        self::getInstance($db_name);
+        $connection = $this->getConnection();
+        //执行
+        $date=$connection->query($sql);
+        //关闭
+        $this->closePdoConnection($connection); //关闭连接
+        if(isset($date) && !empty($date))
+        {
+            return $date;
+        }
+        return false;
     }
 
-    //获取链接
+    //关闭连接
+
     public function getConnection()
     {
         if (count(self::$hahh) > 0) {
@@ -113,7 +163,13 @@ class ConnectionPool {
         }
     }
 
-    //释放连接
+    public function closePdoConnection($connection){
+        $db_name = $GLOBALS['db_name'];
+        // echo "close connection ~\r\n";
+        self::getInstance($db_name);
+        $this->releaseConnection($connection);
+    }
+
     public function releaseConnection($connection)
     {
         if (count(self::$hahh) < $this->maxConnections) {
@@ -122,61 +178,6 @@ class ConnectionPool {
             // 如果连接池已经满了,关闭连接
             $connection = null;
         }
-    }
-
-    //关闭连接
-    public function closePdoConnection($connection){
-        $db_name = $GLOBALS['db_name'];
-        // echo "close connection ~\r\n";
-        self::getInstance($db_name);
-        $this->releaseConnection($connection);
-    }
-
-
-/**
- * 获取结果集，返回tables
- * @param string $sql
- * @param string $db_name
- * @return array()
- */
-    public  function fetchAll($sql,$db_name)
-
-    {
-
-        // echo "*************************************{$db_name}\r\n";
-        //获取连接
-        self::getInstance($db_name);
-        $connection = $this->getConnection();
-
-        $date=$connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-        $list = [];
-        if(isset($date) && !empty($date))
-        {
-            $list = $date;
-        }
-        $this->closePdoConnection($connection); //关闭连接
-        return $list;
-    }
-
-    /**
-     * 获取条记录，并返回数组
-     * @param string $sql
-     * @param string $db_name
-     * @return array()
-     */
-    public  function fetch($sql,$db_name)
-    {
-         //获取连接
-        self::getInstance($db_name);
-        $connection = $this->getConnection();
-        $date=$connection->query($sql)->fetch();
-        $ret = [];
-        if(isset($date) && !empty($date))
-        {
-            $ret = $date;
-        }
-        $this->closePdoConnection($connection); //关闭连接
-        return $ret;
     }
 
         /**
@@ -241,28 +242,6 @@ class ConnectionPool {
         }else{
             return false;
         }
-    }
-
-        /**
-     * 执行一个sql,成功返回sql语句,失败返回空
-     * @param string $sql
-     * @param string $db_name
-     * @return string or  false
-     */
-    public  function query($sql,$db_name)
-    {
-        //获取连接
-        self::getInstance($db_name);
-        $connection = $this->getConnection();
-        //执行
-        $date=$connection->query($sql);
-        //关闭
-        $this->closePdoConnection($connection); //关闭连接
-        if(isset($date) && !empty($date))
-        {
-            return $date;
-        }
-        return false;
     }
 
         /**
@@ -351,7 +330,6 @@ class ConnectionPool {
             return 0;
         }
     }
-
 
     /**
      * 根据条件进行查询
@@ -474,6 +452,31 @@ class ConnectionPool {
             }
         }
         return [];
+    }
+
+/**
+ * 获取结果集，返回tables
+ * @param string $sql
+ * @param string $db_name
+ * @return array()
+ */
+    public  function fetchAll($sql,$db_name)
+
+    {
+
+        // echo "*************************************{$db_name}\r\n";
+        //获取连接
+        self::getInstance($db_name);
+        $connection = $this->getConnection();
+
+        $date=$connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $list = [];
+        if(isset($date) && !empty($date))
+        {
+            $list = $date;
+        }
+        $this->closePdoConnection($connection); //关闭连接
+        return $list;
     }
 
 }
