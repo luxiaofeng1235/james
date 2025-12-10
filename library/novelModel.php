@@ -32,35 +32,29 @@ class NovelModel
 		'third_update_time' =>    'last_chapter_time', //网站的第三方时间
 		'text_num'			=>		'text_num' //总字数
 	];
-	private static $validate_type = ['curl', 'ghttp']; //验证类型 支持curl和ghttp验证
-	private static $imageType = 'jpg'; //默认的头像
-	public static $prefix_html = 'detail_'; //html的前缀
-
-	protected static $run_status = 1; //已经运行完毕的
-
-	protected static $text_num = 2000; //默认的的字数
-
-	public static $is_no_async = 0; //未同步的
-
-	private static $default_pic = '/data/pic/default_cover.jpg'; //默认的图片
-
-
-	public static $file_type = 'txt'; //存储为txt的格式文件
-
-	public static $json_file_type = 'json'; //存储为json文件格式
+	public static $prefix_html = 'detail_'; //验证类型 支持curl和ghttp验证
+	public static $is_no_async = 0; //默认的头像
+	public static $file_type = 'txt'; //html的前缀
+public static $json_file_type = 'json'; //已经运行完毕的
+	public static $filterWords = null; //默认的的字数
+	public static $db_conn = 'db_novel_pro'; //未同步的
+public static $filterContent = null; //默认的图片
+protected static $run_status = 1; //存储为txt的格式文件
+protected static $text_num = 2000; //存储为json文件格式
 
 	//过滤不必要的广告章节
-	public static $filterWords = null;
-	public static $db_conn = 'db_novel_pro';
-	private static $table_name = null;
+private static $validate_type = ['curl', 'ghttp'];
+private static $imageType = 'jpg';
+private static $default_pic = '/data/pic/default_cover.jpg';
 
 	//过滤文本需要用的配置
-	public static $filterContent = null; //过滤文本中的内容
+		private static $table_name = null; //过滤文本中的内容
 
 
 
 
 	//检查当前是否有
+
 	/**
 	 * @note 检查当前是否有下架的书籍，并进行删除
 	 * @param  $where string 查询条件
@@ -97,7 +91,7 @@ class NovelModel
 
 
 	/**
-	 * @note 自动粉刺
+	 * @note 自动分词
 	 * @param word_frequency 分词检索
 	 * @return array
 	 */
@@ -215,6 +209,33 @@ class NovelModel
 	}
 
 	/**
+	 * @note 获取网站的url的配对的源
+	 *
+	 * @param $story_link array  网站的源URL
+	 * @return string
+	 */
+	public static function getSourceUrl($story_link = '')
+	{
+		if (!$story_link) {
+			return '';
+		}
+		$url = parse_url($story_link);
+		$source = '';
+		if (isset($url['host']) && !empty($url['host'])) {
+			//匹配以www.开头的到.结束的为当前的来源
+			//比如www.baidu.com 只取baidu为当前的标识来源
+			preg_match('/www\.(.*?)\./', $url['host'], $matrix);
+			if (isset($matrix[1])) {
+				$source = trim($matrix[1]);
+			}
+		}
+		if (!$source) {
+			$source = 'unknow'; //未定义的或者未知的
+		}
+		return $source;
+	}
+
+	/**
 	 * @note 检测redis代理IP是否可用
 	 *
 	 */
@@ -243,9 +264,6 @@ class NovelModel
 		$url = StoreModel::replaceParam($url, 'page', $index);
 		return $url;
 	}
-
-
-
 
 	/**
 	 * @note 初始化连载状态以及其他的字段信息
@@ -344,8 +362,6 @@ class NovelModel
 		return $store_data;
 	}
 
-
-
 	/**
 	 * @note 转换编码格式
 	 *
@@ -371,7 +387,6 @@ class NovelModel
 		}
 		return $data;
 	}
-
 
 	/**
 	 * @note 检测 缓存跑书吧的首页
@@ -450,7 +465,6 @@ class NovelModel
 		return $pro_book_id ? $pro_book_id :  0;
 	}
 
-
 	/**
 	 * @note 获取redis中小说的基础详情信息
 	 *
@@ -486,7 +500,6 @@ class NovelModel
 		}
 		$content = $redis_data->get_redis($tag);
 	}
-
 
 	/**
 	 * @note 返回对应的cmd的具体的路径信息
@@ -526,6 +539,24 @@ class NovelModel
 		$str = '{' . $curlHtml . '}';
 		$shell_cmd = 'curl  -H "Content-Type:text/pln;charset=UTF-8"  -H "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" --socks5  ' . $proxy_auth . ' -s  ' . Env::get('APICONFIG.PAOSHU_HOST') . '/' . $str . '.html';
 		return $shell_cmd;
+	}
+
+	/**
+	 * @note 获取缓存中的代理里的配置信息
+	 *
+	 * @return string
+	 */
+	public static function getProxyItem()
+	{
+		$proxy_data = getZhimaProxy();
+		if (!$proxy_data)
+			return false;
+		//获取代理的配置信息凭借wget的参数命令
+		$proxyauth = $proxy_data['ip'] . ':' . $proxy_data['port'];
+		if (isset($proxy_data['username']) && isset($proxy_data['password'])) {
+			$proxyauth .= $proxy_data['username'] . ':' . $proxy_data['password'];
+		}
+		return $proxyauth;
 	}
 
 	/**
@@ -570,7 +601,6 @@ class NovelModel
 		return $data;
 	}
 
-
 	/**
 	 * @note 移除不必要的广告章节
 	 * @param $data array 章节列表
@@ -594,37 +624,6 @@ class NovelModel
 			return $list;
 		}
 	}
-	/**
-	 * @note 自动加载分类配置文件
-	 *
-	 */
-	public static function getCateConf()
-	{
-		if (is_file(dirname(__DIR__) . '/config/novel_class.php')) {
-			$config = require  dirname(__DIR__) . '/config/novel_class.php';
-			return $config;
-		} else {
-			return false;
-		}
-	}
-
-
-	/**
-	 * @note 替换里面的指定空行
-	 * @param $data array 处理数据
-	 * @return array
-	 *
-	 */
-	protected static function replaceListArr($data = [])
-	{
-		if (!$data)
-			return false;
-		foreach ($data as &$val) {
-			$val = str_replace("\r\n", '', $val);
-		}
-		return $data;
-	}
-
 
 	/**
 	 * @note 处理指定的HTML中的字符换行问题
@@ -649,68 +648,6 @@ class NovelModel
 		$str  = preg_replace('/<\/dd>/', "</dd>\r\n", $data);
 		return $str;
 	}
-
-	/**
-	 * @note 根据当前的章节连接返回具体IDE总数信息
-	 * @param $link_href string 小说采集源连接
-	 * @param $link_text string 小说采集源文本
-	 * @return array
-	 *
-	 */
-	protected static function getxugesRealList($link_href, $link_text)
-	{
-		if (!$link_href || !$link_text) {
-			return false;
-		}
-		$removeStatus = 1; //设置一个标记，如果是就说明需要删除对应的章节信息
-		foreach ($link_text as $value) {
-			$chapter_name = trimBlankSpace($value);
-			if ($chapter_name && in_array($chapter_name, ['章节目录', '目录'])) {
-				$removeStatus = 1;
-			}
-		}
-		if ($removeStatus) {
-			//这里是说明满足条件，就把原来的直接去掉的配置信息
-			array_shift($link_href);
-			array_shift($link_text);
-		}
-		$hrefArr = array_values($link_href);
-		$textArr = array_values($link_text);
-		return ['href' => $hrefArr, 'text' => $textArr];
-	}
-
-
-
-
-	/**
-	 * @note 处理正则转义字符
-	 * @param $title string 小说标题
-	 * @return array
-	 *
-	 */
-	public static function exchangePregStr($title = "")
-	{
-		if (!$title) {
-			return false;
-		}
-		$title = str_replace('(', '\(', $title);
-		$title = str_replace(')', '\)', $title);
-		$title = str_replace('.', '\.', $title);
-		$title = str_replace(',', '\,', $title);
-		$title = str_replace('[', '\[', $title);
-		$title = str_replace(']', '\]', $title);
-		$title = str_replace('$', '\$', $title);
-		$title = str_replace('?', '\?', $title);
-		$title = str_replace('{', '\{', $title);
-		$title = str_replace('}', '\}', $title);
-		$title = str_replace('*', '\*', $title);
-		$title = str_replace('+', '\+', $title);
-		$title = str_replace('$', '\$', $title);
-		$title = str_replace('^', '\^', $title);
-		$title = str_replace('|', '\|', $title);
-		return $title;
-	}
-
 
 	/**
 	 * @note 从特定的url中获取对应的数据信息
@@ -861,77 +798,32 @@ class NovelModel
 	}
 
 	/**
-	 * @note 初始化标签列表数据
-	 * @param $redis_key string tag缓存标记
-	 * @param $tiemout int 过期时间
+	 * @note 处理正则转义字符
+	 * @param $title string 小说标题
 	 * @return array
+	 *
 	 */
-	public static function initTagList($redis_key = 'tag_list', $timeout = 86400)
+	public static function exchangePregStr($title = "")
 	{
-		global $redis_data, $mysql_obj;
-		//删除redis的主要信息配置修改
-		$redis_data->del_redis($redis_key);
-		if (!$redis_data->get_redis($redis_key)) {
-			$sql = "select id ,tag_name,column_type from mc_tag";
-			$info = $mysql_obj->fetchAll($sql, 'db_novel_pro');
-			$info && $redis_data->set_redis($redis_key, json_encode($info), $timeout);
-			$data  = $info;
-			unset($info);
-		} else {
-			$res = $redis_data->get_redis($redis_key);
-			$t = json_decode($res, true);
-			$data = $t ?? [];
-		}
-		return $data;
-	}
-
-	/**
-	 * @note 获取M站的连接地址
-	 * @param string $msg
-	 * @return array
-	 */
-	public static function mobileLink($url)
-	{
-		if (!$url)
+		if (!$title) {
 			return false;
-		$urlArr = parse_url($url);
-		$items = explode('/', $urlArr['path']);
-		$novel_id = 0;
-		if (isset($items[1])) {
-			$data = explode('_', $items[1]);
-			$novel_id = $data[1] ?? 0;
 		}
-		//拼接获取对应的URL地址
-		$link = Env::get('APICONFIG.PAOSHU_MOBILE_CHAPTER_URL') . '-' . $novel_id . '-' . str_replace('.html', '', $items[2] ?? 0);
-		$info['path'] = $urlArr['path'];
-		$info['link'] = $link;
-		return $info;
-	}
-
-	/**
-	 * 根据配置加载文件信息
-	 * @param integer $store_id 小说id
-	 */
-	public static function reloadChapterTotal($store_id)
-	{
-		if (!$store_id)
-			return [];
-		//加载配置文件信息
-		$file_path = Env::get('SAVE_MOBILE_NUM_PATH') . DS . $store_id . '.' . self::$json_file_type;
-		//读取配置文件
-		$goods_arr = readFileData($file_path);
-		$list = json_decode($goods_arr, true);
-		if (!empty($list)) {
-			//转换数组
-			$items = [];
-			foreach ($list as $val) {
-				//按照 path=> pages对应去
-				$items[$val['path']] = $val['pages'];
-			}
-			return $items;
-		} else {
-			return [];
-		}
+		$title = str_replace('(', '\(', $title);
+		$title = str_replace(')', '\)', $title);
+		$title = str_replace('.', '\.', $title);
+		$title = str_replace(',', '\,', $title);
+		$title = str_replace('[', '\[', $title);
+		$title = str_replace(']', '\]', $title);
+		$title = str_replace('$', '\$', $title);
+		$title = str_replace('?', '\?', $title);
+		$title = str_replace('{', '\{', $title);
+		$title = str_replace('}', '\}', $title);
+		$title = str_replace('*', '\*', $title);
+		$title = str_replace('+', '\+', $title);
+		$title = str_replace('$', '\$', $title);
+		$title = str_replace('^', '\^', $title);
+		$title = str_replace('|', '\|', $title);
+		return $title;
 	}
 
 	/**
@@ -995,7 +887,6 @@ class NovelModel
 		return $info;
 	}
 
-
 	/**
 	 * 转换URL连接诶地址
 	 * @param array $data 章节类目
@@ -1045,6 +936,55 @@ class NovelModel
 	}
 
 	/**
+	 * 根据配置加载文件信息
+	 * @param integer $store_id 小说id
+	 */
+	public static function reloadChapterTotal($store_id)
+	{
+		if (!$store_id)
+			return [];
+		//加载配置文件信息
+		$file_path = Env::get('SAVE_MOBILE_NUM_PATH') . DS . $store_id . '.' . self::$json_file_type;
+		//读取配置文件
+		$goods_arr = readFileData($file_path);
+		$list = json_decode($goods_arr, true);
+		if (!empty($list)) {
+			//转换数组
+			$items = [];
+			foreach ($list as $val) {
+				//按照 path=> pages对应去
+				$items[$val['path']] = $val['pages'];
+			}
+			return $items;
+		} else {
+			return [];
+		}
+	}
+
+	/**
+	 * @note 获取M站的连接地址
+	 * @param string $msg
+	 * @return array
+	 */
+	public static function mobileLink($url)
+	{
+		if (!$url)
+			return false;
+		$urlArr = parse_url($url);
+		$items = explode('/', $urlArr['path']);
+		$novel_id = 0;
+		if (isset($items[1])) {
+			$data = explode('_', $items[1]);
+			$novel_id = $data[1] ?? 0;
+		}
+		//拼接获取对应的URL地址
+		$link = Env::get('APICONFIG.PAOSHU_MOBILE_CHAPTER_URL') . '-' . $novel_id . '-' . str_replace('.html', '', $items[2] ?? 0);
+		$info['path'] = $urlArr['path'];
+		$info['link'] = $link;
+		return $info;
+	}
+
+	/**
 	 * @note 处理https://www.xbiqiku2.com/2中的广告，主要太多了啊吗，还是分开写一下吧。
 	 * @param string $content 小说内容
 	 * @return $string
@@ -1085,144 +1025,6 @@ class NovelModel
 	}
 
 	/**
-	 * @note 替换广告和一些特殊字符
-	 * @param string $str 小说内容
-	 * @param $referer_url string 回调域名地址
-	 * @param $html_path  具体的章节目录，方便处理过滤
-	 * @return $string
-	 */
-	public static function replaceContent($str, $referer_url, $html_path, $title)
-	{
-		if (!$str) {
-			$str = '';
-		}
-		global $advertisement;
-		self::$filterContent = $advertisement['content'] ?? [];
-		if (!self::$filterContent)
-			return '';
-		foreach (self::$filterContent as $keywords) {
-			$matches = strstr($str, $keywords);
-			preg_match('/' . $keywords . '/', $str, $matches);
-			if (isset($matches[0])) {
-				$str = str_replace($matches[0], '', $str);
-			}
-		}
-
-		//过滤实体标签，类似>&nbsp;&nbsp;&nbsp;&nbsp;这样子的过滤一下
-		$str = preg_replace('/&[#\da-z]+;/i', '', $str);
-		//替换注释部分的信息
-		$str = preg_replace('/<!--(.*?)-->/', '', $str);
-		//////////////////////////广告和标签相关
-		//过滤具体的html标签
-		$str = preg_replace('/<script.*?>.*?<\/script>/ism', '', $str);
-		$str = preg_replace('/<br><br><br>/', '', $str); //去除三个BR标签，没啥用
-		//过滤网站中存在的广告
-		//去除含有div的标签对信息
-
-		$str = preg_replace('/一秒记住【笔趣阁 www.bqg24.net】，精彩小说无弹窗！/', '', $str);
-		$str = preg_replace('/喜欢女配真的是来摆烂的请大家收藏：（）女配真的是来摆烂的更新度。/', '', $str);
-		$str = str_replace('/一秒记住【笔趣阁 www.bqg24.net】，精彩小说无弹窗免费阅读！/', '', $str);
-		$str = preg_replace('/<script.*?>.*?<\/script>/ism', '', $str);
-		$str = preg_replace('/<div id="gc1".*?>.*?<\/div>/ism', '', $str);
-		$hostUrl = parse_url($referer_url);
-		$url = trim($hostUrl['host']); //只需要不带https或者http域名的
-		$url = preg_replace('/\//', '\/', $url);
-		$url = preg_replace('/\./', '\.', $url);
-		$mobile_url = str_replace('www', 'm', $url); //移动端的地址
-		$text_reg = "/请记住本书首发域名：{$url}.*?{$mobile_url}/iUs";
-		# $text_reg1 ='/请记住本书首发域名.*?https:\/\/www\.xs74w\.com/iUs'
-		// $str='请记住本书首发域名：www.mxgbqg.com。梦想文学网手机版阅读网址：m.mxgbqg.com';
-		$str = preg_replace($text_reg, '', $str);
-
-
-
-		// $a = preg_match("//")
-		//针对个别网站需要特殊处理下
-		if (preg_match('/xuges/', $referer_url)) {
-			$str = preg_replace('/<\/td><\/tr>/ism', '', $str);
-			$str = preg_replace('/<tr><td>/ism', '', $str);
-			$str = preg_replace('/<hr \/>/ism', '', $str);
-			$str = preg_replace('/<tr><td class=\"zhx\">/ism', '', $str);
-			$str = preg_replace('/<span class=\"zs\">/ism', '', $str);
-			$str = preg_replace('/<\/span>/ism', '', $str);
-			$str = preg_replace('/<td class=\"jz\">/ism', '', $str);
-			// $str = preg_replace('/\r\n.*?<br \/>\r\n/ism','', $str);
-		} else if (preg_match('/xbiqiku2/', $referer_url)) {
-			// $str = self::replaceXbiqiku2Advert($str);
-		}
-		$chapter_link = $referer_url . $html_path; //拼接对应的文章连
-		//去除广告中的网页链接 -- (https://www.mxgbqg.com/book/91090932/22106863.html) ,每个章节里都有这样的一段话
-		$str = str_replace("({$chapter_link})", '', $str);
-		if ($title) {
-			$str = preg_replace('/喜欢' . $title . '请大家收藏：（）' . $title . '更新度。/', '', $str);
-		}
-		//思路客的替换
-		$str = preg_replace('/思路客小说网 www.siluke520.net，最快更新最新章节！/', '', $str);
-		return $str;
-	}
-
-	/**
-	 * 简单的日志信息输出
-	 * @param string $msg
-	 */
-	public function log($message = "")
-	{
-		echo "[" . date("Y-m-d H:i:s", time()) . "]--" . $message . "\n";
-	}
-
-
-	/**
-	 * @note 根据小说内容获取对应的分类id
-	 *
-	 * @param $cate_name str分类名称
-	 * @return string
-	 */
-
-	public static function getNovelCateId($cate_name = '')
-	{
-		$cate_list = self::getCateConf();
-		if (!$cate_list)
-			return false;
-		$cate_id = 0;
-
-		foreach ($cate_list as $key => $category_id) {
-			//根据标签的关键字来进行匹配分类
-			if (strstr($cate_name, $key)) {
-				$cate_id = $category_id;
-				break;
-			}
-		}
-		return $cate_id;
-	}
-
-
-	/**
-	 * @note 获取小说的路径
-	 *
-	 * @param $title string 小说名
-	 * @param $author string 作者
-	 * @return string
-	 */
-	public static function getBookFilePath($title = "", $author = "")
-	{
-		if (!$title || !$author) {
-			return false;
-		}
-		//特殊判断下
-		$md5_str = NovelModel::getAuthorFoleder($title, $author);
-		if ($md5_str) {
-			//拼装组织的路径信息
-			$save_path = Env::get('SAVE_JSON_PATH') . DS . substr($md5_str, 0, 2) . DS . $md5_str . '.' . NovelModel::$json_file_type;
-			if (!file_exists(dirname($save_path))) {
-				createFolders(dirname($save_path));
-			}
-			return $save_path;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * @note 获取远程图片
 	 *
 	 * @param $cate_name str分类名称
@@ -1241,7 +1043,6 @@ class NovelModel
 		curl_close($ch);
 		return $r;
 	}
-
 
 	/**
 	 * @note 远程抓取图片保存到本地
@@ -1291,125 +1092,6 @@ class NovelModel
 			@writeFileCombine($filename, $img_con);
 		}
 		return $filename;
-	}
-
-	/**
-	 * @note 解析当前的参数配置信息和设置信息
-	 *
-	 * @param $story_link array  网站的源URL
-	 * @return string
-	 */
-
-	public static function parseXugesData($data, $url)
-	{
-		if (!$data || !$url) {
-			return	false;
-		}
-		//远端的基本URL地址
-		$remote_url = preg_replace('/index\.htm/', '', $url);
-		foreach ($data as $key => &$val) {
-			if (in_array($key, ['title', 'author', 'cover_logo', 'intro', 'location'])) {
-				$val = array_iconv($val); //自动转换编码信息
-			}
-			if ($key == 'cover_logo' && empty($val)) {
-				$val = 'fm.jpg'; //这个是默认的，每次都需要拼接
-			}
-			if ($key == 'author') $val = str_replace('作者：', '', $val); //处理作者
-			if ($key == 'intro') $val = trimBlankSpace($val); //处理空格
-			if ($key == 'cover_logo') $val = $remote_url . $val; //处理图片的前缀问题
-			if ($key == 'intro') $val = filterHtml($val);
-		}
-		return $data;
-	}
-
-	/**
-	 * @note 获取网站的url的配对的源
-	 *
-	 * @param $story_link array  网站的源URL
-	 * @return string
-	 */
-	public static function getSourceUrl($story_link = '')
-	{
-		if (!$story_link) {
-			return '';
-		}
-		$url = parse_url($story_link);
-		$source = '';
-		if (isset($url['host']) && !empty($url['host'])) {
-			//匹配以www.开头的到.结束的为当前的来源
-			//比如www.baidu.com 只取baidu为当前的标识来源
-			preg_match('/www\.(.*?)\./', $url['host'], $matrix);
-			if (isset($matrix[1])) {
-				$source = trim($matrix[1]);
-			}
-		}
-		if (!$source) {
-			$source = 'unknow'; //未定义的或者未知的
-		}
-		return $source;
-	}
-
-	/**
-	 * @note 对返回的数组做排序
-	 *
-	 * @param $html_data array  文章列表
-	 * @return string
-	 */
-	public static function sortHtmlData($html_data = [])
-	{
-		if (!$html_data)
-			return [];
-		foreach ($html_data as $key => $val) {
-			$pathArr = explode('-', $key);
-			$num = end($pathArr);
-			array_pop($pathArr);
-			$path = implode('-', $pathArr);
-			$new_data[$path][] = $num;
-		}
-		//排序计算
-		$sortDataBlank = function ($arr) {
-			$items = [];
-			foreach ($arr as $k => $v) {
-				sort($v); //按照数组进行排序设置,以免数据错乱
-				$items[$k] = $v;
-			}
-			return $items;
-		};
-		//调用构造函数里的排序
-		$new_data = $sortDataBlank($new_data);
-		$novelList = [];
-		if (!empty($new_data)) {
-			//按照数组来进行排序。返回数组信息
-			foreach ($new_data as $gkey => $gval) {
-				foreach ($gval as $k => $v) {
-					$index = $gkey . '-' . $v;
-					//.echo $index."\r\n";
-					if (isset($html_data[$index])) {
-						$novelList[$index] = $html_data[$index] ?? '';
-					}
-				}
-			}
-		}
-		return $novelList;
-	}
-
-
-	/**
-	 * @note 获取缓存中的代理里的配置信息
-	 *
-	 * @return string
-	 */
-	public static function getProxyItem()
-	{
-		$proxy_data = getZhimaProxy();
-		if (!$proxy_data)
-			return false;
-		//获取代理的配置信息凭借wget的参数命令
-		$proxyauth = $proxy_data['ip'] . ':' . $proxy_data['port'];
-		if (isset($proxy_data['username']) && isset($proxy_data['password'])) {
-			$proxyauth .= $proxy_data['username'] . ':' . $proxy_data['password'];
-		}
-		return $proxyauth;
 	}
 
 	/**
@@ -1476,78 +1158,77 @@ class NovelModel
 		return $cover_logo;
 	}
 
-
 	/**
-	 * @note 获取加密的md5串
+	 * @note 解析当前的参数配置信息和设置信息
 	 *
-	 * @param $title 小说标题
-	 * @param $author string 作者名称
+	 * @param $story_link array  网站的源URL
 	 * @return string
 	 */
-	public static function getAuthorFoleder($title = '', $author = '')
-	{
-		if (!$title) {
-			return false;
-		}
-		$title = trim($title);
-		$author = $author ?  trim($author) : '未知';
-		return md5($title . $author);
-	}
 
-	/**
-	 * @note 根据标签名自动匹配tag_id
-	 *
-	 * @param $tag_name string 标签名称
-	 * @return string|unknow
-	 */
-	public static function getNovelTagByIName($tag_name = '')
+	public static function parseXugesData($data, $url)
 	{
-		$tag_name = trim($tag_name);
-		if (!$tag_name) {
-			return false;
+		if (!$data || !$url) {
+			return	false;
 		}
-		$tagList = self::initTagList();
-		if (!$tagList)
-			return false;
-		$s_tag_id = 0;
-		//按照正常的键值交换数据请求
-		$tagsArr = double_array_exchange_by_field($tagList, 'id');
-
-		foreach ($tagsArr as $tag_id => $value) {
-			//根据标签的关键字来进行匹配分类
-			if (strstr($value['tag_name'], $tag_name)) {
-				$s_tag_id = $value['id'] ?? 0;
-				break;
+		//远端的基本URL地址
+		$remote_url = preg_replace('/index\.htm/', '', $url);
+		foreach ($data as $key => &$val) {
+			if (in_array($key, ['title', 'author', 'cover_logo', 'intro', 'location'])) {
+				$val = array_iconv($val); //自动转换编码信息
 			}
+			if ($key == 'cover_logo' && empty($val)) {
+				$val = 'fm.jpg'; //这个是默认的，每次都需要拼接
+			}
+			if ($key == 'author') $val = str_replace('作者：', '', $val); //处理作者
+			if ($key == 'intro') $val = trimBlankSpace($val); //处理空格
+			if ($key == 'cover_logo') $val = $remote_url . $val; //处理图片的前缀问题
+			if ($key == 'intro') $val = filterHtml($val);
 		}
-		$s_tag_id = intval($s_tag_id);
-		return $s_tag_id;
+		return $data;
 	}
 
 	/**
-	 * @note 判断小说是否为经典类型
+	 * @note 对返回的数组做排序
 	 *
-	 * @param $tid int 标签ID
-	 * @return interger
+	 * @param $html_data array  文章列表
+	 * @return string
 	 */
-	private static function isBookClassic($tid = 0)
+	public static function sortHtmlData($html_data = [])
 	{
-		$is_classic = 0;
-		if (!$tid) {
-			return $is_classic;
+		if (!$html_data)
+			return [];
+		foreach ($html_data as $key => $val) {
+			$pathArr = explode('-', $key);
+			$num = end($pathArr);
+			array_pop($pathArr);
+			$path = implode('-', $pathArr);
+			$new_data[$path][] = $num;
 		}
-		$tagList = self::initTagList();
-		if (is_array($tagList) && count($tagList) > 0) {
-			foreach ($tagList as $tag_id => $value) {
-				$column_type = (int) $value['column_type']; //栏目类型 1-推荐 2-热门 3-经典
-				//只有满足column_type
-				if ($column_type == 3 &&  $value['id'] > 0 && $tid == $value['id']) {
-					$is_classic = 1;
-					break;
+		//排序计算
+		$sortDataBlank = function ($arr) {
+			$items = [];
+			foreach ($arr as $k => $v) {
+				sort($v); //按照数组进行排序设置,以免数据错乱
+				$items[$k] = $v;
+			}
+			return $items;
+		};
+		//调用构造函数里的排序
+		$new_data = $sortDataBlank($new_data);
+		$novelList = [];
+		if (!empty($new_data)) {
+			//按照数组来进行排序。返回数组信息
+			foreach ($new_data as $gkey => $gval) {
+				foreach ($gval as $k => $v) {
+					$index = $gkey . '-' . $v;
+					//.echo $index."\r\n";
+					if (isset($html_data[$index])) {
+						$novelList[$index] = $html_data[$index] ?? '';
+					}
 				}
 			}
 		}
-		return $is_classic;
+		return $novelList;
 	}
 
 	/**
@@ -1568,30 +1249,6 @@ class NovelModel
 			$url .= '1/';
 		}
 		return $url;
-	}
-
-
-	/**
-	 * @note 获取拼接的图片的路径，并以日期创建文件夹
-	 *
-	 * @param $book_name 名称
-	 * @param $title string 作者
-	 * @param $cover_url string 小说封面URL
-	 * @return string
-	 */
-	public static function getNovelToPic($title, $author, $cover_logo)
-	{
-		if (!$title || !$author || !$cover_logo) {
-			return false;
-		}
-		$monthDay = date('Ym'); #获取每周的日期的星期一，以这样子的格式存储
-		$save_filename = Env::get('SAVE_IMG_PATH') . DS . $monthDay . DS . self::getFirstImgePath($title, $author, $cover_logo);
-		$save_path = dirname($save_filename);
-		//判断是否存在该目录
-		if (!is_dir($save_path)) {
-			createFolders($save_path); //创建文件夹
-		}
-		return $save_filename;
 	}
 
 	/**
@@ -1684,8 +1341,8 @@ class NovelModel
 		// 	// //判断是存在标题和作者有修改的情况
 		// 	$oldData = NovelModel::getOnlineBookInfo($source_url);
 		// 	if(
-		// 		$oldData && 
-		// 			( 
+		// 		$oldData &&
+		// 			(
 		// 				$oldData['book_name']!=$info['book_name']
 		// 			|| 	$oldData['author']!=$info['author']
 		// 			)
@@ -1746,7 +1403,212 @@ class NovelModel
 		return $id;
 	}
 
+	/**
+	 * @note 根据标签名自动匹配tag_id
+	 *
+	 * @param $tag_name string 标签名称
+	 * @return string|unknow
+	 */
+	public static function getNovelTagByIName($tag_name = '')
+	{
+		$tag_name = trim($tag_name);
+		if (!$tag_name) {
+			return false;
+		}
+		$tagList = self::initTagList();
+		if (!$tagList)
+			return false;
+		$s_tag_id = 0;
+		//按照正常的键值交换数据请求
+		$tagsArr = double_array_exchange_by_field($tagList, 'id');
 
+		foreach ($tagsArr as $tag_id => $value) {
+			//根据标签的关键字来进行匹配分类
+			if (strstr($value['tag_name'], $tag_name)) {
+				$s_tag_id = $value['id'] ?? 0;
+				break;
+			}
+		}
+		$s_tag_id = intval($s_tag_id);
+		return $s_tag_id;
+	}
+
+	/**
+	 * @note 初始化标签列表数据
+	 * @param $redis_key string tag缓存标记
+	 * @param $tiemout int 过期时间
+	 * @return array
+	 */
+	public static function initTagList($redis_key = 'tag_list', $timeout = 86400)
+	{
+		global $redis_data, $mysql_obj;
+		//删除redis的主要信息配置修改
+		$redis_data->del_redis($redis_key);
+		if (!$redis_data->get_redis($redis_key)) {
+			$sql = "select id ,tag_name,column_type from mc_tag";
+			$info = $mysql_obj->fetchAll($sql, 'db_novel_pro');
+			$info && $redis_data->set_redis($redis_key, json_encode($info), $timeout);
+			$data  = $info;
+			unset($info);
+		} else {
+			$res = $redis_data->get_redis($redis_key);
+			$t = json_decode($res, true);
+			$data = $t ?? [];
+		}
+		return $data;
+	}
+
+	/**
+	 * @note 根据小说内容获取对应的分类id
+	 *
+	 * @param $cate_name str分类名称
+	 * @return string
+	 */
+
+	public static function getNovelCateId($cate_name = '')
+	{
+		$cate_list = self::getCateConf();
+		if (!$cate_list)
+			return false;
+		$cate_id = 0;
+
+		foreach ($cate_list as $key => $category_id) {
+			//根据标签的关键字来进行匹配分类
+			if (strstr($cate_name, $key)) {
+				$cate_id = $category_id;
+				break;
+			}
+		}
+		return $cate_id;
+	}
+
+	/**
+	 * @note 自动加载分类配置文件
+	 *
+	 */
+	public static function getCateConf()
+	{
+		if (is_file(dirname(__DIR__) . '/config/novel_class.php')) {
+			$config = require  dirname(__DIR__) . '/config/novel_class.php';
+			return $config;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @note 获取拼接的图片的路径，并以日期创建文件夹
+	 *
+	 * @param $book_name 名称
+	 * @param $title string 作者
+	 * @param $cover_url string 小说封面URL
+	 * @return string
+	 */
+	public static function getNovelToPic($title, $author, $cover_logo)
+	{
+		if (!$title || !$author || !$cover_logo) {
+			return false;
+		}
+		$monthDay = date('Ym'); #获取每周的日期的星期一，以这样子的格式存储
+		$save_filename = Env::get('SAVE_IMG_PATH') . DS . $monthDay . DS . self::getFirstImgePath($title, $author, $cover_logo);
+		$save_path = dirname($save_filename);
+		//判断是否存在该目录
+		if (!is_dir($save_path)) {
+			createFolders($save_path); //创建文件夹
+		}
+		return $save_filename;
+	}
+
+	/**
+	 * @note 判断小说是否为经典类型
+	 *
+	 * @param $tid int 标签ID
+	 * @return interger
+	 */
+	private static function isBookClassic($tid = 0)
+	{
+		$is_classic = 0;
+		if (!$tid) {
+			return $is_classic;
+		}
+		$tagList = self::initTagList();
+		if (is_array($tagList) && count($tagList) > 0) {
+			foreach ($tagList as $tag_id => $value) {
+				$column_type = (int) $value['column_type']; //栏目类型 1-推荐 2-热门 3-经典
+				//只有满足column_type
+				if ($column_type == 3 &&  $value['id'] > 0 && $tid == $value['id']) {
+					$is_classic = 1;
+					break;
+				}
+			}
+		}
+		return $is_classic;
+	}
+
+	/**
+	 * @note 获取小说的的字数
+	 *
+	 * @param $data 预处理的数据
+	 * @param $mysql_obj string 连接句柄
+	 * @return string
+	 */
+	public static function getTextNum($title, $author)
+	{
+		if (!$title || !$author) {
+			return 0;
+		}
+		$json_path = NovelModel::getBookFilePath($title, $author);
+		$info = readFileData($json_path);
+		$num = 0;
+		if ($info) {
+			$t = json_decode($info, true);
+			$num  = self::$text_num * count($t);
+		}
+		return $num;
+	}
+
+	/**
+	 * @note 获取小说的路径
+	 *
+	 * @param $title string 小说名
+	 * @param $author string 作者
+	 * @return string
+	 */
+	public static function getBookFilePath($title = "", $author = "")
+	{
+		if (!$title || !$author) {
+			return false;
+		}
+		//特殊判断下
+		$md5_str = NovelModel::getAuthorFoleder($title, $author);
+		if ($md5_str) {
+			//拼装组织的路径信息
+			$save_path = Env::get('SAVE_JSON_PATH') . DS . substr($md5_str, 0, 2) . DS . $md5_str . '.' . NovelModel::$json_file_type;
+			if (!file_exists(dirname($save_path))) {
+				createFolders(dirname($save_path));
+			}
+			return $save_path;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @note 获取加密的md5串
+	 *
+	 * @param $title 小说标题
+	 * @param $author string 作者名称
+	 * @return string
+	 */
+	public static function getAuthorFoleder($title = '', $author = '')
+	{
+		if (!$title) {
+			return false;
+		}
+		$title = trim($title);
+		$author = $author ?  trim($author) : '未知';
+		return md5($title . $author);
+	}
 
 	/**
 	 * @note 获取小说的基本信息
@@ -1770,7 +1632,6 @@ class NovelModel
 		}
 	}
 
-
 	/**
 	 * @note 替换分页中的url信息返回
 	 *
@@ -1784,27 +1645,6 @@ class NovelModel
 		}
 		$source_url = preg_replace('/Partlist/', 'Book', $url);
 		return $source_url;
-	}
-	/**
-	 * @note 获取小说的的字数
-	 *
-	 * @param $data 预处理的数据
-	 * @param $mysql_obj string 连接句柄
-	 * @return string
-	 */
-	public static function getTextNum($title, $author)
-	{
-		if (!$title || !$author) {
-			return 0;
-		}
-		$json_path = NovelModel::getBookFilePath($title, $author);
-		$info = readFileData($json_path);
-		$num = 0;
-		if ($info) {
-			$t = json_decode($info, true);
-			$num  = self::$text_num * count($t);
-		}
-		return $num;
 	}
 
 	/**
@@ -1830,7 +1670,6 @@ class NovelModel
 		}
 		return $list;
 	}
-
 
 	/**
 	 * @note 创建生成本地的json文件
@@ -1917,63 +1756,6 @@ class NovelModel
 		$json_data = json_encode($json_list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 		writeFileCombine($filename, $json_data); //把json信息存储为对应的目录中去
 		return $json_list;
-	}
-
-	/**
-	 * @note 解析当前url的域名
-	 * @param $url string url地址
-	 * @return array
-	 */
-	public static function urlHostData($url)
-	{
-		if (!$url)
-			return false;
-		$hostData = parse_url($url);
-		$referer_url = $hostData['scheme']  . '://' . $hostData['host'];
-		return $referer_url;
-	}
-
-	/**
-	 * @note 自动补齐当前的buffer数据信息
-	 * @param $detail array 抓取到的匹配数据
-	 * @param $content string HMTL内容返回的数据
-	 * @return array
-	 */
-	protected static function bufferMetaData($detail = [], $content = [])
-	{
-		if (!$detail &&  !$content) {
-			return false;
-		}
-		// if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网
-		//       if(empty($detail['meta_data']) || empty($detail['href'])){
-		//         //匹配这一段开头的数据jumppage到</heade>中间的内容
-		//          preg_match('/document\.onkeydown=jumpPage.*?<\/head>/ism',$content,$contentarr);
-		//          $html = $contentarr[0] ?? '';
-		//          if($html){
-		//              //通过正则取出来对应额连接
-		//               $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
-		//               $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
-		//               preg_match($meta_reg,$html,$meta_link);
-		//               preg_match($link_reg , $html,$href_link);
-		//               $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
-		//               $detail['href'] = $href_link[1] ?? '';
-		//          }
-		//       }
-		// }
-		$reg = '/lastread\.set.*<\/script>/';
-		preg_match($reg, $content, $matches);
-		$results = '';
-		if (isset($matches[0])) {
-			$list = $matches[0] ?? '';
-			preg_match('/\"\,\"\/chapter\/.*\.html/', $list, $chapterMatches);
-			$results = $chapterMatches[0] ?? '';
-
-			$results = str_replace('"', '', $results);
-			$results = str_replace(',', '', $results);
-		}
-		$detail['meta_data'] = $results;
-
-		return $detail;
 	}
 
 	/**
@@ -2102,6 +1884,96 @@ class NovelModel
 		return $allNovelList;
 	}
 
+	/**
+	 * @note 解析当前url的域名
+	 * @param $url string url地址
+	 * @return array
+	 */
+	public static function urlHostData($url)
+	{
+		if (!$url)
+			return false;
+		$hostData = parse_url($url);
+		$referer_url = $hostData['scheme']  . '://' . $hostData['host'];
+		return $referer_url;
+	}
+
+	/**
+	 * @note 替换广告和一些特殊字符
+	 * @param string $str 小说内容
+	 * @param $referer_url string 回调域名地址
+	 * @param $html_path  具体的章节目录，方便处理过滤
+	 * @return $string
+	 */
+	public static function replaceContent($str, $referer_url, $html_path, $title)
+	{
+		if (!$str) {
+			$str = '';
+		}
+		global $advertisement;
+		self::$filterContent = $advertisement['content'] ?? [];
+		if (!self::$filterContent)
+			return '';
+		foreach (self::$filterContent as $keywords) {
+			$matches = strstr($str, $keywords);
+			preg_match('/' . $keywords . '/', $str, $matches);
+			if (isset($matches[0])) {
+				$str = str_replace($matches[0], '', $str);
+			}
+		}
+
+		//过滤实体标签，类似>&nbsp;&nbsp;&nbsp;&nbsp;这样子的过滤一下
+		$str = preg_replace('/&[#\da-z]+;/i', '', $str);
+		//替换注释部分的信息
+		$str = preg_replace('/<!--(.*?)-->/', '', $str);
+		//////////////////////////广告和标签相关
+		//过滤具体的html标签
+		$str = preg_replace('/<script.*?>.*?<\/script>/ism', '', $str);
+		$str = preg_replace('/<br><br><br>/', '', $str); //去除三个BR标签，没啥用
+		//过滤网站中存在的广告
+		//去除含有div的标签对信息
+
+		$str = preg_replace('/一秒记住【笔趣阁 www.bqg24.net】，精彩小说无弹窗！/', '', $str);
+		$str = preg_replace('/喜欢女配真的是来摆烂的请大家收藏：（）女配真的是来摆烂的更新度。/', '', $str);
+		$str = str_replace('/一秒记住【笔趣阁 www.bqg24.net】，精彩小说无弹窗免费阅读！/', '', $str);
+		$str = preg_replace('/<script.*?>.*?<\/script>/ism', '', $str);
+		$str = preg_replace('/<div id="gc1".*?>.*?<\/div>/ism', '', $str);
+		$hostUrl = parse_url($referer_url);
+		$url = trim($hostUrl['host']); //只需要不带https或者http域名的
+		$url = preg_replace('/\//', '\/', $url);
+		$url = preg_replace('/\./', '\.', $url);
+		$mobile_url = str_replace('www', 'm', $url); //移动端的地址
+		$text_reg = "/请记住本书首发域名：{$url}.*?{$mobile_url}/iUs";
+		# $text_reg1 ='/请记住本书首发域名.*?https:\/\/www\.xs74w\.com/iUs'
+		// $str='请记住本书首发域名：www.mxgbqg.com。梦想文学网手机版阅读网址：m.mxgbqg.com';
+		$str = preg_replace($text_reg, '', $str);
+
+
+
+		// $a = preg_match("//")
+		//针对个别网站需要特殊处理下
+		if (preg_match('/xuges/', $referer_url)) {
+			$str = preg_replace('/<\/td><\/tr>/ism', '', $str);
+			$str = preg_replace('/<tr><td>/ism', '', $str);
+			$str = preg_replace('/<hr \/>/ism', '', $str);
+			$str = preg_replace('/<tr><td class=\"zhx\">/ism', '', $str);
+			$str = preg_replace('/<span class=\"zs\">/ism', '', $str);
+			$str = preg_replace('/<\/span>/ism', '', $str);
+			$str = preg_replace('/<td class=\"jz\">/ism', '', $str);
+			// $str = preg_replace('/\r\n.*?<br \/>\r\n/ism','', $str);
+		} else if (preg_match('/xbiqiku2/', $referer_url)) {
+			// $str = self::replaceXbiqiku2Advert($str);
+		}
+		$chapter_link = $referer_url . $html_path; //拼接对应的文章连
+		//去除广告中的网页链接 -- (https://www.mxgbqg.com/book/91090932/22106863.html) ,每个章节里都有这样的一段话
+		$str = str_replace("({$chapter_link})", '', $str);
+		if ($title) {
+			$str = preg_replace('/喜欢' . $title . '请大家收藏：（）' . $title . '更新度。/', '', $str);
+		}
+		//思路客的替换
+		$str = preg_replace('/思路客小说网 www.siluke520.net，最快更新最新章节！/', '', $str);
+		return $str;
+	}
 
 	/**
 	 * @note 从远程获取相关内容并存储到缓存里
@@ -2131,49 +2003,6 @@ class NovelModel
 		}
 		return $content;
 	}
-
-
-
-
-
-	/**
-	 * @note 获取移动端的组装的链接
-	 *
-	 * @param $data str array处理的数据
-	 * @return $html str 抓取的url 返回抓取后的curl请求连接
-	 */
-	public static function getMobileHtmlUrl($meta_data, $html)
-	{
-		if (!$meta_data || !$html)
-			return false;
-		$path = substr($meta_data, 0, -1);
-		$page_num = 0;
-		$con_str = preg_split('/<\/p>/', $html); //按照P标签切割函数
-		$pages = str_replace("\r\n", '', $con_str[0]); //替换里面的空行
-		$content = filterHtml($pages); //过滤特殊字符
-		$t = explode('/', $content); // (第1/3页) 替换
-		if (!$t)
-			return [];
-		preg_match('/\d/', $t[1], $allPage);
-		$all_num = intval($allPage[0]); //总的页码数量，需要判断是否有1页以上
-
-
-		if (isset($t[0]) && !empty($t[0])) {
-			$info = explode('(', $t[0]); //按照(来分割字符
-			$lastElement = array_pop($info); //只取最后一个,如果存在多个(匹配会有问题
-			if (isset($lastElement) && !empty($lastElement)) {
-				//匹配含有字符的数据内容
-				preg_match('/\d/', $lastElement, $matches);
-				if (isset($matches[0])) {
-					$page_num = intval($matches[0]);
-				}
-			}
-		}
-		//组装移动端内容的数据
-		$mobile_url = $path . '-' . $page_num;
-		return $mobile_url;
-	}
-
 
 	/**
 	 * @note curl抓取远程章节类目并组装数据
@@ -2285,6 +2114,44 @@ class NovelModel
 	}
 
 	/**
+	 * @note 获取移动端的组装的链接
+	 *
+	 * @param $data str array处理的数据
+	 * @return $html str 抓取的url 返回抓取后的curl请求连接
+	 */
+	public static function getMobileHtmlUrl($meta_data, $html)
+	{
+		if (!$meta_data || !$html)
+			return false;
+		$path = substr($meta_data, 0, -1);
+		$page_num = 0;
+		$con_str = preg_split('/<\/p>/', $html); //按照P标签切割函数
+		$pages = str_replace("\r\n", '', $con_str[0]); //替换里面的空行
+		$content = filterHtml($pages); //过滤特殊字符
+		$t = explode('/', $content); // (第1/3页) 替换
+		if (!$t)
+			return [];
+		preg_match('/\d/', $t[1], $allPage);
+		$all_num = intval($allPage[0]); //总的页码数量，需要判断是否有1页以上
+
+
+		if (isset($t[0]) && !empty($t[0])) {
+			$info = explode('(', $t[0]); //按照(来分割字符
+			$lastElement = array_pop($info); //只取最后一个,如果存在多个(匹配会有问题
+			if (isset($lastElement) && !empty($lastElement)) {
+				//匹配含有字符的数据内容
+				preg_match('/\d/', $lastElement, $matches);
+				if (isset($matches[0])) {
+					$page_num = intval($matches[0]);
+				}
+			}
+		}
+		//组装移动端内容的数据
+		$mobile_url = $path . '-' . $page_num;
+		return $mobile_url;
+	}
+
+	/**
 	 * @note 剔除第一场的数据不要移动端的标题
 	 *
 	 * @param $content str 保存的内容设置
@@ -2320,7 +2187,6 @@ class NovelModel
 		}
 	}
 
-
 	/**
 	 * @note 自动把移动端的内容分割成一个对象中
 	 *
@@ -2348,8 +2214,6 @@ class NovelModel
 		}
 		return $list;
 	}
-
-
 
 	/**
 	 * @note 保存本地文件信息
@@ -2465,6 +2329,46 @@ class NovelModel
 	}
 
 	/**
+	 * @note 获取成功和失败的数据信息
+	 *
+	 * @param  $goods_list array 章节信息
+	 * @param  $data array 关联章节数组
+	 * @param $type staring 类型 curl :curl判断 ghttp:通过ghttp来判断
+	 * @return array
+	 */
+	public static function getErrSucData($content, $data, $type = 'ghttp')
+	{
+		if (!$content)
+			return [];
+		//该网站被大量用户举报，网站含有未经证实的信息，可能造成您的损失，建议谨慎访问
+		//strstr($tval, '请求失败')
+		$sucData = $errData = [];
+		foreach ($content as $key => $val) {
+			if ($type == 'ghttp') {
+				//如果存在这个就需要去判断
+				//如果存在503或者抓取有大量被举报的返回值就需要去判断
+				if (empty($val)) { //如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
+					$errData[] = $data[$key] ?? [];
+				} else if (!preg_match('/id="content"/', $val)) { //断章处理
+					$errData[] = $data[$key] ?? [];
+				} else {
+					$sucData[] = $val;
+				}
+			} else if ($type == 'curl') { //采用curl来进行验证
+				// if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde')){
+				if (empty($val)) { //如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
+					$errData[] = $data[$key] ?? [];
+				} else {
+					$sucData[] = $val;
+				}
+			}
+		}
+		$info['sucData'] = $sucData;
+		$info['errData'] = $errData;
+		return $info;
+	}
+
+	/**
 	 * @note 保存HTML实体到指定目录
 	 *
 	 * @param $noveList arrya 小说列表
@@ -2527,56 +2431,6 @@ class NovelModel
 		return true;
 	}
 
-
-	/**
-	 * @note 获取小说详情记录
-	 *
-	 * @param $story_id string  第三方网站的id
-	 * @param $source string 来源 paoshu8：泡书吧 xsw：台湾小说
-	 * @return unnkower
-	 */
-	public static function getNovelInfoById($story_id = '', $source = '', $field = 'store_id,title,author,note')
-	{
-		if (!$story_id || !$source) {
-			return false;
-		}
-		$sql = "select {$field} from " . Env::get('APICONFIG.TABLE_NOVEL') . " where story_id='{$story_id}' and source='{$source}'";
-		// echo "sql  = [{$sql}]\r\n";
-		global $mysql_obj;
-		$info = $mysql_obj->fetch($sql, 'db_slave');
-		return !empty($info) ? $info : [];
-	}
-
-	/**
-	 * @note 根据小说名+作者获取详情信息
-	 *
-	 * @param $title string  标题
-	 * @param $author stirng 作者
-	 * @param $field string  指定字段信息
-	 * @return unnkower
-	 */
-	public static function getNovelByName($title = '', $author = '', $field = 'store_id,title,author,story_link')
-	{
-		if (!$title || !$author) {
-			return  false;
-		}
-		//整体思路：先从book_cener表中去搜索是否存在有此本小说
-		//假如book_center表中存在此本小说就返回
-		//如果条件2中的不满足，还需要从mc_book表中去检索，根据对应的状态去进行返回:
-		//判断第三条里的数据是否满足，如果存在了就直接返回，不存在就说明是新书
-		$sql = "select {$field} from " . Env::get('APICONFIG.TABLE_NOVEL') . " where title='{$title}' and author='{$author}' and is_async = 1"; //只查等于1的已经同步的，如果是0说明是新添加的
-		global $mysql_obj;
-		$info = $mysql_obj->fetch($sql, 'db_slave');
-		if (empty($info)) {
-			//查询是否在mc_book表里有相关的数据信息
-			$sql = "select id as store_id ,book_name as title,author,source_url as story_link from " . Env::get('TABLE_MC_BOOK') . " where book_name='{$title}' and author='{$author}'";
-			$results = $mysql_obj->fetch($sql, self::$db_conn);
-			return !empty($results) ? $results : [];
-		} else {
-			return !empty($info) ? $info : [];
-		}
-	}
-
 	/**
 	 * @note 重复调用请求，防止有空数据返回做特殊调用--小说章节详情页检测
 	 *
@@ -2637,6 +2491,55 @@ class NovelModel
 	}
 
 	/**
+	 * @note 获取小说详情记录
+	 *
+	 * @param $story_id string  第三方网站的id
+	 * @param $source string 来源 paoshu8：泡书吧 xsw：台湾小说
+	 * @return unnkower
+	 */
+	public static function getNovelInfoById($story_id = '', $source = '', $field = 'store_id,title,author,note')
+	{
+		if (!$story_id || !$source) {
+			return false;
+		}
+		$sql = "select {$field} from " . Env::get('APICONFIG.TABLE_NOVEL') . " where story_id='{$story_id}' and source='{$source}'";
+		// echo "sql  = [{$sql}]\r\n";
+		global $mysql_obj;
+		$info = $mysql_obj->fetch($sql, 'db_slave');
+		return !empty($info) ? $info : [];
+	}
+
+	/**
+	 * @note 根据小说名+作者获取详情信息
+	 *
+	 * @param $title string  标题
+	 * @param $author stirng 作者
+	 * @param $field string  指定字段信息
+	 * @return unnkower
+	 */
+	public static function getNovelByName($title = '', $author = '', $field = 'store_id,title,author,story_link')
+	{
+		if (!$title || !$author) {
+			return  false;
+		}
+		//整体思路：先从book_cener表中去搜索是否存在有此本小说
+		//假如book_center表中存在此本小说就返回
+		//如果条件2中的不满足，还需要从mc_book表中去检索，根据对应的状态去进行返回:
+		//判断第三条里的数据是否满足，如果存在了就直接返回，不存在就说明是新书
+		$sql = "select {$field} from " . Env::get('APICONFIG.TABLE_NOVEL') . " where title='{$title}' and author='{$author}' and is_async = 1"; //只查等于1的已经同步的，如果是0说明是新添加的
+		global $mysql_obj;
+		$info = $mysql_obj->fetch($sql, 'db_slave');
+		if (empty($info)) {
+			//查询是否在mc_book表里有相关的数据信息
+			$sql = "select id as store_id ,book_name as title,author,source_url as story_link from " . Env::get('TABLE_MC_BOOK') . " where book_name='{$title}' and author='{$author}'";
+			$results = $mysql_obj->fetch($sql, self::$db_conn);
+			return !empty($results) ? $results : [];
+		} else {
+			return !empty($info) ? $info : [];
+		}
+	}
+
+	/**
 	 * @note 利用信号机制结束当前进程
 	 *
 	 * @return unknown
@@ -2661,65 +2564,6 @@ class NovelModel
 		echo "time =" . date('Y-m-d H:i:s') . "\r\n";
 		pcntl_signal_dispatch();
 	}
-
-	/**
-	 * @note 获取成功和失败的数据信息
-	 *
-	 * @param  $goods_list array 章节信息
-	 * @param  $data array 关联章节数组
-	 * @param $type staring 类型 curl :curl判断 ghttp:通过ghttp来判断
-	 * @return array
-	 */
-	public static function getErrSucData($content, $data, $type = 'ghttp')
-	{
-		if (!$content)
-			return [];
-		//该网站被大量用户举报，网站含有未经证实的信息，可能造成您的损失，建议谨慎访问
-		//strstr($tval, '请求失败')
-		$sucData = $errData = [];
-		foreach ($content as $key => $val) {
-			if ($type == 'ghttp') {
-				//如果存在这个就需要去判断
-				//如果存在503或者抓取有大量被举报的返回值就需要去判断
-				if (empty($val)) { //如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
-					$errData[] = $data[$key] ?? [];
-				} else if (!preg_match('/id="content"/', $val)) { //断章处理
-					$errData[] = $data[$key] ?? [];
-				} else {
-					$sucData[] = $val;
-				}
-			} else if ($type == 'curl') { //采用curl来进行验证
-				// if(empty($tval) || strstr($tval,'503 Service') || strstr($tval, '403 Forbidde')){
-				if (empty($val)) { //如果为空或者503错误就存储对应的记录信息或者是403的页面也需要重新抓取
-					$errData[] = $data[$key] ?? [];
-				} else {
-					$sucData[] = $val;
-				}
-			}
-		}
-		$info['sucData'] = $sucData;
-		$info['errData'] = $errData;
-		return $info;
-	}
-
-	/**
-	 * @note 获取url里的ID信息
-	 *
-	 * @param  $url array url信息
-	 * @return array
-	 */
-	public static function getUrlById($url = "")
-	{
-		if (!$url)
-			return false;
-		$urlArr = parse_url($url);
-		$arr  = explode('/', $urlArr['path']);
-		$arr = array_filter($arr);
-		$ccx = end($arr);
-		if (!$ccx) return false;
-		return $ccx;
-	}
-
 
 	/**
 	 * @note 获取缓存的基础信息
@@ -2747,57 +2591,21 @@ class NovelModel
 	}
 
 	/**
-	 * @note 构建需要添加的json数据信息
+	 * @note 获取url里的ID信息
 	 *
-	 * @param  $value array 小说信息
+	 * @param  $url array url信息
 	 * @return array
 	 */
-	public static function buildCombindData($value = [])
+	public static function getUrlById($url = "")
 	{
-		if (!$value)
+		if (!$url)
 			return false;
-		$id = intval($value['id']);
-		$book_name = trim($value['book_name']);
-		$author = trim($value['author']);
-		$data['id'] = $id;
-		// if($book_name && $author){
-		// 	$data['text'] = sprintf("%s@%s",$book_name,$author);
-		// }else{
-		// 	$data['text'] = sprintf("%s",$book_name);
-		// }
-		$data['text'] = $book_name;
-		$document = [
-			'book_id'	=> $id,
-			'book_name' => $book_name,
-			'author'	=> $author,
-		];
-		$data['document'] = $document;
-		// $json_data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-		return $data;
-	}
-
-	//
-	/**
-	 * @note 同步添加gofound数据
-	 *
-	 * @param  $value array 小说信息
-	 * @return array
-	 */
-	public static function synGofundAdd($gofound, $val)
-	{
-		if (!$val || !$gofound) {
-			return false;
-		}
-		//处理需要同步索引的请求数据信息
-		$post_data = NovelModel::buildCombindData($val);
-		if ($post_data) {
-			$res = $gofound->add(
-				$post_data['id'],
-				$post_data['text'],
-				$post_data['document']
-			);
-			return $res;
-		}
+		$urlArr = parse_url($url);
+		$arr  = explode('/', $urlArr['path']);
+		$arr = array_filter($arr);
+		$ccx = end($arr);
+		if (!$ccx) return false;
+		return $ccx;
 	}
 
 	/**
@@ -2816,21 +2624,6 @@ class NovelModel
 			return $bookData;
 		}
 		return null;
-	}
-
-
-	/**
-	 * @note 获取缓存的对应的key信息
-	 * @param $book_id  int  小说ID
-	 * @return string
-	 */
-	public static function getGofoundKey($book_id)
-	{
-		if (!$book_id) {
-			return false;
-		}
-		$bookKey = sprintf("xunsearch_book:%s", $book_id);
-		return $bookKey;
 	}
 
 	/**
@@ -2870,5 +2663,171 @@ class NovelModel
 			echo "no data\r\n";
 			return false;
 		}
+	}
+
+	/**
+	 * @note 获取缓存的对应的key信息
+	 * @param $book_id  int  小说ID
+	 * @return string
+	 */
+	public static function getGofoundKey($book_id)
+	{
+		if (!$book_id) {
+			return false;
+		}
+		$bookKey = sprintf("xunsearch_book:%s", $book_id);
+		return $bookKey;
+	}
+
+	/**
+	 * @note 同步添加gofound数据
+	 *
+	 * @param  $value array 小说信息
+	 * @return array
+	 */
+	public static function synGofundAdd($gofound, $val)
+	{
+		if (!$val || !$gofound) {
+			return false;
+		}
+		//处理需要同步索引的请求数据信息
+		$post_data = NovelModel::buildCombindData($val);
+		if ($post_data) {
+			$res = $gofound->add(
+				$post_data['id'],
+				$post_data['text'],
+				$post_data['document']
+			);
+			return $res;
+		}
+	}
+
+	/**
+	 * @note 构建需要添加的json数据信息
+	 *
+	 * @param  $value array 小说信息
+	 * @return array
+	 */
+	public static function buildCombindData($value = [])
+	{
+		if (!$value)
+			return false;
+		$id = intval($value['id']);
+		$book_name = trim($value['book_name']);
+		$author = trim($value['author']);
+		$data['id'] = $id;
+		// if($book_name && $author){
+		// 	$data['text'] = sprintf("%s@%s",$book_name,$author);
+		// }else{
+		// 	$data['text'] = sprintf("%s",$book_name);
+		// }
+		$data['text'] = $book_name;
+		$document = [
+			'book_id'	=> $id,
+			'book_name' => $book_name,
+			'author'	=> $author,
+		];
+		$data['document'] = $document;
+		// $json_data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+		return $data;
+	}
+
+	//
+
+	/**
+	 * @note 替换里面的指定空行
+	 * @param $data array 处理数据
+	 * @return array
+	 *
+	 */
+	protected static function replaceListArr($data = [])
+	{
+		if (!$data)
+			return false;
+		foreach ($data as &$val) {
+			$val = str_replace("\r\n", '', $val);
+		}
+		return $data;
+	}
+
+	/**
+	 * @note 根据当前的章节连接返回具体IDE总数信息
+	 * @param $link_href string 小说采集源连接
+	 * @param $link_text string 小说采集源文本
+	 * @return array
+	 *
+	 */
+	protected static function getxugesRealList($link_href, $link_text)
+	{
+		if (!$link_href || !$link_text) {
+			return false;
+		}
+		$removeStatus = 1; //设置一个标记，如果是就说明需要删除对应的章节信息
+		foreach ($link_text as $value) {
+			$chapter_name = trimBlankSpace($value);
+			if ($chapter_name && in_array($chapter_name, ['章节目录', '目录'])) {
+				$removeStatus = 1;
+			}
+		}
+		if ($removeStatus) {
+			//这里是说明满足条件，就把原来的直接去掉的配置信息
+			array_shift($link_href);
+			array_shift($link_text);
+		}
+		$hrefArr = array_values($link_href);
+		$textArr = array_values($link_text);
+		return ['href' => $hrefArr, 'text' => $textArr];
+	}
+
+	/**
+	 * @note 自动补齐当前的buffer数据信息
+	 * @param $detail array 抓取到的匹配数据
+	 * @param $content string HMTL内容返回的数据
+	 * @return array
+	 */
+	protected static function bufferMetaData($detail = [], $content = [])
+	{
+		if (!$detail &&  !$content) {
+			return false;
+		}
+		// if(preg_match('/otcwuxi/',$content)){ //校验锡海小说网
+		//       if(empty($detail['meta_data']) || empty($detail['href'])){
+		//         //匹配这一段开头的数据jumppage到</heade>中间的内容
+		//          preg_match('/document\.onkeydown=jumpPage.*?<\/head>/ism',$content,$contentarr);
+		//          $html = $contentarr[0] ?? '';
+		//          if($html){
+		//              //通过正则取出来对应额连接
+		//               $meta_reg = '/zzurl=\'(.*?)\'/si'; //meta_data信息
+		//               $link_reg  = '/bookurl=\'(.*?)\'/si' ; //href的主要信息
+		//               preg_match($meta_reg,$html,$meta_link);
+		//               preg_match($link_reg , $html,$href_link);
+		//               $detail['meta_data'] = $meta_link[1] ?? '';//获取meta的基础信息
+		//               $detail['href'] = $href_link[1] ?? '';
+		//          }
+		//       }
+		// }
+		$reg = '/lastread\.set.*<\/script>/';
+		preg_match($reg, $content, $matches);
+		$results = '';
+		if (isset($matches[0])) {
+			$list = $matches[0] ?? '';
+			preg_match('/\"\,\"\/chapter\/.*\.html/', $list, $chapterMatches);
+			$results = $chapterMatches[0] ?? '';
+
+			$results = str_replace('"', '', $results);
+			$results = str_replace(',', '', $results);
+		}
+		$detail['meta_data'] = $results;
+
+		return $detail;
+	}
+
+	/**
+	 * 简单的日志信息输出
+	 * @param string $msg
+	 */
+	public function log($message = "")
+	{
+		echo "[" . date("Y-m-d H:i:s", time()) . "]--" . $message . "\n";
 	}
 }

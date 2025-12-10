@@ -36,7 +36,8 @@
 		"phpoffice/phpword": "dev-master",
 		"hightman/xunsearch": "*@beta",
 		"guzzlehttp/guzzle": "^7.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-curl": "*"
   },
 	"config": {
 		"secure-http": false
