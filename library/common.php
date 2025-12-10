@@ -1,5 +1,20 @@
 <?php
 
+// PHP 8+ 移除了 magic quotes 相关函数，提供兼容空实现
+if (!function_exists('get_magic_quotes_gpc')) {
+    function get_magic_quotes_gpc()
+    {
+        return false;
+    }
+}
+
+if (!function_exists('get_magic_quotes_runtime')) {
+    function get_magic_quotes_runtime()
+    {
+        return false;
+    }
+}
+
 use QL\QueryList;
 //数组转换，主要导需要用
 function Array_transdata($array, $field)

@@ -103,12 +103,11 @@ class HttpClientRequest{
     **/
     private function unchunk($result) {
         return preg_replace_callback(
-            '/(?:(?:\r\n|\n)|^)([0-9A-F]+)(?:\r\n|\n){1,2}(.*?)'.
+            '/(?:(?:\r\n|\n)|^)([0-9A-F]+)(?:\r\n|\n){1,2}(.*?)' .
             '((?:\r\n|\n)(?:[0-9A-F]+(?:\r\n|\n))|$)/si',
-            @create_function(
-                '$matches',
-                'return hexdec($matches[1]) == strlen($matches[2]) ? $matches[2] : $matches[0];'
-            ),
+            function ($matches) {
+                return hexdec($matches[1]) == strlen($matches[2]) ? $matches[2] : $matches[0];
+            },
             $result
         );
     }
