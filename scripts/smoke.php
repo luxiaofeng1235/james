@@ -47,7 +47,7 @@ foreach ($requiredSections as $section => $keys) {
     }
 }
 
-$pathKeys = ['SAVE_JSON_PATH', 'SAVE_NOVEL_PATH', 'SAVE_IMG_PATH', 'SAVE_BOOK_COMMENT'];
+$pathKeys = ['SAVE_JSON_PATH', 'SAVE_NOVEL_PATH', 'SAVE_IMG_PATH', 'SAVE_BOOK_COMMENT', 'SAVE_HTML_PATH'];
 foreach ($pathKeys as $key) {
     $path = Env::get($key);
     if (!$path) {
