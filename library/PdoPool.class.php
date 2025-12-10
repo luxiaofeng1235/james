@@ -32,20 +32,11 @@ class ConnectionPool {
             'db_name'   =>Env::get('DATABASE.DBNAME'),//数据库名称
             'port'  =>  Env::get('DATABASE.PORT')//数据库的端口
         ];
-        // 线上/主库配置，如未设置 DATABASE_PRO 则复用 DATABASE
-        $config_pro = [
-            'host'  =>Env::get('DATABASE_PRO.HOST_NAME', $config['host']),
-            'username'  =>Env::get('DATABASE_PRO.USERNAME', $config['username']),
-            'password'  =>Env::get('DATABASE_PRO.PASSWORD', $config['password']),
-            'db_name'   =>Env::get('DATABASE_PRO.DBNAME', $config['db_name']),
-            'port'  =>Env::get('DATABASE_PRO.PORT', $config['port'])
-        ]; 
-        //本地localhost的master
-        $list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
-        //本地本地localhost的slave库
-        $list['db_master']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);
-        //小说库
-        $list['db_novel_pro']=array('dsn'=>'mysql:host='.$config_pro['host'].';port='.$config_pro['port'].';dbname='.$config_pro['db_name'],'user'=> $config_pro['username'],'password'=> $config_pro['password']);
+        // 所有连接（db_master/db_slave/db_novel_pro）统一使用 DATABASE 配置
+        $dsn = 'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'];
+        $list['db_master']=array('dsn'=>$dsn,'user'=> $config['username'],'password'=> $config['password']);
+        $list['db_slave']=array('dsn'=>$dsn,'user'=> $config['username'],'password'=> $config['password']);
+        $list['db_novel_pro']=array('dsn'=>$dsn,'user'=> $config['username'],'password'=> $config['password']);
         return $list;
     }
 

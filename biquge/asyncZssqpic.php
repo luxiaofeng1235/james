@@ -14,7 +14,7 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 
 
 $exec_start_time = microtime(true);
-$db_conn = 'db_novel_pro';
+$db_conn = 'db_master';
 $sql = "select id,source_url,book_name,author,source_url from mc_book WHERE  instr(source_url,'biquge34')>0";
 $lists =$mysql_obj->fetchAll($sql,$db_conn);
 $picReferer = Env::get('BQG.PIC_URL');

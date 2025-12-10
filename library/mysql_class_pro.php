@@ -18,12 +18,13 @@ class  Mysql_class_pro{
 	{
 		$list=array();
 		//从Env的环境变量中加载配置文件方便管理
-		$config = [
-            'host'  =>Env::get('DATABASE_PRO.HOST_NAME'),//数据库的主机地址
-            'username'  =>Env::get('DATABASE_PRO.USERNAME'), //数据库的用户
-            'password'  =>Env::get('DATABASE_PRO.PASSWORD'),//数据库的密码
-            'db_name'   =>Env::get('DATABASE_PRO.DBNAME'),//数据库名称
-            'port'  =>  Env::get('DATABASE_PRO.PORT')//数据库的端口
+        // 优先 DATABASE_PRO，未配置则复用 DATABASE
+        $config = [
+            'host'  =>Env::get('DATABASE_PRO.HOST_NAME', Env::get('DATABASE.HOST_NAME')),
+            'username'  =>Env::get('DATABASE_PRO.USERNAME', Env::get('DATABASE.USERNAME')),
+            'password'  =>Env::get('DATABASE_PRO.PASSWORD', Env::get('DATABASE.PASSWORD')),
+            'db_name'   =>Env::get('DATABASE_PRO.DBNAME', Env::get('DATABASE.DBNAME')),
+            'port'  =>Env::get('DATABASE_PRO.PORT', Env::get('DATABASE.PORT'))
         ];
 		//联盟主库master
 		$list['db_slave']=array('dsn'=>'mysql:host='.$config['host'].';port='.$config['port'].';dbname='.$config['db_name'],'user'=> $config['username'],'password'=> $config['password']);

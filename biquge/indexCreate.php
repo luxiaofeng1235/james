@@ -12,7 +12,7 @@ set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 
 $condition = 'status = 1 and id>=590077';
-$db_conn = 'db_novel_pro';
+$db_conn = 'db_master';
 $sql = "select count(1) as num from mc_book WHERE {$condition}";
 $info = $mysql_obj->fetch($sql,$db_conn);
 $num = $info['num'] ?? 0;

@@ -15,7 +15,7 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 require_once dirname(__DIR__) . '/library/file_factory.php';
 
 use QL\QueryList;
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $table_novel_table = "mc_book";
 $table_ims_table = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
 $db_conn = 'db_master';

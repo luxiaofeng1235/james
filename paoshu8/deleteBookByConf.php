@@ -15,7 +15,7 @@ set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php'; //初始化配置
 
 $table_name = Env::get('TABLE_MC_BOOK');
-$db_conn = 'db_novel_pro';
+$db_conn = 'db_master';
 
 
 $condition = "chapter_num<100 and  `status` = 0 and source_url!='qijitushu'";

@@ -15,7 +15,7 @@ class BiqugeModel{
 
 
 	private static $db_collect_conn = 'db_master'; //默认采集库
-	private static $db_novel_pro ='db_novel_pro';//线上数据节点同步
+	private static $db_novel_pro ='db_master';//线上数据节点同步
 	private static $collect_table_name = 'ims_biquge_info';//笔趣阁线上的接口数据
 	private static $online_table_name = 'mc_book';//线上表
 	private static $method = 'get';

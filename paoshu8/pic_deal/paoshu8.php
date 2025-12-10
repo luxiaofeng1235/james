@@ -14,7 +14,7 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(dirname(__DIR__)).'/library/init.inc.php';
 use QL\QueryList;
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $table_novel_table = "mc_book";
 $exec_start_time = microtime(true);
 $where =" instr(`source_url`,'paoshu8')>0";

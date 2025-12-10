@@ -20,7 +20,7 @@ if(!NovelModel::checkProxyExpire()){
     exit("代理IP已过期，请重新拉取最新的ip\r\n");
 }
 
-$db_name = 'db_novel_pro';
+$db_name = 'db_master';
 $redis_key = 'img_pic_empty_id';//redis的对应可以设置
 // $redis_data->set_redis($redis_key,3000);
 $id = $redis_data->get_redis($redis_key);

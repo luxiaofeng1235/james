@@ -55,7 +55,7 @@ if(!empty($data)){
     }
 }
 $table_name = 'mc_book_comment';
-$conn = 'db_novel_pro';
+$conn = 'db_master';
 $ids= $mysql_obj->add_data($data,$table_name, $conn);
 if(!$ids){
     echo "同步失败\r\n";

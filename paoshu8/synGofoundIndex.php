@@ -15,7 +15,7 @@ require_once dirname(__DIR__).'/library/init.inc.php';
 
 
 echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $table_novel_table = "mc_book";
 
 $exec_start_time = microtime(true);

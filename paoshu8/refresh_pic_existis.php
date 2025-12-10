@@ -17,7 +17,7 @@ echo "start_time：".date('Y-m-d H:i:s') .PHP_EOL;
 $exec_start_time = microtime(true);
 
 $store_id = isset($argv[1])   ? $argv[1] : 0; //匹配对应的ID去关联
-$db_name = 'db_novel_pro';
+$db_name = 'db_master';
 $redis_key = 'img_pic_id';//redis的对应可以设置
 
 $id = $redis_data->get_redis($redis_key);

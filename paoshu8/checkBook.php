@@ -10,7 +10,7 @@
  */
 require_once dirname(__DIR__) . '/library/init.inc.php';
 echo "start_time：".date('Y-m-d H:i:s')."\r\n";
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $table_novel_table = "mc_book";
 
 $sql = "SELECT count(id) as num,md5(CONCAT(book_name,author)) as book_sign,book_name,author from {$table_novel_table} WHERE 1 and 

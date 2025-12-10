@@ -14,7 +14,7 @@ ini_set("memory_limit", "8000M");
 set_time_limit(0);
 require_once dirname(__DIR__).'/library/init.inc.php';
 echo "开始寻找未开售的小说\r\n";
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $db_conn_base ='db_master';
 $table_novel_table = "mc_book";
 $table_sync_table = "ims_novel_info";

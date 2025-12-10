@@ -175,7 +175,7 @@ public function updateFewStatus($pro_book_id= 0){
     $where_condition = "id = '".$pro_book_id."'";
     $no_chapter_data['is_less'] = 2;
     //对比新旧数据返回最新的更新
-    $mysql_obj->update_data($no_chapter_data,$where_condition,'mc_book',false,0,'db_novel_pro');
+    $mysql_obj->update_data($no_chapter_data,$where_condition,'mc_book',false,0,'db_master');
 }
 
 

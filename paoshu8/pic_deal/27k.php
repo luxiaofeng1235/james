@@ -15,9 +15,9 @@ set_time_limit(0);
 require_once dirname(dirname(__DIR__)).'/library/init.inc.php';
 use QL\QueryList;
 
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $table_novel_table = 'mc_book';
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 $table_novel_table = "mc_book";
 $exec_start_time = microtime(true);
 $exec_start_time = microtime(true);

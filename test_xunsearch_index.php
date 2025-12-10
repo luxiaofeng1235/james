@@ -10,7 +10,7 @@ if(!$id){
 }
 
 $table_novel_table = "mc_book";
-$db_conn_novel = 'db_novel_pro';
+$db_conn_novel = 'db_master';
 
 
 $sql = "select id,book_name,author  from  {$table_novel_table} where  id = ".$id;

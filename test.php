@@ -414,14 +414,14 @@ exit;
 
 
 $sql = "select * from mc_book_class";
-$list = $mysql_obj->fetchAll($sql,'db_novel_pro');
+$list = $mysql_obj->fetchAll($sql,'db_master');
 foreach($list as $key =>$val){
 	$sql = "select pic from mc_book where book_name regexp '{$val['class_name']}' and book_type = {$val['book_type']}  order by id desc  LIMIT 1";
-	$info = $mysql_obj->fetch($sql , 'db_novel_pro');
+	$info = $mysql_obj->fetch($sql , 'db_master');
 	$pic = $info['pic'] ?? '';
 	if($pic){
 		$sql = "update mc_book_class set class_pic = '{$pic}' where id =  {$val['id']}";
-		$mysql_obj->query($sql,'db_novel_pro');
+		$mysql_obj->query($sql,'db_master');
 	}
 	echo "{$key} \t $sql\r\n";
 }

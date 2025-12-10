@@ -37,7 +37,7 @@ class NovelModel
     public static $file_type = 'txt'; //html的前缀
     public static $json_file_type = 'json'; //已经运行完毕的
     public static $filterWords = null; //默认的的字数
-    public static $db_conn = 'db_novel_pro'; //未同步的
+    public static $db_conn = 'db_master'; //未同步的
     public static $filterContent = null; //默认的图片
     protected static $run_status = 1; //存储为txt的格式文件
     protected static $text_num = 2000; //存储为json文件格式
@@ -1441,7 +1441,7 @@ class NovelModel
         $redis_data->del_redis($redis_key);
         if (!$redis_data->get_redis($redis_key)) {
             $sql = "select id ,tag_name,column_type from mc_tag";
-            $info = $mysql_obj->fetchAll($sql, 'db_novel_pro');
+            $info = $mysql_obj->fetchAll($sql, 'db_master');
             $info && $redis_data->set_redis($redis_key, json_encode($info), $timeout);
             $data = $info;
             unset($info);

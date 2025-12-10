@@ -21,7 +21,7 @@ if (!is_dir($download_path)) {
 }
 $table_book_info = 'mc_book_comment_info'; #书评基础信息
 $table_book_detail = 'mc_book_comment_detail'; #书评详情
-$db_conn = 'db_novel_pro';
+$db_conn = 'db_master';
 
 $bid = isset($argv[1]) ? $argv[1] : "";
 $where = "";
