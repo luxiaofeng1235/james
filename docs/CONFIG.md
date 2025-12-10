@@ -4,7 +4,7 @@ Env 仅读取根目录 `.env`（`PHP_` 前缀存入环境）。示例见根目�
 
 ## 必填键（最小运行）
 - 顶层：`TABLE_MC_BOOK`（默认 `mc_book`）；`SAVE_JSON_PATH`、`SAVE_NOVEL_PATH`、`SAVE_IMG_PATH`、`SAVE_BOOK_COMMENT`、`SAVE_HTML_PATH` 为本地存储路径。
-- `[DATABASE]`：`HOST_NAME`、`PORT`、`USERNAME`、`PASSWORD`、`DBNAME`；所有连接名 (`db_master`/`db_slave`/兼容别名 `db_novel_pro`) 统一使用此组。
+- `[DATABASE]`：`HOST_NAME`、`PORT`、`USERNAME`、`PASSWORD`、`DBNAME`；所有连接名 (`db_master`/`db_slave`/兼容别名 `db_master`) 统一使用此组。
 - `[REDIS]`：`HOST_NAME`、`PORT`、`PASSWORD`。
 - `[APICONFIG]`：`TABLE_NOVEL`、`TABLE_CHAPTER`、`TABLE_CATE`，以及抓取源标识 `PAOSHU_STR`，基础域名 `PAOSHU_HOST/PAOSHU_API_URL`，默认封面 `DEFAULT_PIC`。
 - `[SEARCH]`：`API_URL`（迅搜/全文检索接口）。
