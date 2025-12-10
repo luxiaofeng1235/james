@@ -1,6 +1,6 @@
 # 配置与环境变量指引
 
-Env 读取 `.env_{env}`（dev/test/prod）和 `.business_config`，使用 `PHP_` 前缀存入环境。示例见根目录 `.env_dev.example`，按需复制为 `.env_dev`。
+Env 仅读取根目录 `.env`（`PHP_` 前缀存入环境）。示例见根目录 `.env.example` 或 `.env_dev.example`，复制为 `.env` 后使用。
 
 ## 必填键（最小运行）
 - 顶层：`TABLE_MC_BOOK`（默认 `mc_book`）；`SAVE_JSON_PATH`、`SAVE_NOVEL_PATH`、`SAVE_IMG_PATH`、`SAVE_BOOK_COMMENT`、`SAVE_HTML_PATH` 为本地存储路径。

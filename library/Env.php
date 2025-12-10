@@ -17,11 +17,8 @@ class Env
     // 配置文件映射
     private const CONFIG_FILES = [
         'env' => [
-            'prod' => '/.env_prod',//线上配置
-            'dev' => '/.env_dev', //线下配置
-            'test' => '/.env_test', //测试配置
+            'local' => '/.env', //统一本地/单一环境配置
         ],
-        'business' => '/.business_config', //通用业务配置
     ];
 
     public static function get($name, $default = null)
@@ -46,9 +43,6 @@ class Env
             // 加载环境特定的配置文件
             self::loadEnvironmentConfig($environment);
             
-            // 加载业务配置文件
-            self::loadBusinessConfig();
-            
             self::$loaded = true;
             
         } catch (\Exception $e) {
@@ -66,20 +60,12 @@ class Env
         $configFiles = self::CONFIG_FILES['env'];
         
         if (!isset($configFiles[$environment])) {
-            throw new \InvalidArgumentException("Unsupported environment: {$environment}");
+            // 回退到 local
+            $environment = 'local';
         }
         
         $envFile = dirname(__DIR__) . $configFiles[$environment];
         self::loadConfigFile($envFile, "environment config ({$environment})");
-    }
-
-    /**
-     * 加载业务配置文件
-     */
-    private static function loadBusinessConfig()
-    {
-        $businessFile = dirname(__DIR__) . self::CONFIG_FILES['business'];
-        self::loadConfigFile($businessFile, 'business config', false);
     }
 
     /**
@@ -179,16 +165,11 @@ class Env
      */
     private static function getCurrentEnvironment()
     {
-        if (isset($_ENV['APP_ENV'])) {
-            return $_ENV['APP_ENV'];
-        }
-        
-        if (isset($_SERVER['APP_ENV'])) {
-            return $_SERVER['APP_ENV'];
-        }
-        
         $env = getenv('RUN_ENV');
-        return $env !== false ? $env : 'prod';
+        if ($env === false || !isset(self::CONFIG_FILES['env'][$env])) {
+            return 'local';
+        }
+        return $env;
     }
 
     /**

@@ -2,7 +2,6 @@
 require 'vendor/autoload.php';
 
 
-
 use Aws\CommandPool;
 use Aws\Exception\AwsException;
 use Aws\Result;
@@ -22,11 +21,9 @@ $s3Client = new S3Client([
     ],
 ]);
 
-
 // 设置要上传的文件路径
 $fileList = [
-    'F:\phpstudy_pro\WWW\caiji\upload\111.txt',
-    'F:\phpstudy_pro\WWW\caiji\upload\112.txt',
+    dirname(__FILE__).'/112.txt',
 ];
 
 $bucket = 'kuaiyan';
