@@ -1,11 +1,10 @@
 # 配置与环境变量指引
 
-Env 仅读取根目录 `.env`（`PHP_` 前缀存入环境）。示例见根目录 `.env.example` 或 `.env_dev.example`，复制为 `.env` 后使用。
+Env 仅读取根目录 `.env`（`PHP_` 前缀存入环境）。示例见根目录 `.env.example`，复制为 `.env` 后使用。
 
 ## 必填键（最小运行）
 - 顶层：`TABLE_MC_BOOK`（默认 `mc_book`）；`SAVE_JSON_PATH`、`SAVE_NOVEL_PATH`、`SAVE_IMG_PATH`、`SAVE_BOOK_COMMENT`、`SAVE_HTML_PATH` 为本地存储路径。
-- `[DATABASE]`：`HOST_NAME`、`PORT`、`USERNAME`、`PASSWORD`、`DBNAME`；连接名 `db_master`/`db_slave`/`db_novel_pro` 复用此组。
-- `[DATABASE_PRO]`（可选）：如设置则覆盖 `db_novel_pro`，未设置时自动回退到 `[DATABASE]`。
+- `[DATABASE]`：`HOST_NAME`、`PORT`、`USERNAME`、`PASSWORD`、`DBNAME`；所有连接名 (`db_master`/`db_slave`/兼容别名 `db_novel_pro`) 统一使用此组。
 - `[REDIS]`：`HOST_NAME`、`PORT`、`PASSWORD`。
 - `[APICONFIG]`：`TABLE_NOVEL`、`TABLE_CHAPTER`、`TABLE_CATE`，以及抓取源标识 `PAOSHU_STR`，基础域名 `PAOSHU_HOST/PAOSHU_API_URL`，默认封面 `DEFAULT_PIC`。
 - `[SEARCH]`：`API_URL`（迅搜/全文检索接口）。

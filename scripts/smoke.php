@@ -46,18 +46,7 @@ foreach ($requiredSections as $section => $keys) {
     }
 }
 
-// Optional: DATABASE_PRO overrides; warn if partial
-$proKeys = ['HOST_NAME','PORT','USERNAME','PASSWORD','DBNAME'];
-$proMissing = 0;
-foreach ($proKeys as $key) {
-    $val = Env::get("DATABASE_PRO.{$key}", '');
-    if ($val === '' || $val === false) {
-        $proMissing++;
-    }
-}
-if ($proMissing > 0) {
-    $warnings[] = "DATABASE_PRO 未配置，db_novel_pro 将复用 DATABASE";
-}
+// 所有连接统一使用 DATABASE；如需拆分可手动扩展 Env::get('DATABASE_PRO.*')
 
 $pathKeys = ['SAVE_JSON_PATH', 'SAVE_NOVEL_PATH', 'SAVE_IMG_PATH', 'SAVE_BOOK_COMMENT', 'SAVE_HTML_PATH'];
 foreach ($pathKeys as $key) {
