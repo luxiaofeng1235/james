@@ -1,8 +1,5 @@
 {
-	"autoload": {
-        "psr-4": {"Acme\\": "src/"}
-    },
-    "repositories": [
+	"repositories": [
         {
             "type": "composer",
             "url": "https://mirrors.aliyun.com/composer/"
@@ -36,8 +33,7 @@
 		"phpoffice/phpword": "dev-master",
 		"hightman/xunsearch": "*@beta",
 		"guzzlehttp/guzzle": "^7.0",
-    "ext-json": "*",
-    "ext-curl": "*"
+    "ext-json": "*"
   },
 	"config": {
 		"secure-http": false

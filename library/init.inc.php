@@ -45,6 +45,7 @@ require_once ROOT.'library/common.php'; #加载公用函数
 // require_once ROOT.'library/Http.php'; //多线程请求curl支持post和get
 require_once ROOT.'vendor/autoload.php';//自动加载第三方类的初始文件
 require_once ROOT.'library/Env.php'; //环境变量
+require_once ROOT.'library/logger.php'; //轻量日志工具
 require_once(ROOT.'library/PdoPool.class.php'); //pdo-mysql连接池类
 require_once ROOT.'library/redis_codes.php'; //redis类
 
