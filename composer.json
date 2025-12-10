@@ -35,7 +35,8 @@
 		"aws/aws-sdk-php": "^3.312",
 		"phpoffice/phpword": "dev-master",
 		"hightman/xunsearch": "*@beta",
-		"guzzlehttp/guzzle": "^7.0"
+		"guzzlehttp/guzzle": "^7.0",
+    "ext-json": "*"
   },
 	"config": {
 		"secure-http": false

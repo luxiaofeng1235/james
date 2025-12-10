@@ -9,46 +9,122 @@
 // 编 码：UTF-8
 // 摘 要:处理佳士小说的采集配置以及规则拉取
 // ///////////////////////////////////////////////////
-use QL\QueryList;
 use Overtrue\Pinyin\Pinyin;
+use QL\QueryList;
 
 class BanjishiModel{
 
-    private static  $method = 'post'; #指定请求方式
-    private static  $chunk_size =200;//指定具体的页码分页长度最多请求200个
-    public static   $timeout = 900; // 默认缓存过期时间为15分钟
-    public static  $defaultimg=null; //默认封面
-
-
-     /**
-    * @note 获取默认图片问题
-    * @param $id int id小说
-    * @param $index int 索引id
-    * @return array
-    *
-    */
-    private static  function getDefaultImg(){
-        self::$defaultimg = Env::get('APICONFIG.DEFAULT_PIC');
-        return self::$defaultimg;
-    }
-
+    public static   $timeout = 900; #指定请求方式
+    public static  $defaultimg=null;//指定具体的页码分页长度最多请求200个
+    private static  $method = 'post'; // 默认缓存过期时间为15分钟
+    private static  $chunk_size =200; //默认封面
 
     /**
-    * @note 生成url
-    * @param $id int id小说
-    * @param $index int 索引id
-    * @return array
+    * @note 获取佳士小说的ID-根据url来解析
+    * @param $story_link string 根据连接地址解析获取目标网站ID
+    * @return string
     *
     */
-    public static function getBanjiashiUrl($id,$index=1) {
-        if(!$id ){
-            return false;
+    public static function getBanjiashiId($story_link= ""){
+        if(!$story_link){
+            return 0;
         }
-        $url = StoreModel::replaceParam(Env::get('APICONFIG.BANJIASHI_NEXT_URL'),'store_id',$id);
-        $url = StoreModel::replaceParam($url,'page',$index);
-        return $url;
+        $hostData= parse_url($story_link);
+        $pathData = explode('/',$hostData['path']);
+        $pathData = array_filter($pathData);
+        $pathData = array_values($pathData);
+        $third_novel_id = $pathData[1] ?? 0;
+        return $third_novel_id;
     }
 
+    /**
+     * @note 获取采集HTML的key信息
+     * @param $id int 小说ID（第三方的标识）
+     * @param $source string 网站来源
+     * @return string
+     *
+     */
+    public static function getCollectHtmlCacheKey($source="",$id = ""){
+        if(!$source || !$id){
+            return false;
+        }
+        #缓存对应的html的key的标记
+        #规则：book+来源+第三方id
+        $html_key  =sprintf("book_%s_id:%s",$source,$id);
+        return $html_key;
+    }
+
+    /**
+     * @note 根据id和allPage来获取对应的分页的章节列表
+     * @param $id int 小说ID（第三方的标识）
+     * @param $title string  小说标题
+     * @param $allPage int 所有分页内容 array对象
+     * @param $story_link string 采集的url
+     * @param $method 请求方式 ：默认为post去进行请求
+     * @return array |bool
+     *
+     *
+     */
+    public static function getAllBanjiashiChapter($id,$title,$allPage,$story_link,$method='post'){
+        if(!$id || !$title || !$allPage){
+            return false;
+        }
+        $book_key ="banjiashi_id:".$id;
+        echo "redis_key =【{$book_key}】 缓存过期时间为：timtout =【".self::$timeout." S】 \r\n";
+        global $redis_data,$urlRules;
+        $rules = CommonService::collectListRule($story_link);
+        // $redis_data->del_Redis($book_key);
+
+        $info = $redis_data->get_redis($book_key);
+        if(!$info || empty($info) || $info=='[]'){
+            #根据需要生成对应的url信息
+            $urls = BanjishiModel::createCHapterUrls($id,$allPage);
+            $t_url = array_values($urls);
+            $chapterList = StoreModel::swooleRquest($t_url , $method);
+            $goodsList = [];
+            echo "当前小说共 【 ".count($urls)." 】 页需要去拉取\r\n";
+
+            foreach ($urls as $key =>$val){
+                $host_data = parse_url($val);
+                $path = $host_data['path'];
+                if(isset($chapterList[$path])){
+                    #处理图片存储问题，第一页的图片有问题需要重新覆盖一遍
+                    if (strpos($path,'xiaoshuo')){
+                        //处理默认封面的问题，原始封面有点难看
+                        //修复：由于https://www.banjiashi.com/这个网站的图片都是一些不合规的图，先用默认图代替
+                        $info_data['cover_logo'] = self::getDefaultImg();
+                        #存储图片到对应的目录中去
+                         if(isset($info_data['cover_logo'])){
+                             $img_ret= BanjishiModel::saveImageNovelLocal($info_data['title'],$info_data['author'],$info_data['cover_logo']);
+                             echo "下载图片到服务器地址：{$img_ret} \r\n";
+                         }
+                    }
+                    $goodsList[$path]= $chapterList[$path] ?? '';
+                }
+            }
+            $list = [];
+            // unset($goodsList['/index/88934/1/']);
+            if(count($goodsList)>0){
+                foreach($goodsList as $key =>$val){
+                    $chapter = BanjishiModel::getBanjiashiChapter($key,$title,$val);
+                    if(!$chapter){
+                        $chapter = [];
+                    }
+                    $list = array_merge($list,$chapter);
+                }
+            }
+            if(!$list){
+                $list = [];
+            }
+            $redis_data->set_redis($book_key,json_encode($list),self::$timeout);
+            return $list;
+        }else{
+            echo "我是缓存中 key= 【{$book_key}】 的章节目录哈 \r\n";
+            $data = json_decode($info,true);
+            return $data ?? [];
+        }
+
+    }
 
     /**
      * @note 生成章节访问的url信息
@@ -81,11 +157,73 @@ class BanjishiModel{
                 $newUrl[$host_url['path']] = $t_url;
             }
         }else{
-            $newUrl[] = $next_page =  StoreModel::replaceParam(Env::get('APICONFIG.BANJIASHI_DETAIL_URL'),'store_id',$id);
+            $newUrl[] =  StoreModel::replaceParam(Env::get('APICONFIG.BANJIASHI_DETAIL_URL'),'store_id',$id);
         }
         return $newUrl;
     }
 
+    /**
+    * @note 生成url
+    * @param $id int id小说
+    * @param $index int 索引id
+    * @return array
+    *
+    */
+    public static function getBanjiashiUrl($id,$index=1) {
+        if(!$id ){
+            return false;
+        }
+        $url = StoreModel::replaceParam(Env::get('APICONFIG.BANJIASHI_NEXT_URL'),'store_id',$id);
+        $url = StoreModel::replaceParam($url,'page',$index);
+        return $url;
+    }
+
+     /**
+    * @note 获取默认图片问题
+    * @param $id int id小说
+    * @param $index int 索引id
+    * @return array
+    *
+    */
+    private static  function getDefaultImg(){
+        self::$defaultimg = Env::get('APICONFIG.DEFAULT_PIC');
+        return self::$defaultimg;
+    }
+
+    /**
+    * @note 存储本地图片
+    *
+    * @param $title string 标题
+    * @param $author string 作者
+    * @param $cover_logo string标题
+    * @return array
+    */
+    public static function saveImageNovelLocal($title,$author,$cover_logo){
+        if(!$title || !$author || !$cover_logo){
+            return false;
+        }
+        $pinyin_class = new Pinyin();
+        $save_img_path = Env::get('SAVE_IMG_PATH');
+        if (!is_dir($save_img_path)) {
+            createFolders($save_img_path);
+        }
+        // $imgFileName = NovelModel::getFirstImgePath($title, $author, $cover_logo, $pinyin_class);
+        #以日期创建文件夹返回的图片路径
+        $imgFileName = NovelModel::getNovelToPic($title,$author,$cover_logo);
+        if(!file_exists($imgFileName)){//如果不存在这个图才去更新
+            $res = webRequest($cover_logo, 'GET'); //利用图片信息来下载
+            if(empty($res)){
+                #获取一张默认的远程头像
+                $default_remote_img = self::getDefaultImg();
+                echo "远程图片获取为空，会从".$default_remote_img."重新获取保存\r\n";
+                $res = webRequest($default_remote_img,'GET');
+            }
+            $img_con = $res ?? '';
+            #写入图片香公馆信息
+            @writeFileCombine($imgFileName, $img_con);
+        }
+       return $imgFileName;
+    }
 
     /**
      * @note 获取佳士小说的所有章节列表
@@ -137,186 +275,6 @@ class BanjishiModel{
             }
         }
         return $chapter_list;
-    }
-
-    /**
-    * @note 获取佳士小说的ID-根据url来解析
-    * @param $story_link string 根据连接地址解析获取目标网站ID
-    * @return string
-    *
-    */
-    public static function getBanjiashiId($story_link= ""){
-        if(!$story_link){
-            return 0;
-        }
-        $hostData= parse_url($story_link);
-        $pathData = explode('/',$hostData['path']);
-        $pathData = array_filter($pathData);
-        $pathData = array_values($pathData);
-        $third_novel_id = $pathData[1] ?? 0;
-        return $third_novel_id;
-    }
-
-    /**
-     * @note 获取采集HTML的key信息
-     * @param $id int 小说ID（第三方的标识）
-     * @param $source string 网站来源
-     * @return string
-     *
-     */
-    public static function getCollectHtmlCacheKey($source="",$id = ""){
-        if(!$source || !$id){
-            return false;
-        }
-        #缓存对应的html的key的标记
-        #规则：book+来源+第三方id
-        $html_key  =sprintf("book_%s_id:%s",$source,$id);
-        return $html_key;
-    }
-
-    /**
-     * @note 根据id和allPage来获取对应的分页的章节列表
-     * @param $id int 小说ID（第三方的标识）
-     * @param $title string  小说标题
-     * @param $allPage int 所有分页内容 array对象
-     * @param $story_link string 采集的url
-     * @param $method 请求方式 ：默认为post去进行请求
-     * @return array
-     *
-     */
-    public static function getAllBanjiashiChapter($id,$title,$allPage,$story_link,$method='post'){
-        if(!$id || !$title || !$allPage){
-            return false;
-        }
-        $book_key ="banjiashi_id:".$id;
-        echo "redis_key =【{$book_key}】 缓存过期时间为：timtout =【".self::$timeout." S】 \r\n";
-        global $redis_data,$urlRules;
-        $rules = CommonService::collectListRule($story_link);
-        // $redis_data->del_Redis($book_key);
-
-        $info = $redis_data->get_redis($book_key);
-        if(!$info || empty($info) || $info=='[]'){
-            #根据需要生成对应的url信息
-            $urls = BanjishiModel::createCHapterUrls($id,$allPage);
-            $t_url = array_values($urls);
-            $chapterList = StoreModel::swooleRquest($t_url , $method);
-            $goodsList = [];
-            // echo '<pre>';
-            // var_dump($chapterList);
-            // echo '</pre>';
-            // exit;
-            echo "当前小说共 【 ".count($urls)." 】 页需要去拉取\r\n";
-                
-            foreach ($urls as $key =>$val){
-                $host_data = parse_url($val);
-                $path = $host_data['path'];
-                if(isset($chapterList[$path])){
-                    #处理图片存储问题，第一页的图片有问题需要重新覆盖一遍
-                    if (strpos($path,'xiaoshuo')){
-                        // $info_data=QueryList::html($chapterList[$path])
-                        //     ->rules($rules)
-                        //         ->query()
-                        //         ->getData()
-                        //         ->all();
-                        //处理默认封面的问题，原始封面有点难看
-                        //修复：由于https://www.banjiashi.com/这个网站的图片都是一些不合规的图，先用默认图代替
-                        $info_data['cover_logo'] = self::getDefaultImg();
-                        // if(strstr($info_data['cover_logo'], 'defaultimg')){
-                        //     $info_data['cover_logo'] = self::getDefaultImg();
-                        // }
-                        #存储图片到对应的目录中去
-                         if(isset($info_data['cover_logo'])){
-                             $img_ret= BanjishiModel::saveImageNovelLocal($info_data['title'],$info_data['author'],$info_data['cover_logo']);
-                             echo "下载图片到服务器地址：{$img_ret} \r\n";
-                         }
-                    }
-                    $goodsList[$path]= $chapterList[$path] ?? '';
-                }
-            }
-            $list = [];
-            // unset($goodsList['/index/88934/1/']);
-            if(count($goodsList)>0){
-                foreach($goodsList as $key =>$val){
-                    $chapter = BanjishiModel::getBanjiashiChapter($key,$title,$val);
-                    if(!$chapter){
-                        $chapter = [];
-                    }
-                    $list = array_merge($list,$chapter);
-                }
-            }
-            if(!$list){
-                $list = [];
-            }
-            $redis_data->set_redis($book_key,json_encode($list),self::$timeout);
-            return $list;
-        }else{
-            echo "我是缓存中 key= 【{$book_key}】 的章节目录哈 \r\n";
-            $data = json_decode($info,true);
-            return $data ?? [];
-        }
-
-    }
-
-      /**
-    * @note 获取单个章节内容信息
-    *
-    * @param $contents array 获取拼接内容
-    * @return array
-    */
-    public static function getChapterContent($contents=""){
-        if (!$contents){
-            return false;
-        }
-        global $urlRules;
-
-        if(preg_match('/class=\"content\"/', $contents)){
-            $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['banjiashi_content_new'];
-        }else{
-            #banjiashi_content_new
-            $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['banjiashi_content'];
-        }
-        $data = QueryList::html($contents)
-                ->rules($rules)
-                ->query()
-                ->removeHead()
-                ->getData();
-        $data = $data->all();
-        return $data;
-    }
-
-    /**
-    * @note 存储本地图片
-    *
-    * @param $title string 标题
-    * @param $author string 作者
-    * @param $cover_logo string标题
-    * @return array
-    */
-    public static function saveImageNovelLocal($title,$author,$cover_logo){
-        if(!$title || !$author || !$cover_logo){
-            return false;
-        }
-        $pinyin_class = new Pinyin();
-        $save_img_path = Env::get('SAVE_IMG_PATH');
-        if (!is_dir($save_img_path)) {
-            createFolders($save_img_path);
-        }
-        // $imgFileName = NovelModel::getFirstImgePath($title, $author, $cover_logo, $pinyin_class);
-        #以日期创建文件夹返回的图片路径
-        $imgFileName = NovelModel::getNovelToPic($title,$author,$cover_logo);
-        if(!file_exists($imgFileName)){//如果不存在这个图才去更新
-            $res = webRequest($cover_logo, 'GET'); //利用图片信息来下载
-            if(empty($res)){
-                #获取一张默认的远程头像
-                $default_remote_img = self::getDefaultImg();
-                echo "远程图片获取为空，会从".$default_remote_img."重新获取保存\r\n";
-                $res = webRequest($default_remote_img,'GET');
-            }
-            $img_con = $res ?? '';
-            #写入图片香公馆信息
-            @writeFileCombine($imgFileName, $img_con);
-        }
-       return $imgFileName;
     }
 
     /**
@@ -479,9 +437,6 @@ class BanjishiModel{
         return $source_url;
     }
 
-
-
-
     /**
     * @note 获取请求所有的章节目录信息
     *
@@ -616,6 +571,33 @@ class BanjishiModel{
         #重构数据
         $returnList = self::buildContents($referer_url,$chapterList,$collectChapter,$title);
         return $returnList;
+    }
+
+      /**
+    * @note 获取单个章节内容信息
+    *
+    * @param $contents array 获取拼接内容
+    * @return array
+    */
+    public static function getChapterContent($contents=""){
+        if (!$contents){
+            return false;
+        }
+        global $urlRules;
+
+        if(preg_match('/class=\"content\"/', $contents)){
+            $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['banjiashi_content_new'];
+        }else{
+            #banjiashi_content_new
+            $rules = $urlRules[Env::get('APICONFIG.PAOSHU_STR')]['banjiashi_content'];
+        }
+        $data = QueryList::html($contents)
+                ->rules($rules)
+                ->query()
+                ->removeHead()
+                ->getData();
+        $data = $data->all();
+        return $data;
     }
 
     /**
