@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * 同步小说基本信息的主程序
  * 主要同步的数据有以下几个流程：
  * 1、同步ims_novel_info表信息和状态 --已实现
@@ -22,7 +22,9 @@ echo "\r\n";
 echo "---------------------------------------------------------------------------------\r\n";
 
 $novel_table_name = Env::get('APICONFIG.TABLE_NOVEL');//小说详情页表信息
-use QL\QueryList;##引入querylist的采集器
+use QL\QueryList;
+
+##引入querylist的采集器
 $exec_start_time = microtime(true);
 $startMemory = memory_get_peak_usage();
 if(is_cli()){
